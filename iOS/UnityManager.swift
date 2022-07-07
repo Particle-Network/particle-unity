@@ -830,7 +830,7 @@ extension UnityManager {
                                  data: transaction.data,
                                  gasLimit: transaction.gasLimit.asString(radix: 10),
                                  gasSpent: transaction.gasSpent.asString(radix: 10),
-                                 gasPrice: transaction.gasPirce.asString(radix: 10),
+                                 gasPrice: transaction.gasPrice.asString(radix: 10),
                                  fees: transaction.fees.asString(radix: 10),
                                  type: transaction.type,
                                  nonce: "0x" + transaction.nonce.asString(radix: 16),
