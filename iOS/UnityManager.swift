@@ -736,6 +736,10 @@ extension UnityManager {
         let config = NFTDetailsConfig(address: address, tokenId: tokenId)
         PNRouter.navigatorNFTDetails(nftDetailsConfig: config)
     }
+    
+    func navigatorPay() {
+        PNRouter.navigatorPay()
+    }
 }
 
 
