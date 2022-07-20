@@ -118,13 +118,13 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
             case .success(let userInfo):
                 guard let userInfo = userInfo else { return }
-                let statusModel = StatusModel(status: true, json: userInfo)
+                let statusModel = UnityStatusModel(status: true, json: userInfo)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
@@ -138,12 +138,12 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
             case .success(let success):
-                let statusModel = StatusModel(status: true, json: success)
+                let statusModel = UnityStatusModel(status: true, json: success)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
@@ -161,12 +161,12 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
             case .success(let signedMessage):
-                let statusModel = StatusModel(status: true, json: signedMessage)
+                let statusModel = UnityStatusModel(status: true, json: signedMessage)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
@@ -180,12 +180,12 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
             case .success(let signedMessage):
-                let statusModel = StatusModel(status: true, json: signedMessage)
+                let statusModel = UnityStatusModel(status: true, json: signedMessage)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
@@ -200,12 +200,12 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
             case .success(let signedMessage):
-                let statusModel = StatusModel(status: true, json: signedMessage)
+                let statusModel = UnityStatusModel(status: true, json: signedMessage)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
@@ -219,12 +219,12 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
             case .success(let signature):
-                let statusModel = StatusModel(status: true, json: signature)
+                let statusModel = UnityStatusModel(status: true, json: signature)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
@@ -243,12 +243,12 @@ extension UnityManager {
             case .failure(let error):
                 
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
             case .success(let signedMessage):
-                let statusModel = StatusModel(status: true, json: signedMessage)
+                let statusModel = UnityStatusModel(status: true, json: signedMessage)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
@@ -262,7 +262,7 @@ extension UnityManager {
     
     func getUserInfo() -> String {
         guard let userInfo = ParticleAuthService.getUserInfo() else { return "" }
-        let statusModel = StatusModel(status: true, json: userInfo)
+        let statusModel = UnityStatusModel(status: true, json: userInfo)
         let data = try! JSONEncoder().encode(statusModel)
         let json = String(data: data, encoding: .utf8)
         return json ?? ""
@@ -279,13 +279,13 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
                 self.ufw?.sendMessageToGO(withName: UnityManager.authSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
             case .success:
-                let statusModel = StatusModel(status: true, json: "")
+                let statusModel = UnityStatusModel(status: true, json: "")
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -313,7 +313,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -322,7 +322,7 @@ extension UnityManager {
                 let rawData = tokenList.map {
                     self.map2UnityTokenInfo(from: $0)
                 }
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -339,7 +339,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -347,7 +347,7 @@ extension UnityManager {
             case .success(let tokenResult):
                 let unityTokenResult = self.map2UnityTokentResult(from: tokenResult)
                 
-                let statusModel = StatusModel(status: true, json: unityTokenResult)
+                let statusModel = UnityStatusModel(status: true, json: unityTokenResult)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -362,7 +362,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -370,7 +370,7 @@ extension UnityManager {
             case .success(let tokenResult):
                 let unityTokenResult = self.map2UnityTokentResult(from: tokenResult)
                 
-                let statusModel = StatusModel(status: true, json: unityTokenResult)
+                let statusModel = UnityStatusModel(status: true, json: unityTokenResult)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -391,7 +391,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -400,7 +400,7 @@ extension UnityManager {
                 let rawData = array.map {
                     self.map2UnityTokenModel(from: $0)
                 }
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -420,7 +420,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -428,7 +428,7 @@ extension UnityManager {
                 let rawData = array.map {
                     self.map2UnitySolanaTransaction(from: $0)
                 }
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -448,7 +448,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -456,7 +456,7 @@ extension UnityManager {
                 let rawData = array.map {
                     self.map2UnitySolanaTransaction(from: $0)
                 }
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -478,7 +478,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -486,7 +486,7 @@ extension UnityManager {
                 let rawData = array.map {
                     self.map2UnitySolanaTransaction(from: $0)
                 }
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -508,7 +508,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -516,7 +516,7 @@ extension UnityManager {
                 let rawData = array.map {
                     self.map2UnitySolanaTransaction(from: $0)
                 }
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -531,7 +531,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -541,7 +541,7 @@ extension UnityManager {
                     self.map2UnityTokenInfo(from: $0)
                 }
                 
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -558,14 +558,14 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
             case .success(let tokenResult):
                 let unityTokenResult = self.map2UnityTokentResult(from: tokenResult)
-                let statusModel = StatusModel(status: true, json: unityTokenResult)
+                let statusModel = UnityStatusModel(status: true, json: unityTokenResult)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -580,14 +580,14 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
             case .success(let tokenResult):
                 let unityTokenResult = self.map2UnityTokentResult(from: tokenResult)
-                let statusModel = StatusModel(status: true, json: unityTokenResult)
+                let statusModel = UnityStatusModel(status: true, json: unityTokenResult)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -602,7 +602,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -611,7 +611,7 @@ extension UnityManager {
                 let rawData = array.map {
                     self.map2UnityEvmTransaction(from: $0)
                 }
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -626,7 +626,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -635,7 +635,7 @@ extension UnityManager {
                 let rawData = array.map {
                     self.map2UnityEvmTransaction(from: $0)
                 }
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -656,7 +656,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = StatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: true, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -665,7 +665,7 @@ extension UnityManager {
                 let rawData = array.map {
                     self.map2UnityTokenModel(from: $0)
                 }
-                let statusModel = StatusModel(status: true, json: rawData)
+                let statusModel = UnityStatusModel(status: true, json: rawData)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.apiSystemName)
@@ -892,7 +892,7 @@ extension UnityManager {
             if chainId == 137 {
                 chainName = .polygon(.mainnet)
             } else if chainId == 80001 {
-                chainName = .polygon(.testnet)
+                chainName = .polygon(.mumbai)
             }
         } else if name == ParticleNetwork.Name.avalanche.rawValue.lowercased() {
             if chainId == 43114 {
@@ -912,17 +912,17 @@ extension UnityManager {
             } else if chainId == 421611 {
                 chainName = .arbitrum(.testnet)
             }
-        } else if name == ParticleNetwork.Name.moonBeam.rawValue.lowercased() {
+        } else if name == ParticleNetwork.Name.moonbeam.rawValue.lowercased() {
             if chainId == 1284 {
-                chainName = .moonBeam(.mainnet)
+                chainName = .moonbeam(.mainnet)
             } else if chainId == 1287 {
-                chainName = .moonBeam(.testnet)
+                chainName = .moonbeam(.testnet)
             }
-        } else if name == ParticleNetwork.Name.moonRiver.rawValue.lowercased() {
+        } else if name == ParticleNetwork.Name.moonriver.rawValue.lowercased() {
             if chainId == 1285 {
-                chainName = .moonRiver(.mainnet)
+                chainName = .moonriver(.mainnet)
             } else if chainId == 1287 {
-                chainName = .moonRiver(.testnet)
+                chainName = .moonriver(.testnet)
             }
         } else if name == ParticleNetwork.Name.heco.rawValue.lowercased() {
             if chainId == 128 {
@@ -1021,7 +1021,7 @@ struct UnityResponseError: Codable {
     let message: String
 }
 
-struct StatusModel<T: Codable>: Codable {
+struct UnityStatusModel<T: Codable>: Codable {
     let status: Bool
     let json: T
 }
