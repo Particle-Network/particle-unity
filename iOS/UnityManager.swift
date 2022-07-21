@@ -103,12 +103,12 @@ extension UnityManager {
     func login(_ type: String, account: String?, supportAuthType: String) {
         let loginType = LoginType(rawValue: type) ?? .email
         var supportAuthTypeArray: [SupportAuthType] = []
-        JSON(supportAuthType).arrayValue.forEach {
-            if $0.string == "apple" {
+        JSON(parseJSON: supportAuthType).arrayValue.forEach {
+            if $0.stringValue.lowercased() == "apple" {
                 supportAuthTypeArray.append(.apple)
-            } else if $0.string == "google" {
+            } else if $0.stringValue.lowercased() == "google" {
                 supportAuthTypeArray.append(.google)
-            } else if $0.string == "facebook" {
+            } else if $0.stringValue.lowercased() == "facebook" {
                 supportAuthTypeArray.append(.facebook)
             }
         }
@@ -194,7 +194,7 @@ extension UnityManager {
     }
     
     func signAllTransactions(_ transactions: String) {
-        let transactions = JSON(transactions).arrayValue.map { $0.stringValue }
+        let transactions = JSON(parseJSON: transactions).arrayValue.map { $0.stringValue }
         ParticleAuthService.signAllTransactions(transactions).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
