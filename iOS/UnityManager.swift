@@ -118,7 +118,7 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: true, json: response)
+                let statusModel = UnityStatusModel(status: false, json: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
