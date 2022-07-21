@@ -93,7 +93,7 @@ extension UnityManager {
     
     func getChainName() -> String {
         let chainName = ParticleNetwork.getChainName()
-        return ["chain_name": chainName.name, "chain_id": chainName.chainId, "chain_id_name": chainName.network].jsonString() ?? ""
+        return ["chain_name": chainName.nameString, "chain_id": chainName.chainId, "chain_id_name": chainName.network].jsonString() ?? ""
     }
 }
 
