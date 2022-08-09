@@ -6,6 +6,7 @@
 //
 import ParticleAuthService
 import ParticleNetworkBase
+import ParticleConnect
 import UIKit
 
 @main
@@ -25,7 +26,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        return ParticleAuthService.handleUrl(url)
+        
+        // if use ParticleConnect
+        return ParticleConnect.handleUrl(url)
+        
+        // if use ParticleAuthService
+        // return ParticleAuthService.handleUrl(url)
     }
 }
+
 
