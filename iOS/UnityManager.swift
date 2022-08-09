@@ -112,6 +112,9 @@ extension UnityManager {
                 supportAuthTypeArray.append(.facebook)
             }
         }
+        if account.isEmpty {
+            account = nil
+        }
         
         ParticleAuthService.login(type: loginType, account: account, supportAuthType: supportAuthTypeArray).subscribe { [weak self] result in
             guard let self = self else { return }
@@ -260,14 +263,10 @@ extension UnityManager {
     }
     
     func getUserInfo() -> String {
-        guard let userInfo = ParticleAuthService.getUserInfo() else { 
-            let response = UnityResponseError(code: nil, message: "not logged in")
-            let data = try! JSONEncoder().encode(response)
-            let json = String(data: data, encoding: .utf8) ?? ""
-            return json
+        guard let userInfo = ParticleAuthService.getUserInfo() else {
+            return ""
         }
-        let statusModel = UnityStatusModel(status: true, data: userInfo)
-        let data = try! JSONEncoder().encode(statusModel)
+        let data = try! JSONEncoder().encode(userInfo)
         let json = String(data: data, encoding: .utf8)
         return json ?? ""
     }
