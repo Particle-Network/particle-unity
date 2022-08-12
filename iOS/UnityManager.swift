@@ -95,7 +95,7 @@ extension UnityManager {
             devEnv = .production
         }
         
-        let config = ParticleNetworkConfiguration(chainName: chainName, devEnv: devEnv)
+        let config = ParticleNetworkConfiguration(chainInfo: chainName, devEnv: devEnv)
         ParticleNetwork.initialize(config: config)
     }
     
@@ -103,18 +103,18 @@ extension UnityManager {
         return ParticleNetwork.getDevEnv().rawValue
     }
     
-    func setChainName(_ json: String) -> Bool {
+    func setChainInfo(_ json: String) -> Bool {
         let data = JSON(parseJSON: json)
         let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainName = matchChain(name: name, chainId: chainId) else { return false }
-        ParticleNetwork.setChainName(chainName)
+        guard let chainInfo = matchChain(name: name, chainId: chainId) else { return false }
+        ParticleNetwork.setChainInfo(chainInfo)
         return true
     }
     
-    func getChainName() -> String {
-        let chainName = ParticleNetwork.getChainName()
-        return ["chain_name": chainName.nameString, "chain_id": chainName.chainId, "chain_id_name": chainName.network].jsonString() ?? ""
+    func getChainInfo() -> String {
+        let chainInfo = ParticleNetwork.getChainInfo()
+        return ["chain_name": chainInfo.name, "chain_id": chainInfo.chainId, "chain_id_name": chainInfo.network].jsonString() ?? ""
     }
 }
 
@@ -293,12 +293,12 @@ extension UnityManager {
         return json ?? ""
     }
     
-    func setChainNameAsync(_ json: String) {
+    func setChainInfoAsync(_ json: String) {
         let data = JSON(parseJSON: json)
         let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainName = matchChain(name: name, chainId: chainId) else { return }
-        ParticleAuthService.setChainName(chainName).subscribe { [weak self] result in
+        guard let chainInfo = matchChain(name: name, chainId: chainId) else { return }
+        ParticleAuthService.setChainInfo(chainInfo).subscribe { [weak self] result in
             guard let self = self else { return }
 
             switch result {
@@ -782,7 +782,7 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let chainName = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainName = matchChain(name: chainName, chainId: chainId) else {
+        guard let chainInfo = matchChain(name: chainName, chainId: chainId) else {
             return print("initialize error, can't find right chain for \(chainName), chainId \(chainId)")
         }
         let env = data["env"].stringValue.lowercased()
@@ -836,17 +836,17 @@ extension UnityManager {
         adapters.append(WalletConnectAdapter())
 #endif
         
-        ParticleConnect.initialize(env: devEnv, chainName: chainName, dAppData: dAppData) {
+        ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData) {
             adapters
         }
     }
     
-    func particleConnectSetChainName(_ json: String) -> Bool {
+    func particleConnectSetChainInfo(_ json: String) -> Bool {
         let data = JSON(parseJSON: json)
         let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainName = matchChain(name: name, chainId: chainId) else { return false }
-        ParticleNetwork.setChainName(chainName)
+        guard let chainInfo = matchChain(name: name, chainId: chainId) else { return false }
+        ParticleNetwork.setChainInfo(chainInfo)
         return true
     }
     
@@ -1407,84 +1407,97 @@ extension UnityManager {
 }
 
 extension UnityManager {
-    func matchChain(name: String, chainId: Int) -> ParticleNetwork.ChainName? {
-        var chainName: ParticleNetwork.ChainName?
-        if name == ParticleNetwork.Name.solana.rawValue.lowercased() {
+    func matchChain(name: String, chainId: Int) -> ParticleNetwork.ChainInfo? {
+        var chainInfo: ParticleNetwork.ChainInfo?
+        
+        if name == "solana" {
             if chainId == 101 {
-                chainName = .solana(.mainnet)
+                chainInfo = .solana(.mainnet)
             } else if chainId == 102 {
-                chainName = .solana(.testnet)
+                chainInfo = .solana(.testnet)
             } else if chainId == 103 {
-                chainName = .solana(.devnet)
+                chainInfo = .solana(.devnet)
             }
-        } else if name == ParticleNetwork.Name.ethereum.rawValue.lowercased() {
+        } else if name == "ethereum" {
             if chainId == 1 {
-                chainName = .ethereum(.mainnet)
+                chainInfo = .ethereum(.mainnet)
             } else if chainId == 42 {
-                chainName = .ethereum(.kovan)
+                chainInfo = .ethereum(.kovan)
             }
-        } else if name == ParticleNetwork.Name.bsc.rawValue.lowercased() {
+        } else if name == "bsc" {
             if chainId == 56 {
-                chainName = .bsc(.mainnet)
+                chainInfo = .bsc(.mainnet)
             } else if chainId == 97 {
-                chainName = .bsc(.testnet)
+                chainInfo = .bsc(.testnet)
             }
-        } else if name == ParticleNetwork.Name.polygon.rawValue.lowercased() {
+        } else if name == "polygon" {
             if chainId == 137 {
-                chainName = .polygon(.mainnet)
+                chainInfo = .polygon(.mainnet)
             } else if chainId == 80001 {
-                chainName = .polygon(.mumbai)
+                chainInfo = .polygon(.mumbai)
             }
-        } else if name == ParticleNetwork.Name.avalanche.rawValue.lowercased() {
+        } else if name == "avalanche" {
             if chainId == 43114 {
-                chainName = .avalanche(.mainnet)
+                chainInfo = .avalanche(.mainnet)
             } else if chainId == 43113 {
-                chainName = .avalanche(.testnet)
+                chainInfo = .avalanche(.testnet)
             }
-        } else if name == ParticleNetwork.Name.fantom.rawValue.lowercased() {
+        } else if name == "fantom" {
             if chainId == 250 {
-                chainName = .fantom(.mainnet)
+                chainInfo = .fantom(.mainnet)
             } else if chainId == 4002 {
-                chainName = .fantom(.testnet)
+                chainInfo = .fantom(.testnet)
             }
-        } else if name == ParticleNetwork.Name.arbitrum.rawValue.lowercased() {
+        } else if name == "arbitrum" {
             if chainId == 42161 {
-                chainName = .arbitrum(.mainnet)
+                chainInfo = .arbitrum(.mainnet)
             } else if chainId == 421611 {
-                chainName = .arbitrum(.testnet)
+                chainInfo = .arbitrum(.testnet)
             }
-        } else if name == ParticleNetwork.Name.moonbeam.rawValue.lowercased() {
+        } else if name == "moonbeam" {
             if chainId == 1284 {
-                chainName = .moonbeam(.mainnet)
+                chainInfo = .moonbeam(.mainnet)
             } else if chainId == 1287 {
-                chainName = .moonbeam(.testnet)
+                chainInfo = .moonbeam(.testnet)
             }
-        } else if name == ParticleNetwork.Name.moonriver.rawValue.lowercased() {
+        } else if name == "moonriver" {
             if chainId == 1285 {
-                chainName = .moonriver(.mainnet)
+                chainInfo = .moonriver(.mainnet)
             } else if chainId == 1287 {
-                chainName = .moonriver(.testnet)
+                chainInfo = .moonriver(.testnet)
             }
-        } else if name == ParticleNetwork.Name.heco.rawValue.lowercased() {
+        } else if name == "heco" {
             if chainId == 128 {
-                chainName = .heco(.mainnet)
+                chainInfo = .heco(.mainnet)
             } else if chainId == 256 {
-                chainName = .heco(.testnet)
+                chainInfo = .heco(.testnet)
             }
-        } else if name == ParticleNetwork.Name.aurora.rawValue.lowercased() {
+        } else if name == "aurora" {
             if chainId == 1313161554 {
-                chainName = .aurora(.mainnet)
+                chainInfo = .aurora(.mainnet)
             } else if chainId == 1313161555 {
-                chainName = .aurora(.testnet)
+                chainInfo = .aurora(.testnet)
             }
-        } else if name == ParticleNetwork.Name.harmony.rawValue.lowercased() {
+        } else if name == "harmony" {
             if chainId == 1666600000 {
-                chainName = .harmony(.mainnet)
+                chainInfo = .harmony(.mainnet)
             } else if chainId == 1666700000 {
-                chainName = .harmony(.testnet)
+                chainInfo = .harmony(.testnet)
+            }
+        } else if name == "kcc" {
+            if chainId == 321 {
+                chainInfo = .kcc(.mainnet)
+            } else if chainId == 322 {
+                chainInfo = .kcc(.testnet)
+            }
+        } else if name == "optimism" {
+            if chainId == 10 {
+                chainInfo = .optimism(.mainnet)
+            } else if chainId == 69 {
+                chainInfo = .optimism(.testnet)
             }
         }
-        return chainName
+        return chainInfo
     }
 }
 
