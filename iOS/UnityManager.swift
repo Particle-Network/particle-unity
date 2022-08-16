@@ -773,6 +773,23 @@ extension UnityManager {
     func navigatorPay() {
         PNRouter.navigatorPay()
     }
+    
+    func showTestNetwork(_ show: Bool) {
+        ParticleWalletGUI.showTestNetwork(show)
+    }
+    
+    func showManageWallet(_ show: Bool) {
+        ParticleWalletGUI.showManageWallet(show)
+    }
+    
+    func supportChain(_ json: String) {
+        let chains = JSON(parseJSON: json).arrayValue.map {
+            $0.stringValue.lowercased()
+        }.compactMap {
+            self.matchChain(name: $0)
+        }
+        ParticleWalletGUI.supportChain(chains)
+    }
 }
 
 // MARK: - Particle Connect
@@ -880,7 +897,7 @@ extension UnityManager {
             return
         }
         
-        adapter.connect().subscribe { [weak self] result in
+        adapter.connect(.none).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -1499,6 +1516,41 @@ extension UnityManager {
         }
         return chainInfo
     }
+    
+    func matchChain(name: String) -> ParticleNetwork.Chain? {
+        var chain: ParticleNetwork.Chain?
+        
+        if name == "solana" {
+            chain = .solana
+        } else if name == "ethereum" {
+            chain = .ethereum
+        } else if name == "bsc" {
+            chain = .bsc
+        } else if name == "polygon" {
+            chain = .polygon
+        } else if name == "avalanche" {
+            chain = .avalanche
+        } else if name == "fantom" {
+            chain = .fantom
+        } else if name == "arbitrum" {
+            chain = .arbitrum
+        } else if name == "moonbeam" {
+            chain = .moonbeam
+        } else if name == "moonriver" {
+            chain = .moonriver
+        } else if name == "heco" {
+            chain = .heco
+        } else if name == "aurora" {
+            chain = .aurora
+        } else if name == "harmony" {
+            chain = .harmony
+        } else if name == "kcc" {
+            chain = .kcc
+        } else if name == "optimism" {
+            chain = .optimism
+        }
+        return chain
+    }
 }
 
 struct UnityTokenInfo: Codable {
@@ -1579,3 +1631,4 @@ struct UnityStatusModel<T: Codable>: Codable {
     let status: Bool
     let data: T
 }
+
