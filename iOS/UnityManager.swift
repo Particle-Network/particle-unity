@@ -124,13 +124,23 @@ extension UnityManager {
     func login(_ type: String, account: String?, supportAuthType: String) {
         let loginType = LoginType(rawValue: type) ?? .email
         var supportAuthTypeArray: [SupportAuthType] = []
-        JSON(supportAuthType).arrayValue.forEach {
+        JSON(parseJSON: supportAuthType).arrayValue.forEach {
             if $0.stringValue.lowercased() == "apple" {
                 supportAuthTypeArray.append(.apple)
             } else if $0.stringValue.lowercased() == "google" {
                 supportAuthTypeArray.append(.google)
             } else if $0.stringValue.lowercased() == "facebook" {
                 supportAuthTypeArray.append(.facebook)
+            } else if $0.stringValue.lowercased() == "discord" {
+                supportAuthTypeArray.append(.discord)
+            } else if $0.stringValue.lowercased() == "github" {
+                supportAuthTypeArray.append(.github)
+            } else if $0.stringValue.lowercased() == "twitch" {
+                supportAuthTypeArray.append(.twitch)
+            } else if $0.stringValue.lowercased() == "microsoft" {
+                supportAuthTypeArray.append(.microsoft)
+            } else if $0.stringValue.lowercased() == "linkedin" {
+                supportAuthTypeArray.append(.linkedin)
             }
         }
         var acc = account
@@ -1631,4 +1641,3 @@ struct UnityStatusModel<T: Codable>: Codable {
     let status: Bool
     let data: T
 }
-
