@@ -64,7 +64,6 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/UnityRpc/UnityRPC.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/WalletType.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Singleton/Singleton.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ParticleNetworkSDKTest.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Utils/ParticleTools.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/EthCallObject.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ParticleRpcResponse.cs" />
