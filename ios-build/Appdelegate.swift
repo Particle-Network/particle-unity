@@ -28,8 +28,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         
         // if use ParticleConnect
-        return ParticleConnect.handleUrl(url)
-        
+        if ParticleConnect.handleUrl(url) {
+            return true
+            // if use ParticleAuthService
+        } else if ParticleAuthService.handleUrl(url) {
+            return true
+        }
+        return true
         // if use ParticleAuthService
         // return ParticleAuthService.handleUrl(url)
     }

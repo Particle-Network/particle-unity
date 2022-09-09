@@ -34,6 +34,8 @@ import ConnectPhantomAdapter
 import ConnectWalletConnectAdapter
 #endif
 
+import UIKit
+
 @objcMembers
 class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     let bag = DisposeBag()
@@ -44,6 +46,7 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     static let apiSystemName = "ParticleWalletAPI"
     static let authSystemName = "ParticleAuthService"
     static let connectSystemName = "ParticleConnect"
+    static let guiSystemName = "ParticleWalletGUI"
     
     override init() {
         super.init()
@@ -124,25 +127,34 @@ extension UnityManager {
     func login(_ type: String, account: String?, supportAuthType: String) {
         let loginType = LoginType(rawValue: type) ?? .email
         var supportAuthTypeArray: [SupportAuthType] = []
-        JSON(parseJSON: supportAuthType).arrayValue.forEach {
-            if $0.stringValue.lowercased() == "apple" {
-                supportAuthTypeArray.append(.apple)
-            } else if $0.stringValue.lowercased() == "google" {
-                supportAuthTypeArray.append(.google)
-            } else if $0.stringValue.lowercased() == "facebook" {
-                supportAuthTypeArray.append(.facebook)
-            } else if $0.stringValue.lowercased() == "discord" {
-                supportAuthTypeArray.append(.discord)
-            } else if $0.stringValue.lowercased() == "github" {
-                supportAuthTypeArray.append(.github)
-            } else if $0.stringValue.lowercased() == "twitch" {
-                supportAuthTypeArray.append(.twitch)
-            } else if $0.stringValue.lowercased() == "microsoft" {
-                supportAuthTypeArray.append(.microsoft)
-            } else if $0.stringValue.lowercased() == "linkedin" {
-                supportAuthTypeArray.append(.linkedin)
+        
+        let array = JSON(parseJSON: supportAuthType).arrayValue.map {
+            $0.stringValue.lowercased()
+        }
+        if array.contains("all") {
+            supportAuthTypeArray = [.all]
+        } else {
+            array.forEach {
+                if $0 == "apple" {
+                    supportAuthTypeArray.append(.apple)
+                } else if $0 == "google" {
+                    supportAuthTypeArray.append(.google)
+                } else if $0 == "facebook" {
+                    supportAuthTypeArray.append(.facebook)
+                } else if $0 == "github" {
+                    supportAuthTypeArray.append(.github)
+                } else if $0 == "twitch" {
+                    supportAuthTypeArray.append(.twitch)
+                } else if $0 == "microsoft" {
+                    supportAuthTypeArray.append(.microsoft)
+                } else if $0 == "linkedin" {
+                    supportAuthTypeArray.append(.linkedin)
+                } else if $0 == "discord" {
+                    supportAuthTypeArray.append(.discord)
+                }
             }
         }
+        
         var acc = account
         if acc != nil, acc!.isEmpty {
             acc = nil
@@ -191,7 +203,15 @@ extension UnityManager {
     }
     
     func signMessage(_ message: String) {
-        ParticleAuthService.signMessage(message).subscribe { [weak self] result in
+        var serializedMessage: String = ""
+        switch  ParticleNetwork.getChainInfo().chain{
+        case .solana:
+            serializedMessage = Base58.encode(message.data(using: .utf8)!)
+        default:
+            serializedMessage = "0x" + message.data(using: .utf8)!.map { String(format: "%02x", $0) }.joined()
+        }
+        
+        ParticleAuthService.signMessage(serializedMessage).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -272,7 +292,9 @@ extension UnityManager {
         let message = data["message"].stringValue
         let version = data["version"].stringValue.lowercased()
         
-        ParticleAuthService.signTypedData(message, version: EVMSignTypedDataVersion(rawValue: version) ?? .v1).subscribe { [weak self] result in
+        let hexString = "0x" + message.data(using: .utf8)!.map { String(format: "%02x", $0) }.joined()
+       
+        ParticleAuthService.signTypedData(hexString, version: EVMSignTypedDataVersion(rawValue: version) ?? .v1).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -319,8 +341,9 @@ extension UnityManager {
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
                 self.ufw?.sendMessageToGO(withName: UnityManager.authSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
-            case .success:
-                let statusModel = UnityStatusModel(status: true, data: "")
+            case .success(let userInfo):
+                guard let userInfo = userInfo else { return }
+                let statusModel = UnityStatusModel(status: true, data: userInfo)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
@@ -766,9 +789,9 @@ extension UnityManager {
     func navigatorNFTSend(_ json: String) {
         let data = JSON(parseJSON: json)
         let address = data["mint"].stringValue
-        let toAddress = data["receiver_address"].string
+        let toAddress = data["receiver_address"].stringValue
         let tokenId = data["token_id"].stringValue
-        let config = NFTSendConfig(address: address, toAddress: toAddress, tokenId: tokenId)
+        let config = NFTSendConfig(address: address, toAddress: toAddress.isEmpty ? nil : toAddress, tokenId: tokenId)
         PNRouter.navigatroNFTSend(nftSendConfig: config)
     }
     
@@ -782,6 +805,20 @@ extension UnityManager {
     
     func navigatorPay() {
         PNRouter.navigatorPay()
+    }
+    
+    func navigatorSwap(_ json: String?) {
+        if let json = json {
+            let data = JSON(parseJSON: json)
+            let fromTokenAddress = data["from_token_address"].string
+            let toTokenAddress = data["to_token_address"].string
+            let amount = data["amount"].string
+            let config = SwapConfig(fromTokenAddress: fromTokenAddress, toTokenAddress: toTokenAddress, fromTokenAmountString: amount)
+            
+            PNRouter.navigatorSwap(swapConfig: config)
+        } else {
+            PNRouter.navigatorSwap()
+        }
     }
     
     func showTestNetwork(_ show: Bool) {
@@ -799,6 +836,90 @@ extension UnityManager {
             self.matchChain(name: $0)
         }
         ParticleWalletGUI.supportChain(chains)
+    }
+    
+    func enableSwap(_ enable: Bool) {
+        ParticleWalletGUI.enableSwap(enable)
+    }
+    
+    func getEnableSwap() -> Bool {
+        ParticleWalletGUI.getEnableSwap()
+    }
+    
+    func navigatorLoginList() {
+        PNRouter.navigatorLoginList().subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "loginList")
+            case .success(let (walletType, account)):
+                guard let account = account else { return }
+                
+                let UnityLoginListModel = UnityLoginListModel(walletType: walletType.stringValue, account: account)
+                let statusModel = UnityStatusModel(status: true, data: UnityLoginListModel)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "loginList")
+            }
+        }.disposed(by: bag)
+    }
+    
+    func switchWallet(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let walletTypsString = data["wallet_type"].stringValue
+        let publicAddress = data["public_address"].stringValue
+        
+        if let walletType = map2WalletType(from: walletTypsString) {
+            let result = ParticleWalletGUI.switchWallet(walletType: walletType, publicAddress: publicAddress)
+            
+            let UnityLoginListModel = UnityStatusModel(status: true, data: result == true ? "success" : "failed")
+            
+            let statusModel = UnityStatusModel(status: true, data: UnityLoginListModel)
+            let data = try! JSONEncoder().encode(statusModel)
+            guard let json = String(data: data, encoding: .utf8) else { return }
+            callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "switchWallet")
+        } else {
+            print("walletType \(walletTypsString) is not existed")
+            let response = UnityResponseError(code: nil, message: "walletType \(walletTypsString) is not existed", data: nil)
+            let statusModel = UnityStatusModel(status: false, data: response)
+            let data = try! JSONEncoder().encode(statusModel)
+            guard let json = String(data: data, encoding: .utf8) else { return }
+            callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "switchWallet")
+        }
+    }
+    
+    func setLanguage(_ json: String) {
+        /**
+         SYSTEM,
+         EN,
+         ZH_HANS,
+         */
+        if json.lowercased() == "system" {
+            ParticleWalletGUI.setLanguage(ParticleWalletGUI.Language.unspecified)
+        } else if json.lowercased() == "en" {
+            ParticleWalletGUI.setLanguage(ParticleWalletGUI.Language.en)
+        } else if json.lowercased() == "zh_hans" {
+            ParticleWalletGUI.setLanguage(ParticleWalletGUI.Language.zh_Hans)
+        }
+    }
+    
+    func setInterfaceStyle(_ json: String) {
+        /**
+         SYSTEM,
+         LIGHT,
+         DARK,
+         */
+        if json.lowercased() == "system" {
+            ParticleWalletGUI.setInterfaceStyle(UIUserInterfaceStyle.unspecified)
+        } else if json.lowercased() == "light" {
+            ParticleWalletGUI.setInterfaceStyle(UIUserInterfaceStyle.light)
+        } else if json.lowercased() == "dark" {
+            ParticleWalletGUI.setInterfaceStyle(UIUserInterfaceStyle.dark)
+        }
     }
 }
 
@@ -907,7 +1028,19 @@ extension UnityManager {
             return
         }
         
-        adapter.connect(.none).subscribe { [weak self] result in
+        guard let vc = self.ufw?.appController().rootViewController else {
+            print("unity root view controller is nil")
+            return
+        }
+        
+        var observable: Single<Account?>
+        if walletType == .walletConnect {
+            observable = (adapter as! WalletConnectAdapter).connectWithQrCode(from: vc)
+        } else {
+            observable = adapter.connect(.none)
+        }
+        
+        observable.subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -1053,6 +1186,7 @@ extension UnityManager {
             print("walletType \(walletTypsString) is not existed ")
             return
         }
+        
         guard let adapter = map2ConnectAdapter(from: walletType) else {
             print("adapter for \(walletTypsString) is not init ")
             return
@@ -1086,6 +1220,7 @@ extension UnityManager {
             print("walletType \(walletTypsString) is not existed ")
             return
         }
+        
         guard let adapter = map2ConnectAdapter(from: walletType) else {
             print("adapter for \(walletTypsString) is not init ")
             return
@@ -1119,6 +1254,7 @@ extension UnityManager {
             print("walletType \(walletTypsString) is not existed ")
             return
         }
+        
         guard let adapter = map2ConnectAdapter(from: walletType) else {
             print("adapter for \(walletTypsString) is not init ")
             return
@@ -1257,6 +1393,82 @@ extension UnityManager {
             }
         }.disposed(by: bag)
     }
+    
+    func adapterLogin(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let walletTypsString = data["wallet_type"].stringValue
+        let publicAddress = data["public_address"].stringValue
+        let domain = data["domain"].stringValue
+        let address = publicAddress
+        guard let uri = URL(string: data["uri"].stringValue) else { return }
+        
+        guard let walletType = map2WalletType(from: walletTypsString) else {
+            print("walletType \(walletTypsString) is not existed ")
+            return
+        }
+        
+        guard let adapter = map2ConnectAdapter(from: walletType) else {
+            print("adapter for \(walletTypsString) is not init ")
+            return
+        }
+        
+        let siwe = try! SiweMessage(domain: domain, address: address, uri: uri)
+        
+        adapter.login(config: siwe, publicAddress: publicAddress).subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "login")
+            case .success(let (sourceMessage, signedMessage)):
+                let result = UnityConnectLoginResult(message: sourceMessage, signature: signedMessage)
+                let statusModel = UnityStatusModel(status: true, data: result)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "login")
+            }
+        }.disposed(by: bag)
+    }
+    
+    func adapterVerify(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let walletTypsString = data["wallet_type"].stringValue
+        let publicAddress = data["public_address"].stringValue
+        let message = data["message"].stringValue
+        let signature = data["signature"].stringValue
+        
+        guard let walletType = map2WalletType(from: walletTypsString) else {
+            print("walletType \(walletTypsString) is not existed ")
+            return
+        }
+        
+        guard let adapter = map2ConnectAdapter(from: walletType) else {
+            print("adapter for \(walletTypsString) is not init ")
+            return
+        }
+        
+        let siwe = try! SiweMessage(message)
+        
+        adapter.verify(message: siwe, against: signature).subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "verify")
+            case .success(let flag):
+                let statusModel = UnityStatusModel(status: true, data: flag)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "verify")
+            }
+        }.disposed(by: bag)
+    }
 }
 
 // MARK: - Help methods
@@ -1369,16 +1581,16 @@ extension UnityManager {
         if let error = error as? ParticleNetwork.Error {
             switch error {
             case .invalidResponse(let response):
-                return UnityResponseError(code: response.code, message: response.message ?? "")
+                return UnityResponseError(code: response.code, message: response.message ?? "", data: response.data)
             case .invalidData(reason: let reason):
-                return UnityResponseError(code: nil, message: reason ?? "")
+                return UnityResponseError(code: nil, message: reason ?? "", data: nil)
             case .interrupt:
-                return UnityResponseError(code: nil, message: "interrupt")
+                return UnityResponseError(code: nil, message: "interrupt", data: nil)
             }
         } else if let error = error as? ConnectError {
-            return UnityResponseError(code: error.code, message: error.message!)
+            return UnityResponseError(code: error.code, message: error.message!, data: nil)
         } else {
-            return UnityResponseError(code: nil, message: String(describing: error))
+            return UnityResponseError(code: nil, message: String(describing: error), data: nil)
         }
     }
     
@@ -1448,8 +1660,12 @@ extension UnityManager {
         } else if name == "ethereum" {
             if chainId == 1 {
                 chainInfo = .ethereum(.mainnet)
-            } else if chainId == 42 {
-                chainInfo = .ethereum(.kovan)
+            } else if chainId == 5 {
+                chainInfo = .ethereum(.goerli)
+            } else if chainId == 3 {
+                chainInfo = .ethereum(.ropsten)
+            } else if chainId == 4 {
+                chainInfo = .ethereum(.rinkeby)
             }
         } else if name == "bsc" {
             if chainId == 56 {
@@ -1522,6 +1738,12 @@ extension UnityManager {
                 chainInfo = .optimism(.mainnet)
             } else if chainId == 69 {
                 chainInfo = .optimism(.testnet)
+            }
+        } else if name == "platon" {
+            if chainId == 210425 {
+                chainInfo = .platON(.mainnet)
+            } else if chainId == 2203181 {
+                chainInfo = .platON(.testnet)
             }
         }
         return chainInfo
@@ -1635,9 +1857,20 @@ struct UnityEvmTransactionModel: Codable {
 struct UnityResponseError: Codable {
     let code: Int?
     let message: String?
+    let data: String?
 }
 
 struct UnityStatusModel<T: Codable>: Codable {
     let status: Bool
     let data: T
+}
+
+struct UnityLoginListModel: Codable {
+    let walletType: String
+    let account: Account
+}
+
+struct UnityConnectLoginResult: Codable {
+    let message: String
+    let signature: String
 }

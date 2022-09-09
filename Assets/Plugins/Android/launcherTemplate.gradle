@@ -1,0 +1,92 @@
+apply plugin: 'com.android.application'
+
+dependencies {
+        implementation project(':unityLibrary')
+        def sdkVersion = "0.7.4" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+        //particle auth service (Required)  
+        implementation "network.particle:auth-service:${sdkVersion}"
+        //particle api service (Optional.) If you don't want to use the API service, you can remove this dependency.
+        implementation "network.particle:api-service:${sdkVersion}"
+        //particle wallet service (Optional.) If you don't want to use the wallet service, you can remove this dependency. wallet service contains the connect sdk 
+        implementation "network.particle:wallet-service:${sdkVersion}"
+        //particle unity bridge (Required) 
+        implementation "network.particle:unity-bridge:${sdkVersion}"
+        
+        //if only use connect sdk, you must add the following dependencies 
+//         def sdkVersion = "0.9.3" find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+//         implementation "network.particle:connect-common:${connectVersion}"
+//         implementation "network.particle:connect:${connectVersion}"
+//         implementation "network.particle:connect-evm-adapter:${connectVersion}"
+//         implementation "network.particle:connect-solana-adapter:${connectVersion}"
+//         implementation "network.particle:connect-phantom-adapter:${connectVersion}"
+//         implementation "network.particle:connect-wallet-connect-adapter:${connectVersion}"
+    }
+Properties localProps = getLocalProperties()
+android {
+    compileSdkVersion **APIVERSION**
+    buildToolsVersion '**BUILDTOOLS**'
+
+      compileOptions {
+            sourceCompatibility(JavaVersion.VERSION_1_8)
+            targetCompatibility(JavaVersion.VERSION_1_8)
+        }
+    
+    defaultConfig {
+        minSdkVersion **MINSDKVERSION**
+        targetSdkVersion **TARGETSDKVERSION**
+        applicationId '**APPLICATIONID**'
+        ndk {
+            abiFilters **ABIFILTERS**
+        }
+        versionCode **VERSIONCODE**
+        versionName '**VERSIONNAME**'
+         manifestPlaceholders = [
+                 PN_PROJECT_ID        : localProps['particle.network.project_id'],
+                 PN_PROJECT_CLIENT_KEY: localProps['particle.network.project_client_key'],
+                 PN_APP_ID            : localProps['particle.network.app_id']
+        ]
+    }
+
+    aaptOptions {
+        noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }**SIGN**
+
+    lintOptions {
+        abortOnError false
+    }
+    dataBinding {
+        enabled = true
+    }
+    buildTypes {
+        debug {
+            minifyEnabled **MINIFY_DEBUG**
+            proguardFiles getDefaultProguardFile('proguard-android.txt')**SIGNCONFIG**
+            jniDebuggable true
+        }
+        release {
+            minifyEnabled **MINIFY_RELEASE**
+            proguardFiles getDefaultProguardFile('proguard-android.txt')**SIGNCONFIG**
+        }
+    }**PACKAGING_OPTIONS****PLAY_ASSET_PACKS****SPLITS**
+**BUILT_APK_LOCATION**
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+}**SPLITS_VERSION_CODE****LAUNCHER_SOURCE_BUILD_SETUP**
+
+
+def getLocalProperties() {
+    Properties props = new Properties()
+    props.load(project.rootProject.file('gradle.properties').newDataInputStream())
+    return props
+}
+
