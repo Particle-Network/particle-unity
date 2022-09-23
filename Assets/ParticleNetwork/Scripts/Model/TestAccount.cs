@@ -21,10 +21,10 @@ namespace Network.Particle.Scripts.Model
 
         public string ReceiverAddress;
 
-        public int chainId;
+        public int ChainId;
 
         public TestAccount(string publicAddress, string privateKey, string mnemonic, string tokenContractAddress,
-            BigInteger amount, string nftContractAddress, string nftTokenId, string receiverAddress, int chainId)
+            BigInteger amount, string nftContractAddress, string nftTokenId, string receiverAddress, int ChainId)
         {
             this.PublicAddress = publicAddress;
             this.PrivateKey = privateKey;
@@ -34,7 +34,7 @@ namespace Network.Particle.Scripts.Model
             this.NFTContractAddress = nftContractAddress;
             this.NFTTokenId = nftTokenId;
             this.ReceiverAddress = receiverAddress;
-            this.chainId = chainId;
+            this.ChainId = ChainId;
         }
 
         /// <summary>

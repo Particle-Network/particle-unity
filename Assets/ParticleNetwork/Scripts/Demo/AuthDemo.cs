@@ -230,7 +230,7 @@ namespace Network.Particle.Scripts.Test
 
             var maxPriorityFeePerGas = (double)JObject.Parse(gasFeesResult)["result"]["high"]["maxPriorityFeePerGas"];
             var maxPriorityFeePerGasHex = "0x" + ((BigInteger)(maxPriorityFeePerGas * Mathf.Pow(10, 9))).ToString("x");
-            var chainId = TestAccount.EVM.chainId;
+            var chainId = TestAccount.EVM.ChainId;
 
             var transaction = new EthereumTransaction(sender, contractAddress, data, gasLimit, gasPrice: null, value: "0x0",
                 nonce: null, type: "0x2",
