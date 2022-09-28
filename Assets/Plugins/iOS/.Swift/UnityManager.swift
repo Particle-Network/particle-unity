@@ -859,8 +859,8 @@ extension UnityManager {
             case .success(let (walletType, account)):
                 guard let account = account else { return }
                 
-                let UnityLoginListModel = UnityLoginListModel(walletType: walletType.stringValue, account: account)
-                let statusModel = UnityStatusModel(status: true, data: UnityLoginListModel)
+                let unityLoginListModel = UnityLoginListModel(walletType: walletType.stringValue, account: account)
+                let statusModel = UnityStatusModel(status: true, data: unityLoginListModel)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "loginList")
@@ -876,9 +876,8 @@ extension UnityManager {
         if let walletType = map2WalletType(from: walletTypeString) {
             let result = ParticleWalletGUI.switchWallet(walletType: walletType, publicAddress: publicAddress)
             
-            let UnityLoginListModel = UnityStatusModel(status: true, data: result == true ? "success" : "failed")
+            let statusModel = UnityStatusModel(status: true, data: result == true ? "success" : "failed")
             
-            let statusModel = UnityStatusModel(status: true, data: UnityLoginListModel)
             let data = try! JSONEncoder().encode(statusModel)
             guard let json = String(data: data, encoding: .utf8) else { return }
             callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "switchWallet")
