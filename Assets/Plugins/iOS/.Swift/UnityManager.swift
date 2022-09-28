@@ -1598,7 +1598,7 @@ extension UnityManager {
     private func map2WalletType(from string: String) -> WalletType? {
         /* Define in unity
          Particle,
-         EthereumPrivateKey,
+         EvmPrivateKey,
          SolanaPrivateKey,
          MetaMask,
          Rainbow,
@@ -1612,7 +1612,7 @@ extension UnityManager {
         var walletType: WalletType?
         if str == "particle" {
             walletType = .particle
-        } else if str == "ethereumprivatekey" {
+        } else if str == "evmprivatekey" {
             walletType = .evmPrivateKey
         } else if str == "solanaprivatekey" {
             walletType = .solanaPrivateKey
