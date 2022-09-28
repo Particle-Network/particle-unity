@@ -870,10 +870,10 @@ extension UnityManager {
     
     func switchWallet(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         
-        if let walletType = map2WalletType(from: walletTypsString) {
+        if let walletType = map2WalletType(from: walletTypeString) {
             let result = ParticleWalletGUI.switchWallet(walletType: walletType, publicAddress: publicAddress)
             
             let UnityLoginListModel = UnityStatusModel(status: true, data: result == true ? "success" : "failed")
@@ -883,8 +883,8 @@ extension UnityManager {
             guard let json = String(data: data, encoding: .utf8) else { return }
             callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "switchWallet")
         } else {
-            print("walletType \(walletTypsString) is not existed")
-            let response = UnityResponseError(code: nil, message: "walletType \(walletTypsString) is not existed", data: nil)
+            print("walletType \(walletTypeString) is not existed")
+            let response = UnityResponseError(code: nil, message: "walletType \(walletTypeString) is not existed", data: nil)
             let statusModel = UnityStatusModel(status: false, data: response)
             let data = try! JSONEncoder().encode(statusModel)
             guard let json = String(data: data, encoding: .utf8) else { return }
@@ -994,18 +994,18 @@ extension UnityManager {
         let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
         guard let chainInfo = matchChain(name: name, chainId: chainId) else { return false }
-        ParticleNetwork.setChainInfo(chainInfo)
+        ParticleConnect.setChain(chainInfo: chainInfo)
         return true
     }
     
     func adapterGetAccounts(_ json: String) -> String {
-        let walletTypsString = json
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        let walletTypeString = json
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return ""
         }
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return ""
         }
         
@@ -1018,13 +1018,13 @@ extension UnityManager {
     }
     
     func adapterConnect(_ json: String) {
-        let walletTypsString = json
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        let walletTypeString = json
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1061,15 +1061,15 @@ extension UnityManager {
     
     func adapterDisconnect(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1093,15 +1093,15 @@ extension UnityManager {
     
     func adapterIsConnected(_ json: String) -> Bool {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return false
         }
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return false
         }
         
@@ -1110,16 +1110,16 @@ extension UnityManager {
     
     func adapterSignAndSendTransaction(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         let transaction = data["transaction"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1143,16 +1143,16 @@ extension UnityManager {
     
     func adapterSignTransaction(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         let transaction = data["transaction"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1176,19 +1176,19 @@ extension UnityManager {
     
     func adapterSignAllTransactions(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         let transactions = JSON(parseJSON: data["transactions"].stringValue).arrayValue.map {
             $0.stringValue
         }
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1212,17 +1212,17 @@ extension UnityManager {
     
     func adapterSignMessage(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         let message = data["message"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1246,17 +1246,17 @@ extension UnityManager {
     
     func adapterSignTypedData(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         let message = data["message"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1280,21 +1280,21 @@ extension UnityManager {
     
     func adapterImportWallet(fromPrivateKey json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let privateKey = data["private_key"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         
         guard walletType == WalletType.evmPrivateKey || walletType == WalletType.solanaPrivateKey else {
-            print("walletType \(walletTypsString) is not support import from private key ")
+            print("walletType \(walletTypeString) is not support import from private key ")
             return
         }
         
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1319,21 +1319,21 @@ extension UnityManager {
     
     func adapterImportWallet(fromMnemonic json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let mnemonic = data["mnemonic"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         
         guard walletType == WalletType.evmPrivateKey || walletType == WalletType.solanaPrivateKey else {
-            print("walletType \(walletTypsString) is not support import from mnemonic ")
+            print("walletType \(walletTypeString) is not support import from mnemonic ")
             return
         }
         
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1358,21 +1358,21 @@ extension UnityManager {
     
     func adapterExportWalletPrivateKey(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         
         guard walletType == WalletType.evmPrivateKey || walletType == WalletType.solanaPrivateKey else {
-            print("walletType \(walletTypsString) is not support import from mnemonic ")
+            print("walletType \(walletTypeString) is not support import from mnemonic ")
             return
         }
         
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1396,19 +1396,19 @@ extension UnityManager {
     
     func adapterLogin(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         let domain = data["domain"].stringValue
         let address = publicAddress
         guard let uri = URL(string: data["uri"].stringValue) else { return }
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1435,18 +1435,17 @@ extension UnityManager {
     
     func adapterVerify(_ json: String) {
         let data = JSON(parseJSON: json)
-        let walletTypsString = data["wallet_type"].stringValue
-        let publicAddress = data["public_address"].stringValue
+        let walletTypeString = data["wallet_type"].stringValue
         let message = data["message"].stringValue
         let signature = data["signature"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypsString) else {
-            print("walletType \(walletTypsString) is not existed ")
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
             return
         }
         
         guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypsString) is not init ")
+            print("adapter for \(walletTypeString) is not init ")
             return
         }
         
@@ -1586,6 +1585,8 @@ extension UnityManager {
                 return UnityResponseError(code: nil, message: reason ?? "", data: nil)
             case .interrupt:
                 return UnityResponseError(code: nil, message: "interrupt", data: nil)
+            case .resultEmpty:
+                return UnityResponseError(code: nil, message: error.description, data: nil)
             }
         } else if let error = error as? ConnectError {
             return UnityResponseError(code: error.code, message: error.message!, data: nil)
