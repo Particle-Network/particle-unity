@@ -1177,8 +1177,9 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
-        let transactions = JSON(parseJSON: data["transactions"].stringValue).arrayValue.map {
-            $0.stringValue
+        
+        let transactions = data["transactions"].arrayValue.map {
+                    $0.stringValue
         }
         
         guard let walletType = map2WalletType(from: walletTypeString) else {
@@ -1436,8 +1437,13 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let walletTypeString = data["wallet_type"].stringValue
         let message = data["message"].stringValue
-        let signature = data["signature"].stringValue
-        
+
+        var signature = data["signature"].stringValue
+                
+        if ConnectManager.getChainType() == .solana {
+            signature = Base58.encode(Data(base64Encoded: signature)!)
+        }
+                
         guard let walletType = map2WalletType(from: walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return

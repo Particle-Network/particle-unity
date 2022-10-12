@@ -156,12 +156,14 @@ namespace Network.Particle.Scripts.Core
 
         public static void SignAllTransactions(WalletType walletType, string publicAddress, string[] transactions)
         {
+           
+            var a = JsonConvert.SerializeObject(transactions);
             var json = JsonConvert.SerializeObject(new JObject
             {
                 { "wallet_type", walletType.ToString() },
                 { "public_address", publicAddress },
                 {
-                    "transactions", JsonConvert.SerializeObject(transactions)
+                    "transactions",  JToken.FromObject(transactions)//JsonConvert.SerializeObject(transactions)
                 },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -169,7 +171,7 @@ namespace Network.Particle.Scripts.Core
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.adapterSignAllTransactions(json);
 #else
-
+            
 #endif
         }
 
