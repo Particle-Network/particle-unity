@@ -156,14 +156,13 @@ namespace Network.Particle.Scripts.Core
 
         public static void SignAllTransactions(WalletType walletType, string publicAddress, string[] transactions)
         {
-           
-            var a = JsonConvert.SerializeObject(transactions);
+            
             var json = JsonConvert.SerializeObject(new JObject
             {
                 { "wallet_type", walletType.ToString() },
                 { "public_address", publicAddress },
                 {
-                    "transactions",  JToken.FromObject(transactions)//JsonConvert.SerializeObject(transactions)
+                    "transactions",  JToken.FromObject(transactions)
                 },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
