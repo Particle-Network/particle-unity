@@ -263,7 +263,7 @@ namespace Network.Particle.Scripts.Test
 
         public void SetChainInfoSync()
         {
-            // call this method to change chain info. You
+            // call this method to change chain info. 
             ParticleNetwork.SetChainInfo(_chainInfo);
         }
     }

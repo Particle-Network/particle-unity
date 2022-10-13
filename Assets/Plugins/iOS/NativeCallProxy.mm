@@ -14,8 +14,8 @@ id<NativeCallsProtocol> api = NULL;
 // Particle Network Base
 extern "C" {
     char* getChainInfo() {
-        char* cStringCopy(const char* string);
-        return cStringCopy([[api getChainInfo] UTF8String]);
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api getChainInfo] UTF8String]);
     }
 
     bool setChainInfo(const char* chainInfo) {
@@ -67,14 +67,14 @@ extern "C" {
     }
 
     char* getAddress() {
-        char* cStringCopy(const char* string);
-        return cStringCopy([[api getAddress] UTF8String]);
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api getAddress] UTF8String]);
         
     }
 
     char* getUserInfo() {
-        char* cStringCopy(const char* string);
-        return cStringCopy([[api getUserInfo] UTF8String]);
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api getUserInfo] UTF8String]);
         
     }
 
@@ -243,8 +243,8 @@ extern "C" {
 // Connect Service
 extern "C" {
      char* adapterGetAccounts(const char* json) {
-        char* cStringCopy(const char* string);
-        return cStringCopy([[api adapterGetAccounts:[NSString stringWithUTF8String: json]] UTF8String]);
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api adapterGetAccounts:[NSString stringWithUTF8String: json]] UTF8String]);
      }
      
      void adapterConnect(const char* json) {
@@ -296,7 +296,8 @@ extern "C" {
     }
 }
 
-char* cStringCopy(const char* string) {
+// rename to cStringCopyPN in case meet same name function from other library.
+char* cStringCopyPN(const char* string) {
      if (string == NULL){
           return NULL;
      }
