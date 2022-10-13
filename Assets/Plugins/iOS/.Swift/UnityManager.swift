@@ -1668,10 +1668,6 @@ extension UnityManager {
                 chainInfo = .ethereum(.mainnet)
             } else if chainId == 5 {
                 chainInfo = .ethereum(.goerli)
-            } else if chainId == 3 {
-                chainInfo = .ethereum(.ropsten)
-            } else if chainId == 4 {
-                chainInfo = .ethereum(.rinkeby)
             }
         } else if name == "bsc" {
             if chainId == 56 {
@@ -1742,7 +1738,7 @@ extension UnityManager {
         } else if name == "optimism" {
             if chainId == 10 {
                 chainInfo = .optimism(.mainnet)
-            } else if chainId == 69 {
+            } else if chainId == 420 {
                 chainInfo = .optimism(.testnet)
             }
         } else if name == "platon" {
