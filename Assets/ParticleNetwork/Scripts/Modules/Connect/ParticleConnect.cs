@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Network.Particle.Scripts.Core.UnityEditorTestMode;
 using Newtonsoft.Json.Linq;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Singleton;
+using Newtonsoft.Json;
 using UnityEngine;
 
 
@@ -19,11 +21,13 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> signTypedDataTask;
         private TaskCompletionSource<NativeResultData> loginTask;
         private TaskCompletionSource<NativeResultData> verifyTask;
+        private TaskCompletionSource<NativeResultData> setChainTask;
 
         private TaskCompletionSource<NativeResultData> importPrivateKeyTask;
         private TaskCompletionSource<NativeResultData> importMnemonicTask;
         private TaskCompletionSource<NativeResultData> exportPrivateKeyTask;
         private TaskCompletionSource<NativeResultData> loginListTask;
+
         public Task<NativeResultData> NavigatorLoginList()
         {
             loginListTask = new TaskCompletionSource<NativeResultData>();
@@ -49,20 +53,52 @@ namespace Network.Particle.Scripts.Core
             loginListTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
 #endif
         }
-        
-        
+
+        /// <summary>
+        /// Set Chain Info Async, because ParticleAuthService support both solana and evm, if switch to solana from evm,
+        /// Auth Service will create a evm address if the user doesn't has a evm address.
+        /// </summary>
+        /// <param name="chainInfo">Chain info</param>
+        /// <returns></returns>
+        public Task<NativeResultData> SetChainInfoAsync(ChainInfo chainInfo)
+        {
+            Debug.Log(chainInfo);
+            setChainTask = new TaskCompletionSource<NativeResultData>();
+            ParticleConnectInteraction.SetChainInfoAsync(chainInfo);
+#if UNITY_EDITOR
+            LoginCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", "" },
+            }));
+#endif
+            return setChainTask.Task;
+        }
+
+        /// <summary>
+        /// Set Chain Info Async call back
+        /// </summary>
+        /// <param name="json"></param>
+        public void SetChainInfoAsyncCallBack(string json)
+        {
+            Debug.Log($"SetChainCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            setChainTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+
         /// <summary>
         /// Connect wallet
         /// </summary>
         /// <param name="walletType">Wallet Type</param>
         /// <returns></returns>
-        public Task<NativeResultData> Connect(WalletType walletType)
+        public Task<NativeResultData> Connect(WalletType walletType, [CanBeNull] ConnectConfig config = null)
         {
             connectTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
 
 #else
-            ParticleConnectInteraction.Connect(walletType);
+            ParticleConnectInteraction.Connect(walletType,config);
 #endif
             return connectTask.Task;
         }
@@ -292,7 +328,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             signTypedDataTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Login, Sign-in with Ethereum, For more information on SIWE check out https://docs.login.xyz
         /// </summary>
@@ -304,7 +340,7 @@ namespace Network.Particle.Scripts.Core
         {
             loginTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-            
+
 #else
             ParticleConnectInteraction.Login(walletType, publicAddress, domain, uri);
 #endif
@@ -327,7 +363,7 @@ namespace Network.Particle.Scripts.Core
             loginTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
 #endif
         }
-        
+
         /// <summary>
         /// Verify locally, works with Login.
         /// </summary>
@@ -336,7 +372,8 @@ namespace Network.Particle.Scripts.Core
         /// <param name="message">Message</param>
         /// <param name="signature">Signature</param>
         /// <returns></returns>
-        public Task<NativeResultData> Verify(WalletType walletType, string publicAddress, string message, string signature)
+        public Task<NativeResultData> Verify(WalletType walletType, string publicAddress, string message,
+            string signature)
         {
             verifyTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR

@@ -217,9 +217,9 @@ namespace Network.Particle.Scripts.Test
         {
             // mock send some chain link token from send to receiver.
             string sender = GetAddress();
-            string receiver = TestAccount.EVM.ReceiverAddress;;
-            string contractAddress = TestAccount.EVM.TokenContractAddress;;
-            BigInteger amount = TestAccount.EVM.Amount;;
+            string receiver = TestAccount.EVM.ReceiverAddress;
+            string contractAddress = TestAccount.EVM.TokenContractAddress;
+            BigInteger amount = TestAccount.EVM.Amount;
             var dataResult = await EvmService.Erc20Transfer(contractAddress, receiver, amount);
             var data = (string)JObject.Parse(dataResult)["result"];
             var gasLimitResult = await EvmService.EstimateGas(sender, contractAddress, "0x0", data);

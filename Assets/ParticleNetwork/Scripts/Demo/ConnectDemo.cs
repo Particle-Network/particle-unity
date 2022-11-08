@@ -78,6 +78,29 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
+        public async void ConnectWithParticleParams()
+        {
+            ConnectConfig config = null;
+            if (_walletType == WalletType.Particle)
+            {
+                config = new ConnectConfig(LoginType.PHONE, null, SupportAuthType.ALL);
+            }
+
+            var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, config);
+            Debug.Log(nativeResultData.data);
+
+            if (nativeResultData.isSuccess)
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log(nativeResultData.data);
+            }
+            else
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                Debug.Log(errorData);
+            }
+        }
 
         public async void Disconnect()
         {
@@ -254,9 +277,8 @@ namespace Network.Particle.Scripts.Test
 
         public async void Login()
         {
-
             string publicAddress;
-            
+
             if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
             {
                 publicAddress = TestAccount.Solana.PublicAddress;
@@ -265,7 +287,7 @@ namespace Network.Particle.Scripts.Test
             {
                 publicAddress = TestAccount.EVM.PublicAddress;
             }
-            
+
             var domain = "login.xyz";
             var uri = "https://login.xyz/demo#login";
             var nativeResultData =
@@ -295,7 +317,7 @@ namespace Network.Particle.Scripts.Test
         public async void Verify()
         {
             string publicAddress;
-            
+
             if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
             {
                 publicAddress = TestAccount.Solana.PublicAddress;
@@ -304,7 +326,7 @@ namespace Network.Particle.Scripts.Test
             {
                 publicAddress = TestAccount.EVM.PublicAddress;
             }
-            
+
             var message = this.loginSourceMessage;
             var signature = this.loginSignature;
             var nativeResultData =
@@ -327,7 +349,7 @@ namespace Network.Particle.Scripts.Test
         public async void ImportPrivateKey()
         {
             string privateKey;
-            
+
             if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
             {
                 privateKey = TestAccount.Solana.PrivateKey;
@@ -356,9 +378,8 @@ namespace Network.Particle.Scripts.Test
 
         public async void ImportMnemonic()
         {
-
             string mnemonic;
-            
+
             if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
             {
                 mnemonic = TestAccount.Solana.Mnemonic;
@@ -388,7 +409,7 @@ namespace Network.Particle.Scripts.Test
         public async void ExportPrivateKey()
         {
             string publicAddress;
-            
+
             if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
             {
                 publicAddress = TestAccount.Solana.PublicAddress;
@@ -397,7 +418,7 @@ namespace Network.Particle.Scripts.Test
             {
                 publicAddress = TestAccount.EVM.PublicAddress;
             }
-            
+
             var nativeResultData =
                 await ParticleConnect.Instance.ExportWalletPrivateKey(this._walletType, publicAddress);
             Debug.Log(nativeResultData.data);
@@ -415,6 +436,30 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
+        public void SetChainInfoSync()
+        {
+            ParticleConnectInteraction.SetChainInfo(_chainInfo);
+        }
+
+        public async void SetChainInfoAsync()
+        {
+            var nativeResultData =
+                await ParticleConnect.Instance.SetChainInfoAsync(_chainInfo);
+            Debug.Log(nativeResultData.data);
+
+            if (nativeResultData.isSuccess)
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log(nativeResultData.data);
+            }
+            else
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                Debug.Log(errorData);
+            }
+        }
+        
         public void ShowToast(string message)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
