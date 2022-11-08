@@ -238,6 +238,10 @@ extern "C" {
     bool particleConnectSetChainInfo(const char* chainInfo) {
          return [api particleConnectSetChainInfo:[NSString stringWithUTF8String: chainInfo]];
     }
+
+    void particleConnectSetChainInfoAsync(const char* chainInfo) {
+         return [api particleConnectSetChainInfoAsync:[NSString stringWithUTF8String: chainInfo]];
+    }
 }
 
 // Connect Service
