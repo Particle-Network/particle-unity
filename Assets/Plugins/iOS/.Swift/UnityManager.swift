@@ -124,11 +124,12 @@ extension UnityManager {
 // MARK: - Particle Auth Service
 
 extension UnityManager {
-    func login(_ type: String, account: String?, supportAuthType: String) {
-        let loginType = LoginType(rawValue: type.lowercased()) ?? .email
+    func login(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
         var supportAuthTypeArray: [SupportAuthType] = []
         
-        let array = JSON(parseJSON: supportAuthType).arrayValue.map {
+        let array = data["supportAuthTypeValues"].arrayValue.map {
             $0.stringValue.lowercased()
         }
         if array.contains("all") {
@@ -155,12 +156,13 @@ extension UnityManager {
             }
         }
         
-        var acc = account
-        if acc != nil, acc!.isEmpty {
-            acc = nil
+        var account = data["account"].string
+        if account != nil, account!.isEmpty {
+            account = nil
         }
+        let loginFormMode = data["loginFormMode"].bool
         
-        ParticleAuthService.login(type: loginType, account: acc, supportAuthType: supportAuthTypeArray).subscribe { [weak self] result in
+        ParticleAuthService.login(type: loginType, account: account, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):

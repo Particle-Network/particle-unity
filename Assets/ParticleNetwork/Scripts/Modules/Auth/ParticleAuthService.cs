@@ -33,15 +33,16 @@ namespace Network.Particle.Scripts.Core
         /// <param name="loginType">Login type</param>
         /// <param name="account">Account, default value is empty</param>
         /// <param name="supportAuthTypes">Support auth types, default value is all</param>
+        /// <param name="loginFormMode">Login form mode</param>
         /// <returns></returns>
         public Task<NativeResultData> Login(LoginType loginType, string account = "",
-            SupportAuthType supportAuthTypes = SupportAuthType.ALL)
+            SupportAuthType supportAuthTypes = SupportAuthType.ALL, bool loginFormMode = false)
         {
             loginTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-             DevModeService.Login();
+            DevModeService.Login();
 #else
-            ParticleAuthServiceInteraction.Login(loginType, account, supportAuthTypes);
+            ParticleAuthServiceInteraction.Login(loginType, account, supportAuthTypes, loginFormMode);
 #endif
             return loginTask.Task;
         }

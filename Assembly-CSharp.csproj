@@ -73,6 +73,7 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/GUI/ParticleWalletGUI.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Connect/ParticleConnect.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ParticleRpcRequest.cs" />
+     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ConnectConfig.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Auth/ParticleAuthServiceInteraction.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/API/ParticleWalletAPI.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Model/EthereumTransaction.cs" />
@@ -86,7 +87,6 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Singleton/SingletonMonoBehaviour.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/DAppMetadata.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ChainChoice.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ConnectConfig.cs" />
      <None Include="Assets/Resources/TypedDataV1.txt" />
      <None Include="Assets/Resources/TypedDataV4.txt" />
      <Reference Include="UnityEngine">

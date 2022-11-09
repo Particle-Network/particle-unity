@@ -20,7 +20,7 @@
 - (BOOL) setChainInfo:(NSString* _Nonnull)json;
 
 // Particle Auth Service
-- (void) login:(NSString* _Nonnull)type account:(NSString* _Nullable)account supportAuthType:(NSString* _Nonnull) supportAuthType;
+- (void) login:(NSString* _Nonnull)json;
 - (void) logout;
 - (BOOL) isLogin;
 - (void) signMessage:(NSString* _Nonnull)message;

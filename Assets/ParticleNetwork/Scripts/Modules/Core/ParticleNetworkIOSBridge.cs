@@ -25,7 +25,7 @@ namespace Network.Particle.Scripts.Core
         // Particle Auth Service
 #if UNITY_IOS
         [DllImport("__Internal")]
-        public static extern void login(string type, string? account, string supportAuthType);
+        public static extern void login(string json);
 
         [DllImport("__Internal")]
         public static extern void logout();

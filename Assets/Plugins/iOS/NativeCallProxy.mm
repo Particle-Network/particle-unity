@@ -33,8 +33,8 @@ extern "C" {
 
 // Particle Auth Service
 extern "C" {
-    void login(const char* type, const char* _Nullable account, const char* supportAuthType) {
-        [api login:[NSString stringWithUTF8String: type] account: (account == NULL) ? NULL : [NSString stringWithUTF8String: account] supportAuthType:[NSString stringWithUTF8String: supportAuthType]];
+    void login(const char* json) {
+        [api login:[NSString stringWithUTF8String: json]];
     }
 
     void logout() {
