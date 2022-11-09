@@ -45,7 +45,7 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         chainInfos.Add(new FantomChain(FantomChainId.Testnet));
 
         chainInfos.Add(new ArbitrumChain(ArbitrumChainId.Mainnet));
-        chainInfos.Add(new ArbitrumChain(ArbitrumChainId.Testnet));
+        chainInfos.Add(new ArbitrumChain(ArbitrumChainId.Goerli));
 
         chainInfos.Add(new HarmonyChain(HarmonyChainId.Mainnet));
         chainInfos.Add(new HarmonyChain(HarmonyChainId.Testnet));
@@ -58,7 +58,7 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         chainInfos.Add(new KccChain(KccChainId.Testnet));
 
         chainInfos.Add(new OptimismChain(OptimismChainId.Mainnet));
-        chainInfos.Add(new OptimismChain(OptimismChainId.Testnet));
+        chainInfos.Add(new OptimismChain(OptimismChainId.Goerli));
 
         chainInfos.Add(new PlatONChain(PlatONChainId.Mainnet));
         chainInfos.Add(new PlatONChain(PlatONChainId.Testnet));

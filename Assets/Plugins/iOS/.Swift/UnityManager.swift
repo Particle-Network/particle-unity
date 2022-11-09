@@ -125,7 +125,7 @@ extension UnityManager {
 
 extension UnityManager {
     func login(_ type: String, account: String?, supportAuthType: String) {
-        let loginType = LoginType(rawValue: type) ?? .email
+        let loginType = LoginType(rawValue: type.lowercased()) ?? .email
         var supportAuthTypeArray: [SupportAuthType] = []
         
         let array = JSON(parseJSON: supportAuthType).arrayValue.map {
@@ -203,8 +203,8 @@ extension UnityManager {
     }
     
     func signMessage(_ message: String) {
-        var serializedMessage: String = ""
-        switch  ParticleNetwork.getChainInfo().chain{
+        var serializedMessage = ""
+        switch ParticleNetwork.getChainInfo().chain {
         case .solana:
             serializedMessage = Base58.encode(message.data(using: .utf8)!)
         default:
@@ -898,11 +898,11 @@ extension UnityManager {
          ZH_HANS,
          */
         if json.lowercased() == "system" {
-            ParticleWalletGUI.setLanguage(ParticleWalletGUI.Language.unspecified)
+            ParticleWalletGUI.setLanguage(Language.unspecified)
         } else if json.lowercased() == "en" {
-            ParticleWalletGUI.setLanguage(ParticleWalletGUI.Language.en)
+            ParticleWalletGUI.setLanguage(Language.en)
         } else if json.lowercased() == "zh_hans" {
-            ParticleWalletGUI.setLanguage(ParticleWalletGUI.Language.zh_Hans)
+            ParticleWalletGUI.setLanguage(Language.zh_Hans)
         }
     }
     
@@ -986,6 +986,10 @@ extension UnityManager {
         ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData) {
             adapters
         }
+        
+        #if canImport(ParticleWalletGUI)
+        ParticleWalletGUI.supportWalletConnect(false)
+        #endif
     }
     
     func particleConnectSetChainInfo(_ json: String) -> Bool {
@@ -995,6 +999,33 @@ extension UnityManager {
         guard let chainInfo = matchChain(name: name, chainId: chainId) else { return false }
         ParticleConnect.setChain(chainInfo: chainInfo)
         return true
+    }
+    
+    func particleConnectSetChainInfoAsync(_ json: String){
+        let data = JSON(parseJSON: json)
+        let name = data["chain_name"].stringValue.lowercased()
+        let chainId = data["chain_id"].intValue
+        guard let chainInfo = matchChain(name: name, chainId: chainId) else { return }
+        ParticleAuthService.setChainInfo(chainInfo).subscribe { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                
+                self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+            case .success(let userInfo):
+                guard let userInfo = userInfo else { return }
+                let statusModel = UnityStatusModel(status: true, data: userInfo)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                
+                self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+            }
+        }.disposed(by: bag)
     }
     
     func adapterGetAccounts(_ json: String) -> String {
@@ -1016,8 +1047,52 @@ extension UnityManager {
         return json
     }
     
-    func adapterConnect(_ json: String) {
+    func adapterConnect(_ json: String, configJson: String) {
         let walletTypeString = json
+        
+        var connectConfig: ParticleConnectConfig?
+        if !configJson.isEmpty {
+            let data = JSON(parseJSON: configJson)
+            let loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
+            var supportAuthTypeArray: [SupportAuthType] = []
+            
+            let array = data["supportAuthTypeValues"].arrayValue.map {
+                $0.stringValue.lowercased()
+            }
+            if array.contains("all") {
+                supportAuthTypeArray = [.all]
+            } else {
+                array.forEach {
+                    if $0 == "apple" {
+                        supportAuthTypeArray.append(.apple)
+                    } else if $0 == "google" {
+                        supportAuthTypeArray.append(.google)
+                    } else if $0 == "facebook" {
+                        supportAuthTypeArray.append(.facebook)
+                    } else if $0 == "github" {
+                        supportAuthTypeArray.append(.github)
+                    } else if $0 == "twitch" {
+                        supportAuthTypeArray.append(.twitch)
+                    } else if $0 == "microsoft" {
+                        supportAuthTypeArray.append(.microsoft)
+                    } else if $0 == "linkedin" {
+                        supportAuthTypeArray.append(.linkedin)
+                    } else if $0 == "discord" {
+                        supportAuthTypeArray.append(.discord)
+                    }
+                }
+            }
+            
+            var account = data["account"].string
+            
+            if account != nil, account!.isEmpty {
+                account = nil
+            }
+            
+            let loginFormMode = data["loginFormMode"].boolValue
+            connectConfig = ParticleConnectConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode, phoneOrEmailAccount: account)
+        }
+        
         guard let walletType = map2WalletType(from: walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
@@ -1027,7 +1102,7 @@ extension UnityManager {
             return
         }
         
-        guard let vc = self.ufw?.appController().rootViewController else {
+        guard let vc = ufw?.appController().rootViewController else {
             print("unity root view controller is nil")
             return
         }
@@ -1035,6 +1110,8 @@ extension UnityManager {
         var observable: Single<Account?>
         if walletType == .walletConnect {
             observable = (adapter as! WalletConnectAdapter).connectWithQrCode(from: vc)
+        } else if walletType == .particle {
+            observable = adapter.connect(connectConfig)
         } else {
             observable = adapter.connect(.none)
         }
@@ -1179,7 +1256,7 @@ extension UnityManager {
         let publicAddress = data["public_address"].stringValue
         
         let transactions = data["transactions"].arrayValue.map {
-                    $0.stringValue
+            $0.stringValue
         }
         
         guard let walletType = map2WalletType(from: walletTypeString) else {
@@ -1473,6 +1550,7 @@ extension UnityManager {
             }
         }.disposed(by: bag)
     }
+    
 }
 
 // MARK: - Help methods
@@ -1582,17 +1660,8 @@ extension UnityManager {
     }
     
     private func ResponseFromError(_ error: Error) -> UnityResponseError {
-        if let error = error as? ParticleNetwork.Error {
-            switch error {
-            case .invalidResponse(let response):
-                return UnityResponseError(code: response.code, message: response.message ?? "", data: response.data)
-            case .invalidData(reason: let reason):
-                return UnityResponseError(code: nil, message: reason ?? "", data: nil)
-            case .interrupt:
-                return UnityResponseError(code: nil, message: "interrupt", data: nil)
-            case .resultEmpty:
-                return UnityResponseError(code: nil, message: error.description, data: nil)
-            }
+        if let responseError = error as? ParticleNetwork.ResponseError {
+            return UnityResponseError(code: responseError.code, message: responseError.message ?? "", data: responseError.data)
         } else if let error = error as? ConnectError {
             return UnityResponseError(code: error.code, message: error.message!, data: nil)
         } else {
@@ -1696,8 +1765,8 @@ extension UnityManager {
         } else if name == "arbitrum" {
             if chainId == 42161 {
                 chainInfo = .arbitrum(.mainnet)
-            } else if chainId == 421611 {
-                chainInfo = .arbitrum(.testnet)
+            } else if chainId == 421613 {
+                chainInfo = .arbitrum(.goerli)
             }
         } else if name == "moonbeam" {
             if chainId == 1284 {
@@ -1739,7 +1808,7 @@ extension UnityManager {
             if chainId == 10 {
                 chainInfo = .optimism(.mainnet)
             } else if chainId == 420 {
-                chainInfo = .optimism(.testnet)
+                chainInfo = .optimism(.goerli)
             }
         } else if name == "platon" {
             if chainId == 210425 {

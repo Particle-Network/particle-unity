@@ -13,6 +13,7 @@ namespace Network.Particle.Scripts.Model
         TWITCH,
         MICROSOFT,
         LINKEDIN,
+        JWT,
     }
 
     public enum SupportAuthType

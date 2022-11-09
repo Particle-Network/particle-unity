@@ -238,6 +238,10 @@ extern "C" {
     bool particleConnectSetChainInfo(const char* chainInfo) {
          return [api particleConnectSetChainInfo:[NSString stringWithUTF8String: chainInfo]];
     }
+
+    void particleConnectSetChainInfoAsync(const char* chainInfo) {
+         return [api particleConnectSetChainInfoAsync:[NSString stringWithUTF8String: chainInfo]];
+    }
 }
 
 // Connect Service
@@ -247,8 +251,8 @@ extern "C" {
         return cStringCopyPN([[api adapterGetAccounts:[NSString stringWithUTF8String: json]] UTF8String]);
      }
      
-     void adapterConnect(const char* json) {
-        [api adapterConnect:[NSString stringWithUTF8String: json]];
+     void adapterConnect(const char* json, const char* configJson) {
+        [api adapterConnect:[NSString stringWithUTF8String: json] configJson:[NSString stringWithUTF8String: configJson]];
      }
 
     void adapterDisconnect(const char* json) {

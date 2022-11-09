@@ -178,6 +178,10 @@ namespace Network.Particle.Scripts.Core
         
         [DllImport("__Internal")]
         public static extern bool particleConnectSetChainInfo(string json);
+        
+        [DllImport("__Internal")]
+        public static extern bool particleConnectSetChainInfoAsync(string json);
+        
 #endif 
             
        // Connect Service
@@ -186,8 +190,8 @@ namespace Network.Particle.Scripts.Core
         public static extern string adapterGetAccounts(string json);
         
         [DllImport("__Internal")]
-        public static extern void adapterConnect(string json);
-
+        public static extern void adapterConnect(string json, string configJson);
+        
         [DllImport("__Internal")]
         public static extern void adapterDisconnect(string json);
         

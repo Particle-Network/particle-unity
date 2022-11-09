@@ -83,7 +83,6 @@ namespace Network.Particle.Scripts.Core
 
         public static void Connect(WalletType walletType, [CanBeNull] ConnectConfig config)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
             string configJson = "";
             if (config != null)
             {
@@ -99,11 +98,13 @@ namespace Network.Particle.Scripts.Core
                     { "loginType", config.LoginType.ToString() },
                     { "account", accountNative },
                     { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
+                    { "loginFormMode", config.LoginFormMode}
                 });
             }
+#if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("connect",walletType.ToString(),configJson);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.adapterConnect(walletType.ToString());
+            ParticleNetworkIOSBridge.adapterConnect(walletType.ToString(), configJson);
 #else
 
 #endif

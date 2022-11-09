@@ -46,7 +46,7 @@ namespace Network.Particle.Scripts.Model
     public enum ArbitrumChainId
     {
         Mainnet = 42161,
-        Testnet = 421611
+        Goerli = 421613
     }
 
     public enum MoonbeamChainId
@@ -88,7 +88,7 @@ namespace Network.Particle.Scripts.Model
     public enum OptimismChainId
     {
         Mainnet = 10,
-        Testnet = 69
+        Goerli = 420
     }
 
     public enum PlatONChainId

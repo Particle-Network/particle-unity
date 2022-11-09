@@ -73,10 +73,10 @@
 // Particle Connect
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;
 - (BOOL) particleConnectSetChainInfo:(NSString* _Nonnull)json;
-
+- (void) particleConnectSetChainInfoAsync:(NSString* _Nonnull)json;
 // Particle Connect Service
 - (NSString* _Nonnull) adapterGetAccounts:(NSString* _Nonnull)json;
-- (void) adapterConnect:(NSString* _Nonnull)json;
+- (void) adapterConnect:(NSString* _Nonnull)json configJson:(NSString* _Nonnull)account;
 - (void) adapterDisconnect:(NSString* _Nonnull)json;
 - (BOOL) adapterIsConnected:(NSString* _Nonnull)json;
 - (void) adapterSignAndSendTransaction:(NSString* _Nonnull)json;

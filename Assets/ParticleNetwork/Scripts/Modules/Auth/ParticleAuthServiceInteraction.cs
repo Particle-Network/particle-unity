@@ -12,7 +12,7 @@ namespace Network.Particle.Scripts.Core
     public static class ParticleAuthServiceInteraction
     {
         
-        public static void Login(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes)
+        public static void Login(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes, bool loginFormMode = false)
         {
             var authTypeList = ParticleTools.GetSupportAuthTypeValues(supportAuthTypes);
             string accountNative = "";
