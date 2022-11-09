@@ -106,6 +106,13 @@ namespace Network.Particle.Scripts.Test
             ParticleWalletGUI.NavigatorPay();
         }
 
+        public void NavigatorBuyBnb()
+        {
+            BuyCryptoConfig config = new BuyCryptoConfig(TestAccount.EVM.PublicAddress,
+                OpenBuyNetwork.BinanceSmartChain, "BNB", "USD", 100);
+            ParticleWalletGUI.NavigatorBuy(config);
+        }
+
         public async void NavigatorLoginList()
         {
             var nativeResultData = await ParticleWalletGUI.Instance.NavigatorLoginList();

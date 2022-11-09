@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Network.Particle.Scripts.Core.UnityEditorTestMode;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Singleton;
@@ -203,6 +205,30 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
+        public static void NavigatorBuy([CanBeNull] BuyCryptoConfig config)
+        {
+            string json = "";
+            if (config != null)
+            {
+                json = JsonConvert.SerializeObject(new JObject
+                {
+                    { "wallet_address", config.walletAddress },
+                    { "network", config.network.ToString() },
+                    { "crypto_coin", config.cryptoCoin },
+                    { "fiat_coin", config.fiatCoin},
+                    { "fiat_amt", config.fiatAmt}
+                });
+            }
+            Debug.Log(json);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("openPay");
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.navigatorBuy(json);
+#else
+
+#endif
+        }
         /// <summary>
         /// Open Swap page
         /// </summary>
