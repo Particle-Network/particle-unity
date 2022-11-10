@@ -19,8 +19,6 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         chainInfos.Add(new SolanaChain(SolanaChainId.Devnet));
         chainInfos.Add(new SolanaChain(SolanaChainId.Testnet));
         chainInfos.Add(new EthereumChain(EthereumChainId.Mainnet));
-        chainInfos.Add(new EthereumChain(EthereumChainId.Ropsten));
-        chainInfos.Add(new EthereumChain(EthereumChainId.Rinkeby));
         chainInfos.Add(new EthereumChain(EthereumChainId.Goerli));
 
         chainInfos.Add(new BSCChain(BscChainId.Mainnet));
