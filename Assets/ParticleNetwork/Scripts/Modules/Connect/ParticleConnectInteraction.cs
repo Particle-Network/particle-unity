@@ -98,9 +98,10 @@ namespace Network.Particle.Scripts.Core
                     { "loginType", config.LoginType.ToString() },
                     { "account", accountNative },
                     { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
-                    { "loginFormMode", config.LoginFormMode}
+                    { "loginFormMode", config.LoginFormMode }
                 });
             }
+            Debug.Log($"Connect-> walletType:{walletType} configJson:{configJson} ");
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("connect",walletType.ToString(),configJson);
 #elif UNITY_IOS && !UNITY_EDITOR

@@ -84,7 +84,7 @@ namespace Network.Particle.Scripts.Test
             ConnectConfig config = null;
             if (_walletType == WalletType.Particle)
             {
-                config = new ConnectConfig(LoginType.PHONE, null, SupportAuthType.ALL, false);
+                config = new ConnectConfig(LoginType.GOOGLE, null, SupportAuthType.NONE, false);
             }
 
             var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, config);
