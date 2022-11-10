@@ -56,7 +56,7 @@ namespace Network.Particle.Scripts.Test
             ParticleNetwork.Init(_chainInfo);
             ParticleConnectInteraction.Init(_chainInfo, metadata);
         }
-
+        string publicAddress = "";
         /// <summary>
         /// Before test connect to wallet connect, like metamask wallet, you should login metamask with our evm test account.
         /// </summary>
@@ -67,12 +67,13 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                publicAddress = JObject.Parse(nativeResultData.data)["publicAddress"].ToString();
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} publicAddress:{publicAddress}  Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -91,12 +92,13 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                publicAddress = JObject.Parse(nativeResultData.data)["publicAddress"].ToString();
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} publicAddress:{publicAddress} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -105,19 +107,20 @@ namespace Network.Particle.Scripts.Test
         public async void Disconnect()
         {
             // Test public address
-            string publicAddress = TestAccount.EVM.PublicAddress;
+            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            
             var nativeResultData = await ParticleConnect.Instance.Disconnect(this._walletType, publicAddress);
 
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -125,26 +128,24 @@ namespace Network.Particle.Scripts.Test
 
         public void IsConnected()
         {
-            // Test public address
-            string publicAddress = TestAccount.EVM.PublicAddress;
+            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var isConnect = ParticleConnectInteraction.IsConnected(this._walletType, publicAddress);
+            Tips.Instance.Show(
+                $"Particle Connect is Connect = {isConnect}, publicAddress = {publicAddress}, walletType = {this._walletType.ToString()}");
             Debug.Log(
                 $"Particle Connect is Connect = {isConnect}, publicAddress = {publicAddress}, walletType = {this._walletType.ToString()}");
         }
 
         public async void SignAndSendTransaction()
         {
-            // Test public address
-            string publicAddress;
+            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             string transaction;
-            if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
+            if (!_account.PublicAddress.StartsWith("0x"))
             {
-                publicAddress = TestAccount.Solana.PublicAddress;
                 transaction = await GetSolanaTransacion();
             }
             else
             {
-                publicAddress = TestAccount.EVM.PublicAddress;
                 transaction = await GetEVMTransacion();
             }
 
@@ -152,15 +153,15 @@ namespace Network.Particle.Scripts.Test
             var nativeResultData =
                 await ParticleConnect.Instance.SignAndSendTransaction(this._walletType, publicAddress, transaction);
             Debug.Log(nativeResultData.data);
-
+            Tips.Instance.Show(nativeResultData.data);
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -169,22 +170,20 @@ namespace Network.Particle.Scripts.Test
         public async void SignTransaction()
         {
             // sign transaction doesn't support evm.
-            // Test public address
-            string publicAddress = TestAccount.Solana.PublicAddress;
+            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var transaction = await GetSolanaTransacion();
             Debug.Log("transaction = " + transaction);
             var nativeResultData =
                 await ParticleConnect.Instance.SignTransaction(this._walletType, publicAddress, transaction);
             Debug.Log(nativeResultData.data);
-
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -193,7 +192,7 @@ namespace Network.Particle.Scripts.Test
         public async void SignAllTransactions()
         {
             // sign all transactions doesn't support evm.
-            var publicAddress = TestAccount.Solana.PublicAddress;
+            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var transaction1 = await GetSolanaTransacion();
             var transaction2 = await GetSolanaTransacion();
             Debug.Log("transaction1 = " + transaction1);
@@ -205,12 +204,12 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -218,31 +217,22 @@ namespace Network.Particle.Scripts.Test
 
         public async void SignMessage()
         {
-            // Test public address
-            string publicAddress;
-
-            if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
-            {
-                publicAddress = TestAccount.Solana.PublicAddress;
-            }
-            else
-            {
-                publicAddress = TestAccount.EVM.PublicAddress;
-            }
-
+            // string publicAddress;
+            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var message = "Hello world";
+            Debug.Log($"SignMessage-> publicAddress:{publicAddress} message:{message}");
             var nativeResultData =
                 await ParticleConnect.Instance.SignMessage(this._walletType, publicAddress, message);
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -251,9 +241,7 @@ namespace Network.Particle.Scripts.Test
         public async void SignTypedData()
         {
             // sign typed data doesn't support solana
-            // Test public address
-            string publicAddress = TestAccount.EVM.PublicAddress;
-
+            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
             string typedData = txtAsset.text;
             Debug.Log(typedData);
@@ -264,12 +252,12 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -277,17 +265,7 @@ namespace Network.Particle.Scripts.Test
 
         public async void Login()
         {
-            string publicAddress;
-
-            if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
-            {
-                publicAddress = TestAccount.Solana.PublicAddress;
-            }
-            else
-            {
-                publicAddress = TestAccount.EVM.PublicAddress;
-            }
-
+            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var domain = "login.xyz";
             var uri = "https://login.xyz/demo#login";
             var nativeResultData =
@@ -296,7 +274,7 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
 
                 var message = (string)JObject.Parse(nativeResultData.data)["message"];
                 var signature = (string)JObject.Parse(nativeResultData.data)["signature"];
@@ -308,7 +286,7 @@ namespace Network.Particle.Scripts.Test
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -316,16 +294,7 @@ namespace Network.Particle.Scripts.Test
 
         public async void Verify()
         {
-            string publicAddress;
-
-            if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
-            {
-                publicAddress = TestAccount.Solana.PublicAddress;
-            }
-            else
-            {
-                publicAddress = TestAccount.EVM.PublicAddress;
-            }
+            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
 
             var message = this.loginSourceMessage;
             var signature = this.loginSignature;
@@ -335,12 +304,12 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -365,12 +334,12 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -395,12 +364,12 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -425,12 +394,12 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
@@ -438,7 +407,9 @@ namespace Network.Particle.Scripts.Test
 
         public void SetChainInfoSync()
         {
-            ParticleConnectInteraction.SetChainInfo(_chainInfo);
+            var result = ParticleConnectInteraction.SetChainInfo(_chainInfo);
+            Debug.Log("SetChainInfoSync:" + result);
+            Tips.Instance.Show("SetChainInfoSync:" + result);
         }
 
         public async void SetChainInfoAsync()
@@ -449,28 +420,18 @@ namespace Network.Particle.Scripts.Test
 
             if (nativeResultData.isSuccess)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                Debug.Log(nativeResultData.data);
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log("SetChainInfoAsync:" + nativeResultData.data);
+                Tips.Instance.Show(nativeResultData.data);
             }
             else
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
         }
-        
-        public void ShowToast(string message)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-        AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
-        AndroidJavaClass Toast = new AndroidJavaClass("android.widget.Toast");
-        currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() => {
-            Toast.CallStatic<AndroidJavaObject>("makeText", currentActivity, message, Toast.GetStatic<int>("LENGTH_LONG")).Call("show");
-        }));
-#endif
-        }
+
 
         async Task<string> GetSolanaTransacion()
         {
@@ -503,7 +464,6 @@ namespace Network.Particle.Scripts.Test
             var maxPriorityFeePerGas = (double)JObject.Parse(gasFeesResult)["result"]["high"]["maxPriorityFeePerGas"];
             var maxPriorityFeePerGasHex = "0x" + ((BigInteger)(maxPriorityFeePerGas * Mathf.Pow(10, 9))).ToString("x");
             var chainId = TestAccount.EVM.ChainId;
-            ;
 
             var transaction = new EthereumTransaction(sender, contractAddress, data, gasLimit, gasPrice: null,
                 value: "0x0",

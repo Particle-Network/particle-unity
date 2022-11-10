@@ -15,6 +15,7 @@ namespace Network.Particle.Scripts.Test
     public class AuthDemo : MonoBehaviour
     {
         private ChainInfo _chainInfo = new EthereumChain(EthereumChainId.Goerli);
+
         public void SelectChain()
         {
             ChainChoice.Instance.Show((chainInfo) =>
@@ -23,12 +24,12 @@ namespace Network.Particle.Scripts.Test
                 this._chainInfo = ChainUtils.CreateChain(chainInfo.getChainName(), chainInfo.getChainId());
             });
         }
-        
+
         public void Init()
         {
             ParticleNetwork.Init(this._chainInfo);
         }
-        
+
         public async void Login()
         {
             // login email
@@ -71,7 +72,7 @@ namespace Network.Particle.Scripts.Test
             Debug.Log(ParticleAuthServiceInteraction.IsLogin());
         }
 
-        public string GetAddress()
+        private string GetAddress()
         {
             return ParticleAuthServiceInteraction.GetAddress();
         }
@@ -232,7 +233,8 @@ namespace Network.Particle.Scripts.Test
             var maxPriorityFeePerGasHex = "0x" + ((BigInteger)(maxPriorityFeePerGas * Mathf.Pow(10, 9))).ToString("x");
             var chainId = TestAccount.EVM.ChainId;
 
-            var transaction = new EthereumTransaction(sender, contractAddress, data, gasLimit, gasPrice: null, value: "0x0",
+            var transaction = new EthereumTransaction(sender, contractAddress, data, gasLimit, gasPrice: null,
+                value: "0x0",
                 nonce: null, type: "0x2",
                 chainId: "0x" + chainId.ToString("x"), maxPriorityFeePerGasHex, maxFeePerGasHex);
             var json = JsonConvert.SerializeObject(transaction);
@@ -259,6 +261,12 @@ namespace Network.Particle.Scripts.Test
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
+        }
+
+        public  void GetPnAddress()
+        {
+            var address = GetAddress();
+            Tips.Instance.Show("GetPnAddress:" + address);
         }
 
         public void SetChainInfoSync()
