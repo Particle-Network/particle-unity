@@ -61,7 +61,8 @@
 - (void) navigatorNFTSend:(NSString*_Nonnull)json;
 - (void) navigatorNFTDetails:(NSString*_Nonnull)json;
 - (void) navigatorPay;
-- (void) navigatorSwap:(NSString* _Nullable)json;
+- (void) navigatorBuyCrypto:(NSString*_Nonnull)json;
+- (void) navigatorSwap:(NSString* _Nonnull)json;
 - (void) navigatorLoginList;
 - (void) showTestNetwork:(BOOL)show; 
 - (void) showManageWallet:(BOOL)show;

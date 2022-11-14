@@ -38,6 +38,7 @@ import UIKit
 
 @objcMembers
 class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
+    
     let bag = DisposeBag()
     static var shared = UnityManager()
     
@@ -809,6 +810,38 @@ extension UnityManager {
         PNRouter.navigatorPay()
     }
     
+    func navigatorBuyCrypto(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let walletAddress = data["wallet_address"].string
+        let networkString = data["network"].stringValue.lowercased()
+        var network: OpenBuyNetwork? = nil
+        /*
+         Solana,
+         Ethereum,
+         BinanceSmartChain,
+         Avalanche,
+         Polygon,
+         */
+        if networkString == "solana" {
+            network = .solana
+        } else if networkString == "ethereum" {
+            network = .ethereum
+        } else if networkString == "binancesmartchain" {
+            network = .binanceSmartChain
+        } else if networkString == "avalanche" {
+            network = .avalanche
+        } else if networkString == "polygon" {
+            network = .polygon
+        } else {
+            network = nil
+        }
+        let fiatCoin = data["fiat_coin"].string
+        let fiatAmt = data["fiat_amt"].int
+        let cryptoCoin = data["crypto_coin"].string
+        
+        PNRouter.navigatorBuy(walletAddress: walletAddress, network: network, cryptoCoin: cryptoCoin, fiatCoin: fiatCoin, fiatAmt: fiatAmt)
+    }
+    
     func navigatorSwap(_ json: String?) {
         if let json = json {
             let data = JSON(parseJSON: json)
@@ -1008,26 +1041,36 @@ extension UnityManager {
         let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
         guard let chainInfo = matchChain(name: name, chainId: chainId) else { return }
-        ParticleAuthService.setChainInfo(chainInfo).subscribe { [weak self] result in
-            guard let self = self else { return }
+        
+        if ParticleAuthService.isLogin() {
+            ParticleAuthService.setChainInfo(chainInfo).subscribe { [weak self] result in
+                guard let self = self else { return }
 
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
-            case .success(let userInfo):
-                guard let userInfo = userInfo else { return }
-                let statusModel = UnityStatusModel(status: true, data: userInfo)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
-            }
-        }.disposed(by: bag)
+                switch result {
+                case .failure(let error):
+                    let response = self.ResponseFromError(error)
+                    let statusModel = UnityStatusModel(status: false, data: response)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    
+                    self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+                case .success(let userInfo):
+                    guard let userInfo = userInfo else { return }
+                    let statusModel = UnityStatusModel(status: true, data: true)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    
+                    self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+                }
+            }.disposed(by: bag)
+        } else {
+            ParticleNetwork.setChainInfo(chainInfo)
+            let statusModel = UnityStatusModel(status: true, data: true)
+            let data = try! JSONEncoder().encode(statusModel)
+            guard let json = String(data: data, encoding: .utf8) else { return }
+            self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+        }
+        
     }
     
     func adapterGetAccounts(_ json: String) -> String {

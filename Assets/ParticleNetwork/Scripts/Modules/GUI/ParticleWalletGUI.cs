@@ -205,7 +205,11 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void NavigatorBuy([CanBeNull] BuyCryptoConfig config)
+        /// <summary>
+        /// Open buy crypto page
+        /// </summary>
+        /// <param name="config">Buy crypto config</param>
+        public static void NavigatorBuyCrypto([CanBeNull] BuyCryptoConfig config)
         {
             string json = "";
             if (config != null)
@@ -224,7 +228,7 @@ namespace Network.Particle.Scripts.Core
 // todo
             ParticleNetwork.GetUnityBridgeClass().CallStatic("openPay");
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.navigatorBuy(json);
+            ParticleNetworkIOSBridge.navigatorBuyCrypto(json);
 #else
 
 #endif

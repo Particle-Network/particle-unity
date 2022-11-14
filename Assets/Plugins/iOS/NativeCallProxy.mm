@@ -195,8 +195,12 @@ extern "C" {
         [api navigatorPay];
     }
     
+    void navigatorBuyCrypto(const char* json) {
+        [api navigatorBuyCrypto:[NSString stringWithUTF8String: json]];
+    }
+    
     void navigatorSwap(const char* json) {
-     [api navigatorSwap:[NSString stringWithUTF8String: json]];
+        [api navigatorSwap:[NSString stringWithUTF8String: json]];
     }
     
     void navigatorLoginList() {

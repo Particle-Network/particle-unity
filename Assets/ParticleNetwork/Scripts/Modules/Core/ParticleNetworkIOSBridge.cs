@@ -97,7 +97,7 @@ namespace Network.Particle.Scripts.Core
         public static extern void navigatorPay();
         
         [DllImport("__Internal")]
-        public static extern void navigatorBuy(string json);
+        public static extern void navigatorBuyCrypto(string json);
         
         [DllImport("__Internal")]
         public static extern void navigatorLoginList();
