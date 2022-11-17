@@ -52,6 +52,7 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/SignData.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/OpenBuyNework.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/Chain.cs" />
+     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/NativeCurrency.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/WalletChoiceItem.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ChainId.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Model/TestAccount.cs" />

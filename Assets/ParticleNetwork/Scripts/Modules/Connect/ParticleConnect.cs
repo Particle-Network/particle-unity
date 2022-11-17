@@ -27,6 +27,9 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> importMnemonicTask;
         private TaskCompletionSource<NativeResultData> exportPrivateKeyTask;
         private TaskCompletionSource<NativeResultData> loginListTask;
+        
+        private TaskCompletionSource<NativeResultData> switchEthereumChainTask;
+        private TaskCompletionSource<NativeResultData> addEthereumChainTask;
 
         public Task<NativeResultData> NavigatorLoginList()
         {
@@ -493,5 +496,89 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             exportPrivateKeyTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
+
+        
+        /// <summary>
+        /// Call wallet_switchEthereumChain, only support wallet type MetaMask.
+        /// </summary>
+        /// <param name="walletType">Wallet type</param>
+        /// <param name="publicAddress">Public address</param>
+        /// <param name="chainId">Chain id</param>
+        /// <returns></returns>
+        public Task<NativeResultData> SwitchEthereumChain(WalletType walletType, string publicAddress, int chainId)
+        {
+            switchEthereumChainTask = new TaskCompletionSource<NativeResultData>();
+
+            // Wallet type WalletConnect contains metamask when connect with show qrcode.
+            if (walletType != WalletType.MetaMask && walletType != WalletType.WalletConnect)
+            {
+                NativeErrorData errorData = new NativeErrorData("not support wallet type", 0, "");
+                var data = new NativeResultData(false, JsonConvert.SerializeObject(errorData));
+                switchEthereumChainTask.TrySetResult(data);
+                return switchEthereumChainTask.Task;
+            }
+            else
+            {
+#if UNITY_EDITOR
+#else
+            ParticleConnectInteraction.SwitchEthereumChain(walletType,publicAddress,chainId);
+#endif
+                return switchEthereumChainTask.Task;  
+            }
+        }
+
+        
+        public void SwitchEthereumChainCallBack(string json)
+        {
+            Debug.Log($"switchEthereumChainCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            switchEthereumChainTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+        
+        /// <summary>
+        /// Call wallet_addEthereumChain, only support wallet type MetaMask.
+        /// </summary>
+        /// <param name="walletType">Wallet type</param>
+        /// <param name="publicAddress">Public address</param>
+        /// <param name="chainId">Chain id</param>
+        /// <param name="chainName">Chain name</param>
+        /// <param name="nativeCurrency">Chain native curreny</param>
+        /// <param name="rpcUrl">Rpc url</param>
+        /// <param name="blockExplorerUrl">Block explorer url</param>
+        /// <returns></returns>
+        public Task<NativeResultData> AddEthereumChain(WalletType walletType, string publicAddress, int chainId, [CanBeNull] string chainName = null, 
+            [CanBeNull] NativeCurrency nativeCurrency = null, [CanBeNull] string rpcUrl = null, [CanBeNull] string blockExplorerUrl = null)
+        {
+            
+            addEthereumChainTask = new TaskCompletionSource<NativeResultData>();
+
+            // Wallet type WalletConnect contains metamask when connect with show qrcode.
+            if (walletType != WalletType.MetaMask && walletType != WalletType.WalletConnect)
+            {
+                NativeErrorData errorData = new NativeErrorData("not support wallet type", 0, "");
+                var data = new NativeResultData(false, JsonConvert.SerializeObject(errorData));
+                addEthereumChainTask.TrySetResult(data);
+                return addEthereumChainTask.Task;
+            }
+            else
+            {
+#if UNITY_EDITOR
+#else
+            ParticleConnectInteraction.AddEthereumChain(walletType,publicAddress,chainId, chainName, nativeCurrency, rpcUrl, blockExplorerUrl);
+#endif
+                return addEthereumChainTask.Task;
+            }
+        }
+
+        public void AddEthereumChainCallBack(string json)
+        {
+            Debug.Log($"addEthereumChainTask:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            addEthereumChainTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+        
+        
     }
 }

@@ -12,5 +12,12 @@ namespace Network.Particle.Scripts.Model
         public int Code;
         [JsonProperty(PropertyName = "data")] 
         public string Data;
+
+        public NativeErrorData(string message, int code, string data)
+        {
+            this.Message = message;
+            this.Code = code;
+            this.Data = data;
+        }
     }
 }

@@ -39,6 +39,7 @@ import UIKit
 @objcMembers
 class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     
+    
     let bag = DisposeBag()
     static var shared = UnityManager()
     
@@ -814,7 +815,7 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let walletAddress = data["wallet_address"].string
         let networkString = data["network"].stringValue.lowercased()
-        var network: OpenBuyNetwork? = nil
+        var network: OpenBuyNetwork?
         /*
          Solana,
          Ethereum,
@@ -1022,9 +1023,9 @@ extension UnityManager {
             adapters
         }
         
-        #if canImport(ParticleWalletGUI)
+#if canImport(ParticleWalletGUI)
         ParticleWalletGUI.supportWalletConnect(false)
-        #endif
+#endif
     }
     
     func particleConnectSetChainInfo(_ json: String) -> Bool {
@@ -1036,7 +1037,7 @@ extension UnityManager {
         return true
     }
     
-    func particleConnectSetChainInfoAsync(_ json: String){
+    func particleConnectSetChainInfoAsync(_ json: String) {
         let data = JSON(parseJSON: json)
         let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
@@ -1068,9 +1069,8 @@ extension UnityManager {
             let statusModel = UnityStatusModel(status: true, data: true)
             let data = try! JSONEncoder().encode(statusModel)
             guard let json = String(data: data, encoding: .utf8) else { return }
-            self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+            ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
         }
-        
     }
     
     func adapterGetAccounts(_ json: String) -> String {
@@ -1596,6 +1596,90 @@ extension UnityManager {
         }.disposed(by: bag)
     }
     
+    
+    func adapterAddEthereumChain(_ json: String) {
+        let data = JSON(parseJSON: json)
+        
+        let walletTypeString = data["wallet_type"].stringValue
+        let publicAddress = data["public_address"].stringValue
+        let chainId = data["chain_id"].intValue
+        let chainName = data["chain_name"].string
+        let rpcUrl = data["rpc_url"].string
+        let blockExplorerUrl = data["block_explorer_url"].string
+        let nativeCurrencyName = data["native_currency"]["name"].string
+        let nativeCurrencySymbol = data["native_currency"]["symbol"].string
+        let nativeCurrencyDecimals = data["native_currency"]["decimals"].uInt8
+        
+        var nativeCurrency: NativeCurrency?
+        if nativeCurrencyName != nil, nativeCurrencySymbol != nil, nativeCurrencyDecimals != nil {
+            nativeCurrency = NativeCurrency(name: nativeCurrencyName!, symbol: nativeCurrencySymbol!, decimals: nativeCurrencyDecimals!)
+        }
+        
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
+            return
+        }
+        
+        guard let adapter = map2ConnectAdapter(from: walletType) else {
+            print("adapter for \(walletTypeString) is not init ")
+            return
+        }
+        
+        adapter.addEthereumChain(publicAddress: publicAddress, chainId: chainId, chainName: chainName, nativeCurrency: nativeCurrency, rpcUrl: rpcUrl, blockExplorerUrl: blockExplorerUrl).subscribe {
+            [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .failure(let error):
+                    let response = self.ResponseFromError(error)
+                    let statusModel = UnityStatusModel(status: false, data: response)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "addEthereumChain")
+                case .success(let flag):
+                    let statusModel = UnityStatusModel(status: true, data: flag)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "addEthereumChain")
+                }
+        }.disposed(by: bag)
+    }
+    
+    func adapterSwitchEthereumChain(_ json: String) {
+        let data = JSON(parseJSON: json)
+            
+        let walletTypeString = data["wallet_type"].stringValue
+        let publicAddress = data["public_address"].stringValue
+        let chainId = data["chain_id"].intValue
+        
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
+            return
+        }
+        
+        guard let adapter = map2ConnectAdapter(from: walletType) else {
+            print("adapter for \(walletTypeString) is not init ")
+            return
+        }
+        
+        adapter.switchEthereumChain(publicAddress: publicAddress, chainId: chainId).subscribe {
+            [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .failure(let error):
+                    let response = self.ResponseFromError(error)
+                    let statusModel = UnityStatusModel(status: false, data: response)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "switchEthereumChain")
+                case .success(let flag):
+                    let statusModel = UnityStatusModel(status: true, data: flag)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "switchEthereumChain")
+                }
+            
+        }.disposed(by: bag)
+    }
 }
 
 // MARK: - Help methods

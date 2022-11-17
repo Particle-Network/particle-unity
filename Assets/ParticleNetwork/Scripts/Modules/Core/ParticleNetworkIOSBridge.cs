@@ -231,6 +231,12 @@ namespace Network.Particle.Scripts.Core
         [DllImport("__Internal")]
         public static extern void adapterVerify(string json);
 
+        [DllImport("__Internal")]
+        public static extern void adapterSwitchEthereumChain(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void adapterAddEthereumChain(string json);
+
 #endif
 
     }

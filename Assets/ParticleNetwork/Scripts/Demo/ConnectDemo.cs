@@ -432,6 +432,54 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
+        public async void SwitchEthereumChain()
+        {
+            var nativeResultData =
+                await ParticleConnect.Instance.SwitchEthereumChain(_walletType, publicAddress, (int)EthereumChainId.Goerli);
+            Debug.Log(nativeResultData.data);
+
+            if (nativeResultData.isSuccess)
+            {
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log("SwitchEthereumChain:" + nativeResultData.data);
+                Tips.Instance.Show(nativeResultData.data);
+            }
+            else
+            {
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                Debug.Log(errorData);
+            }
+        }
+        
+        public async void AddEthereumChain()
+        {
+            // add chain example
+            // define chain id, chain name, native currency, block explorer url and rpc url.
+            var nativeResultData =
+                await ParticleConnect.Instance.AddEthereumChain(_walletType, publicAddress, (int)PolygonChainId.Mumbai, 
+                    "Polygon Mumbai", 
+                    new NativeCurrency("Polygon Mumbai", "Matic", 18), 
+                    "https://matic-mumbai.chainstacklabs.com", "https://mumbai.polygonscan.com");
+            // define chain id, other parameters will auto configure in SDK.
+            // var nativeResultData =
+                // await ParticleConnect.Instance.AddEthereumChain(_walletType, publicAddress, (int)PolygonChainId.Mumbai);
+            Debug.Log(nativeResultData.data);
+
+            if (nativeResultData.isSuccess)
+            {
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log("AddEthereumChain:" + nativeResultData.data);
+                Tips.Instance.Show(nativeResultData.data);
+            }
+            else
+            {
+                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                Debug.Log(errorData);
+            }
+        }
+
 
         async Task<string> GetSolanaTransacion()
         {

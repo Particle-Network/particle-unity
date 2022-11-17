@@ -62,7 +62,7 @@
 - (void) navigatorNFTDetails:(NSString*_Nonnull)json;
 - (void) navigatorPay;
 - (void) navigatorBuyCrypto:(NSString*_Nonnull)json;
-- (void) navigatorSwap:(NSString* _Nonnull)json;
+- (void) navigatorSwap:(NSString* _Nullable)json;
 - (void) navigatorLoginList;
 - (void) showTestNetwork:(BOOL)show; 
 - (void) showManageWallet:(BOOL)show;
@@ -90,6 +90,8 @@
 - (void) adapterExportWalletPrivateKey:(NSString* _Nonnull)json;
 - (void) adapterLogin:(NSString* _Nonnull)json;
 - (void) adapterVerify:(NSString* _Nonnull)json;
+- (void) adapterSwitchEthereumChain:(NSString* _Nonnull)json;
+- (void) adapterAddEthereumChain:(NSString* _Nonnull)json;
 @end
 
 __attribute__ ((visibility("default")))

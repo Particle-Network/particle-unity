@@ -302,6 +302,14 @@ extern "C" {
     void adapterVerify(const char* json) {
         [api adapterVerify:[NSString stringWithUTF8String: json]];
     }
+    
+    void adapterSwitchEthereumChain(const char* json) {
+        [api adapterSwitchEthereumChain:[NSString stringWithUTF8String: json]];
+    }
+    
+    void adapterAddEthereumChain(const char* json) {
+        [api adapterAddEthereumChain:[NSString stringWithUTF8String: json]];
+    }
 }
 
 // rename to cStringCopyPN in case meet same name function from other library.
