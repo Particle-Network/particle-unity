@@ -16,6 +16,7 @@
         <!--   Particle Network config start     -->
         <activity
                 android:name="com.particle.network.controller.WebActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
                 android:exported="true"
                 android:launchMode="singleTask"
                 android:theme="@style/ThemeAuthWeb">
@@ -31,6 +32,7 @@
         <!-- Particle Connect Redirect Callback -->
         <activity
                 android:name="com.connect.common.controller.RedirectActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
                 android:exported="true"
                 android:launchMode="singleTask"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">

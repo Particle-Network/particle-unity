@@ -197,7 +197,7 @@ namespace Network.Particle.Scripts.Core
         public static void NavigatorPay()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("openPay");
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("openBuy", "");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.navigatorPay();
 #else
@@ -225,8 +225,7 @@ namespace Network.Particle.Scripts.Core
             }
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("openPay");
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("openBuy", json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.navigatorBuyCrypto(json);
 #else

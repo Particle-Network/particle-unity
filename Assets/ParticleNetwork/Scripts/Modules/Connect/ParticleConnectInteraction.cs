@@ -338,8 +338,7 @@ namespace Network.Particle.Scripts.Core
             });
             
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("verify",json);
+            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("switchEthereumChain", json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.adapterSwitchEthereumChain(json);
 #else
@@ -362,13 +361,12 @@ namespace Network.Particle.Scripts.Core
                 { "chain_id", chainId },
                 { "chain_name", chainName},
                 { "native_currency", nativeCurrencyJson},
-                { "rpcUrl", rpcUrl},
+                { "rpc_url", rpcUrl},
                 { "block_explorer_url", blockExplorerUrl}
             });
             
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("verify",json);
+            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("addEthereumChain",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.adapterAddEthereumChain(json);
 #else
