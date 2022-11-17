@@ -13,7 +13,7 @@ dependencies {
         implementation "network.particle:unity-bridge:${sdkVersion}"
         
         //if only use connect sdk, you must add the following dependencies 
-//         def sdkVersion = "0.9.30" find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+//         def sdkVersion = "0.9.31" find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
 //         implementation "network.particle:connect-common:${connectVersion}"
 //         implementation "network.particle:connect:${connectVersion}"
 //         implementation "network.particle:connect-evm-adapter:${connectVersion}"
