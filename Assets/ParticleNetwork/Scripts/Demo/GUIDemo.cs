@@ -137,6 +137,77 @@ namespace Network.Particle.Scripts.Test
             ParticleWalletGUI.NavigatorSwap();
         }
 
+        public async void SwitchWallet()
+        {
+            var walletType = WalletType.MetaMask;
+            var publicAddress = "";
+            var nativeResultData = await ParticleWalletGUI.Instance.SwitchWallet(walletType, publicAddress);
+            
+            Debug.Log(nativeResultData.data);
+
+            if (nativeResultData.isSuccess)
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log(nativeResultData.data);
+            }
+            else
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                Debug.Log(errorData);
+            }
+        }
+
+        public void ShowTestNetwork()
+        {
+            ParticleWalletGUI.ShowTestNetwork(false);
+        }
+
+        public void ShowManageWallet()
+        {
+            ParticleWalletGUI.ShowManageWallet(false);
+        }
+        
+        public void SetUserInterfaceStyle()
+        {
+            ParticleWalletGUI.SetInterfaceStyle(UserInterfaceStyle.DARK);
+        }
+
+        public void SetLanguage()
+        {
+            ParticleWalletGUI.SetLanguage(Language.EN);
+        }
+
+        public void SetEnableBuyCryptoFeature()
+        {
+            ParticleWalletGUI.EnablePay(true);
+        }
+        
+        public void SetEnableSwapFeature()
+        {
+            ParticleWalletGUI.EnableSwap(true);
+        }
+
+        public void SetSupportChainInfos()
+        {
+            ChainInfo avalanche = new AvalancheChain(AvalancheChainId.Mainnet);
+            ChainInfo ethereum = new EthereumChain(EthereumChainId.Mainnet);
+            ChainInfo bsc = new BSCChain(BscChainId.Mainnet);
+            ParticleWalletGUI.SupportChain(new []{avalanche, bsc, ethereum});
+        }
+
+        public void GetSwapEnableState()
+        {
+            var result = ParticleWalletGUI.GetEnableSwap();
+            Debug.Log($"Swap enable state = {result}");
+        }
+        
+        public void GetBuyCryptoEnableState()
+        {
+            var result = ParticleWalletGUI.GetEnablePay();
+            Debug.Log($"Buy crypto enable state = {result}");
+        }
+
         public void ShowToast(string message)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
