@@ -96,6 +96,41 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             return 0;
 #endif
         }
+        
+        
+        /// <summary>
+        /// Set Interface Style
+        /// </summary>
+        /// <param name="style">Style</param>
+        public static void SetInterfaceStyle(UserInterfaceStyle style)
+        {
+            Debug.Log(style);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo 
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xxx);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setInterfaceStyle(style.ToString());
+#else
+
+#endif
+        }
+
+        /// <summary>
+        /// Set language
+        /// </summary>
+        /// <param name="language">Language</param>
+        public static void SetLanguage(Language language)
+        {
+            Debug.Log(language);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo 
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xxx);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setLanguage(language.ToString());
+#else
+
+#endif
+        }
 
         public static void CallNative(string methodName, params object[] args)
         {

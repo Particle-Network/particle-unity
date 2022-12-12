@@ -20,6 +20,12 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern int getDevEnv();
+        
+        [DllImport("__Internal")]
+        public static extern void setInterfaceStyle(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setLanguage(string json);
 #endif
 
         // Particle Auth Service
@@ -109,22 +115,23 @@ namespace Network.Particle.Scripts.Core
         public static extern void showManageWallet(bool show);
         
         [DllImport("__Internal")]
+        public static extern void showAppearanceSetting(bool show);
+        
+        [DllImport("__Internal")]
+        public static extern void showLanguageSetting(bool show);
+        
+        
+        [DllImport("__Internal")]
         public static extern void supportChain(string json);
         
         [DllImport("__Internal")]
         public static extern void switchWallet(string json);
         
         [DllImport("__Internal")]
-        public static extern void setLanguage(string json);
-        
-        [DllImport("__Internal")]
-        public static extern void setInterfaceStyle(string json);
-        
+        public static extern void guiSetLanguage(string json);
+
         [DllImport("__Internal")]
         public static extern void navigatorSwap(string json);
-        
-        
-        
 
 #endif
 

@@ -27,7 +27,7 @@ namespace Network.Particle.Scripts.Test
             // Disable wallet manage page if you only support one wallet
             ParticleWalletGUI.ShowManageWallet(false);
             // Use this method to control dark mode or light mode. you can call this method with your button.
-            ParticleWalletGUI.SetInterfaceStyle(UserInterfaceStyle.DARK);
+            ParticleNetwork.SetInterfaceStyle(UserInterfaceStyle.DARK);
         }
 
         public async void Login()

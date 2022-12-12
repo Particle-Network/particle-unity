@@ -320,6 +320,39 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
+
+        /// <summary>
+        /// Set Show Appearance Setting in Setting page
+        /// </summary>
+        /// <param name="show">Set true to show appearance setting in setting page, vice versa, default value is false.</param>
+        public static void ShowAppearanceSetting(bool show = false)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("showAppearanceSetting",show);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.showAppearanceSetting(show);
+#else
+
+#endif
+        }
+        
+        /// <summary>
+        /// Set Show Language Setting in Setting page
+        /// </summary>
+        /// <param name="show">Set true to show language setting in setting page, vice versa, default value is false.</param>
+        public static void ShowLanguageSetting(bool show = false)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("showLanguageSetting",show);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.showLanguageSetting(show);
+#else
+
+#endif
+        }
+
         /// <summary>
         /// Set Support Chain
         /// </summary>
@@ -401,27 +434,12 @@ namespace Network.Particle.Scripts.Core
 // todo unsupport
             // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xx);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.setLanguage(language.ToString());
+            ParticleNetworkIOSBridge.guiSetLanguage(language.ToString());
 #else
 
 #endif
         }
 
-        /// <summary>
-        /// Set Interface Style
-        /// </summary>
-        /// <param name="style">Style</param>
-        public static void SetInterfaceStyle(UserInterfaceStyle style)
-        {
-            Debug.Log(style);
-#if UNITY_ANDROID && !UNITY_EDITOR
-// todo unsupport
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xxx);
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.setInterfaceStyle(style.ToString());
-#else
-
-#endif
-        }
+        
     }
 }

@@ -29,6 +29,14 @@ extern "C" {
     long getDevEnv() {
         return [api getDevEnv];
     }
+
+    void setLanguage(const char* json) {
+        [api setLanguage:[NSString stringWithUTF8String: json]];
+    }
+
+    void setInterfaceStyle(const char* json) {
+        [api setInterfaceStyle:[NSString stringWithUTF8String: json]];
+    }
 }
 
 // Particle Auth Service
@@ -222,13 +230,17 @@ extern "C" {
     void switchWallet(const char* json) {
         [api switchWallet:[NSString stringWithUTF8String: json]];
     }
-    
-    void setLanguage(const char* json) {
-        [api setLanguage:[NSString stringWithUTF8String: json]];
+
+    void guiSetLanguage(const char* json) {
+        [api guiSetLanguage:[NSString stringWithUTF8String: json]];
     }
-    
-    void setInterfaceStyle(const char* json) {
-        [api setInterfaceStyle:[NSString stringWithUTF8String: json]];
+
+    void showLanguageSetting(bool show) {
+        [api showLanguageSetting:show];
+    }
+
+    void showAppearanceSetting(bool show) {
+        [api showAppearanceSetting:show];
     }
 
 }

@@ -167,15 +167,20 @@ namespace Network.Particle.Scripts.Test
         {
             ParticleWalletGUI.ShowManageWallet(false);
         }
-        
-        public void SetUserInterfaceStyle()
+
+        public void ShowLanguageSetting()
         {
-            ParticleWalletGUI.SetInterfaceStyle(UserInterfaceStyle.DARK);
+            ParticleWalletGUI.ShowLanguageSetting(true);
+        }
+        
+        public void ShowAppearanceSetting()
+        {
+            ParticleWalletGUI.ShowAppearanceSetting(true);
         }
 
         public void SetLanguage()
         {
-            ParticleWalletGUI.SetLanguage(Language.EN);
+            ParticleWalletGUI.SetLanguage(Language.KO);
         }
 
         public void SetEnableBuyCryptoFeature()
@@ -207,6 +212,7 @@ namespace Network.Particle.Scripts.Test
             var result = ParticleWalletGUI.GetEnablePay();
             Debug.Log($"Buy crypto enable state = {result}");
         }
+        
 
         public void ShowToast(string message)
         {

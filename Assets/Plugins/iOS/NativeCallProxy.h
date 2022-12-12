@@ -18,6 +18,8 @@
 - (NSString* _Nonnull) getChainInfo;
 - (NSInteger) getDevEnv;
 - (BOOL) setChainInfo:(NSString* _Nonnull)json;
+- (void) setInterfaceStyle:(NSString* _Nonnull)json;
+- (void) setLanguage:(NSString* _Nonnull)json;
 
 // Particle Auth Service
 - (void) login:(NSString* _Nonnull)json;
@@ -68,8 +70,9 @@
 - (void) showManageWallet:(BOOL)show;
 - (void) supportChain:(NSString*_Nonnull)json;
 - (void) switchWallet:(NSString*_Nonnull)json;
-- (void) setLanguage:(NSString* _Nonnull)json;
-- (void) setInterfaceStyle:(NSString* _Nonnull)json;
+- (void) guiSetLanguage:(NSString* _Nonnull)json;
+- (void) showAppearanceSetting:(BOOL)show;
+- (void) showLanguageSetting:(BOOL)show;
 
 // Particle Connect
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;

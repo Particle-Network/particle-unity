@@ -188,6 +188,18 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
+        public void SetLanguage()
+        {
+            Language language = Language.JA;
+            ParticleNetwork.SetLanguage(language);
+        }
+
+        public void SetInterfaceStyle()
+        {
+            UserInterfaceStyle style = UserInterfaceStyle.DARK;
+            ParticleNetwork.SetInterfaceStyle(style);
+        }
+
 
         public void ShowToast(string message)
         {

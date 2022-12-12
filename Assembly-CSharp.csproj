@@ -90,6 +90,7 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/GUIDemo.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Singleton/SingletonMonoBehaviour.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/DAppMetadata.cs" />
+     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/Example.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ChainChoice.cs" />
      <None Include="Assets/Resources/TypedDataV1.txt" />
      <None Include="Assets/Resources/TypedDataV4.txt" />

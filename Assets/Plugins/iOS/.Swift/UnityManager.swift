@@ -38,8 +38,6 @@ import UIKit
 
 @objcMembers
 class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
-    
-    
     let bag = DisposeBag()
     static var shared = UnityManager()
     
@@ -120,6 +118,40 @@ extension UnityManager {
     func getChainInfo() -> String {
         let chainInfo = ParticleNetwork.getChainInfo()
         return ["chain_name": chainInfo.name, "chain_id": chainInfo.chainId, "chain_id_name": chainInfo.network].jsonString() ?? ""
+    }
+    
+    func setLanguage(_ json: String) {
+        /**
+         SYSTEM,
+         EN,
+         ZH_HANS,
+         */
+        if json.lowercased() == "en" {
+            ParticleNetwork.setLanguage(Language.en)
+        } else if json.lowercased() == "zh_hans" {
+            ParticleNetwork.setLanguage(Language.zh_Hans)
+        } else if json.lowercased() == "zh_hant" {
+            ParticleNetwork.setLanguage(Language.zh_Hant)
+        } else if json.lowercased() == "ko" {
+            ParticleNetwork.setLanguage(Language.ko)
+        } else if json.lowercased() == "ja" {
+            ParticleNetwork.setLanguage(Language.ja)
+        }
+    }
+    
+    func setInterfaceStyle(_ json: String) {
+        /**
+         SYSTEM,
+         LIGHT,
+         DARK,
+         */
+        if json.lowercased() == "system" {
+            ParticleNetwork.setInterfaceStyle(UIUserInterfaceStyle.unspecified)
+        } else if json.lowercased() == "light" {
+            ParticleNetwork.setInterfaceStyle(UIUserInterfaceStyle.light)
+        } else if json.lowercased() == "dark" {
+            ParticleNetwork.setInterfaceStyle(UIUserInterfaceStyle.dark)
+        }
     }
 }
 
@@ -927,34 +959,33 @@ extension UnityManager {
         }
     }
     
-    func setLanguage(_ json: String) {
+    func guiSetLanguage(_ json: String) {
         /**
-         SYSTEM,
          EN,
          ZH_HANS,
+         ZH_HANT,
+         JA,
+         KO
          */
-        if json.lowercased() == "system" {
-            ParticleWalletGUI.setLanguage(Language.unspecified)
-        } else if json.lowercased() == "en" {
+        if json.lowercased() == "en" {
             ParticleWalletGUI.setLanguage(Language.en)
         } else if json.lowercased() == "zh_hans" {
             ParticleWalletGUI.setLanguage(Language.zh_Hans)
+        } else if json.lowercased() == "zh_hant" {
+            ParticleWalletGUI.setLanguage(Language.zh_Hant)
+        } else if json.lowercased() == "ko" {
+            ParticleWalletGUI.setLanguage(Language.ko)
+        } else if json.lowercased() == "ja" {
+            ParticleWalletGUI.setLanguage(Language.ja)
         }
     }
     
-    func setInterfaceStyle(_ json: String) {
-        /**
-         SYSTEM,
-         LIGHT,
-         DARK,
-         */
-        if json.lowercased() == "system" {
-            ParticleWalletGUI.setInterfaceStyle(UIUserInterfaceStyle.unspecified)
-        } else if json.lowercased() == "light" {
-            ParticleWalletGUI.setInterfaceStyle(UIUserInterfaceStyle.light)
-        } else if json.lowercased() == "dark" {
-            ParticleWalletGUI.setInterfaceStyle(UIUserInterfaceStyle.dark)
-        }
+    func showLanguageSetting(_ show: Bool) {
+        ParticleWalletGUI.showLanguageSetting(show)
+    }
+    
+    func showAppearanceSetting(_ show: Bool) {
+        ParticleWalletGUI.showAppearanceSetting(show)
     }
 }
 
@@ -1158,7 +1189,7 @@ extension UnityManager {
         } else if walletType == .particle {
             observable = adapter.connect(connectConfig)
         } else {
-            observable = adapter.connect(.none)
+            observable = adapter.connect(ConnectConfig.none)
         }
         
         observable.subscribe { [weak self] result in
@@ -1595,7 +1626,6 @@ extension UnityManager {
             }
         }.disposed(by: bag)
     }
-    
     
     func adapterAddEthereumChain(_ json: String) {
         let data = JSON(parseJSON: json)
