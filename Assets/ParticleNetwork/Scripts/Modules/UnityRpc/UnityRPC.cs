@@ -95,7 +95,7 @@ namespace Network.Particle.Scripts.Core
         }
 
         public async static Task<string> AbiEncodeFunctionCall(string contractAddress, string methodName,
-            string parameters,
+            List<object> parameters,
             string abiJsonString)
         {
             var list = new List<object> { contractAddress, methodName, parameters };

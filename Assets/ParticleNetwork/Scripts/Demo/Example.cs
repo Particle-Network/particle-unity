@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
@@ -85,6 +86,34 @@ namespace Network.Particle.Scripts.Test
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
+        }
+
+        public async void Mint()
+        {
+            // Example for call mint method of a contract
+            string contractAddress = "";
+            string methodName = "custom_mint";
+            List<object> parameters = new List<object> { "1"};
+
+            List<object> objects = new List<object> { contractAddress, methodName, parameters };
+            string data = await EvmService.AbiEncodeFunctionCall(objects);
+        }
+
+        public async void CustomMethod()
+        {
+            // Example for call custom method of a contract
+            string contractAddress = "";
+            // should add custom_ before your method name. like "custom_mint", "custom_balanceOf"
+            string methodName = "custom_method"; 
+            // List your method's parameters 
+            List<object> parameters = new List<object> { "1"};
+            // This is your contact abjJsonString
+            string abiJson = "";
+
+            // Combine above into a ordered list
+            List<object> objects = new List<object> { contractAddress, methodName, parameters, abiJson};
+            // Send and get data
+            string data = await EvmService.AbiEncodeFunctionCall(objects);
         }
     }
 }
