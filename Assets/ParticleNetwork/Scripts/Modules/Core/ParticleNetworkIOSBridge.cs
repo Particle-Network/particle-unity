@@ -120,7 +120,6 @@ namespace Network.Particle.Scripts.Core
         [DllImport("__Internal")]
         public static extern void showLanguageSetting(bool show);
         
-        
         [DllImport("__Internal")]
         public static extern void supportChain(string json);
         
@@ -132,6 +131,10 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void navigatorSwap(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void supportWalletConnect(bool enable);
+        
 
 #endif
 

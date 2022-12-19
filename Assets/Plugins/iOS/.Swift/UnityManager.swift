@@ -987,6 +987,10 @@ extension UnityManager {
     func showAppearanceSetting(_ show: Bool) {
         ParticleWalletGUI.showAppearanceSetting(show)
     }
+    
+    func supportWalletConnect(_ enable: Bool) {
+        ParticleWalletGUI.supportWalletConnect(enable)
+    }
 }
 
 // MARK: - Particle Connect
@@ -1053,10 +1057,6 @@ extension UnityManager {
         ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData) {
             adapters
         }
-        
-#if canImport(ParticleWalletGUI)
-        ParticleWalletGUI.supportWalletConnect(false)
-#endif
     }
     
     func particleConnectSetChainInfo(_ json: String) -> Bool {

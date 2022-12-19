@@ -243,6 +243,10 @@ extern "C" {
         [api showAppearanceSetting:show];
     }
 
+    void supportWalletConnect(bool enable) {
+        [api supportWalletConnect: enable];
+    }
+
 }
 
 // Particle Connect

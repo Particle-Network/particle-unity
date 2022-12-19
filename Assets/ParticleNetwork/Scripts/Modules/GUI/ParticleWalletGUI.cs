@@ -440,6 +440,22 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
+        /// <summary>
+        /// Set support wallet connect as a wallet
+        /// </summary>
+        /// <param name="enable">Enable</param>
+        public static void SupportWalletConnect(bool enable)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo unsupport
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xx);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.supportWalletConnect(enable);
+#else
+
+#endif
+        }
+
         
     }
 }

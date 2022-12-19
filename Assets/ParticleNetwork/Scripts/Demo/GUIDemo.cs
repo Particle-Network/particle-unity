@@ -212,6 +212,11 @@ namespace Network.Particle.Scripts.Test
             var result = ParticleWalletGUI.GetEnablePay();
             Debug.Log($"Buy crypto enable state = {result}");
         }
+
+        public void SupportWalletConnect()
+        {
+            ParticleWalletGUI.SupportWalletConnect(true);
+        }
         
 
         public void ShowToast(string message)

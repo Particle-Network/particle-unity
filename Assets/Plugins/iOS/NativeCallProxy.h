@@ -73,6 +73,7 @@
 - (void) guiSetLanguage:(NSString* _Nonnull)json;
 - (void) showAppearanceSetting:(BOOL)show;
 - (void) showLanguageSetting:(BOOL)show;
+- (void) supportWalletConnect:(BOOL)enable;
 
 // Particle Connect
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;
