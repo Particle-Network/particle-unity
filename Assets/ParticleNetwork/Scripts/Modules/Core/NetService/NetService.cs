@@ -20,7 +20,7 @@ namespace Network.Particle.Scripts.Core
 
     public class NetService
     {
-        private static string url = "https://api.particle.network/";
+        private static string url = "https://rpc.particle.network/";
         private static string authenticate(string username, string password)
         {
             string auth = username + ":" + password;
