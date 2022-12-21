@@ -447,10 +447,33 @@ namespace Network.Particle.Scripts.Core
         public static void SupportWalletConnect(bool enable)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo unsupport
+// todo 
             // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xx);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.supportWalletConnect(enable);
+#else
+
+#endif
+        }
+
+        /// <summary>
+        /// Initialize particle wallet connect as a wallet 
+        /// </summary>
+        /// <param name="metaData">WalletMetdData</param>
+        public static void ParticleWalletConnectInitialize(WalletMetaData metaData)
+        {
+            var json = JsonConvert.SerializeObject(new JObject
+            {
+                { "name", metaData.name },
+                { "icon", metaData.icon },
+                { "url", metaData.url },
+                { "description", metaData.description },
+            });
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo 
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xx);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.particleWalletConnectInitialize(json);
 #else
 
 #endif

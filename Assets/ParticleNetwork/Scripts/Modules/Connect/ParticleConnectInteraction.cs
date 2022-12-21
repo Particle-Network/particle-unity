@@ -21,7 +21,7 @@ namespace Network.Particle.Scripts.Core
 	        "rpc_url": null
         }
          */
-        public static void Init(ChainInfo chainInfo, DAppMetadata dAppMetadata, [CanBeNull] RpcUrl rpcUrl = null,
+        public static void Init(ChainInfo chainInfo, DAppMetaData dAppMetadata, [CanBeNull] RpcUrl rpcUrl = null,
             Env env = Env.DEV)
         {
             var json = JsonConvert.SerializeObject(new JObject

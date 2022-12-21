@@ -246,6 +246,10 @@ extern "C" {
     void supportWalletConnect(bool enable) {
         [api supportWalletConnect: enable];
     }
+    
+    void particleWalletConnectInitialize(const char* json) {
+        [api particleWalletConnectInitialize:[NSString stringWithUTF8String: json]];
+    }
 
 }
 

@@ -135,7 +135,8 @@ namespace Network.Particle.Scripts.Core
         [DllImport("__Internal")]
         public static extern void supportWalletConnect(bool enable);
         
-
+        [DllImport("__Internal")]
+        public static extern void particleWalletConnectInitialize(string json);
 #endif
 
         // Particle Wallet API

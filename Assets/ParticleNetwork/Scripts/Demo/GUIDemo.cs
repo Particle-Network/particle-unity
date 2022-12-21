@@ -37,12 +37,20 @@ namespace Network.Particle.Scripts.Test
 
         public void Init()
         {
-            var metadata = DAppMetadata.Create("Particle Connect",
+            var metadata = new DAppMetaData("Particle Connect",
                 "https://connect.particle.network/icons/512.png",
                 "https://connect.particle.network");
 
             ParticleNetwork.Init(_chainInfo);
             ParticleConnectInteraction.Init(_chainInfo, metadata);
+        }
+
+        public void ParticleWalletConnectInitialize()
+        {
+            var metaData = new WalletMetaData("Particle Connect",
+                "https://connect.particle.network/icons/512.png",
+                "https://connect.particle.network", description: "");
+            ParticleWalletGUI.ParticleWalletConnectInitialize(metaData);
         }
 
         public void NavigatorWallet()

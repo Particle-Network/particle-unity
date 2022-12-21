@@ -13,6 +13,7 @@ import UnityFramework
 import ParticleAuthService
 import ParticleNetworkBase
 import ParticleWalletAPI
+import ParticleWalletConnect
 import ParticleWalletGUI
 
 import ConnectCommon
@@ -990,6 +991,22 @@ extension UnityManager {
     
     func supportWalletConnect(_ enable: Bool) {
         ParticleWalletGUI.supportWalletConnect(enable)
+    }
+    
+    func particleWalletConnectInitialize(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let name = data["name"].stringValue
+        let iconString = data["icon"].stringValue
+        let urlString = data["url"].stringValue
+        let description = data["description"].string
+        
+        let icon = URL(string: iconString) != nil ? URL(string: iconString)! : URL(string: "https://static.particle.network/wallet-icons/Particle.png")!
+        
+        let url = URL(string: urlString) != nil ? URL(string: urlString)! : URL(string: "https://static.particle.network")!
+        
+        let walletMetaData = WalletMetaData(name: name, icon: icon, url: url, description: description)
+        
+        ParticleWalletConnect.initialize(walletMetaData)
     }
 }
 

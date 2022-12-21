@@ -50,7 +50,7 @@ namespace Network.Particle.Scripts.Test
 
         public void Init()
         {
-            var metadata = DAppMetadata.Create("Particle Connect",
+            var metadata = new DAppMetaData("Particle Connect",
                 "https://connect.particle.network/icons/512.png",
                 "https://connect.particle.network");
             ParticleNetwork.Init(_chainInfo);
@@ -478,6 +478,15 @@ namespace Network.Particle.Scripts.Test
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
+        }
+
+        public void GetChainInfo()
+        {
+            var chainInfo = ParticleNetwork.GetChainInfo();
+            Debug.Log(chainInfo);
+            Debug.Log(chainInfo.getChainId());
+            Debug.Log(chainInfo.getChainName());
+            Debug.Log(chainInfo.getChainIdName());
         }
 
 

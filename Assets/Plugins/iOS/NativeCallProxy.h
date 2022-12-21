@@ -74,6 +74,7 @@
 - (void) showAppearanceSetting:(BOOL)show;
 - (void) showLanguageSetting:(BOOL)show;
 - (void) supportWalletConnect:(BOOL)enable;
+- (void) particleWalletConnectInitialize:(NSString*_Nonnull)json;
 
 // Particle Connect
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;

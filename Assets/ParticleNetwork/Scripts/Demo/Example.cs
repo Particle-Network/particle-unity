@@ -10,10 +10,10 @@ namespace Network.Particle.Scripts.Test
     {
         public void Init()
         {
-            var metadata = DAppMetadata.Create("Particle Connect",
+            var metadata = new DAppMetaData("Particle Connect",
                 "https://connect.particle.network/icons/512.png",
                 "https://connect.particle.network");
-            
+
             ChainInfo chainInfo = new AvalancheChain(AvalancheChainId.Mainnet);
             // Init and set default chain info.
             ParticleNetwork.Init(chainInfo);
