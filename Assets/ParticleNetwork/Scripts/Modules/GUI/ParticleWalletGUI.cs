@@ -460,7 +460,7 @@ namespace Network.Particle.Scripts.Core
         public static void SupportWalletConnect(bool enable)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-           ParticleNetwork.GetUnityBridgeClass().CallStatic("supportWalletConnect",show);
+           ParticleNetwork.GetUnityBridgeClass().CallStatic("supportWalletConnect",enable);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.supportWalletConnect(enable);
 #else
