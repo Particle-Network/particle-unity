@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Core.Utils;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace Network.Particle.Scripts.Test
@@ -224,6 +225,30 @@ namespace Network.Particle.Scripts.Test
         public void SupportWalletConnect()
         {
             ParticleWalletGUI.SupportWalletConnect(true);
+        }
+
+        public void SetCustomUI()
+        {
+            ParticleWalletGUI.SetSupportAddToken(true);
+            
+            List<string> displayTokenAddresses = new List<string>();
+            displayTokenAddresses.Add("0x326C977E6efc84E512bB9C30f76E30c160eD06FB");
+            displayTokenAddresses.Add("0xaFF4481D10270F50f203E0763e2597776068CBc5");
+            ParticleWalletGUI.SetDisplayTokenAddresses(displayTokenAddresses.ToArray());
+
+            List<string> nftContractAddresses = new List<string>();
+            nftContractAddresses.Add("0xD000F000Aa1F8accbd5815056Ea32A54777b2Fc4");
+            nftContractAddresses.Add("0x225140E33a113CC616A5d5F06D01e258f5a19B7D");
+            ParticleWalletGUI.SetDisplayNFTContractAddresses(nftContractAddresses.ToArray());
+            
+            ParticleWalletGUI.SetFiatCoin("JPY");
+
+            // your custom ui json
+            // format is here.
+            // https://github.com/Particle-Network/particle-ios/blob/main/Demo/Demo/customUIConfig.json
+            var txtAsset = Resources.Load<TextAsset>("customUIConfig");
+            string json = txtAsset.text;
+            ParticleWalletGUI.LoadCustomUIJsonString(json);
         }
         
 

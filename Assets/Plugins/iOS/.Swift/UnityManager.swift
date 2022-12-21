@@ -1008,6 +1008,40 @@ extension UnityManager {
         
         ParticleWalletConnect.initialize(walletMetaData)
     }
+    
+    func setSupportAddToken(_ enable: Bool) {
+        ParticleWalletGUI.setSupportAddToken(enable)
+    }
+    
+    func setDisplayTokenAddresses(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let tokenAddresses = data.arrayValue.map {
+            $0.stringValue
+        }
+        ParticleWalletGUI.setDisplayTokenAddresses(tokenAddresses)
+    }
+
+    func setDisplayNFTContractAddresses(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let tokenAddresses = data.arrayValue.map {
+            $0.stringValue
+        }
+        ParticleWalletGUI.setDisplayNFTContractAddresses(tokenAddresses)
+    }
+
+    func setFiatCoin(_ json: String) {
+        let fiatCoin = json
+        ParticleWalletGUI.setFiatCoin(fiatCoin)
+    }
+
+    func loadCustomUIJsonString(_ json: String) {
+        let jsonString = json
+        do {
+            try ParticleWalletGUI.loadCustomUIJsonString(jsonString)
+        } catch {
+            print("loadCustomUIJsonString error = \(error)")
+        }
+    }
 }
 
 // MARK: - Particle Connect

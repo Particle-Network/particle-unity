@@ -251,6 +251,24 @@ extern "C" {
         [api particleWalletConnectInitialize:[NSString stringWithUTF8String: json]];
     }
 
+    void setSupportAddToken(bool enable) {
+        [api supportWalletConnect: enable];
+    }
+
+    void setDisplayTokenAddresses(const char* json) {
+        [api setDisplayTokenAddresses:[NSString stringWithUTF8String: json]];
+    }
+
+    void setDisplayNFTContractAddresses(const char* json) {
+        [api setDisplayNFTContractAddresses:[NSString stringWithUTF8String: json]];
+    }
+    void setFiatCoin(const char* json) {
+        [api setFiatCoin:[NSString stringWithUTF8String: json]];
+    }
+
+    void loadCustomUIJsonString(const char* json) {
+        [api loadCustomUIJsonString:[NSString stringWithUTF8String: json]];
+    }
 }
 
 // Particle Connect

@@ -328,7 +328,7 @@ namespace Network.Particle.Scripts.Core
         public static void ShowAppearanceSetting(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showAppearanceSetting",show);
+        ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingAppearance",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.showAppearanceSetting(show);
 #else
@@ -346,22 +346,6 @@ namespace Network.Particle.Scripts.Core
             ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingLanguage",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.showLanguageSetting(show);
-#else
-
-#endif
-        }
-
-
-        /// <summary>
-        /// Set Show Appearance page
-        /// </summary>
-        /// <param name="show">Set true to show Appearance wallet page button in setting page, vice versa, default value is true</param>
-        public static void ShowSettingAppearance(bool show = true)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingAppearance",show);
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.showSettingAppearance(show);
 #else
 
 #endif
@@ -488,6 +472,100 @@ namespace Network.Particle.Scripts.Core
 #else
 
 #endif
+        }
+
+        /// <summary>
+        /// Set support add token, true will show add token button, false will hide add token button.
+        /// </summary>
+        /// <param name="enable">Default value is true</param>
+        public static void SetSupportAddToken(bool enable)
+        {
+           
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setSupportAddToken(enable);
+#else
+
+#endif
+        }
+
+        /// <summary>
+        /// Set display token addresses,
+        /// If you called this method, Wallet SDK will show these tokens in the token addresses.
+        /// </summary>
+        /// <param name="tokenAddresses"></param>
+        public static void SetDisplayTokenAddresses(string[] tokenAddresses)
+        {
+            var json = JsonConvert.SerializeObject(tokenAddresses);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setDisplayTokenAddresses(json);
+#else
+
+#endif
+            
+        }
+        
+        /// <summary>
+        /// Set display NFT contract addresses
+        /// If you called this method, Wallet SDK will only show NFTs in the NFT contract addresses.
+        /// </summary>
+        /// <param name="tokenAddresses"></param>
+        public static void SetDisplayNFTContractAddresses(string[] tokenAddresses)
+        {
+            
+            var json = JsonConvert.SerializeObject(tokenAddresses);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setDisplayNFTContractAddresses(json);
+#else
+
+#endif
+            
+        }
+        
+        
+        /// <summary>
+        /// Set fait coin, currently support USD, CNY, JPY, HKD, INR, KRW.
+        /// If you called this method, we will hide curreny change button in setting page.
+        /// You can pass nil to reset, after reset default fiatcoin is USD and curreny change button will show in setting page.
+        /// </summary>
+        /// <param name="fiatCoin">Fiat coin symbol.</param>
+        public static void SetFiatCoin(string fiatCoin)
+        {
+            
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setFiatCoin(fiatCoin);
+#else
+
+#endif
+            
+        }
+        
+        /// <summary>
+        /// Load custom ui json string
+        /// </summary>
+        /// <param name="json">Json string</param>
+        public static void LoadCustomUIJsonString(string json)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.loadCustomUIJsonString(json);
+#else
+
+#endif
+            
         }
 
         

@@ -75,6 +75,12 @@
 - (void) showLanguageSetting:(BOOL)show;
 - (void) supportWalletConnect:(BOOL)enable;
 - (void) particleWalletConnectInitialize:(NSString*_Nonnull)json;
+- (void) setSupportAddToken:(BOOL)enable;
+- (void) setDisplayTokenAddresses:(NSString*_Nonnull)json;
+- (void) setDisplayNFTContractAddresses:(NSString*_Nonnull)json;
+- (void) setFiatCoin:(NSString*_Nonnull)json;
+- (void) loadCustomUIJsonString:(NSString*_Nonnull)json;
+
 
 // Particle Connect
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;
