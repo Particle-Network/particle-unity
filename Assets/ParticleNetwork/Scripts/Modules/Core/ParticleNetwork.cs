@@ -106,8 +106,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
         {
             Debug.Log(style);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo 
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xxx);
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("setInterfaceStyle",style.ToString());
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setInterfaceStyle(style.ToString());
 #else
@@ -123,8 +122,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
         {
             Debug.Log(language);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo 
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xxx);
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("setLanguage",language.ToString());
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setLanguage(language.ToString());
 #else

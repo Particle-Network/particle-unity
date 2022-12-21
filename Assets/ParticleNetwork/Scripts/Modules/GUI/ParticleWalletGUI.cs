@@ -111,7 +111,7 @@ namespace Network.Particle.Scripts.Core
 #else
 #endif
         }
-        
+
         /// <summary>
         /// Open NFT Details page
         /// </summary>
@@ -219,8 +219,8 @@ namespace Network.Particle.Scripts.Core
                     { "wallet_address", config.walletAddress },
                     { "network", config.network.ToString() },
                     { "crypto_coin", config.cryptoCoin },
-                    { "fiat_coin", config.fiatCoin},
-                    { "fiat_amt", config.fiatAmt}
+                    { "fiat_coin", config.fiatCoin },
+                    { "fiat_amt", config.fiatAmt }
                 });
             }
             Debug.Log(json);
@@ -328,7 +328,6 @@ namespace Network.Particle.Scripts.Core
         public static void ShowAppearanceSetting(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.GetUnityBridgeClass().CallStatic("showAppearanceSetting",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.showAppearanceSetting(show);
@@ -344,10 +343,25 @@ namespace Network.Particle.Scripts.Core
         public static void ShowLanguageSetting(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showLanguageSetting",show);
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingLanguage",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.showLanguageSetting(show);
+#else
+
+#endif
+        }
+
+
+        /// <summary>
+        /// Set Show Appearance page
+        /// </summary>
+        /// <param name="show">Set true to show Appearance wallet page button in setting page, vice versa, default value is true</param>
+        public static void ShowSettingAppearance(bool show = true)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingAppearance",show);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.showSettingAppearance(show);
 #else
 
 #endif
@@ -405,7 +419,7 @@ namespace Network.Particle.Scripts.Core
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.switchWallet(json);
 #else
-            
+
 #endif
             return switchWallet.Task;
         }
@@ -431,8 +445,7 @@ namespace Network.Particle.Scripts.Core
         {
             Debug.Log(language);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo unsupport
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xx);
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("guiSetLanguage",language.ToString());
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.guiSetLanguage(language.ToString());
 #else
@@ -447,8 +460,7 @@ namespace Network.Particle.Scripts.Core
         public static void SupportWalletConnect(bool enable)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo 
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xx);
+           ParticleNetwork.GetUnityBridgeClass().CallStatic("supportWalletConnect",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.supportWalletConnect(enable);
 #else
@@ -470,8 +482,7 @@ namespace Network.Particle.Scripts.Core
                 { "description", metaData.description },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo 
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("xxx",xx);
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.particleWalletConnectInitialize(json);
 #else

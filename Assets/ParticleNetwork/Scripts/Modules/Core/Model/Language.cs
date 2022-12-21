@@ -2,10 +2,10 @@ namespace Network.Particle.Scripts.Model
 {
     public enum Language
     {
+        ZH_CN,
+        ZH_TW,
         EN,
-        ZH_HANS,
-        ZH_HANT,
         JA,
-        KO
+        KO,
     }
 }
