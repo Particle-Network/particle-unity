@@ -28,7 +28,7 @@ namespace Network.Particle.Scripts.Core
                 { "env", env.ToString() },
             });
 
-#if UNITY_ANDROID&& !UNITY_EDITORsi
+#if UNITY_ANDROID&& !UNITY_EDITOR
                 ParticleNetwork.CallNative("init",json);
 #elif UNITY_IOS&& !UNITY_EDITOR
                 ParticleNetworkIOSBridge.initialize(json);
