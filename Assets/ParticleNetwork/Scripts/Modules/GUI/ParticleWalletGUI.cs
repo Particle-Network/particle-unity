@@ -321,6 +321,9 @@ namespace Network.Particle.Scripts.Core
         }
 
 
+
+        
+        
         /// <summary>
         /// Set Show Appearance Setting in Setting page
         /// </summary>
@@ -328,7 +331,7 @@ namespace Network.Particle.Scripts.Core
         public static void ShowAppearanceSetting(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showAppearanceSetting",show);
+        ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingAppearance",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.showAppearanceSetting(show);
 #else
@@ -346,22 +349,6 @@ namespace Network.Particle.Scripts.Core
             ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingLanguage",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.showLanguageSetting(show);
-#else
-
-#endif
-        }
-
-
-        /// <summary>
-        /// Set Show Appearance page
-        /// </summary>
-        /// <param name="show">Set true to show Appearance wallet page button in setting page, vice versa, default value is true</param>
-        public static void ShowSettingAppearance(bool show = true)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingAppearance",show);
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.showSettingAppearance(show);
 #else
 
 #endif
