@@ -65,6 +65,10 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void setModalPresentStyle(string style);
+        
+        [DllImport("__Internal")]
+        public static extern void setMediumScreen(bool isMedium);
+        
 #endif
 
         // Particle Wallet GUI
@@ -137,6 +141,23 @@ namespace Network.Particle.Scripts.Core
         
         [DllImport("__Internal")]
         public static extern void particleWalletConnectInitialize(string json);
+
+        [DllImport("__Internal")]
+        public static extern void setSupportAddToken(bool enable);
+        
+        [DllImport("__Internal")]
+        public static extern void setDisplayTokenAddresses(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setDisplayNFTContractAddresses(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setFiatCoin(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void loadCustomUIJsonString(string json);
+        
+        
 #endif
 
         // Particle Wallet API

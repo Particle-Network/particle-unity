@@ -390,10 +390,18 @@ extension UnityManager {
     }
     
     func setModalPresentStyle(_ style: String) {
-        if style == "fullScreen" {
+        if style.lowercased() == "fullscreen" {
             ParticleAuthService.setModalPresentStyle(.fullScreen)
         } else {
             ParticleAuthService.setModalPresentStyle(.formSheet)
+        }
+    }
+    
+    func setMediumScreen(_ isMedium: Bool) {
+        if #available(iOS 15.0, *) {
+            ParticleAuthService.setMediumScreen(isMedium)
+        } else {
+            // Fallback on earlier versions
         }
     }
 }
@@ -1007,6 +1015,40 @@ extension UnityManager {
         let walletMetaData = WalletMetaData(name: name, icon: icon, url: url, description: description)
         
         ParticleWalletConnect.initialize(walletMetaData)
+    }
+    
+    func setSupportAddToken(_ enable: Bool) {
+        ParticleWalletGUI.setSupportAddToken(enable)
+    }
+    
+    func setDisplayTokenAddresses(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let tokenAddresses = data.arrayValue.map {
+            $0.stringValue
+        }
+        ParticleWalletGUI.setDisplayTokenAddresses(tokenAddresses)
+    }
+
+    func setDisplayNFTContractAddresses(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let nftContractAddresses = data.arrayValue.map {
+            $0.stringValue
+        }
+        ParticleWalletGUI.setDisplayNFTContractAddresses(nftContractAddresses)
+    }
+
+    func setFiatCoin(_ json: String) {
+        let fiatCoin = json
+        ParticleWalletGUI.setFiatCoin(fiatCoin)
+    }
+
+    func loadCustomUIJsonString(_ json: String) {
+        let jsonString = json
+        do {
+            try ParticleWalletGUI.loadCustomUIJsonString(jsonString)
+        } catch {
+            print("loadCustomUIJsonString error = \(error)")
+        }
     }
 }
 
