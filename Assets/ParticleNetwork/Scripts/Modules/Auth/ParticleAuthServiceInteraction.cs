@@ -172,11 +172,30 @@ namespace Network.Particle.Scripts.Core
         }
 
 
-        public static void SetModalPresentStyle(string style)
+        /// <summary>
+        /// Set iOS modal present style
+        /// </summary>
+        /// <param name="style">Set fullScreen or formSheet, default value is formSheet</param>
+        public static void SetiOSModalPresentStyle(iOSModalPresentStyle style)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 #elif UNITY_IOS &&!UNITY_EDITOR
-            ParticleNetworkIOSBridge.setModalPresentStyle(style);
+            ParticleNetworkIOSBridge.setModalPresentStyle(style.ToString());
+#else
+#endif
+        }
+
+        /// <summary>
+        /// Set medium screen, this method works from iOS 15.
+        /// If you want to show half screen in embedded safari, set this method to true.
+        /// and make sure you didn't call SetModalPresentStyle with FullScreen.
+        /// </summary>
+        /// <param name="isMedium">Default value is false</param>
+        public static void SetiOSMediumScreen(bool isMedium)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.setMediumScreen(isMedium);
 #else
 #endif
         }

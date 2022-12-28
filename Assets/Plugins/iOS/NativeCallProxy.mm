@@ -37,6 +37,11 @@ extern "C" {
     void setInterfaceStyle(const char* json) {
         [api setInterfaceStyle:[NSString stringWithUTF8String: json]];
     }
+
+    void setMediumScreen(bool isMedium) {
+        [api setMediumScreen: isMedium];
+    }
+
 }
 
 // Particle Auth Service

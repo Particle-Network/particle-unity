@@ -65,6 +65,10 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void setModalPresentStyle(string style);
+        
+        [DllImport("__Internal")]
+        public static extern void setMediumScreen(bool isMedium);
+        
 #endif
 
         // Particle Wallet GUI

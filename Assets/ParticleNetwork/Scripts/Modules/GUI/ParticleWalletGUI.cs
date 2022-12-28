@@ -483,7 +483,7 @@ namespace Network.Particle.Scripts.Core
            
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setSupportAddToken(enable);
 #else
@@ -501,7 +501,7 @@ namespace Network.Particle.Scripts.Core
             var json = JsonConvert.SerializeObject(tokenAddresses);
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setDisplayTokenAddresses(json);
 #else
@@ -521,7 +521,7 @@ namespace Network.Particle.Scripts.Core
             var json = JsonConvert.SerializeObject(tokenAddresses);
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setDisplayNFTContractAddresses(json);
 #else
@@ -542,7 +542,7 @@ namespace Network.Particle.Scripts.Core
             
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setFiatCoin(fiatCoin);
 #else
@@ -559,7 +559,7 @@ namespace Network.Particle.Scripts.Core
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.loadCustomUIJsonString(json);
 #else

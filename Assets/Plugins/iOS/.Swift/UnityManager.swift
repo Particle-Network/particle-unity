@@ -390,10 +390,18 @@ extension UnityManager {
     }
     
     func setModalPresentStyle(_ style: String) {
-        if style == "fullScreen" {
+        if style.lowercased() == "fullscreen" {
             ParticleAuthService.setModalPresentStyle(.fullScreen)
         } else {
             ParticleAuthService.setModalPresentStyle(.formSheet)
+        }
+    }
+    
+    func setMediumScreen(_ isMedium: Bool) {
+        if #available(iOS 15.0, *) {
+            ParticleAuthService.setMediumScreen(isMedium)
+        } else {
+            // Fallback on earlier versions
         }
     }
 }
@@ -1023,10 +1031,10 @@ extension UnityManager {
 
     func setDisplayNFTContractAddresses(_ json: String) {
         let data = JSON(parseJSON: json)
-        let tokenAddresses = data.arrayValue.map {
+        let nftContractAddresses = data.arrayValue.map {
             $0.stringValue
         }
-        ParticleWalletGUI.setDisplayNFTContractAddresses(tokenAddresses)
+        ParticleWalletGUI.setDisplayNFTContractAddresses(nftContractAddresses)
     }
 
     func setFiatCoin(_ json: String) {

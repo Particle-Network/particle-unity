@@ -286,5 +286,15 @@ namespace Network.Particle.Scripts.Test
             // call this method to change chain info. 
             ParticleNetwork.SetChainInfo(_chainInfo);
         }
+
+        public void SetiOSModalStyle()
+        {
+            ParticleAuthServiceInteraction.SetiOSModalPresentStyle(iOSModalPresentStyle.FullScreen);
+        }
+
+        public void SetiOSMediumScreen()
+        {
+            ParticleAuthServiceInteraction.SetiOSMediumScreen(true);
+        }
     }
 }

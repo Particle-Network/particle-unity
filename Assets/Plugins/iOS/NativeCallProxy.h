@@ -34,6 +34,7 @@
 - (NSString* _Nonnull) getUserInfo;
 - (void) setChainInfoAsync:(NSString* _Nonnull)json;
 - (void) setModalPresentStyle:(NSString* _Nonnull)style;
+- (void) setMediumScreen:(BOOL)isMedium;
 
 // Particle Wallet API
 - (void) solanaGetTokenList;
