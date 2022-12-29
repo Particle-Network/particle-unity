@@ -1,12 +1,6 @@
 {
   "dependencies": {
-    "com.demigiant.dotween": {
-      "version": "1.2.632",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://package.openupm.com"
-    },
+    
     "com.unity.ext.nunit": {
       "version": "1.0.6",
       "depth": 1,

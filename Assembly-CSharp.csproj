@@ -75,6 +75,7 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/API/ParticleWalletAPIInteraction.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ParticleNetworkSDKDemo.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/GUI/ParticleWalletGUI.cs" />
+     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/iOSModalPresentStyle.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Connect/ParticleConnect.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ParticleRpcRequest.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ConnectConfig.cs" />
@@ -93,8 +94,6 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/DAppMetaData.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/Example.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ChainChoice.cs" />
-
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/iOSModalPresentStyle.cs" />
      <None Include="Assets/Resources/TypedDataV1.txt" />
      <None Include="Assets/Resources/TypedDataV4.txt" />
      <None Include="Assets/Resources/customUIConfig.json" />
@@ -310,9 +309,6 @@
      </Reference>
      <Reference Include="UnityEditor.UnityConnectModule">
      <HintPath>/Applications/Unity/Hub/Editor/2020.3.26f1/Unity.app/Contents/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll</HintPath>
-     </Reference>
-     <Reference Include="DOTween">
-     <HintPath>/Users/link2/Documents/particle-unity-github/Library/PackageCache/com.demigiant.dotween@1.2.632/DOTween/Plugins/DOTween.dll</HintPath>
      </Reference>
      <Reference Include="Newtonsoft.Json">
      <HintPath>/Users/link2/Documents/particle-unity-github/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.0.2/Runtime/Newtonsoft.Json.dll</HintPath>
@@ -693,10 +689,6 @@
     <ProjectReference Include="Unity.TextMeshPro.csproj">
       <Project>{1e9d8133-b3c0-17bd-0e56-d1d2e01d3482}</Project>
       <Name>Unity.TextMeshPro</Name>
-    </ProjectReference>
-    <ProjectReference Include="DOTween.Modules.csproj">
-      <Project>{d5416221-f989-4d02-d301-ef28b2434327}</Project>
-      <Name>DOTween.Modules</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{40bef3b2-29b8-ac71-3915-c13baaf77135}</Project>

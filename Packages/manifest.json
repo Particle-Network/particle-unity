@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.demigiant.dotween": "1.2.632",
     "com.unity.ide.rider": "3.0.13",
     "com.unity.ide.visualstudio": "2.0.14",
     "com.unity.ide.vscode": "1.2.5",
@@ -46,7 +45,6 @@
       "name": "package.openupm.com",
       "url": "https://package.openupm.com",
       "scopes": [
-        "com.demigiant.dotween",
         "com.openupm"
       ]
     }
