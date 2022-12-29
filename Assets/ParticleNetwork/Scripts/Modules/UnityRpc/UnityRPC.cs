@@ -22,7 +22,7 @@ namespace Network.Particle.Scripts.Core
         {
             string path = "evm-chain";
             ParticleRpcRequest<object> request = new ParticleRpcRequest<object>(method, parameters);
-            return await NetService.Request(path, request);
+            return await NodeService.Request(path, request);
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Network.Particle.Scripts.Core
         {
             string path = "solana";
             ParticleRpcRequest<object> request = new ParticleRpcRequest<object>(method, parameters);
-            return await NetService.Request(path, request);
+            return await NodeService.Request(path, request);
         }
 
         /// <summary>

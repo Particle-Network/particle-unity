@@ -85,13 +85,13 @@ namespace Network.Particle.Scripts.Core.UnityEditorTestMode
         public async static Task<string> Request(string path, [CanBeNull] string method, object[] parameters)
         {
             ParticleRpcRequest<object> request = new ParticleRpcRequest<object>(method, parameters);
-            return await NetService.Request(path, request);
+            return await APIService.Request(path, request);
         }
 
         public async static Task<string> Request(string path, string json)
         {
 #if UNITY_EDITOR
-            return await NetService.Request(path, json);
+            return await APIService.Request(path, json);
 #endif
             return string.Empty;
         }

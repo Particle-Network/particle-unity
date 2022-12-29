@@ -86,7 +86,7 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/ParticleNetworkIOSBridge.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/UnityRpc/ParticleUnityRpc.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/NativeResultData.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/NetService/NetService.cs" />
+     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/NetService/NodeService.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Utils/PersistTools.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/BuyCryptoConfig.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/GUIDemo.cs" />
@@ -94,6 +94,7 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/DAppMetaData.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/Example.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ChainChoice.cs" />
+     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/NetService/APIService.cs" />
      <None Include="Assets/Resources/TypedDataV1.txt" />
      <None Include="Assets/Resources/TypedDataV4.txt" />
      <None Include="Assets/Resources/customUIConfig.json" />

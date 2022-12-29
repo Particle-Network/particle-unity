@@ -8,19 +8,10 @@ using UnityEngine.Networking;
 
 namespace Network.Particle.Scripts.Core
 {
-    public static class ExtensionMethods
-    {
-        public static TaskAwaiter GetAwaiter(this AsyncOperation asyncOp)
-        {
-            var tcs = new TaskCompletionSource<object>();
-            asyncOp.completed += obj => { tcs.SetResult(null); };
-            return ((Task) tcs.Task).GetAwaiter();
-        }
-    }
 
-    public class NetService
+    public class APIService
     {
-        private static string url = "https://rpc.particle.network/";
+        private static string url = "https://api.particle.network/";
         private static string authenticate(string username, string password)
         {
             string auth = username + ":" + password;
