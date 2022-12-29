@@ -29,6 +29,30 @@ Make sure that your Unity project meets these requirements:
 
 **GUI**: https://docs.particle.network/wallet-service/sdks/unity
 
+## 🚀 Quick start with DEMO
+
+
+### 💻 In Unity Editor, we provide a test mode, easy to develop and debug.
+
+1. Download and open in Unity Editor.
+
+2. Run and click `Auth Demo` button, click `Select Chain` button, select `Ethereum Goerli`.
+
+3. Click `Init` button to initialize the SDK.
+
+4. Click `Login` button, in test mode, api will return a user info.
+
+5. Click other button to test, you can see all logs in Console.
+
+
+### 📲 Export to Real Phone to test.
+
+1. Export project and follow steps in Docs, install project to your phone.
+   
+2. Use the same steps to test `Auth Demo`.
+
+3. With phone, you can test `Connect Demo` and `GUI Demo`
+
 ## 💼 Feedback
 
 If you got some problems, please report bugs or issues.
