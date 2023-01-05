@@ -8,6 +8,23 @@ allprojects {
             maven { url "https://maven.google.com/" }
             maven { url"https://s01.oss.sonatype.org/content/groups/staging/" }
             maven { url"https://s01.oss.sonatype.org/content/repositories/releases/" }    
+            maven {
+              url 'https://maven.aliyun.com/repository/public'
+            }
+            maven {
+              credentials {
+                username '618e1901e6290b981e22d0b3'
+                password 'AS)ceNRJ6IJ6'
+              }
+              url 'https://packages.aliyun.com/maven/repository/2316149-release-7iKvTZ/'
+            }
+            maven {
+              credentials {
+                username '618e1901e6290b981e22d0b3'
+                password 'AS)ceNRJ6IJ6'
+              }
+              url 'https://packages.aliyun.com/maven/repository/2316149-snapshot-mc7GiM/'
+            }
         }
 
         dependencies {
@@ -29,6 +46,24 @@ allprojects {
             maven { url"https://s01.oss.sonatype.org/content/repositories/releases/" }    
             flatDir {
                 dirs "${project(':unityLibrary').projectDir}/libs"
+            }
+            
+            maven {
+              url 'https://maven.aliyun.com/repository/public'
+            }
+            maven {
+              credentials {
+                username '618e1901e6290b981e22d0b3'
+                password 'AS)ceNRJ6IJ6'
+              }
+              url 'https://packages.aliyun.com/maven/repository/2316149-release-7iKvTZ/'
+            }
+            maven {
+              credentials {
+                username '618e1901e6290b981e22d0b3'
+                password 'AS)ceNRJ6IJ6'
+              }
+              url 'https://packages.aliyun.com/maven/repository/2316149-snapshot-mc7GiM/'
             }
     }
 }
