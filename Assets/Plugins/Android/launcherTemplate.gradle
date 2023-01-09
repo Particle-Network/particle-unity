@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 dependencies {
         implementation project(':unityLibrary')
-        def sdkVersion = "0.9.10" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+        def sdkVersion = "0.9.15" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
         //particle auth service (Required)  
         implementation "network.particle:auth-service:${sdkVersion}"
         //particle api service (Optional.) If you don't want to use the API service, you can remove this dependency.
