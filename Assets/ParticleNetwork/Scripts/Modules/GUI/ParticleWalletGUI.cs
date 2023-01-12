@@ -1,6 +1,5 @@
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Network.Particle.Scripts.Core.UnityEditorTestMode;
@@ -16,12 +15,7 @@ namespace Network.Particle.Scripts.Core
     public class ParticleWalletGUI : SingletonMonoBehaviour<ParticleWalletGUI>
     {
         private TaskCompletionSource<NativeResultData> switchWallet;
-
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
+        
         private TaskCompletionSource<NativeResultData> loginListTask;
 
         /// <summary>
@@ -458,7 +452,7 @@ namespace Network.Particle.Scripts.Core
         /// <summary>
         /// Initialize particle wallet connect as a wallet 
         /// </summary>
-        /// <param name="metaData">WalletMetdData</param>
+        /// <param name="metaData">WalletMetaData</param>
         public static void ParticleWalletConnectInitialize(WalletMetaData metaData)
         {
             var json = JsonConvert.SerializeObject(new JObject
@@ -536,8 +530,8 @@ namespace Network.Particle.Scripts.Core
         
         /// <summary>
         /// Set fait coin, currently support USD, CNY, JPY, HKD, INR, KRW.
-        /// If you called this method, we will hide curreny change button in setting page.
-        /// You can pass nil to reset, after reset default fiatcoin is USD and curreny change button will show in setting page.
+        /// If you called this method, we will hide currency change button in setting page.
+        /// You can pass nil to reset, after reset default fiat coin is USD and currency change button will show in setting page.
         /// </summary>
         /// <param name="fiatCoin">Fiat coin symbol.</param>
         public static void SetFiatCoin(string fiatCoin)

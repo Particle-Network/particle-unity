@@ -1,4 +1,4 @@
-using System;
+
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -151,7 +151,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
                     GetUnityConnectBridgeClass().CallStatic(methodName, args);
                 }));
         }
-        public static AndroidJavaObject GetAndroidJavaObject()
+        private static AndroidJavaObject GetAndroidJavaObject()
         {
             if (activityObject != null)
             {
@@ -164,7 +164,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             return activityObject;
         }
 
-        public static AndroidJavaClass GetUnityBridgeClass()
+        private static AndroidJavaClass GetUnityBridgeClass()
         {
             if (unityBridge != null)
             {
@@ -175,7 +175,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             return unityBridge;
         }
         
-        public static AndroidJavaClass GetUnityConnectBridgeClass()
+        private static AndroidJavaClass GetUnityConnectBridgeClass()
         {
             if (unityConnectBridge != null)
             {
@@ -196,12 +196,12 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
 
             if (ParticleNetwork.GetChainInfo().IsEvmChain())
             {
-                var evmPrivateKey = wallets.FirstOrDefault(x => x.ChainName == "evm_chain").PrivateKey;
+                var evmPrivateKey = wallets.FirstOrDefault(x => x.ChainName == "evm_chain")?.PrivateKey;
                 return evmPrivateKey;
             }
             else
             {
-                var solanaPrivateKey = wallets.FirstOrDefault(x => x.ChainName == "solana").PrivateKey;
+                var solanaPrivateKey = wallets.FirstOrDefault(x => x.ChainName == "solana")?.PrivateKey;
                 return solanaPrivateKey;
             }
 #else
