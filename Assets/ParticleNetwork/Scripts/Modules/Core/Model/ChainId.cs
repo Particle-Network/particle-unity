@@ -94,4 +94,35 @@ namespace Network.Particle.Scripts.Model
         Mainnet = 210425,
         Testnet = 2203181
     }
+    
+    public enum TronChainId: long
+    {
+        Mainnet = 728126428,
+        Shasta = 2494104990,
+        Nile = 3448148188
+    }
+    
+    public enum OKCChainId
+    {
+        Mainnet = 66,
+        Testnet = 65
+    }
+
+    public enum ThunderCoreChainId
+    {
+        Mainnet = 108,
+        Testnet = 18
+    }
+    
+    public enum CronosChainId
+    {
+        Mainnet = 25,
+        Testnet = 338
+    }
+
+    public enum OasisEmeraldChainId
+    {
+        Mainnet = 42262,
+        Testnet = 42261
+    }
 }

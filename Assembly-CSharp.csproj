@@ -51,6 +51,7 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ConnectDemo.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/SignData.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/OpenBuyNework.cs" />
+     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/NetService/APIService.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/Chain.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/NativeCurrency.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/WalletChoiceItem.cs" />
@@ -94,7 +95,6 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/DAppMetaData.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/Example.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ChainChoice.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/NetService/APIService.cs" />
      <None Include="Assets/Resources/TypedDataV1.txt" />
      <None Include="Assets/Resources/TypedDataV4.txt" />
      <None Include="Assets/Resources/customUIConfig.json" />

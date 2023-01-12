@@ -21,7 +21,7 @@ namespace Network.Particle.Scripts.Model
     public interface ChainInfo
     {
         public string getChainName();
-        public int getChainId();
+        public long getChainId();
         public string getChainIdName();
 
         public bool IsMainnet();
@@ -30,7 +30,7 @@ namespace Network.Particle.Scripts.Model
     public abstract class BaseChainInfo : ChainInfo
     {
         protected string chainName;
-        protected int chainId;
+        protected long chainId;
         protected string chainIdName;
 
         public string getChainName()
@@ -38,7 +38,7 @@ namespace Network.Particle.Scripts.Model
             return chainName;
         }
 
-        public int getChainId()
+        public long getChainId()
         {
             return chainId;
         }
@@ -62,347 +62,443 @@ namespace Network.Particle.Scripts.Model
 
     class SolanaChain : SolanaBaseChain
     {
-        public SolanaChain(SolanaChainId solanaChainId)
+        public SolanaChain(SolanaChainId chainId)
         {
-            chainId = (int)solanaChainId;
-            chainIdName = solanaChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Solana.ToString();
         }
 
-        public SolanaChain(int chainIdInt)
+        public SolanaChain(long chainId)
         {
-            var solanaChainId = Enum.Parse(typeof(SolanaChainId), chainIdInt + "");
-            chainId = (int)solanaChainId;
-            chainIdName = solanaChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(SolanaChainId), chainId + "").ToString();
             chainName = ChainName.Solana.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)SolanaChainId.Mainnet;
+            return chainId == (long)SolanaChainId.Mainnet;
         }
     }
 
     class EthereumChain : EvmBaseChain
     {
-        public EthereumChain(EthereumChainId ethereumChainId)
+        public EthereumChain(EthereumChainId chainId)
         {
-            chainId = (int)ethereumChainId;
-            chainIdName = ethereumChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Ethereum.ToString();
         }
 
-        public EthereumChain(int chainIdInt)
+        public EthereumChain(long chainId)
         {
-            var ethereumChainId = Enum.Parse(typeof(EthereumChainId), chainIdInt + "");
-            chainId = (int)ethereumChainId;
-            chainIdName = ethereumChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(EthereumChainId), chainId + "").ToString();
             chainName = ChainName.Ethereum.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)EthereumChainId.Mainnet;
+            return chainId == (long)EthereumChainId.Mainnet;
         }
     }
 
 
     class BSCChain : EvmBaseChain
     {
-        public BSCChain(BscChainId bscChainId)
+        public BSCChain(BscChainId chainId)
         {
-            chainId = (int)bscChainId;
-            chainIdName = bscChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.BSC.ToString();
         }
 
-        public BSCChain(int chainIdInt)
+        public BSCChain(long chainId)
         {
-            var bscChainId = Enum.Parse(typeof(BscChainId), chainIdInt + "");
-            chainId = (int)bscChainId;
-            chainIdName = bscChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(BscChainId), chainId + "").ToString();
             chainName = ChainName.BSC.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)BscChainId.Mainnet;
+            return chainId == (long)BscChainId.Mainnet;
         }
     }
 
     class PolygonChain : EvmBaseChain
     {
-        public PolygonChain(PolygonChainId polygonChainId)
+        public PolygonChain(PolygonChainId chainId)
         {
-            chainId = (int)polygonChainId;
-            chainIdName = polygonChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Polygon.ToString();
         }
 
-        public PolygonChain(int chainIdInt)
+        public PolygonChain(long chainId)
         {
-            var polygonChainId = Enum.Parse(typeof(PolygonChainId), chainIdInt + "");
-            chainId = (int)polygonChainId;
-            chainIdName = polygonChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(PolygonChainId), chainId + "").ToString();
             chainName = ChainName.Polygon.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)PolygonChainId.Mainnet;
+            return chainId == (long)PolygonChainId.Mainnet;
         }
     }
 
     class AvalancheChain : EvmBaseChain
     {
-        public AvalancheChain(AvalancheChainId avalancheChainId)
+        public AvalancheChain(AvalancheChainId chainId)
         {
-            chainId = (int)avalancheChainId;
-            chainIdName = avalancheChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Avalanche.ToString();
         }
 
-        public AvalancheChain(int chainIdInt)
+        public AvalancheChain(long chainId)
         {
-            var avalancheChainId = Enum.Parse(typeof(AvalancheChainId), chainIdInt + "");
-            chainId = (int)avalancheChainId;
-            chainIdName = avalancheChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(AvalancheChainId), chainId + "").ToString();
             chainName = ChainName.Avalanche.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)AvalancheChainId.Mainnet;
+            return chainId == (long)AvalancheChainId.Mainnet;
         }
     }
 
     class MoonbeamChain : EvmBaseChain
     {
-        public MoonbeamChain(MoonbeamChainId moonbeamChainId)
+        public MoonbeamChain(MoonbeamChainId chainId)
         {
-            chainId = (int)moonbeamChainId;
-            chainIdName = moonbeamChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Moonbeam.ToString();
         }
 
-        public MoonbeamChain(int chainIdInt)
+        public MoonbeamChain(long chainId)
         {
-            var moonbeamChainId = Enum.Parse(typeof(AvalancheChainId), chainIdInt + "");
-            chainId = (int)moonbeamChainId;
-            chainIdName = moonbeamChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(AvalancheChainId), chainId + "").ToString();
             chainName = ChainName.Moonbeam.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)MoonbeamChainId.Mainnet;
+            return chainId == (long)MoonbeamChainId.Mainnet;
         }
     }
 
     class MoonriverChain : EvmBaseChain
     {
-        public MoonriverChain(MoonriverChainId moonriverChainId)
+        public MoonriverChain(MoonriverChainId chainId)
         {
-            chainId = (int)moonriverChainId;
-            chainIdName = moonriverChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Moonriver.ToString();
         }
 
-        public MoonriverChain(int chainIdInt)
+        public MoonriverChain(long chainId)
         {
-            var moonriverChainId = Enum.Parse(typeof(MoonriverChainId), chainIdInt + "");
-            chainId = (int)moonriverChainId;
-            chainIdName = moonriverChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(MoonriverChainId), chainId + "").ToString();
             chainName = ChainName.Moonriver.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)MoonriverChainId.Mainnet;
+            return chainId == (long)MoonriverChainId.Mainnet;
         }
     }
 
     class HecoChain : EvmBaseChain
     {
-        public HecoChain(HecoChainId hecoChainId)
+        public HecoChain(HecoChainId chainId)
         {
-            chainId = (int)hecoChainId;
-            chainIdName = hecoChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Heco.ToString();
         }
 
-        public HecoChain(int chainIdInt)
+        public HecoChain(long chainId)
         {
-            var hecoChainId = Enum.Parse(typeof(HecoChain), chainIdInt + "");
-            chainId = (int)hecoChainId;
-            chainIdName = hecoChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(HecoChain), chainId + "").ToString();
             chainName = ChainName.Heco.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)HecoChainId.Mainnet;
+            return chainId == (long)HecoChainId.Mainnet;
         }
     }
 
     class FantomChain : EvmBaseChain
     {
-        public FantomChain(FantomChainId fantomChainId)
+        public FantomChain(FantomChainId chainId)
         {
-            chainId = (int)fantomChainId;
-            chainIdName = fantomChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Fantom.ToString();
         }
 
-        public FantomChain(int chainIdInt)
+        public FantomChain(long chainId)
         {
-            var fantomChainId = Enum.Parse(typeof(FantomChainId), chainIdInt + "");
-            chainId = (int)fantomChainId;
-            chainIdName = fantomChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(FantomChainId), chainId + "").ToString();
             chainName = ChainName.Fantom.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)FantomChainId.Mainnet;
+            return chainId == (long)FantomChainId.Mainnet;
         }
     }
 
     class ArbitrumChain : EvmBaseChain
     {
-        public ArbitrumChain(ArbitrumChainId arbitrumChainId)
+        public ArbitrumChain(ArbitrumChainId chainId)
         {
-            chainId = (int)arbitrumChainId;
-            chainIdName = arbitrumChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Arbitrum.ToString();
         }
 
-        public ArbitrumChain(int chainIdInt)
+        public ArbitrumChain(long chainId)
         {
-            var arbitrumChainId = Enum.Parse(typeof(ArbitrumChainId), chainIdInt + "");
-            chainId = (int)arbitrumChainId;
-            chainIdName = arbitrumChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(ArbitrumChainId), chainId + "").ToString();
             chainName = ChainName.Arbitrum.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)ArbitrumChainId.Mainnet;
+            return chainId == (long)ArbitrumChainId.Mainnet;
         }
     }
 
     class HarmonyChain : EvmBaseChain
     {
-        public HarmonyChain(HarmonyChainId harmonyChainId)
+        public HarmonyChain(HarmonyChainId chainId)
         {
-            chainId = (int)harmonyChainId;
-            chainIdName = harmonyChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Harmony.ToString();
         }
 
-        public HarmonyChain(int chainIdInt)
+        public HarmonyChain(long chainId)
         {
-            var harmonyChainId = Enum.Parse(typeof(HarmonyChainId), chainIdInt + "");
-            chainId = (int)harmonyChainId;
-            chainIdName = harmonyChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(HarmonyChainId), chainId + "").ToString();
             chainName = ChainName.Harmony.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)HarmonyChainId.Mainnet;
+            return chainId == (long)HarmonyChainId.Mainnet;
         }
     }
 
     class AuroraChain : EvmBaseChain
     {
-        public AuroraChain(AuroraChainId auroraChainId)
+        public AuroraChain(AuroraChainId chainId)
         {
-            chainId = (int)auroraChainId;
-            chainIdName = auroraChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Aurora.ToString();
         }
 
-        public AuroraChain(int chainIdInt)
+        public AuroraChain(long chainId)
         {
-            var auroraChainId = Enum.Parse(typeof(AuroraChainId), chainIdInt + "");
-            chainId = (int)auroraChainId;
-            chainIdName = auroraChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(AuroraChainId), chainId + "").ToString();
             chainName = ChainName.Aurora.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)AuroraChainId.Mainnet;
+            return chainId == (long)AuroraChainId.Mainnet;
         }
     }
 
     class KccChain : EvmBaseChain
     {
-        public KccChain(KccChainId kccChainId)
+        public KccChain(KccChainId chainId)
         {
-            chainId = (int)kccChainId;
-            chainIdName = kccChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.KCC.ToString();
         }
 
-        public KccChain(int chainIdInt)
+        public KccChain(long chainId)
         {
-            var kccChainId = Enum.Parse(typeof(KccChainId), chainIdInt + "");
-            chainId = (int)kccChainId;
-            chainIdName = kccChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(KccChainId), chainId + "").ToString();
             chainName = ChainName.KCC.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)KccChainId.Mainnet;
+            return chainId == (long)KccChainId.Mainnet;
         }
     }
 
     class OptimismChain : EvmBaseChain
     {
-        public OptimismChain(OptimismChainId optimismChainId)
+        public OptimismChain(OptimismChainId chainId)
         {
-            chainId = (int)optimismChainId;
-            chainIdName = optimismChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.Optimism.ToString();
         }
 
-        public OptimismChain(int chainIdInt)
+        public OptimismChain(long chainId)
         {
-            var optimismChainId = Enum.Parse(typeof(OptimismChainId), chainIdInt + "");
-            chainId = (int)optimismChainId;
-            chainIdName = optimismChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(OptimismChainId), chainId + "").ToString();
             chainName = ChainName.Optimism.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)OptimismChainId.Mainnet;
+            return chainId == (long)OptimismChainId.Mainnet;
         }
     }
     
     class PlatONChain : EvmBaseChain
     {
-        public PlatONChain(PlatONChainId platOnChainId)
+        public PlatONChain(PlatONChainId chainId)
         {
-            chainId = (int)platOnChainId;
-            chainIdName = platOnChainId.ToString();
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
             chainName = ChainName.PlatON.ToString();
         }
 
-        public PlatONChain(int chainIdInt)
+        public PlatONChain(long chainId)
         {
-            var platOnChainId = Enum.Parse(typeof(PlatONChainId), chainIdInt + "");
-            chainId = (int)platOnChainId;
-            chainIdName = platOnChainId.ToString();
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(PlatONChainId), chainId + "").ToString();
             chainName = ChainName.PlatON.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (int)PlatONChainId.Mainnet;
+            return chainId == (long)PlatONChainId.Mainnet;
+        }
+    }
+    
+    class TronChain : EvmBaseChain
+    {
+        public TronChain(TronChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Tron.ToString();
+            
+        }
+
+        public TronChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(TronChainId), chainId + "").ToString();
+            chainName = ChainName.Tron.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)TronChainId.Mainnet;
+        }
+    }
+    
+    class OKCChain : EvmBaseChain
+    {
+        public OKCChain(OKCChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.OKC.ToString();
+        }
+
+        public OKCChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(OKCChainId), chainId + "").ToString();
+            chainName = ChainName.OKC.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)OKCChainId.Mainnet;
+        }
+    }
+    
+    class ThunderCoreChain : EvmBaseChain
+    {
+        public ThunderCoreChain(ThunderCoreChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.ThunderCore.ToString();
+        }
+
+        public ThunderCoreChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(ThunderCoreChainId), chainId + "").ToString();
+            chainName = ChainName.ThunderCore.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)ThunderCoreChainId.Mainnet;
+        }
+    }
+    
+    class CronosChain : EvmBaseChain
+    {
+        public CronosChain(CronosChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Cronos.ToString();
+        }
+
+        public CronosChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(CronosChainId), chainId + "").ToString();
+            chainName = ChainName.Cronos.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)CronosChainId.Mainnet;
+        }
+    }
+    
+    class OasisEmeraldChain : EvmBaseChain
+    {
+        public OasisEmeraldChain(OasisEmeraldChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.OasisEmerald.ToString();
+        }
+
+        public OasisEmeraldChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(OasisEmeraldChainId), chainId + "").ToString();
+            chainName = ChainName.OasisEmerald.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)OasisEmeraldChainId.Mainnet;
         }
     }
 
@@ -410,12 +506,12 @@ namespace Network.Particle.Scripts.Model
     public enum ChainName
     {
         Solana,
-        Ethereum, //1.Ethereum
-        Avalanche, //2.Avalanche
-        Polygon, //3.Polygon
-        Moonbeam, //4.Moonbeam
-        Moonriver, //5.Moonriver
-        Heco, //6.Heco
+        Ethereum, 
+        Avalanche, 
+        Polygon,
+        Moonbeam, 
+        Moonriver, 
+        Heco, 
         BSC,
         Fantom,
         Arbitrum,
@@ -423,6 +519,11 @@ namespace Network.Particle.Scripts.Model
         Aurora,
         KCC,
         Optimism,
-        PlatON
+        PlatON,
+        Tron,
+        OKC,
+        ThunderCore,
+        Cronos,
+        OasisEmerald
     }
 }

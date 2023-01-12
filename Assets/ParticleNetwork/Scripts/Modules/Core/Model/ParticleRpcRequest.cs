@@ -13,7 +13,7 @@ namespace Network.Particle.Scripts.Model
         [SerializeField] public string jsonrpc = "2.0";
         [SerializeField] [CanBeNull] public string method;
         [SerializeField] public T[] @params;
-        [SerializeField] public int chainId;
+        [SerializeField] public long chainId;
 
         public ParticleRpcRequest()
         {

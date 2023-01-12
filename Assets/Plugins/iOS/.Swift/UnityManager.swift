@@ -2034,6 +2034,32 @@ extension UnityManager {
             } else if chainId == 2203181 {
                 chainInfo = .platON(.testnet)
             }
+        } else if name == "tron" {
+            if chainId == 728126428 {
+                chainInfo = .tron(.mainnet)
+            } else if chainId == 2494104990 {
+                chainInfo = .tron(.shasta)
+            } else if chainId == 3448148188 {
+                chainInfo = .tron(.nile)
+            }
+        } else if name == "okc" {
+            if chainId == 66 {
+                chainInfo = .okc(.mainnet)
+            } else if chainId == 65 {
+                chainInfo = .okc(.testnet)
+            }
+        } else if name == "thundercore" {
+            if chainId == 108 {
+                chainInfo = .thunderCore(.mainnet)
+            } else if chainId == 18 {
+                chainInfo = .thunderCore(.testnet)
+            }
+        } else if name == "cronos" {
+            if chainId == 25 {
+                chainInfo = .cronos(.mainnet)
+            } else if chainId == 338 {
+                chainInfo = .cronos(.testnet)
+            }
         }
         return chainInfo
     }
@@ -2069,7 +2095,18 @@ extension UnityManager {
             chain = .kcc
         } else if name == "optimism" {
             chain = .optimism
+        } else if name == "platon" {
+            chain = .platON
+        } else if name == "tron" {
+            chain = .tron
+        } else if name == "okc" {
+            chain = .okc
+        } else if name == "thundercore" {
+            chain = .thunderCore
+        } else if name == "cronos" {
+            chain = .cronos
         }
+                    
         return chain
     }
 }

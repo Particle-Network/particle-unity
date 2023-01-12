@@ -60,6 +60,23 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
 
         chainInfos.Add(new PlatONChain(PlatONChainId.Mainnet));
         chainInfos.Add(new PlatONChain(PlatONChainId.Testnet));
+        
+        chainInfos.Add(new TronChain(TronChainId.Mainnet));
+        chainInfos.Add(new TronChain(TronChainId.Shasta));
+        chainInfos.Add(new TronChain(TronChainId.Nile));
+        
+        chainInfos.Add(new OKCChain(OKCChainId.Mainnet));
+        chainInfos.Add(new OKCChain(OKCChainId.Testnet));
+        
+        chainInfos.Add(new ThunderCoreChain(ThunderCoreChainId.Mainnet));
+        chainInfos.Add(new ThunderCoreChain(ThunderCoreChainId.Testnet));
+        
+        chainInfos.Add(new CronosChain(CronosChainId.Mainnet));
+        chainInfos.Add(new CronosChain(CronosChainId.Testnet));
+        
+        chainInfos.Add(new OasisEmeraldChain(OasisEmeraldChainId.Mainnet));
+        chainInfos.Add(new OasisEmeraldChain(OasisEmeraldChainId.Testnet));
+        
 
         foreach (var chainInfo in chainInfos)
         {
