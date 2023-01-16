@@ -2,9 +2,17 @@ apply plugin: 'com.android.application'
 
 dependencies {
         implementation project(':unityLibrary')
-        def sdkVersion = "0.9.15" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
-        //particle auth service (Required)  
-        implementation "network.particle:auth-service:${sdkVersion}"
+        def sdkVersion = "0.9.17" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+     
+        //tips
+        //auth-service and auth-service-tiramisu are the same library,
+        //tiramisu requires android targetSdkVersion 33,it supports set auth browser height percent
+        
+        //particle auth service(Required)  
+        //implementation "network.particle:auth-service:$sdkVersion"
+        //particle auth service tiramisu(Required), it supports set auth browser height percent,require targetSdkVersion 33
+        implementation "network.particle:auth-service-tiramisu:$sdkVersion"
+        
         //particle api service (Optional.) If you don't want to use the API service, you can remove this dependency.
         implementation "network.particle:api-service:${sdkVersion}"
         //particle wallet service (Optional.) If you don't want to use the wallet service, you can remove this dependency. wallet service contains the connect sdk 

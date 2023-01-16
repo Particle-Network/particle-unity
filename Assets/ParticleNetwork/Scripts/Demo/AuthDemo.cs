@@ -275,7 +275,7 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public  void GetPnAddress()
+        public void GetPnAddress()
         {
             var address = GetAddress();
             Tips.Instance.Show("GetPnAddress:" + address);
@@ -295,6 +295,14 @@ namespace Network.Particle.Scripts.Test
         public void SetiOSMediumScreen()
         {
             ParticleAuthServiceInteraction.SetiOSMediumScreen(true);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SetBrowserHeightPercent()
+        {
+            ParticleAuthServiceInteraction.SetBrowserHeightPercent(0.7f);
         }
     }
 }

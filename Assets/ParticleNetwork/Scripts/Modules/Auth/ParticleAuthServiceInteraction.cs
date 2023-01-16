@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using Network.Particle.Scripts.Core.UnityEditorTestMode;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -11,8 +12,8 @@ namespace Network.Particle.Scripts.Core
 {
     public static class ParticleAuthServiceInteraction
     {
-        
-        public static void Login(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes, bool loginFormMode)
+        public static void Login(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes,
+            bool loginFormMode)
         {
             var authTypeList = ParticleTools.GetSupportAuthTypeValues(supportAuthTypes);
             string accountNative = "";
@@ -29,7 +30,6 @@ namespace Network.Particle.Scripts.Core
             });
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
-            
             ParticleNetwork.CallNative("login",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.login(json);
@@ -44,8 +44,8 @@ namespace Network.Particle.Scripts.Core
             ParticleNetwork.CallNative("logout");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.logout();
-#else   
-            
+#else
+
 #endif
         }
 
@@ -197,6 +197,26 @@ namespace Network.Particle.Scripts.Core
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.setMediumScreen(isMedium);
 #else
+#endif
+        }
+
+
+        /// <summary>
+        /// only Android support
+        /// set auth browser height percent, you must use android auth sdk tiramisu
+        /// if you didn't call this method, the default value is 0.9f
+        /// </summary>
+        /// <param name="percent"> percent>0 percent<=1 </param>
+        public static void SetBrowserHeightPercent(float percent)
+        {
+            if (percent <= 0 || percent > 1) throw new Exception("require 0<percent<=1");
+            Debug.Log($"SetBrowserHeightPercent percent: {percent}");
+#if UNITY_ANDROID && !UNITY_EDITOR
+            var authTiramisu = new AndroidJavaClass("com.particle.browser.ParticleNetworkAuthTiramisu");
+            authTiramisu.CallStatic("setBrowserHeightPercent", percent);
+#elif UNITY_IOS &&!UNITY_EDITOR
+#else
+
 #endif
         }
     }
