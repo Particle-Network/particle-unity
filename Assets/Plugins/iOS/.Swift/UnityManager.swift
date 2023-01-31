@@ -123,15 +123,17 @@ extension UnityManager {
     
     func setLanguage(_ json: String) {
         /**
-         SYSTEM,
+         ZH_CN,
+         ZH_TW,
          EN,
-         ZH_HANS,
+         JA,
+         KO,
          */
         if json.lowercased() == "en" {
             ParticleNetwork.setLanguage(Language.en)
-        } else if json.lowercased() == "zh_hans" {
+        } else if json.lowercased() == "zh_cn" {
             ParticleNetwork.setLanguage(Language.zh_Hans)
-        } else if json.lowercased() == "zh_hant" {
+        } else if json.lowercased() == "zh_tw" {
             ParticleNetwork.setLanguage(Language.zh_Hant)
         } else if json.lowercased() == "ko" {
             ParticleNetwork.setLanguage(Language.ko)
