@@ -23,6 +23,10 @@ namespace Network.Particle.Scripts.Utils
             
             foreach (SupportAuthType item in Enum.GetValues(typeof(SupportAuthType)))
             {
+                if (item == SupportAuthType.ALL)
+                {
+                    continue;
+                }
                 if ((item & supportAuthTypes) != 0)
                 {
                     if (!authTypeList.Contains(item.ToString()))

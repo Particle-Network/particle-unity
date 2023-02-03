@@ -35,7 +35,7 @@ namespace Network.Particle.Scripts.Test
         {
             // Show login with particle auth, support apple and google.
             var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, "",
-                SupportAuthType.APPLE | SupportAuthType.GOOGLE);
+                SupportAuthType.APPLE | SupportAuthType.GOOGLE | SupportAuthType.EMAIL);
             // Get result
             Debug.Log(nativeResultData.data);
             if (nativeResultData.isSuccess)
