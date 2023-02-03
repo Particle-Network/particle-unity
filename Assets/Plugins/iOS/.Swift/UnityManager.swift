@@ -173,7 +173,11 @@ extension UnityManager {
             supportAuthTypeArray = [.all]
         } else {
             array.forEach {
-                if $0 == "apple" {
+                if $0 == "email" {
+                    supportAuthTypeArray.append(.email)
+                } else if $0 == "phone" {
+                    supportAuthTypeArray.append(.phone)
+                } else if $0 == "apple" {
                     supportAuthTypeArray.append(.apple)
                 } else if $0 == "google" {
                     supportAuthTypeArray.append(.google)
