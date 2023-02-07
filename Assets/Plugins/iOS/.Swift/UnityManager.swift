@@ -1203,24 +1203,27 @@ extension UnityManager {
             if array.contains("all") {
                 supportAuthTypeArray = [.all]
             } else {
-                array.forEach {
-                    if $0 == "apple" {
-                        supportAuthTypeArray.append(.apple)
-                    } else if $0 == "google" {
-                        supportAuthTypeArray.append(.google)
-                    } else if $0 == "facebook" {
-                        supportAuthTypeArray.append(.facebook)
-                    } else if $0 == "github" {
-                        supportAuthTypeArray.append(.github)
-                    } else if $0 == "twitch" {
-                        supportAuthTypeArray.append(.twitch)
-                    } else if $0 == "microsoft" {
-                        supportAuthTypeArray.append(.microsoft)
-                    } else if $0 == "linkedin" {
-                        supportAuthTypeArray.append(.linkedin)
-                    } else if $0 == "discord" {
-                        supportAuthTypeArray.append(.discord)
-                    }
+                array.forEach { if $0 == "email" {
+                    supportAuthTypeArray.append(.email)
+                } else if $0 == "phone" {
+                    supportAuthTypeArray.append(.phone)
+                } else if $0 == "apple" {
+                    supportAuthTypeArray.append(.apple)
+                } else if $0 == "google" {
+                    supportAuthTypeArray.append(.google)
+                } else if $0 == "facebook" {
+                    supportAuthTypeArray.append(.facebook)
+                } else if $0 == "github" {
+                    supportAuthTypeArray.append(.github)
+                } else if $0 == "twitch" {
+                    supportAuthTypeArray.append(.twitch)
+                } else if $0 == "microsoft" {
+                    supportAuthTypeArray.append(.microsoft)
+                } else if $0 == "linkedin" {
+                    supportAuthTypeArray.append(.linkedin)
+                } else if $0 == "discord" {
+                    supportAuthTypeArray.append(.discord)
+                }
                 }
             }
             
