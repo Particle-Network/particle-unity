@@ -176,7 +176,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             return unityBridge;
         }
         
-        private static AndroidJavaClass GetUnityConnectBridgeClass()
+        public static AndroidJavaClass GetUnityConnectBridgeClass()
         {
             if (unityConnectBridge != null)
             {
