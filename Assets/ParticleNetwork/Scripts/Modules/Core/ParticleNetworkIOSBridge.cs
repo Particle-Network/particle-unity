@@ -35,6 +35,9 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void logout();
+        
+        [DllImport("__Internal")]
+        public static extern void fastLogout();
 
         [DllImport("__Internal")]
         public static extern bool isLogin();
@@ -68,6 +71,16 @@ namespace Network.Particle.Scripts.Core
         
         [DllImport("__Internal")]
         public static extern void setMediumScreen(bool isMedium);
+        
+        [DllImport("__Internal")]
+        public static extern void openWebWallet();
+        
+        [DllImport("__Internal")]
+        public static extern void openAccountAndSecurity();
+        
+        [DllImport("__Internal")]
+        public static extern void setSecurityAccountConfig(string json);
+        
         
 #endif
 
@@ -150,6 +163,12 @@ namespace Network.Particle.Scripts.Core
         
         [DllImport("__Internal")]
         public static extern void setDisplayNFTContractAddresses(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setPriorityTokenAddresses(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setPriorityNFTContractAddresses(string json);
         
         [DllImport("__Internal")]
         public static extern void setFiatCoin(string json);
@@ -268,6 +287,10 @@ namespace Network.Particle.Scripts.Core
         
         [DllImport("__Internal")]
         public static extern void adapterAddEthereumChain(string json);
+        
+        [DllImport("__Internal")]
+        public static extern string adapterWalletReadyState(string json);
+        
 
 #endif
 

@@ -501,6 +501,139 @@ namespace Network.Particle.Scripts.Model
             return chainId == (long)OasisEmeraldChainId.Mainnet;
         }
     }
+    
+    class GnosisChain : EvmBaseChain
+    {
+        public GnosisChain(GnosisChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Gnosis.ToString();
+        }
+
+        public GnosisChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(GnosisChainId), chainId + "").ToString();
+            chainName = ChainName.Gnosis.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)GnosisChainId.Mainnet;
+        }
+    }
+    
+    class CeloChain : EvmBaseChain
+    {
+        public CeloChain(CeloChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Celo.ToString();
+        }
+
+        public CeloChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(CeloChainId), chainId + "").ToString();
+            chainName = ChainName.Celo.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)CeloChainId.Mainnet;
+        }
+    }
+    
+    class KlaytnChain : EvmBaseChain
+    {
+        public KlaytnChain(KlaytnChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Klaytn.ToString();
+        }
+
+        public KlaytnChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(KlaytnChainId), chainId + "").ToString();
+            chainName = ChainName.Klaytn.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)KlaytnChainId.Mainnet;
+        }
+    }
+    
+    class ScrollChain : EvmBaseChain
+    {
+        public ScrollChain(ScrollChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Scroll.ToString();
+        }
+
+        public ScrollChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(ScrollChainId), chainId + "").ToString();
+            chainName = ChainName.Scroll.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            // scroll doesn't has a mainnet.
+            return false;
+        }
+    }
+    
+    class ZkSyncV2Chain : EvmBaseChain
+    {
+        public ZkSyncV2Chain(ZkSyncV2ChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.ZkSyncV2.ToString();
+        }
+
+        public ZkSyncV2Chain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(ZkSyncV2ChainId), chainId + "").ToString();
+            chainName = ChainName.ZkSyncV2.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)ZkSyncV2ChainId.Mainnet;
+        }
+    }
+    
+    class MetisChain : EvmBaseChain
+    {
+        public MetisChain(MetisChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Metis.ToString();
+        }
+
+        public MetisChain(long chainId)
+        {
+            this.chainId = chainId;
+            chainIdName = Enum.Parse(typeof(MetisChainId), chainId + "").ToString();
+            chainName = ChainName.Metis.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)MetisChainId.Mainnet;
+        }
+    }
 
 
     public enum ChainName
@@ -524,6 +657,12 @@ namespace Network.Particle.Scripts.Model
         OKC,
         ThunderCore,
         Cronos,
-        OasisEmerald
+        OasisEmerald,
+        Gnosis,
+        Celo,
+        Klaytn,
+        Scroll,
+        ZkSyncV2,
+        Metis
     }
 }

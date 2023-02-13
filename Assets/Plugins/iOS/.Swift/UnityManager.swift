@@ -202,8 +202,10 @@ extension UnityManager {
             account = nil
         }
         let loginFormMode = data["loginFormMode"].bool
+        let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
+        let socialLoginPrompt: SocialLoginPrompt? = SocialLoginPrompt(rawValue: socialLoginPromptString)
         
-        ParticleAuthService.login(type: loginType, account: account, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode).subscribe { [weak self] result in
+        ParticleAuthService.login(type: loginType, account: account, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode, socialLoginPrompt: socialLoginPrompt).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -224,6 +226,25 @@ extension UnityManager {
     
     func logout() {
         ParticleAuthService.logout().subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            case .success(let success):
+                let statusModel = UnityStatusModel(status: true, data: success)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            }
+        }.disposed(by: bag)
+    }
+    
+    func fastLogout() {
+        ParticleAuthService.fastLogout().subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -409,6 +430,38 @@ extension UnityManager {
         } else {
             // Fallback on earlier versions
         }
+    }
+    
+    func openWebWallet() {
+        ParticleAuthService.openWebWallet()
+    }
+    
+    func openAccountAndSecurity() {
+        ParticleAuthService.openAccountAndSecurity().subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                
+                self.ufw?.sendMessageToGO(withName: UnityManager.authSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            case .success():
+                let str: String? = nil
+                let statusModel = UnityStatusModel(status: true, data: str)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            }
+        }.disposed(by: bag)
+    }
+    
+    func setSecurityAccountConfig(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let promptSettingWhenSign = data["prompt_setting_when_sign"].intValue
+        ParticleAuthService.setSecurityAccountConfig(config: .init(promptSettingWhenSign: promptSettingWhenSign))
     }
 }
 
@@ -1042,6 +1095,22 @@ extension UnityManager {
         }
         ParticleWalletGUI.setDisplayNFTContractAddresses(nftContractAddresses)
     }
+    
+    func setPriorityTokenAddresses(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let tokenAddresses = data.arrayValue.map {
+            $0.stringValue
+        }
+        ParticleWalletGUI.setPriorityTokenAddresses(tokenAddresses)
+    }
+
+    func setPriorityNFTContractAddresses(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let nftContractAddresses = data.arrayValue.map {
+            $0.stringValue
+        }
+        ParticleWalletGUI.setPriorityNFTContractAddresses(nftContractAddresses)
+    }
 
     func setFiatCoin(_ json: String) {
         let fiatCoin = json
@@ -1173,11 +1242,19 @@ extension UnityManager {
         let walletTypeString = json
         guard let walletType = map2WalletType(from: walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
-            return ""
+            let response = UnityResponseError(code: nil, message: "walletType \(walletTypeString) is not existed", data: nil)
+            let statusModel = UnityStatusModel(status: false, data: response)
+            let data = try! JSONEncoder().encode(statusModel)
+            guard let json = String(data: data, encoding: .utf8) else { return "" }
+            return json
         }
         guard let adapter = map2ConnectAdapter(from: walletType) else {
             print("adapter for \(walletTypeString) is not init ")
-            return ""
+            let response = UnityResponseError(code: nil, message: "adapter for \(walletTypeString) is not init", data: nil)
+            let statusModel = UnityStatusModel(status: false, data: response)
+            let data = try! JSONEncoder().encode(statusModel)
+            guard let json = String(data: data, encoding: .utf8) else { return "" }
+            return json
         }
         
         let accounts = adapter.getAccounts()
@@ -1234,7 +1311,9 @@ extension UnityManager {
             }
             
             let loginFormMode = data["loginFormMode"].boolValue
-            connectConfig = ParticleConnectConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode, phoneOrEmailAccount: account)
+            let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
+            let socialLoginPrompt: SocialLoginPrompt? = SocialLoginPrompt(rawValue: socialLoginPromptString)
+            connectConfig = ParticleConnectConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt)
         }
         
         guard let walletType = map2WalletType(from: walletTypeString) else {
@@ -1778,6 +1857,46 @@ extension UnityManager {
             
         }.disposed(by: bag)
     }
+    
+    func adapterWalletReadyState(_ json: String) -> String {
+        let data = JSON(parseJSON: json)
+        let walletTypeString = data["wallet_type"].stringValue
+
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
+            let response = UnityResponseError(code: nil, message: "walletType \(walletTypeString) is not existed", data: nil)
+            let statusModel = UnityStatusModel(status: false, data: response)
+            let data = try! JSONEncoder().encode(statusModel)
+            guard let json = String(data: data, encoding: .utf8) else { return "" }
+            return json
+        }
+        guard let adapter = map2ConnectAdapter(from: walletType) else {
+            print("adapter for \(walletTypeString) is not init ")
+            let response = UnityResponseError(code: nil, message: "adapter for \(walletTypeString) is not init", data: nil)
+            let statusModel = UnityStatusModel(status: false, data: response)
+            let data = try! JSONEncoder().encode(statusModel)
+            guard let json = String(data: data, encoding: .utf8) else { return "" }
+            return json
+        }
+
+        var str: String
+        switch adapter.readyState {
+        case .installed:
+            str = "installed"
+        case .notDetected:
+            str = "notDetected"
+        case .loadable:
+            str = "loadable"
+        case .unsupported:
+            str = "unsupported"
+        case .undetectable:
+            str = "undetectable"
+        @unknown default:
+            str = "undetectable"
+        }
+
+        return str
+    }
 }
 
 // MARK: - Help methods
@@ -1991,7 +2110,9 @@ extension UnityManager {
             }
         } else if name == "arbitrum" {
             if chainId == 42161 {
-                chainInfo = .arbitrum(.mainnet)
+                chainInfo = .arbitrum(.one)
+            } else if chainId == 42170 {
+                chainInfo = .arbitrum(.nova)
             } else if chainId == 421613 {
                 chainInfo = .arbitrum(.goerli)
             }
@@ -2069,6 +2190,48 @@ extension UnityManager {
             } else if chainId == 338 {
                 chainInfo = .cronos(.testnet)
             }
+        } else if name == "oasisemerald" {
+            if chainId == 42262 {
+                chainInfo = .oasisEmerald(.mainnet)
+            } else if chainId == 42261 {
+                chainInfo = .oasisEmerald(.testnet)
+            }
+        } else if name == "gnosis" {
+            if chainId == 100 {
+                chainInfo = .gnosis(.mainnet)
+            } else if chainId == 10200 {
+                chainInfo = .gnosis(.testnet)
+            }
+        } else if name == "celo" {
+            if chainId == 42220 {
+                chainInfo = .celo(.mainnet)
+            } else if chainId == 44787 {
+                chainInfo = .celo(.testnet)
+            }
+        } else if name == "klaytn" {
+            if chainId == 8217 {
+                chainInfo = .klaytn(.mainnet)
+            } else if chainId == 1001 {
+                chainInfo = .klaytn(.testnet)
+            }
+        } else if name == "scroll" {
+            if chainId == 534351 {
+                chainInfo = .scroll(.testnetL1)
+            } else if chainId == 534354 {
+                chainInfo = .scroll(.testnetL2)
+            }
+        } else if name == "zksyncv2" {
+            if chainId == 324 {
+                chainInfo = .zkSyncV2(.mainnet)
+            } else if chainId == 280 {
+                chainInfo = .zkSyncV2(.testnet)
+            }
+        } else if name == "metis" {
+            if chainId == 1088 {
+                chainInfo = .metis(.mainnet)
+            } else if chainId == 599 {
+                chainInfo = .metis(.goerli)
+            }
         }
         return chainInfo
     }
@@ -2114,6 +2277,20 @@ extension UnityManager {
             chain = .thunderCore
         } else if name == "cronos" {
             chain = .cronos
+        } else if name == "oasisemerald" {
+            chain = .oasisEmerald
+        } else if name == "gnosis" {
+            chain = .gnosis
+        } else if name == "celo" {
+            chain = .celo
+        } else if name == "klaytn" {
+            chain = .klaytn
+        } else if name == "scroll" {
+            chain = .scroll
+        } else if name == "zksyncv2" {
+            chain = .zkSyncV2
+        } else if name == "metis" {
+            chain = .metis
         }
                     
         return chain

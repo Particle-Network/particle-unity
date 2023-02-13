@@ -1,3 +1,4 @@
+
 namespace Network.Particle.Scripts.Model
 {
     public enum LoginType
@@ -30,5 +31,12 @@ namespace Network.Particle.Scripts.Model
         PHONE = 1 << 9, // 512
         EMAIL = 1 << 10, // 1024
         ALL = (1 << 11) - 1, // 2048 - 1 
+    }
+
+    public enum SocialLoginPrompt
+    {
+        None,
+        Consent,
+        Select_account,
     }
 }

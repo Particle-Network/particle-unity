@@ -12,8 +12,8 @@ namespace Network.Particle.Scripts.Core
 {
     public static class ParticleAuthServiceInteraction
     {
-        public static void Login(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes,
-            bool loginFormMode)
+        internal static void Login(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes,
+            bool loginFormMode, SocialLoginPrompt? socialLoginPrompt)
         {
             var authTypeList = ParticleTools.GetSupportAuthTypeValues(supportAuthTypes);
             string accountNative = "";
@@ -26,7 +26,8 @@ namespace Network.Particle.Scripts.Core
                 { "loginType", loginType.ToString() },
                 { "account", accountNative },
                 { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
-                { "loginFormMode", loginFormMode }
+                { "loginFormMode", loginFormMode },
+                { "socialLoginPrompt", socialLoginPrompt.ToString() },
             });
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -38,12 +39,24 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void Logout()
+        internal static void Logout()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallNative("logout");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.logout();
+#else
+
+#endif
+        }
+        
+        internal static void FastLogout()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("logout");
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.fastLogout();
 #else
 
 #endif
@@ -60,7 +73,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void SignMessage(string message)
+        internal static void SignMessage(string message)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallNative("signMessage",message);
@@ -71,7 +84,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void SignTransaction(string transaction)
+        internal static void SignTransaction(string transaction)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallNative("signTransaction",transaction);
@@ -82,7 +95,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void SignAllTransactions(string[] transactions)
+        internal static void SignAllTransactions(string[] transactions)
         {
             var json = JsonConvert.SerializeObject(transactions);
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -94,7 +107,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void SignAndSendTransaction(string message)
+        internal static void SignAndSendTransaction(string message)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallNative("signAndSendTransaction",message);
@@ -105,7 +118,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void SignTypedData(string message, SignTypedDataVersion signTypedDataVersion)
+        internal static void SignTypedData(string message, SignTypedDataVersion signTypedDataVersion)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -217,6 +230,40 @@ namespace Network.Particle.Scripts.Core
 #elif UNITY_IOS &&!UNITY_EDITOR
 #else
 
+#endif
+        }
+
+        public static void OpenWebWallet()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // todo
+#elif UNITY_IOS &&!UNITY_EDITOR
+        ParticleNetworkIOSBridge.openWebWallet();
+#else
+
+#endif
+        }
+
+        internal static void OpenAccountAndSecurity()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            // todo
+#elif UNITY_IOS &&!UNITY_EDITOR
+        ParticleNetworkIOSBridge.openAccountAndSecurity();
+#else
+
+#endif
+        }
+
+
+        public static void SetSecurityAccountConfig(SecurityAccountConfig config)
+        {
+            var json = JsonConvert.SerializeObject(config);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.setSecurityAccountConfig(json);
+#else
 #endif
         }
     }

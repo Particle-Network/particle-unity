@@ -33,7 +33,7 @@ namespace Network.Particle.Scripts.Test
         public async void Login()
         {
             // login email
-            var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, null, SupportAuthType.ALL);
+            var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, null, SupportAuthType.ALL, false, SocialLoginPrompt.Select_account);
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
@@ -52,6 +52,24 @@ namespace Network.Particle.Scripts.Test
         public async void Logout()
         {
             var nativeResultData = await ParticleAuthService.Instance.Logout();
+            Debug.Log(nativeResultData.data);
+
+            if (nativeResultData.isSuccess)
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log(nativeResultData.data);
+            }
+            else
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                Debug.Log(errorData);
+            }
+        }
+        
+        public async void FastLogout()
+        {
+            var nativeResultData = await ParticleAuthService.Instance.FastLogout();
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
@@ -298,11 +316,36 @@ namespace Network.Particle.Scripts.Test
         }
 
         /// <summary>
-        /// 
+        /// Set browser height percent, only support android.
         /// </summary>
         public void SetBrowserHeightPercent()
         {
             ParticleAuthServiceInteraction.SetBrowserHeightPercent(0.7f);
+        }
+
+        public async void OpenAccountAndSecurity()
+        {
+            var nativeResultData =
+                await ParticleAuthService.Instance.OpenAccountAndSecurity();
+            
+            Debug.Log(nativeResultData.data);
+
+            if (nativeResultData.isSuccess)
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log(nativeResultData.data);
+            }
+            else
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                Debug.Log(errorData);
+            }
+        }
+
+        public void OpenWebWallet()
+        {
+            ParticleAuthServiceInteraction.OpenWebWallet();
         }
     }
 }

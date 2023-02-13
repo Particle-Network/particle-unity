@@ -480,6 +480,12 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
+        public void GetWalletReadyState()
+        {
+            var walletReadyState = ParticleConnectInteraction.GetWalletReadyState(WalletType.Rainbow);
+            Debug.Log($"walletReadyState = {walletReadyState}");
+        }
+
         public void GetChainInfo()
         {
             var chainInfo = ParticleNetwork.GetChainInfo();

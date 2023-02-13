@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using Network.Particle.Scripts.Core.UnityEditorTestMode;
 using Newtonsoft.Json;
@@ -86,19 +87,20 @@ namespace Network.Particle.Scripts.Core
             string configJson = "";
             if (config != null)
             {
-                var authTypeList = ParticleTools.GetSupportAuthTypeValues(config.SupportAuthTypes);
+                var authTypeList = ParticleTools.GetSupportAuthTypeValues(config.supportAuthTypes);
                 string accountNative = "";
-                if (string.IsNullOrEmpty(config.Account))
+                if (string.IsNullOrEmpty(config.account))
                     accountNative = "";
                 else
-                    accountNative = config.Account;
+                    accountNative = config.account;
 
                 configJson = JsonConvert.SerializeObject(new JObject
                 {
-                    { "loginType", config.LoginType.ToString() },
+                    { "loginType", config.loginType.ToString() },
                     { "account", accountNative },
                     { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
-                    { "loginFormMode", config.LoginFormMode }
+                    { "loginFormMode", config.loginFormMode },
+                    { "socialLoginPrompt", config.socialLoginPrompt.ToString()}
                 });
             }
             Debug.Log($"Connect-> walletType:{walletType} configJson:{configJson} ");
@@ -372,6 +374,36 @@ namespace Network.Particle.Scripts.Core
 #else
 
 #endif
+        }
+
+
+        public static WalletReadyState GetWalletReadyState(WalletType walletType)
+        {
+            var json = JsonConvert.SerializeObject(new JObject
+            {
+                { "wallet_type", walletType.ToString() }
+            });
+            var readyState = "";
+            
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            readyState = ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("addEthereumChain",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            readyState = ParticleNetworkIOSBridge.adapterWalletReadyState(json);
+#else
+            readyState = "";
+#endif
+
+            WalletReadyState walletReadyState = WalletReadyState.undetectable;
+            foreach (WalletReadyState item in Enum.GetValues(typeof(WalletReadyState)))
+            {
+                if (item.ToString() == readyState)
+                {
+                    walletReadyState = item;
+                    break;
+                }
+            }
+            return walletReadyState;
         }
     }
 }

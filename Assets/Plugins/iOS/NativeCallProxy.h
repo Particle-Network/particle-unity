@@ -24,6 +24,7 @@
 // Particle Auth Service
 - (void) login:(NSString* _Nonnull)json;
 - (void) logout;
+- (void) fastLogout;
 - (BOOL) isLogin;
 - (void) signMessage:(NSString* _Nonnull)message;
 - (void) signTransaction:(NSString* _Nonnull)transaction;
@@ -35,6 +36,9 @@
 - (void) setChainInfoAsync:(NSString* _Nonnull)json;
 - (void) setModalPresentStyle:(NSString* _Nonnull)style;
 - (void) setMediumScreen:(BOOL)isMedium;
+- (void) openWebWallet;
+- (void) openAccountAndSecurity;
+- (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
 
 // Particle Wallet API
 - (void) solanaGetTokenList;
@@ -79,6 +83,8 @@
 - (void) setSupportAddToken:(BOOL)enable;
 - (void) setDisplayTokenAddresses:(NSString*_Nonnull)json;
 - (void) setDisplayNFTContractAddresses:(NSString*_Nonnull)json;
+- (void) setPriorityTokenAddresses:(NSString*_Nonnull)json;
+- (void) setPriorityNFTContractAddresses:(NSString*_Nonnull)json;
 - (void) setFiatCoin:(NSString*_Nonnull)json;
 - (void) loadCustomUIJsonString:(NSString*_Nonnull)json;
 
@@ -104,6 +110,7 @@
 - (void) adapterVerify:(NSString* _Nonnull)json;
 - (void) adapterSwitchEthereumChain:(NSString* _Nonnull)json;
 - (void) adapterAddEthereumChain:(NSString* _Nonnull)json;
+- (NSString* _Nonnull) adapterWalletReadyState:(NSString* _Nonnull)json;
 @end
 
 __attribute__ ((visibility("default")))

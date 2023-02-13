@@ -125,4 +125,40 @@ namespace Network.Particle.Scripts.Model
         Mainnet = 42262,
         Testnet = 42261
     }
+    
+    public enum GnosisChainId
+    {
+        Mainnet = 100,
+        Testnet = 10200
+    }
+    
+    public enum CeloChainId
+    {
+        Mainnet = 42220,
+        Testnet = 44787
+    }
+    
+    public enum KlaytnChainId
+    {
+        Mainnet = 8217,
+        Testnet = 1001
+    }
+    
+    public enum ScrollChainId
+    {
+        TestnetL1 = 534351,
+        TestnetL2 = 534354
+    }
+    
+    public enum ZkSyncV2ChainId
+    {
+        Mainnet = 324,
+        Testnet = 280
+    }
+    
+    public enum MetisChainId
+    {
+        Mainnet = 1088,
+        Testnet = 599
+    }
 }

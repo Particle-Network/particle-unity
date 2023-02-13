@@ -512,16 +512,55 @@ namespace Network.Particle.Scripts.Core
         /// Set display NFT contract addresses
         /// If you called this method, Wallet SDK will only show NFTs in the NFT contract addresses.
         /// </summary>
-        /// <param name="tokenAddresses"></param>
-        public static void SetDisplayNFTContractAddresses(string[] tokenAddresses)
+        /// <param name="nftContractAddresses"></param>
+        public static void SetDisplayNFTContractAddresses(string[] nftContractAddresses)
         {
             
-            var json = JsonConvert.SerializeObject(tokenAddresses);
+            var json = JsonConvert.SerializeObject(nftContractAddresses);
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
             // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setDisplayNFTContractAddresses(json);
+#else
+
+#endif
+            
+        }
+        
+        /// <summary>
+        /// Set display token addresses,
+        /// If you called this method, Wallet SDK will show these tokens in the token addresses.
+        /// </summary>
+        /// <param name="tokenAddresses"></param>
+        public static void SetPriorityTokenAddresses(string[] tokenAddresses)
+        {
+            var json = JsonConvert.SerializeObject(tokenAddresses);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setPriorityTokenAddresses(json);
+#else
+
+#endif
+            
+        }
+        
+        /// <summary>
+        /// Set display NFT contract addresses
+        /// If you called this method, Wallet SDK will only show NFTs in the NFT contract addresses.
+        /// </summary>
+        /// <param name="nftContractAddresses"></param>
+        public static void SetPriorityNFTContractAddresses(string[] nftContractAddresses)
+        {
+            
+            var json = JsonConvert.SerializeObject(nftContractAddresses);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setPriorityNFTContractAddresses(json);
 #else
 
 #endif

@@ -18,6 +18,7 @@ namespace Network.Particle.Scripts.Core
 
         private TaskCompletionSource<NativeResultData> loginTask;
         private TaskCompletionSource<NativeResultData> logoutTask;
+        private TaskCompletionSource<NativeResultData> fastLogoutTask;
         private TaskCompletionSource<NativeResultData> setChainTask;
 
         private TaskCompletionSource<NativeResultData> signMessageTask;
@@ -26,7 +27,8 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> signAndSendTransactionTask;
         private TaskCompletionSource<NativeResultData> signTypedDataTask;
 
-
+        private TaskCompletionSource<NativeResultData> openAccountAndSecurityTask;
+        
         /// <summary>
         /// Login
         /// </summary>
@@ -34,15 +36,16 @@ namespace Network.Particle.Scripts.Core
         /// <param name="account">Account, default value is empty</param>
         /// <param name="supportAuthTypes">Support auth types, default value is all</param>
         /// <param name="loginFormMode">Login form mode</param>
+        /// <param name="socialLoginPrompt">Social login prompt</param>
         /// <returns></returns>
         public Task<NativeResultData> Login(LoginType loginType, string account = "",
-            SupportAuthType supportAuthTypes = SupportAuthType.ALL, bool loginFormMode = false)
+            SupportAuthType supportAuthTypes = SupportAuthType.ALL, bool loginFormMode = false, SocialLoginPrompt? socialLoginPrompt = null)
         {
             loginTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
             DevModeService.Login();
 #else
-            ParticleAuthServiceInteraction.Login(loginType, account, supportAuthTypes, loginFormMode);
+            ParticleAuthServiceInteraction.Login(loginType, account, supportAuthTypes, loginFormMode, socialLoginPrompt);
 #endif
             return loginTask.Task;
         }
@@ -90,6 +93,33 @@ namespace Network.Particle.Scripts.Core
             var resultData = JObject.Parse(json);
             var status = (int) resultData["status"];
             logoutTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+        
+        /// <summary>
+        /// Fast logout, silently
+        /// </summary>
+        /// <returns></returns>
+        public Task<NativeResultData> FastLogout()
+        {
+            fastLogoutTask = new TaskCompletionSource<NativeResultData>();
+            ParticleAuthServiceInteraction.FastLogout();
+#if UNITY_EDITOR
+            DevModeService.Logout();
+            fastLogoutTask?.TrySetResult(new NativeResultData(true, ""));
+#endif
+            return fastLogoutTask.Task;
+        }
+
+        /// <summary>
+        /// Logout call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void FastLogoutCallBack(string json)
+        {
+            Debug.Log($"FastLogoutCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int) resultData["status"];
+            fastLogoutTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
         /// <summary>
@@ -307,6 +337,37 @@ namespace Network.Particle.Scripts.Core
             var resultData = JObject.Parse(json);
             var status = (int) resultData["status"];
             signTypedDataTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+        
+        
+        
+        /// <summary>
+        /// Open account and security page.
+        /// </summary>
+        /// <returns></returns>
+        public Task<NativeResultData> OpenAccountAndSecurity()
+        {
+            openAccountAndSecurityTask = new TaskCompletionSource<NativeResultData>();
+
+            ParticleAuthServiceInteraction.OpenAccountAndSecurity();
+
+            return openAccountAndSecurityTask.Task;
+        }
+
+        /// <summary>
+        /// Open account and security call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void OpenAccountAndSecurityCallBack(string json)
+        {
+            Debug.Log($"OpenAccountAndSecurityCallBack:{json}");
+#if UNITY_EDITOR
+            openAccountAndSecurityTask?.TrySetResult(new NativeResultData(true, json));
+#else
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            openAccountAndSecurityTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+#endif
         }
     }
 }

@@ -42,6 +42,18 @@ extern "C" {
         [api setMediumScreen: isMedium];
     }
 
+    void openWebWallet() {
+        [api openWebWallet];
+    }
+
+    void openAccountAndSecurity() {
+        [api openAccountAndSecurity];
+    }
+
+    void setSecurityAccountConfig(const char* json) {
+        [api setSecurityAccountConfig:[NSString stringWithUTF8String: json]];
+    }
+
 }
 
 // Particle Auth Service
@@ -54,10 +66,13 @@ extern "C" {
         [api logout];
     }
 
+    void fastLogout() {
+        [api fastLogout];
+    }
+
     bool isLogin() {
         return [api isLogin];
     }
-
 
     void signMessage(const char* message) {
         [api signMessage:[NSString stringWithUTF8String: message]];
@@ -98,6 +113,8 @@ extern "C" {
     void setModalPresentStyle(const char* style) {
         [api setModalPresentStyle:[NSString stringWithUTF8String: style]];
     }
+
+    
 }
 
 // Particle Wallet API
@@ -267,6 +284,15 @@ extern "C" {
     void setDisplayNFTContractAddresses(const char* json) {
         [api setDisplayNFTContractAddresses:[NSString stringWithUTF8String: json]];
     }
+
+    void setPriorityTokenAddresses(const char* json) {
+        [api setPriorityTokenAddresses:[NSString stringWithUTF8String: json]];
+    }
+
+    void setPriorityNFTContractAddresses(const char* json) {
+        [api setPriorityNFTContractAddresses:[NSString stringWithUTF8String: json]];
+    }
+
     void setFiatCoin(const char* json) {
         [api setFiatCoin:[NSString stringWithUTF8String: json]];
     }
@@ -352,6 +378,11 @@ extern "C" {
     
     void adapterAddEthereumChain(const char* json) {
         [api adapterAddEthereumChain:[NSString stringWithUTF8String: json]];
+    }
+
+    char* adapterWalletReadyState(const char* json) {
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api adapterWalletReadyState:[NSString stringWithUTF8String: json]] UTF8String]);
     }
 }
 
