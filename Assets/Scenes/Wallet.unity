@@ -413,6 +413,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1393739573 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7507976573011243539, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+  m_PrefabInstance: {fileID: 2103656786}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1489493103
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1067,6 +1072,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -2470
       objectReference: {fileID: 0}
+    - target: {fileID: 5047835955231025170, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1393739573}
+    - target: {fileID: 5047835955231025170, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetActive
+      objectReference: {fileID: 0}
     - target: {fileID: 5047835955231025171, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1655,7 +1668,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -1870
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1678948821, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
 --- !u!1001 &6162198293908026044
 PrefabInstance:

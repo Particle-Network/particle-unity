@@ -42,13 +42,13 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         chainInfos.Add(new FantomChain(FantomChainId.Mainnet));
         chainInfos.Add(new FantomChain(FantomChainId.Testnet));
 
-        chainInfos.Add(new ArbitrumChain(ArbitrumChainId.Mainnet));
+        chainInfos.Add(new ArbitrumChain(ArbitrumChainId.One));
+        chainInfos.Add(new ArbitrumChain(ArbitrumChainId.Nova));
         chainInfos.Add(new ArbitrumChain(ArbitrumChainId.Goerli));
 
         chainInfos.Add(new HarmonyChain(HarmonyChainId.Mainnet));
         chainInfos.Add(new HarmonyChain(HarmonyChainId.Testnet));
-
-
+        
         chainInfos.Add(new AuroraChain(AuroraChainId.Mainnet));
         chainInfos.Add(new AuroraChain(AuroraChainId.Testnet));
 
@@ -77,6 +77,23 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         chainInfos.Add(new OasisEmeraldChain(OasisEmeraldChainId.Mainnet));
         chainInfos.Add(new OasisEmeraldChain(OasisEmeraldChainId.Testnet));
         
+        chainInfos.Add(new GnosisChain(GnosisChainId.Mainnet));
+        chainInfos.Add(new GnosisChain(GnosisChainId.Testnet));
+        
+        chainInfos.Add(new CeloChain(CeloChainId.Mainnet));
+        chainInfos.Add(new CeloChain(CeloChainId.Testnet));
+        
+        chainInfos.Add(new KlaytnChain(KlaytnChainId.Mainnet));
+        chainInfos.Add(new KlaytnChain(KlaytnChainId.Testnet));
+        
+        chainInfos.Add(new ScrollChain(ScrollChainId.TestnetL1));
+        chainInfos.Add(new ScrollChain(ScrollChainId.TestnetL2));
+        
+        chainInfos.Add(new ZkSyncV2Chain(ZkSyncV2ChainId.Mainnet));
+        chainInfos.Add(new ZkSyncV2Chain(ZkSyncV2ChainId.Testnet));
+        
+        chainInfos.Add(new MetisChain(MetisChainId.Mainnet));
+        chainInfos.Add(new MetisChain(MetisChainId.Testnet));
 
         foreach (var chainInfo in chainInfos)
         {

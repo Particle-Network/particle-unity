@@ -43,7 +43,8 @@ namespace Network.Particle.Scripts.Model
 
     public enum ArbitrumChainId
     {
-        Mainnet = 42161,
+        One = 42161,
+        Nova = 42170,
         Goerli = 421613
     }
 

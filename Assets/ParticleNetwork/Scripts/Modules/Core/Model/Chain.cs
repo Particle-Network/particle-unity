@@ -69,13 +69,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.Solana.ToString();
         }
 
-        public SolanaChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(SolanaChainId), chainId + "").ToString();
-            chainName = ChainName.Solana.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)SolanaChainId.Mainnet;
@@ -88,13 +81,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.Ethereum.ToString();
-        }
-
-        public EthereumChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(EthereumChainId), chainId + "").ToString();
             chainName = ChainName.Ethereum.ToString();
         }
 
@@ -114,13 +100,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.BSC.ToString();
         }
 
-        public BSCChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(BscChainId), chainId + "").ToString();
-            chainName = ChainName.BSC.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)BscChainId.Mainnet;
@@ -133,13 +112,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.Polygon.ToString();
-        }
-
-        public PolygonChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(PolygonChainId), chainId + "").ToString();
             chainName = ChainName.Polygon.ToString();
         }
 
@@ -158,13 +130,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.Avalanche.ToString();
         }
 
-        public AvalancheChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(AvalancheChainId), chainId + "").ToString();
-            chainName = ChainName.Avalanche.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)AvalancheChainId.Mainnet;
@@ -177,13 +142,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.Moonbeam.ToString();
-        }
-
-        public MoonbeamChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(AvalancheChainId), chainId + "").ToString();
             chainName = ChainName.Moonbeam.ToString();
         }
 
@@ -202,13 +160,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.Moonriver.ToString();
         }
 
-        public MoonriverChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(MoonriverChainId), chainId + "").ToString();
-            chainName = ChainName.Moonriver.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)MoonriverChainId.Mainnet;
@@ -221,13 +172,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.Heco.ToString();
-        }
-
-        public HecoChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(HecoChain), chainId + "").ToString();
             chainName = ChainName.Heco.ToString();
         }
 
@@ -246,13 +190,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.Fantom.ToString();
         }
 
-        public FantomChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(FantomChainId), chainId + "").ToString();
-            chainName = ChainName.Fantom.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)FantomChainId.Mainnet;
@@ -268,16 +205,9 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.Arbitrum.ToString();
         }
 
-        public ArbitrumChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(ArbitrumChainId), chainId + "").ToString();
-            chainName = ChainName.Arbitrum.ToString();
-        }
-
         public override bool IsMainnet()
         {
-            return chainId == (long)ArbitrumChainId.Mainnet;
+            return chainId == (long)ArbitrumChainId.One || chainId == (long)ArbitrumChainId.Nova;
         }
     }
 
@@ -287,13 +217,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.Harmony.ToString();
-        }
-
-        public HarmonyChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(HarmonyChainId), chainId + "").ToString();
             chainName = ChainName.Harmony.ToString();
         }
 
@@ -312,13 +235,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.Aurora.ToString();
         }
 
-        public AuroraChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(AuroraChainId), chainId + "").ToString();
-            chainName = ChainName.Aurora.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)AuroraChainId.Mainnet;
@@ -331,13 +247,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.KCC.ToString();
-        }
-
-        public KccChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(KccChainId), chainId + "").ToString();
             chainName = ChainName.KCC.ToString();
         }
 
@@ -356,13 +265,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.Optimism.ToString();
         }
 
-        public OptimismChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(OptimismChainId), chainId + "").ToString();
-            chainName = ChainName.Optimism.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)OptimismChainId.Mainnet;
@@ -375,13 +277,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.PlatON.ToString();
-        }
-
-        public PlatONChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(PlatONChainId), chainId + "").ToString();
             chainName = ChainName.PlatON.ToString();
         }
 
@@ -398,14 +293,7 @@ namespace Network.Particle.Scripts.Model
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
             chainName = ChainName.Tron.ToString();
-            
-        }
 
-        public TronChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(TronChainId), chainId + "").ToString();
-            chainName = ChainName.Tron.ToString();
         }
 
         public override bool IsMainnet()
@@ -420,13 +308,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.OKC.ToString();
-        }
-
-        public OKCChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(OKCChainId), chainId + "").ToString();
             chainName = ChainName.OKC.ToString();
         }
 
@@ -445,13 +326,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.ThunderCore.ToString();
         }
 
-        public ThunderCoreChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(ThunderCoreChainId), chainId + "").ToString();
-            chainName = ChainName.ThunderCore.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)ThunderCoreChainId.Mainnet;
@@ -464,13 +338,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.Cronos.ToString();
-        }
-
-        public CronosChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(CronosChainId), chainId + "").ToString();
             chainName = ChainName.Cronos.ToString();
         }
 
@@ -489,13 +356,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.OasisEmerald.ToString();
         }
 
-        public OasisEmeraldChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(OasisEmeraldChainId), chainId + "").ToString();
-            chainName = ChainName.OasisEmerald.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)OasisEmeraldChainId.Mainnet;
@@ -508,13 +368,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.Gnosis.ToString();
-        }
-
-        public GnosisChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(GnosisChainId), chainId + "").ToString();
             chainName = ChainName.Gnosis.ToString();
         }
 
@@ -532,14 +385,6 @@ namespace Network.Particle.Scripts.Model
             chainIdName = chainId.ToString();
             chainName = ChainName.Celo.ToString();
         }
-
-        public CeloChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(CeloChainId), chainId + "").ToString();
-            chainName = ChainName.Celo.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)CeloChainId.Mainnet;
@@ -554,14 +399,6 @@ namespace Network.Particle.Scripts.Model
             chainIdName = chainId.ToString();
             chainName = ChainName.Klaytn.ToString();
         }
-
-        public KlaytnChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(KlaytnChainId), chainId + "").ToString();
-            chainName = ChainName.Klaytn.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)KlaytnChainId.Mainnet;
@@ -574,13 +411,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.Scroll.ToString();
-        }
-
-        public ScrollChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(ScrollChainId), chainId + "").ToString();
             chainName = ChainName.Scroll.ToString();
         }
 
@@ -600,13 +430,6 @@ namespace Network.Particle.Scripts.Model
             chainName = ChainName.ZkSyncV2.ToString();
         }
 
-        public ZkSyncV2Chain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(ZkSyncV2ChainId), chainId + "").ToString();
-            chainName = ChainName.ZkSyncV2.ToString();
-        }
-
         public override bool IsMainnet()
         {
             return chainId == (long)ZkSyncV2ChainId.Mainnet;
@@ -619,13 +442,6 @@ namespace Network.Particle.Scripts.Model
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.Metis.ToString();
-        }
-
-        public MetisChain(long chainId)
-        {
-            this.chainId = chainId;
-            chainIdName = Enum.Parse(typeof(MetisChainId), chainId + "").ToString();
             chainName = ChainName.Metis.ToString();
         }
 
