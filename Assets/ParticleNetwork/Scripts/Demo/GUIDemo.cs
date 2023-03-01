@@ -19,7 +19,8 @@ namespace Network.Particle.Scripts.Test
             ChainChoice.Instance.Show((chainInfo) =>
             {
                 Debug.Log($"xxhong {chainInfo.getChainName()} {chainInfo.getChainId()} {chainInfo.getChainIdName()}");
-                this._chainInfo = ChainUtils.CreateChain(chainInfo.getChainName(), chainInfo.getChainId());
+                this._chainInfo =
+                    chainInfo; 
             });
         }
         

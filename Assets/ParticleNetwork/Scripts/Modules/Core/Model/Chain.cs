@@ -421,18 +421,18 @@ namespace Network.Particle.Scripts.Model
         }
     }
     
-    class ZkSyncV2Chain : EvmBaseChain
+    class ZkSyncChain : EvmBaseChain
     {
-        public ZkSyncV2Chain(ZkSyncV2ChainId chainId)
+        public ZkSyncChain(ZkSyncChainId chainId)
         {
             this.chainId = (long)chainId;
             chainIdName = chainId.ToString();
-            chainName = ChainName.ZkSyncV2.ToString();
+            chainName = ChainName.ZkSync.ToString();
         }
 
         public override bool IsMainnet()
         {
-            return chainId == (long)ZkSyncV2ChainId.Mainnet;
+            return chainId == (long)ZkSyncChainId.Mainnet;
         }
     }
     
@@ -478,7 +478,7 @@ namespace Network.Particle.Scripts.Model
         Celo,
         Klaytn,
         Scroll,
-        ZkSyncV2,
+        ZkSync,
         Metis
     }
 }

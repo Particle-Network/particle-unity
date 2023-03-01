@@ -1,8 +1,5 @@
 namespace Network.Particle.Scripts.Model
 {
-    public class ChainId
-    {
-    }
 
     public enum SolanaChainId
     {
@@ -151,7 +148,7 @@ namespace Network.Particle.Scripts.Model
         TestnetL2 = 534354
     }
     
-    public enum ZkSyncV2ChainId
+    public enum ZkSyncChainId
     {
         Mainnet = 324,
         Testnet = 280

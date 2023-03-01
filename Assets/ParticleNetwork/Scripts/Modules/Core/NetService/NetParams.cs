@@ -10,6 +10,8 @@ namespace Network.Particle.Scripts.Core
         public const string particleSuggestedGasFees = "particle_suggestedGasFees";
         public const string particleGetPrice = "particle_getPrice";
         public const string particleGetTokensAndNFTs = "particle_getTokensAndNFTs";
+        public const string particleGetTokens = "particle_getTokens";
+        public const string particleGetNFTs = "particle_getNFTs";
         public const string particleDeserializeTransaction = "particle_deserializeTransaction";
         public const string particleGetTransactionsByAddress = "particle_getTransactionsByAddress";
         public const string particleAbiEncodeFunctionCall = "particle_abi_encodeFunctionCall";

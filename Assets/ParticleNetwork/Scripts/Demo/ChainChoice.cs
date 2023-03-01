@@ -89,8 +89,8 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         chainInfos.Add(new ScrollChain(ScrollChainId.TestnetL1));
         chainInfos.Add(new ScrollChain(ScrollChainId.TestnetL2));
         
-        chainInfos.Add(new ZkSyncV2Chain(ZkSyncV2ChainId.Mainnet));
-        chainInfos.Add(new ZkSyncV2Chain(ZkSyncV2ChainId.Testnet));
+        chainInfos.Add(new ZkSyncChain(ZkSyncChainId.Mainnet));
+        chainInfos.Add(new ZkSyncChain(ZkSyncChainId.Testnet));
         
         chainInfos.Add(new MetisChain(MetisChainId.Mainnet));
         chainInfos.Add(new MetisChain(MetisChainId.Testnet));

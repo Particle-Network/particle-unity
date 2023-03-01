@@ -1,6 +1,7 @@
 
 using System;
 using System.Linq;
+using Network.Particle.Scripts.Core.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Network.Particle.Scripts.Model;
@@ -71,19 +72,15 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
 #if UNITY_ANDROID && !UNITY_EDITOR
             var resultJson = ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getChainInfo");
             var nativeChainInfo = JsonConvert.DeserializeObject<NativeChainInfo>(resultJson);
-            var chainInfo = (ChainInfo)Activator.CreateInstance(
-                Type.GetType($"Network.Particle.Scripts.Model.{nativeChainInfo.chainName}Chain"),
-                nativeChainInfo.chainId);
+             var chainInfo = ChainUtils.FindChain(nativeChainInfo.chainName, nativeChainInfo.chainId);
             return chainInfo;
 #elif UNITY_IOS && !UNITY_EDITOR
             var resultJson = ParticleNetworkIOSBridge.getChainInfo();
             var nativeChainInfo = JsonConvert.DeserializeObject<NativeChainInfo>(resultJson);
-            var chainInfo = (ChainInfo)Activator.CreateInstance(
-                Type.GetType($"Network.Particle.Scripts.Model.{nativeChainInfo.chainName}Chain"),
-                nativeChainInfo.chainId);
+            var chainInfo = ChainUtils.FindChain(nativeChainInfo.chainName, nativeChainInfo.chainId);
             return chainInfo;
 #elif UNITY_EDITOR
-            return currChainInfo;
+             return currChainInfo;
 #endif
         }
 
