@@ -44,7 +44,6 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     
     var ufw: UnityFramework?
     
-    static let apiSystemName = "ParticleWalletAPI"
     static let authSystemName = "ParticleAuthService"
     static let connectSystemName = "ParticleConnect"
     static let guiSystemName = "ParticleWalletGUI"
@@ -404,14 +403,13 @@ extension UnityManager {
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
-                self.ufw?.sendMessageToGO(withName: UnityManager.authSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
             case .success(let userInfo):
                 guard let userInfo = userInfo else { return }
                 let statusModel = UnityStatusModel(status: true, data: userInfo)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.ufw?.sendMessageToGO(withName: UnityManager.authSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
             }
         }.disposed(by: bag)
     }
@@ -446,7 +444,6 @@ extension UnityManager {
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 
-                self.ufw?.sendMessageToGO(withName: UnityManager.authSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
             case .success():
                 let str: String? = nil
@@ -462,385 +459,6 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let promptSettingWhenSign = data["prompt_setting_when_sign"].intValue
         ParticleAuthService.setSecurityAccountConfig(config: .init(promptSettingWhenSign: promptSettingWhenSign))
-    }
-}
-
-// MARK: - Particle Wallet API
-
-extension UnityManager {
-    func solanaGetTokenList() {
-        ParticleWalletAPI.getSolanaService().getTokenList().subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            case .success(let tokenList):
-                let rawData = tokenList.map {
-                    self.map2UnityTokenInfo(from: $0)
-                }
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            }
-            
-        }.disposed(by: bag)
-    }
-    
-    func solanaGetTokensAndNFTs(_ address: String) {
-        ParticleWalletAPI.getSolanaService().getTokensAndNFTs(by: address, tokenAddresses: []).subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            case .success(let tokenResult):
-                let unityTokenResult = self.map2UnityTokenResult(from: tokenResult)
-                
-                let statusModel = UnityStatusModel(status: false, data: unityTokenResult)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            }
-        }.disposed(by: bag)
-    }
-    
-    func solanaGetTokensAndNFTs(fromDB address: String) {
-        ParticleWalletAPI.getSolanaService().getTokensAndNFTsFromDB(by: address).subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "solanaGetTokensAndNFTsFromDB")
-            case .success(let tokenResult):
-                let unityTokenResult = self.map2UnityTokenResult(from: tokenResult)
-                
-                let statusModel = UnityStatusModel(status: true, data: unityTokenResult)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "solanaGetTokensAndNFTsFromDB")
-            }
-        }.disposed(by: bag)
-    }
-    
-    func solanaAddCustomTokens(_ json: String) {
-        let data = JSON(parseJSON: json)
-        let address = data["address"].stringValue
-        
-        let tokenAddresses = JSON(parseJSON: data["token_addresses"].stringValue).arrayValue.map {
-            $0.stringValue
-        }
-        
-        ParticleWalletAPI.getSolanaService().addCustomTokens(address: address, tokenAddresses: tokenAddresses).subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            case .success(let array):
-                let rawData = array.map {
-                    self.map2UnityTokenModel(from: $0)
-                }
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            }
-        }.disposed(by: bag)
-    }
-    
-    func solanaGetTransactions(_ json: String) {
-        let data = JSON(parseJSON: json)
-        let address = data["address"].stringValue
-        let beforeSignature = data["before"].string
-        let untilSignature = data["until"].string
-        let limit = data["limit"].intValue
-        
-        ParticleWalletAPI.getSolanaService().getTransactions(by: address, beforeSignature: beforeSignature, untilSignature: untilSignature, limit: limit).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            case .success(let array):
-                let rawData = array.map {
-                    self.map2UnitySolanaTransaction(from: $0)
-                }
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            }
-        }.disposed(by: bag)
-    }
-    
-    func solanaGetTransactions(fromDB json: String) {
-        let data = JSON(parseJSON: json)
-        let address = data["address"].stringValue
-        let beforeSignature = data["before"].string
-        let untilSignature = data["until"].string
-        let limit = data["limit"].intValue
-        
-        ParticleWalletAPI.getSolanaService().getTransactionsFromDB(by: address, beforeSignature: beforeSignature, untilSignature: untilSignature, limit: limit).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "solanaGetTransactionsFromDB")
-            case .success(let array):
-                let rawData = array.map {
-                    self.map2UnitySolanaTransaction(from: $0)
-                }
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "solanaGetTransactionsFromDB")
-            }
-        }.disposed(by: bag)
-    }
-    
-    func solanaGetTokenTransactions(_ json: String) {
-        let data = JSON(parseJSON: json)
-        
-        let address = data["address"].stringValue
-        let mintAddress = data["mint_address"].stringValue
-        let beforeSignature = data["before"].string
-        let untilSignature = data["until"].string
-        let limit = data["limit"].intValue
-        
-        ParticleWalletAPI.getSolanaService().getTokenTransactions(by: address, mintAddress: mintAddress, beforeSignature: beforeSignature, untilSignature: untilSignature, limit: limit).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            case .success(let array):
-                let rawData = array.map {
-                    self.map2UnitySolanaTransaction(from: $0)
-                }
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            }
-        }.disposed(by: bag)
-    }
-    
-    func solanaGetTokenTransactions(fromDB json: String) {
-        let data = JSON(parseJSON: json)
-        
-        let address = data["address"].stringValue
-        let mintAddress = data["mint_address"].stringValue
-        let beforeSignature = data["before"].string
-        let untilSignature = data["until"].string
-        let limit = data["limit"].intValue
-        
-        ParticleWalletAPI.getSolanaService().getTokenTransactionsFromDB(address: address, mintAddress: mintAddress, beforeSignature: beforeSignature, untilSignature: untilSignature, limit: limit).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "solanaGetTokenTransactionsFromDB")
-            case .success(let array):
-                let rawData = array.map {
-                    self.map2UnitySolanaTransaction(from: $0)
-                }
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "solanaGetTokenTransactionsFromDB")
-            }
-        }.disposed(by: bag)
-    }
-    
-    func evmGetTokenList() {
-        ParticleWalletAPI.getEvmService().getTokenList().subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            case .success(let tokenList):
-                let rawData = tokenList.map {
-                    self.map2UnityTokenInfo(from: $0)
-                }
-                
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            }
-            
-        }.disposed(by: bag)
-    }
-    
-    func evmGetTokensAndNFTs(_ json: String) {
-        let data = JSON(parseJSON: json)
-        let address = data["address"].stringValue
-        
-        let tokenAddresses = JSON(parseJSON: data["token_addresses"].stringValue).arrayValue.map {
-            $0.stringValue
-        }
-        ParticleWalletAPI.getEvmService().getTokensAndNFTs(by: address, tokenAddresses: tokenAddresses).subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            case .success(let tokenResult):
-                let unityTokenResult = self.map2UnityTokenResult(from: tokenResult)
-                let statusModel = UnityStatusModel(status: true, data: unityTokenResult)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            }
-        }.disposed(by: bag)
-    }
-    
-    func evmGetTokensAndNFTs(fromDB address: String) {
-        ParticleWalletAPI.getEvmService().getTokensAndNFTsFromDB(by: address).subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "evmGetTokensAndNFTsFromDB")
-            case .success(let tokenResult):
-                let unityTokenResult = self.map2UnityTokenResult(from: tokenResult)
-                let statusModel = UnityStatusModel(status: true, data: unityTokenResult)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "evmGetTokensAndNFTsFromDB")
-            }
-        }.disposed(by: bag)
-    }
-    
-    func evmGetTransactions(_ address: String) {
-        ParticleWalletAPI.getEvmService().getTransactions(by: address).subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            case .success(let array):
-                let rawData = array.map {
-                    self.map2UnityEvmTransaction(from: $0)
-                }
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            }
-        }.disposed(by: bag)
-    }
-    
-    func evmGetTransactions(fromDB address: String) {
-        ParticleWalletAPI.getEvmService().getTransactionsFromDB(by: address).subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "evmGetTransactionsFromDB")
-            case .success(let array):
-                let rawData = array.map {
-                    self.map2UnityEvmTransaction(from: $0)
-                }
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName, methodName: "evmGetTransactionsFromDB")
-            }
-        }.disposed(by: bag)
-    }
-    
-    func evmAddCustomTokens(_ json: String) {
-        let data = JSON(parseJSON: json)
-        let address = data["address"].stringValue
-        
-        let tokenAddresses = JSON(parseJSON: data["token_addresses"].stringValue).arrayValue.map {
-            $0.stringValue
-        }
-        
-        ParticleWalletAPI.getEvmService().addCustomTokens(address: address, tokenAddresses: tokenAddresses).subscribe { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            case .success(let array):
-                let rawData = array.map {
-                    self.map2UnityTokenModel(from: $0)
-                }
-                let statusModel = UnityStatusModel(status: true, data: rawData)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.apiSystemName)
-            }
-        }.disposed(by: bag)
     }
 }
 
@@ -908,7 +526,7 @@ extension UnityManager {
     }
     
     func navigatorPay() {
-        PNRouter.navigatorPay()
+        PNRouter.navigatorBuy()
     }
     
     func navigatorBuyCrypto(_ json: String) {
@@ -1058,6 +676,10 @@ extension UnityManager {
     
     func supportWalletConnect(_ enable: Bool) {
         ParticleWalletGUI.supportWalletConnect(enable)
+    }
+    
+    func supportDappBrowser(_ enable: Bool) {
+        ParticleWalletGUI.supportDappBrowser(enable)
     }
     
     func particleWalletConnectInitialize(_ json: String) {
@@ -1218,15 +840,13 @@ extension UnityManager {
                     let statusModel = UnityStatusModel(status: false, data: response)
                     let data = try! JSONEncoder().encode(statusModel)
                     guard let json = String(data: data, encoding: .utf8) else { return }
-                    
-                    self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName)
                 case .success(let userInfo):
                     guard let userInfo = userInfo else { return }
                     let statusModel = UnityStatusModel(status: true, data: true)
                     let data = try! JSONEncoder().encode(statusModel)
                     guard let json = String(data: data, encoding: .utf8) else { return }
-                    
-                    self.ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName)
                 }
             }.disposed(by: bag)
         } else {
@@ -1234,7 +854,7 @@ extension UnityManager {
             let statusModel = UnityStatusModel(status: true, data: true)
             let data = try! JSONEncoder().encode(statusModel)
             guard let json = String(data: data, encoding: .utf8) else { return }
-            ufw?.sendMessageToGO(withName: UnityManager.connectSystemName, functionName: "SetChainInfoAsyncCallBack", message: json)
+            callBackMessage(json, unityName: UnityManager.connectSystemName)
         }
     }
     

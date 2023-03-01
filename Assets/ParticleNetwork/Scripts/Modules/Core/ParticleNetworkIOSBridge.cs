@@ -153,6 +153,10 @@ namespace Network.Particle.Scripts.Core
         public static extern void supportWalletConnect(bool enable);
         
         [DllImport("__Internal")]
+        public static extern void supportDappBrowser(bool enable);
+        
+        
+        [DllImport("__Internal")]
         public static extern void particleWalletConnectInitialize(string json);
 
         [DllImport("__Internal")]
@@ -176,56 +180,9 @@ namespace Network.Particle.Scripts.Core
         [DllImport("__Internal")]
         public static extern void loadCustomUIJsonString(string json);
         
-        
 #endif
 
-        // Particle Wallet API
-#if UNITY_IOS
-        [DllImport("__Internal")]
-        public static extern void solanaGetTokenList();
-
-        [DllImport("__Internal")]
-        public static extern void solanaGetTokensAndNFTs(string json);
-
-        [DllImport("__Internal")]
-        public static extern void solanaGetTokensAndNFTsFromDB(string json);
-
-        [DllImport("__Internal")]
-        public static extern void solanaAddCustomTokens(string json);
-
-        [DllImport("__Internal")]
-        public static extern void solanaGetTransactions(string json);
-
-        [DllImport("__Internal")]
-        public static extern void solanaGetTransactionsFromDB(string json);
-
-        [DllImport("__Internal")]
-        public static extern void solanaGetTokenTransactions(string json);
-
-        [DllImport("__Internal")]
-        public static extern void solanaGetTokenTransactionsFromDB(string json);
-
-        [DllImport("__Internal")]
-        public static extern void evmGetTokenList();
-
-        [DllImport("__Internal")]
-        public static extern void evmGetTokensAndNFTs(string json);
-
-        [DllImport("__Internal")]
-        public static extern void evmGetTokensAndNFTsFromDB(string json);
-
-        [DllImport("__Internal")]
-        public static extern void evmAddCustomTokens(string json);
-
-        [DllImport("__Internal")]
-        public static extern void evmGetTransactions(string json);
-
-        [DllImport("__Internal")]
-        public static extern void evmGetTransactionsFromDB(string json);
-
-#endif
-            
-        // Particle Connect
+            // Particle Connect
 #if UNITY_IOS
         [DllImport("__Internal")]
         public static extern void particleConnectInitialize(string json);

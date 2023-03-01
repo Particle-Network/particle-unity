@@ -113,69 +113,6 @@ extern "C" {
     void setModalPresentStyle(const char* style) {
         [api setModalPresentStyle:[NSString stringWithUTF8String: style]];
     }
-
-    
-}
-
-// Particle Wallet API
-extern "C" {
- 
-    void solanaGetTokenList() {
-        [api solanaGetTokenList];
-    }
-
-    void solanaGetTokensAndNFTs(const char* address) {
-        [api solanaGetTokensAndNFTs: [NSString stringWithUTF8String: address]];
-    }
-
-    void solanaGetTokensAndNFTsFromDB(const char* address) {
-        [api solanaGetTokensAndNFTsFromDB: [NSString stringWithUTF8String: address]];
-    }
-
-    void solanaAddCustomTokens(const char* json) {
-        [api solanaAddCustomTokens: [NSString stringWithUTF8String: json]];
-    }
-
-    void solanaGetTransactions(const char* json) {
-        [api solanaGetTransactions: [NSString stringWithUTF8String: json]];
-    }
-
-    void solanaGetTransactionsFromDB(const char* json) {
-        [api solanaGetTransactionsFromDB: [NSString stringWithUTF8String: json]];
-    }
-
-    void solanaGetTokenTransactions(const char* json) {
-        [api solanaGetTokenTransactions: [NSString stringWithUTF8String: json]];
-    }
-
-    void solanaGetTokenTransactionsFromDB(const char* json) {
-        [api solanaGetTokenTransactionsFromDB: [NSString stringWithUTF8String: json]];
-    }
-
-    void evmGetTokenList() {
-        [api evmGetTokenList];
-    }
-
-    void evmGetTokensAndNFTs(const char* json) {
-        [api evmGetTokensAndNFTs: [NSString stringWithUTF8String: json]];
-    }
-
-    void evmGetTokensAndNFTsFromDB(const char* address) {
-        [api evmGetTokensAndNFTsFromDB: [NSString stringWithUTF8String: address]];
-    }
-
-    void evmAddCustomTokens(const char* json) {
-        [api evmGetTokensAndNFTsFromDB: [NSString stringWithUTF8String: json]];
-    }
-
-    void evmGetTransactions(const char* address) {
-        [api evmGetTransactions:  [NSString stringWithUTF8String: address]];
-    }
-
-    void evmGetTransactionsFromDB(const char* address) {
-        [api evmGetTransactionsFromDB:  [NSString stringWithUTF8String: address]];
-    }
-   
 }
 
 
@@ -267,6 +204,10 @@ extern "C" {
 
     void supportWalletConnect(bool enable) {
         [api supportWalletConnect: enable];
+    }
+    
+    void supportDappBrowser(bool enable) {
+        [api supportDappBrowser: enable];
     }
     
     void particleWalletConnectInitialize(const char* json) {

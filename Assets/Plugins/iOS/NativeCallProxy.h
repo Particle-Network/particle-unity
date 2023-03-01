@@ -40,22 +40,6 @@
 - (void) openAccountAndSecurity;
 - (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
 
-// Particle Wallet API
-- (void) solanaGetTokenList;
-- (void) solanaGetTokensAndNFTs:(NSString* _Nonnull)address;
-- (void) solanaGetTokensAndNFTsFromDB:(NSString* _Nonnull)address;
-- (void) solanaAddCustomTokens:(NSString* _Nonnull)json;
-- (void) solanaGetTransactions:(NSString* _Nonnull)json;
-- (void) solanaGetTransactionsFromDB:(NSString* _Nonnull)json;
-- (void) solanaGetTokenTransactions:(NSString* _Nonnull)json;
-- (void) solanaGetTokenTransactionsFromDB:(NSString* _Nonnull)json;
-- (void) evmGetTokenList;
-- (void) evmGetTokensAndNFTs:(NSString* _Nonnull)json;
-- (void) evmGetTokensAndNFTsFromDB:(NSString* _Nonnull)address;
-- (void) evmAddCustomTokens:(NSString* _Nonnull)json;
-- (void) evmGetTransactions:(NSString* _Nonnull)address;
-- (void) evmGetTransactionsFromDB:(NSString* _Nonnull)address;
-
 // Particle Wallet GUI
 - (void) enablePay:(BOOL)enable;
 - (BOOL) getEnablePay;
@@ -79,6 +63,7 @@
 - (void) showAppearanceSetting:(BOOL)show;
 - (void) showLanguageSetting:(BOOL)show;
 - (void) supportWalletConnect:(BOOL)enable;
+- (void) supportDappBrowser:(BOOL)enable;
 - (void) particleWalletConnectInitialize:(NSString*_Nonnull)json;
 - (void) setSupportAddToken:(BOOL)enable;
 - (void) setDisplayTokenAddresses:(NSString*_Nonnull)json;

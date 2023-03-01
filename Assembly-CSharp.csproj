@@ -60,10 +60,11 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/UnityEditorTestMode/DevModeService.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/ParticleNetwork.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/Language.cs" />
-     <Compile Include="Assets/Tips.cs" />
+     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/Tips.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ChainChoiceItem.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/RpcUrl.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/NetService/NetParams.cs" />
+     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/WalletReadyState.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/LoginInfo.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/UnityRpc/UnityRPC.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/WalletType.cs" />
@@ -73,7 +74,6 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/EthCallObject.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ParticleRpcResponse.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Auth/ParticleAuthService.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/API/ParticleWalletAPIInteraction.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ParticleNetworkSDKDemo.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/GUI/ParticleWalletGUI.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/iOSModalPresentStyle.cs" />
@@ -81,7 +81,6 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ParticleRpcRequest.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ConnectConfig.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Auth/ParticleAuthServiceInteraction.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/API/ParticleWalletAPI.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Model/EthereumTransaction.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/UserInfo.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/ParticleNetworkIOSBridge.cs" />
@@ -96,7 +95,6 @@
      <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/DAppMetaData.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/Example.cs" />
      <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ChainChoice.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/WalletReadyState.cs" />
      <None Include="Assets/Resources/TypedDataV1.txt" />
      <None Include="Assets/Resources/TypedDataV4.txt" />
      <None Include="Assets/Resources/customUIConfig.json" />

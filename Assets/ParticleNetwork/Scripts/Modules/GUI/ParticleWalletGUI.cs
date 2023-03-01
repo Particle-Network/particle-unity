@@ -449,6 +449,22 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
+        
+        /// <summary>
+        /// Set support dapp browser in wallet page
+        /// </summary>
+        /// <param name="enable">Enable</param>
+        public static void SupportDappBrowser(bool enable)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+           ParticleNetwork.GetUnityBridgeClass().CallStatic("supportWalletConnect",enable);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.supportDappBrowser(enable);
+#else
+
+#endif
+        }
 
         /// <summary>
         /// Initialize particle wallet connect as a wallet 

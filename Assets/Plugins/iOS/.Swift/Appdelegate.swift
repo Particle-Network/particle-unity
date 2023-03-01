@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         UnityManager.shared.startGame()
 
+        ParticleWalletGUI.showTestNetwork(true)
         return true
     }
 
@@ -37,11 +38,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             // if integrate with ParticleConnect, call ParticleConnect.handleUrl(url)
             // if integrate with ParticleAuthService, call ParticleAuthService.handleUrl(url)
-            #if canImport(ParticleConnect)
-            return ParticleConnect.handleUrl(url)
-            #elseif canImport(ParticleAuthService)
-            return ParticleAuthService.handleUrl(url)
+
+            #if canImport(ParticleAuthService)
+            if ParticleAuthService.handleUrl(url) {
+                return true
+            }
+
+            #elseif canImport(ParticleConnect)
+            if ParticleConnect.handleUrl(url) {
+                return true
+            }
             #endif
         }
+
+        return true
     }
 }
