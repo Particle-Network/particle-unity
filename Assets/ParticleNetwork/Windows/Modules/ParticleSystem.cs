@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Particle.Windows.Modules.Models;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Vuplex.WebView;
 
 namespace Particle.Windows
