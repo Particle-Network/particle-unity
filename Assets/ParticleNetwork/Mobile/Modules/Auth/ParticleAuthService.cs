@@ -15,7 +15,6 @@ namespace Network.Particle.Scripts.Core
     public class ParticleAuthService : SingletonMonoBehaviour<ParticleAuthService>
     {
         
-
         private TaskCompletionSource<NativeResultData> loginTask;
         private TaskCompletionSource<NativeResultData> logoutTask;
         private TaskCompletionSource<NativeResultData> fastLogoutTask;
