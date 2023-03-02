@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Particle.Windows.Modules.Models;
 using UnityEngine;
-using Vuplex.WebView;
 
 namespace Particle.Windows.Demo
 {
