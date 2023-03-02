@@ -19,7 +19,8 @@ Make sure that your Unity project meets these requirements:
 - *For iOS** — targets iOS 13 or higher
 - **For Android** — Minimum API Level 23 or higher,Targets API level 31 or higher，Pack apk must be with exporting project to Android Studio, [change Java SDK version to 11](https://stackoverflow.com/questions/66449161/how-to-upgrade-an-android-project-to-java-11)
 
-**[See More](https://docs.particle.network/dashboard/unity-sdk-prerequisites)**
+**[iOS and Android](https://docs.particle.network/dashboard/unity-sdk-prerequisites)**
+**[Windows and macOS](https://docs.particle.network/auth-service/sdks/unity-windows-macos) 
 
 ## 📗 Docs
 
