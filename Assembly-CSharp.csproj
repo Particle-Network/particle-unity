@@ -41,61 +41,61 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/UserInterfaceStyle.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/AuthDemo.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Singleton/SingletonException.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Utils/ChainUtils.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/WalletChoice.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Connect/ParticleConnectInteraction.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/NativeErrorData.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ConnectDemo.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/SignData.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/OpenBuyNework.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/NetService/APIService.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/Chain.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/NativeCurrency.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/WalletChoiceItem.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ChainId.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Model/TestAccount.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/UnityEditorTestMode/DevModeService.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/ParticleNetwork.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/Language.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/Tips.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ChainChoiceItem.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/RpcUrl.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/NetService/NetParams.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/WalletReadyState.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/LoginInfo.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/UnityRpc/UnityRPC.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/WalletType.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Singleton/Singleton.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/WalletMetaData.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Utils/ParticleTools.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/EthCallObject.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ParticleRpcResponse.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Auth/ParticleAuthService.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ParticleNetworkSDKDemo.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/GUI/ParticleWalletGUI.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/iOSModalPresentStyle.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Connect/ParticleConnect.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ParticleRpcRequest.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/ConnectConfig.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Auth/ParticleAuthServiceInteraction.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Model/EthereumTransaction.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/UserInfo.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/ParticleNetworkIOSBridge.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/UnityRpc/ParticleUnityRpc.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/NativeResultData.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/NetService/NodeService.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/SecurityAccountConfig.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Utils/PersistTools.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/BuyCryptoConfig.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/GUIDemo.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Singleton/SingletonMonoBehaviour.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Modules/Core/Model/DAppMetaData.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/Example.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/ChainChoice.cs" />
-     <Compile Include="Assets/ParticleNetwork/Scripts/Demo/UnityRPCDemo.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\UserInterfaceStyle.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\AuthDemo.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Singleton\SingletonException.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Utils\ChainUtils.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\WalletChoice.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Connect\ParticleConnectInteraction.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\NativeErrorData.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\ConnectDemo.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\SignData.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\OpenBuyNework.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\NetService\APIService.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\Chain.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\NativeCurrency.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\WalletChoiceItem.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\ChainId.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Model\TestAccount.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\UnityEditorTestMode\DevModeService.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\ParticleNetwork.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\Language.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\Tips.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\ChainChoiceItem.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\RpcUrl.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\NetService\NetParams.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\WalletReadyState.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\LoginInfo.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\UnityRpc\UnityRPC.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\WalletType.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Singleton\Singleton.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\WalletMetaData.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Utils\ParticleTools.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\EthCallObject.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\ParticleRpcResponse.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Auth\ParticleAuthService.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\ParticleNetworkSDKDemo.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\GUI\ParticleWalletGUI.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\iOSModalPresentStyle.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Connect\ParticleConnect.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\UnityRPCDemo.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\ParticleRpcRequest.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\ConnectConfig.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Auth\ParticleAuthServiceInteraction.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Model\EthereumTransaction.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\UserInfo.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\ParticleNetworkIOSBridge.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\UnityRpc\ParticleUnityRpc.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\NativeResultData.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\NetService\NodeService.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\SecurityAccountConfig.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Utils\PersistTools.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\BuyCryptoConfig.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\GUIDemo.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Singleton\SingletonMonoBehaviour.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Modules\Core\Model\DAppMetaData.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\Example.cs" />
+     <Compile Include="Assets\ParticleNetwork\Mobile\Demo\ChainChoice.cs" />
      <None Include="Assets/Resources/TypedDataV1.txt" />
      <None Include="Assets/Resources/TypedDataV4.txt" />
      <None Include="Assets/Resources/customUIConfig.json" />
@@ -704,6 +704,9 @@
       <Project>{8c128bad-74c4-c0bb-b048-a5cf73a38375}</Project>
       <Name>UnityEngine.UI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\ParticleNetwork\Windows" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
