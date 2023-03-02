@@ -822,6 +822,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224179541092979990, guid: 3e10f3b6a733e441c8352020cff2f1f6, type: 3}
   m_PrefabInstance: {fileID: 722392715}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &722392717 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114949863196309792, guid: 3e10f3b6a733e441c8352020cff2f1f6, type: 3}
+  m_PrefabInstance: {fileID: 722392715}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 879d31ebe92b040cbb3ef97e98278140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &926712127
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,7 +975,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDontDestroy: 1
-  canvasWebViewPrefab: {fileID: 0}
+  canvasWebViewPrefab: {fileID: 722392717}
 --- !u!1 &975768662
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,8 +32,6 @@ namespace Particle.Windows
         
         async void Start()
         {
-            // _canvasWebViewPrefab.gameObject.SetActive(false);
-
             await canvasWebViewPrefab.WaitUntilInitialized();
             
             canvasWebViewPrefab.WebView.MessageEmitted += (sender, eventArgs) => {
@@ -50,6 +48,8 @@ namespace Particle.Windows
                     OnSign(jsonString);
                 }
             };
+            
+            Debug.Log("[CanvasWebViewDemo] Initialized finished");
             
             canvasWebViewPrefab.WebView.UrlChanged += (sender, eventArgs) =>
             {
@@ -72,6 +72,8 @@ namespace Particle.Windows
             this._language = language;
             this._chainName = chainName;
             this._chainId = chainId;
+            
+            Debug.Log($"Particle SDK init, Config = {config}, ChainName = {chainName}, ChainId = {chainId}, Language = {language}, Theme = {theme}");
         }
 
         /// <summary>
@@ -129,7 +131,7 @@ namespace Particle.Windows
             }
             else
             {
-                method = SignMethod.personal_Sign.ToString();
+                method = SignMethod.personal_sign.ToString();
             }
 
             var queryStr = $"config={_config}&theme={_theme}&language={_language}&chainName={_chainName}&chainId={_chainId}&method={method}&message={message}";
@@ -168,7 +170,7 @@ namespace Particle.Windows
             }
             else
             {
-                method = SignMethod.eth_SendTransaction.ToString();
+                method = SignMethod.eth_sendTransaction.ToString();
             }
 
             var queryStr = $"config={_config}&theme={_theme}&language={_language}&chainName={_chainName}&chainId={_chainId}&method={method}&message={transaction}";
@@ -205,19 +207,19 @@ namespace Particle.Windows
             switch (version)
             {
                 case SignTypedDataVersion.Default:
-                    method = SignMethod.eth_SignTypedData.ToString();
+                    method = SignMethod.eth_signTypedData.ToString();
                     break;
                 case SignTypedDataVersion.v1:
-                    method = SignMethod.eth_SignTypedData_v1.ToString();
+                    method = SignMethod.eth_signTypedData_v1.ToString();
                     break;
                 case SignTypedDataVersion.v3:
-                    method = SignMethod.eth_SignTypedData_v3.ToString();
+                    method = SignMethod.eth_signTypedData_v3.ToString();
                     break;
                 case SignTypedDataVersion.v4:
-                    method = SignMethod.eth_SignTypedData_v4.ToString();
+                    method = SignMethod.eth_signTypedData_v4.ToString();
                     break;
                 default:
-                    method = SignMethod.eth_SignTypedData.ToString();
+                    method = SignMethod.eth_signTypedData.ToString();
                     break;
             }
 
@@ -316,18 +318,18 @@ namespace Particle.Windows
             var result = JsonConvert.DeserializeObject<OnSignResult>(jsonString);
 
             
-            if (result.Method == SignMethod.personal_Sign.ToString() || result.Method == SignMethod.signMessage.ToString())
+            if (result.Method == SignMethod.personal_sign.ToString() || result.Method == SignMethod.signMessage.ToString())
             {
                 _signMessageTask.TrySetResult(jsonString);
             }
-            else if (result.Method == SignMethod.eth_SignTypedData.ToString()
-                     || result.Method == SignMethod.eth_SignTypedData_v1.ToString()
-                     || result.Method == SignMethod.eth_SignTypedData_v3.ToString()
-                     || result.Method == SignMethod.eth_SignTypedData_v4.ToString())
+            else if (result.Method == SignMethod.eth_signTypedData.ToString()
+                     || result.Method == SignMethod.eth_signTypedData_v1.ToString()
+                     || result.Method == SignMethod.eth_signTypedData_v3.ToString()
+                     || result.Method == SignMethod.eth_signTypedData_v4.ToString())
             {
                 _signTypedDataTask.TrySetResult(jsonString);
             }
-            else if (result.Method == SignMethod.eth_SendTransaction.ToString() || result.Method == SignMethod.signAndSendTransaction.ToString())
+            else if (result.Method == SignMethod.eth_sendTransaction.ToString() || result.Method == SignMethod.signAndSendTransaction.ToString())
             {
                 _signAndSendTransactionTask.TrySetResult(jsonString);
             }
@@ -339,6 +341,10 @@ namespace Particle.Windows
             {
                 _signAllTransactionsTask.TrySetResult(jsonString);
             }
+            
+            canvasWebViewPrefab.gameObject.SetActive(false);
+            
+            Debug.Log($"Particle OnSign JsonString = {jsonString}");
         }
 
         /// <summary>

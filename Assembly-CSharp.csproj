@@ -104,6 +104,7 @@
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/ThreadDispatcher.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/PointerEventArgs.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/Language.cs" />
+     <Compile Include="Assets/ParticleNetwork/Windows/Modules/Models/PreferredAuthType.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/TerminatedEventArgs.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Tips.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/ConsoleBridgeMessage.cs" />
@@ -211,7 +212,6 @@
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/ViewportMaterialView.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/ChainChoice.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Web.cs" />
-     <Compile Include="Assets/ParticleNetwork/Windows/Modules/Models/PreferredAuthType.cs" />
      <None Include="Assets/Vuplex/WebView/Standalone/Mac/Plugins/VuplexWebViewMac.bundle/Contents/Frameworks/Vuplex WebView.app/Contents/Frameworks/Chromium Embedded Framework.framework/Libraries/vk_swiftshader_icd.json" />
      <None Include="Assets/Vuplex/WebView/Standalone/Mac/Plugins/VuplexWebViewMac_with_codecs.bundle/Contents/Frameworks/Vuplex WebView.app/Contents/Frameworks/Chromium Embedded Framework.framework/Libraries/vk_swiftshader_icd.json" />
      <None Include="Assets/Resources/TypedDataV1.txt" />

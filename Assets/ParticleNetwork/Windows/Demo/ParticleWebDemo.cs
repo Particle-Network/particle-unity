@@ -8,7 +8,6 @@ namespace Particle.Windows.Demo
 {
     public class ParticleWebDemo : MonoBehaviour
     {
-        CanvasWebViewPrefab _canvasWebViewPrefab;
 
         public void Init()
         {
@@ -30,19 +29,19 @@ namespace Particle.Windows.Demo
         public async void Login()
         {
             var loginResult = await ParticleSystem.Instance.Login(PreferredAuthType.email, "");
-            Debug.Log($"login result {loginResult}");
+            Debug.Log($"Login result {loginResult}");
         }
         
         public async void SignMessage()
         {
             var signMessageResult = await ParticleSystem.Instance.SignMessage("hello world");
-            Debug.Log($"login result {signMessageResult}");
+            Debug.Log($"SignMessage result {signMessageResult}");
         }
         
         public async void SignAndSendTransaction()
         {
             var signMessageResult = await ParticleSystem.Instance.SignAndSendTransaction("hello world");
-            Debug.Log($"login result {signMessageResult}");
+            Debug.Log($"SignAndSendTransaction result {signMessageResult}");
         }
         
         public async void SignTypedData()
@@ -51,7 +50,7 @@ namespace Particle.Windows.Demo
             // pass your typedDataV4 here.
             string typedDataV4 = "";
             var signMessageResult = await ParticleSystem.Instance.SignTypedData(typedDataV4, SignTypedDataVersion.Default);
-            Debug.Log($"login result {signMessageResult}");
+            Debug.Log($"SignTypedData result {signMessageResult}");
         }
         
         public async void SignTransaction()
@@ -60,7 +59,7 @@ namespace Particle.Windows.Demo
             // pass your solana transaction here, request base58 string.
             string transaction = "";
             var signMessageResult = await ParticleSystem.Instance.SignTransaction(transaction);
-            Debug.Log($"login result {signMessageResult}");
+            Debug.Log($"SignTransaction result {signMessageResult}");
         }
         
         public async void SignAllTransactions()
@@ -69,7 +68,7 @@ namespace Particle.Windows.Demo
             // pass your solana transactions here, request base58 string list.
             List<string> transactions = new List<string> { "" };
             var signMessageResult = await ParticleSystem.Instance.SignAllTransactions(transactions);
-            Debug.Log($"login result {signMessageResult}");
+            Debug.Log($"SignAllTransactions result {signMessageResult}");
         }
     }
 }
