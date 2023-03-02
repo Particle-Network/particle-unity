@@ -5,9 +5,9 @@ namespace Particle.Windows.Modules.Models
         // Evm
         eth_SendTransaction,
         eth_SignTypedData,
-        eth_SignTypedData1,
-        eth_SignTypedData3,
-        eth_SignTypedData4,
+        eth_SignTypedData_v1,
+        eth_SignTypedData_v3,
+        eth_SignTypedData_v4,
         personal_Sign,
 
         // Solana
