@@ -9,6 +9,8 @@
 
 Install Unity 2020.3.26f1 or later. Earlier versions may also be compatible but will not be actively supported. 
 
+**[iOS and Android](https://docs.particle.network/dashboard/unity-sdk-prerequisites)**
+
 *(iOS only)* Install the following:
 
 - Xcode 13.3.1 or higher
@@ -16,12 +18,13 @@ Install Unity 2020.3.26f1 or later. Earlier versions may also be compatible but 
 
 Make sure that your Unity project meets these requirements:
 
-- *For iOS** — targets iOS 13 or higher
+- **For iOS** — targets iOS 13 or higher
 - **For Android** — Minimum API Level 23 or higher,Targets API level 31 or higher，Pack apk must be with exporting project to Android Studio, [change Java SDK version to 11](https://stackoverflow.com/questions/66449161/how-to-upgrade-an-android-project-to-java-11)
 
-**[iOS and Android](https://docs.particle.network/dashboard/unity-sdk-prerequisites)**
 
-**[Windows and macOS](https://docs.particle.network/auth-service/sdks/unity-windows-macos)**
+- **For Windows and macOS** - 
+Require unity package: 3D WebView for Windows and macOS (Web Browser), version 4.3.3
+If you are familiar with web browser in windows platform, you can use other web browser instead.
 
 ## 📗 Docs
 
@@ -31,10 +34,14 @@ Make sure that your Unity project meets these requirements:
 
 **GUI**: https://docs.particle.network/wallet-service/sdks/unity
 
+**Windows and macOS**: https://docs.particle.network/auth-service/sdks/unity-windows-macos
+
 ## 🚀 Quick start with DEMO
 
 
 ### 💻 In Unity Editor, we provide a test mode, easy to develop and debug.
+
+In scene: Mobile_WalletDemo
 
 1. Download and open in Unity Editor.
 
@@ -45,6 +52,14 @@ Make sure that your Unity project meets these requirements:
 4. Click `Login` button, in test mode, api will return a user info.
 
 5. Click other button to test, you can see all logs in Console.
+
+In scene: Window_AuthDemo
+
+1. Download and open in Unity Editor.
+ 
+2. Click `Particle Init` button to initialize the SDK
+
+3. Click `Login` to login in web view.
 
 
 ### 📲 Export to Real Phone to test.
