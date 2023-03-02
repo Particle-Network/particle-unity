@@ -11,14 +11,17 @@ namespace Particle.Windows.Demo
         public void Init()
         {
             var config = new ParticleConfig();
-            config.ProjectId = "7fa3e77f-9d07-4417-8e45-01560fef0eab";
-            config.ClientKey = "cRX26iCgKipWu6scQi6R8qWaP903EF3YsL3bxIym";
-            config.AppId = "4ca94b0e-74b9-4a5b-aad3-72ee1ed84793";
+            // replace with your project info
+            config.ProjectId = "d02226f6-f051-43df-8751-83cf1ead5a40";
+            config.ClientKey = "cRtRmsvPWs8N4eJemZZadKlyZrXNV5Ai9pOoCgTF";
+            config.AppId = "db3da81e-2a86-46ed-883e-d0b40af53639";
 
             var theme = new ParticleTheme();
             theme.UiMode = "dark";
+            theme.DisplayWallet = true;
+            theme.DisplayCloseButton = true;
             
-            string language = "en";
+            string language = "en-US";
             string chainName = "Ethereum";
             long chainId = 5;
             
@@ -46,7 +49,7 @@ namespace Particle.Windows.Demo
             webCanvas.sortingOrder = 2;
             
             // make a test transaction,
-            // you need to update it parameters.
+            // you need to update it parameters before trying.
             var transaction = ParticleSystem.Instance.MakeEvmTransaction("0x16380a03f21e5a5e339c15ba8ebe581d194e0db3", "0xA719d8C4C94C1a877289083150f8AB96AD0C6aa1", "0x",
                 "0x123123");
             var signMessageResult = await ParticleSystem.Instance.SignAndSendTransaction(transaction);

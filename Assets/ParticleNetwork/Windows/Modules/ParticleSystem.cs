@@ -19,7 +19,7 @@ namespace Particle.Windows
         private string _chainName;
         private long _chainId;
         private string _config;
-        private readonly string _walletURL = "https://auth-bridge-debug.particle.network/";
+        private readonly string _walletURL = "https://auth-bridge.particle.network/";
 
         private TaskCompletionSource<string> _loginTask;
         
