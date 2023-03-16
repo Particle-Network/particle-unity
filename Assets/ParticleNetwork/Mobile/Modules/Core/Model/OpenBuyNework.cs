@@ -5,7 +5,15 @@ namespace Network.Particle.Scripts.Model
         Solana,
         Ethereum,
         BinanceSmartChain,
-        Avalanche,
+        Optimism,
         Polygon,
+        Tron,
+        ArbitrumOne,
+    }
+
+    public enum Theme
+    {
+        Dark,
+        Light
     }
 }

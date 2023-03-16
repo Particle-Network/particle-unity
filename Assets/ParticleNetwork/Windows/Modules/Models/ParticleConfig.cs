@@ -1,3 +1,4 @@
+#if !UNITY_ANDROID && !UNITY_IOS
 using System.Collections.Generic;
 using System.Numerics;
 using Newtonsoft.Json;
@@ -80,3 +81,4 @@ namespace Particle.Windows.Modules.Models
             }
         }
 }
+#endif

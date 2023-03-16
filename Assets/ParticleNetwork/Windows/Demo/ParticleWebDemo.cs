@@ -1,3 +1,4 @@
+#if !UNITY_ANDROID && !UNITY_IOS
 using System.Collections.Generic;
 using Particle.Windows.Modules.Models;
 using UnityEngine;
@@ -91,3 +92,4 @@ namespace Particle.Windows.Demo
         }
     }
 }
+#endif

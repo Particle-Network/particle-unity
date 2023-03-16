@@ -1,3 +1,4 @@
+#if !UNITY_ANDROID && !UNITY_IOS
 using Newtonsoft.Json;
 
 namespace Particle.Windows.Modules.Models
@@ -26,3 +27,4 @@ namespace Particle.Windows.Modules.Models
         
     }
 }
+#endif

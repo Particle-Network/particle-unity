@@ -30,7 +30,8 @@ namespace Network.Particle.Scripts.Model
         LINKEDIN = 1 << 8, // 256
         PHONE = 1 << 9, // 512
         EMAIL = 1 << 10, // 1024
-        ALL = (1 << 11) - 1, // 2048 - 1 
+        TWITTER = 1 << 11,
+        ALL = (1 << 12) - 1, // 4096 - 1 
     }
 
     public enum SocialLoginPrompt

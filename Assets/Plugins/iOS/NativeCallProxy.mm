@@ -61,6 +61,9 @@ extern "C" {
     void login(const char* json) {
         [api login:[NSString stringWithUTF8String: json]];
     }
+    void setUserInfo(const char* json) {
+        [api setUserInfo:[NSString stringWithUTF8String: json]];
+    }
 
     void logout() {
         [api logout];

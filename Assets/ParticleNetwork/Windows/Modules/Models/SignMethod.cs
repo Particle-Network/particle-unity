@@ -1,3 +1,4 @@
+#if !UNITY_ANDROID && !UNITY_IOS
 namespace Particle.Windows.Modules.Models
 {
     public enum SignMethod
@@ -17,3 +18,4 @@ namespace Particle.Windows.Modules.Models
         signAllTransactions,
     }
 }
+#endif

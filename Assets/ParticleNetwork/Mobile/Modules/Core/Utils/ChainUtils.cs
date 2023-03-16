@@ -276,16 +276,12 @@ namespace Network.Particle.Scripts.Core.Utils
             }
             else if (name == "scroll")
             {
-                if (chainId == 534351)
+                if (chainId == 534353)
                 {
-                    chainInfo = new ScrollChain(ScrollChainId.TestnetL1);
-                }
-                else if (chainId == 534354)
-                {
-                    chainInfo = new ScrollChain(ScrollChainId.TestnetL2);
+                    chainInfo = new ScrollChain(ScrollChainId.Testnet);
                 }
             }
-            else if (name == "zksyncv2")
+            else if (name == "zksync")
             {
                 if (chainId == 324)
                 {

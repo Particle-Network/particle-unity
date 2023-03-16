@@ -1,3 +1,6 @@
+
+#if !UNITY_ANDROID && !UNITY_IOS
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
@@ -388,3 +391,5 @@ namespace Particle.Windows
         }
     }
 }
+
+#endif

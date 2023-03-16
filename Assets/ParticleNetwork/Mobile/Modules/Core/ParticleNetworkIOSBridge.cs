@@ -34,6 +34,9 @@ namespace Network.Particle.Scripts.Core
         public static extern void login(string json);
 
         [DllImport("__Internal")]
+        public static extern void setUserInfo(string json);
+
+        [DllImport("__Internal")]
         public static extern void logout();
         
         [DllImport("__Internal")]

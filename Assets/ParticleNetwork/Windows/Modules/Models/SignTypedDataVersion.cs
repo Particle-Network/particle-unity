@@ -1,3 +1,4 @@
+#if !UNITY_ANDROID && !UNITY_IOS
 namespace Particle.Windows.Modules.Models
 {
     public enum SignTypedDataVersion
@@ -8,3 +9,4 @@ namespace Particle.Windows.Modules.Models
         v4,
     }
 }
+#endif

@@ -192,6 +192,8 @@ extension UnityManager {
                     supportAuthTypeArray.append(.linkedin)
                 } else if $0 == "discord" {
                     supportAuthTypeArray.append(.discord)
+                } else if $0 == "twitter" {
+                    supportAuthTypeArray.append(.twitter)
                 }
             }
         }
@@ -205,6 +207,26 @@ extension UnityManager {
         let socialLoginPrompt: SocialLoginPrompt? = SocialLoginPrompt(rawValue: socialLoginPromptString)
         
         ParticleAuthService.login(type: loginType, account: account, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode, socialLoginPrompt: socialLoginPrompt).subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            case .success(let userInfo):
+                guard let userInfo = userInfo else { return }
+                let statusModel = UnityStatusModel(status: true, data: userInfo)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            }
+        }.disposed(by: bag)
+    }
+    
+    func setUserInfo(_ json: String) {
+        ParticleAuthService.setUserInfo(json: json).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -458,7 +480,8 @@ extension UnityManager {
     func setSecurityAccountConfig(_ json: String) {
         let data = JSON(parseJSON: json)
         let promptSettingWhenSign = data["prompt_setting_when_sign"].intValue
-        ParticleAuthService.setSecurityAccountConfig(config: .init(promptSettingWhenSign: promptSettingWhenSign))
+        let promptMasterPasswordSettingWhenLogin = data["prompt_master_password_setting_when_login"].intValue
+        ParticleAuthService.setSecurityAccountConfig(config: .init(promptSettingWhenSign: promptSettingWhenSign, promptMasterPasswordSettingWhenLogin: promptMasterPasswordSettingWhenLogin))
     }
 }
 
@@ -547,16 +570,27 @@ extension UnityManager {
             network = .ethereum
         } else if networkString == "binancesmartchain" {
             network = .binanceSmartChain
-        } else if networkString == "avalanche" {
-            network = .avalanche
+        } else if networkString == "optimism" {
+            network = .optimism
         } else if networkString == "polygon" {
             network = .polygon
+        } else if networkString == "tron" {
+            network = .tron
+        } else if networkString == "arbitrumOne" {
+            network = .arbitrumOne
         } else {
             network = nil
         }
-        let fiatCoin = data["fiat_coin"].string
+        let fiatCoin = data["fiat_coin"].string ?? "USD"
         let fiatAmt = data["fiat_amt"].int
         let cryptoCoin = data["crypto_coin"].string
+        let fixCryptoCoin = data["fix_crypto_coin"].boolValue
+        let fixFiatAmt = data["fix_fiat_amt"].boolValue
+        let FixFiatCoin = data["fix_fiat_coin"].boolValue
+        let theme = data["theme"].stringValue.lowercased()
+        let language = getLanguage(from: data["language"].stringValue.lowercased())
+        
+        let buyConfig = BuyCryptoConfig(walletAddress: walletAddress, network: network, cryptoCoin: cryptoCoin, fiatAmt: fiatAmt, fiatCoin: fiatCoin, fixFiatCoin: fixCryptoCoin, fixFiatAmt: fixFiatAmt, fixCryptoCoin: fixCryptoCoin, theme: theme, language: language.webString)
         
         PNRouter.navigatorBuy(walletAddress: walletAddress, network: network, cryptoCoin: cryptoCoin, fiatCoin: fiatCoin, fiatAmt: fiatAmt)
     }
@@ -653,17 +687,24 @@ extension UnityManager {
          JA,
          KO
          */
+        let language = getLanguage(from: json)
+        ParticleWalletGUI.setLanguage(language)
+    }
+    
+    private func getLanguage(from json: String) -> Language {
+        var language: Language = .en
         if json.lowercased() == "en" {
-            ParticleWalletGUI.setLanguage(Language.en)
+            language = Language.en
         } else if json.lowercased() == "zh_hans" {
-            ParticleWalletGUI.setLanguage(Language.zh_Hans)
+            language = Language.zh_Hans
         } else if json.lowercased() == "zh_hant" {
-            ParticleWalletGUI.setLanguage(Language.zh_Hant)
+            language = Language.zh_Hant
         } else if json.lowercased() == "ko" {
-            ParticleWalletGUI.setLanguage(Language.ko)
+            language = Language.ko
         } else if json.lowercased() == "ja" {
-            ParticleWalletGUI.setLanguage(Language.ja)
+            language = Language.ja
         }
+        return language
     }
     
     func showLanguageSetting(_ show: Bool) {
@@ -840,13 +881,13 @@ extension UnityManager {
                     let statusModel = UnityStatusModel(status: false, data: response)
                     let data = try! JSONEncoder().encode(statusModel)
                     guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName)
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "SetChainInfoAsync")
                 case .success(let userInfo):
                     guard let userInfo = userInfo else { return }
                     let statusModel = UnityStatusModel(status: true, data: true)
                     let data = try! JSONEncoder().encode(statusModel)
                     guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName)
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "SetChainInfoAsync")
                 }
             }.disposed(by: bag)
         } else {
@@ -854,7 +895,7 @@ extension UnityManager {
             let statusModel = UnityStatusModel(status: true, data: true)
             let data = try! JSONEncoder().encode(statusModel)
             guard let json = String(data: data, encoding: .utf8) else { return }
-            callBackMessage(json, unityName: UnityManager.connectSystemName)
+            callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "SetChainInfoAsync")
         }
     }
     
@@ -920,6 +961,8 @@ extension UnityManager {
                     supportAuthTypeArray.append(.linkedin)
                 } else if $0 == "discord" {
                     supportAuthTypeArray.append(.discord)
+                } else if $0 == "twitter" {
+                    supportAuthTypeArray.append(.twitter)
                 }
                 }
             }
@@ -1781,7 +1824,7 @@ extension UnityManager {
         } else if name == "platon" {
             if chainId == 210425 {
                 chainInfo = .platON(.mainnet)
-            } else if chainId == 2203181 {
+            } else if chainId == 2206132 {
                 chainInfo = .platON(.testnet)
             }
         } else if name == "tron" {
@@ -1835,16 +1878,14 @@ extension UnityManager {
                 chainInfo = .klaytn(.testnet)
             }
         } else if name == "scroll" {
-            if chainId == 534351 {
-                chainInfo = .scroll(.testnetL1)
-            } else if chainId == 534354 {
-                chainInfo = .scroll(.testnetL2)
+            if chainId == 534353 {
+                chainInfo = .scroll(.testnet)
             }
-        } else if name == "zksyncv2" {
+        } else if name == "zksync" {
             if chainId == 324 {
-                chainInfo = .zkSyncV2(.mainnet)
+                chainInfo = .zkSync(.mainnet)
             } else if chainId == 280 {
-                chainInfo = .zkSyncV2(.testnet)
+                chainInfo = .zkSync(.testnet)
             }
         } else if name == "metis" {
             if chainId == 1088 {
@@ -1907,8 +1948,8 @@ extension UnityManager {
             chain = .klaytn
         } else if name == "scroll" {
             chain = .scroll
-        } else if name == "zksyncv2" {
-            chain = .zkSyncV2
+        } else if name == "zksync" {
+            chain = .zkSync
         } else if name == "metis" {
             chain = .metis
         }

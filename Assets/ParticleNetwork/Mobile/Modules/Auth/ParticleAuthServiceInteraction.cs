@@ -39,6 +39,18 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
+        internal static void SetUserInfo(string json)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("login",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setUserInfo(json);
+#else
+
+#endif
+        }
+
         internal static void Logout()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -49,7 +61,7 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
-        
+
         internal static void FastLogout()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR

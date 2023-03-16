@@ -27,6 +27,7 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> signTypedDataTask;
 
         private TaskCompletionSource<NativeResultData> openAccountAndSecurityTask;
+        private TaskCompletionSource<NativeResultData> setUserInfoTask;
         
         /// <summary>
         /// Login
@@ -64,6 +65,44 @@ namespace Network.Particle.Scripts.Core
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             loginTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+#endif
+        }
+        
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <param name="loginType">Login type</param>
+        /// <param name="account">Account, default value is empty</param>
+        /// <param name="supportAuthTypes">Support auth types, default value is all</param>
+        /// <param name="loginFormMode">Login form mode</param>
+        /// <param name="socialLoginPrompt">Social login prompt</param>
+        /// <returns></returns>
+        public Task<NativeResultData> SetUserInfo(string json)
+        {
+            setUserInfoTask = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+            DevModeService.Login();
+#else
+            ParticleAuthServiceInteraction.SetUserInfo(json);
+#endif
+            return setUserInfoTask.Task;
+        }
+
+        /// <summary>
+        /// SetUserInfo call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void SetUserInfoCallBack(string json)
+        {
+            Debug.Log($"SetUserInfoCallBack:{json}");
+#if UNITY_EDITOR
+            var data = new NativeResultData(true, json);
+            setUserInfoTask?.TrySetResult(data);
+            PersistTools.SaveUserInfo(json);
+#else
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            setUserInfoTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
 #endif
         }
 

@@ -23,6 +23,7 @@
 
 // Particle Auth Service
 - (void) login:(NSString* _Nonnull)json;
+- (void) setUserInfo:(NSString* _Nonnull)json;
 - (void) logout;
 - (void) fastLogout;
 - (BOOL) isLogin;

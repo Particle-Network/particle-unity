@@ -209,14 +209,25 @@ namespace Network.Particle.Scripts.Core
             string json = "";
             if (config != null)
             {
-                json = JsonConvert.SerializeObject(new JObject
+                var jobject = new JObject
                 {
-                    { "wallet_address", config.walletAddress },
-                    { "network", config.network.ToString() },
-                    { "crypto_coin", config.cryptoCoin },
-                    { "fiat_coin", config.fiatCoin },
-                    { "fiat_amt", config.fiatAmt }
-                });
+                    { "wallet_address", config.WalletAddress },
+                    { "network", config.Network.ToString() },
+                    { "crypto_coin", config.CryptoCoin },
+                    { "fiat_coin", config.FiatCoin },
+                    { "fiat_amt", config.FiatAmt },
+                    { "fix_crypto_coin", config.FixCryptoCoin },
+                    { "fix_fiat_amt", config.FixFiatAmt },
+                    { "fix_fiat_coin", config.FixFiatCoin },
+                };
+                if (config.Theme != null)
+                {
+                    jobject.Add(new JProperty("theme", config.Theme));
+                }
+                if (config.Language != null)
+                {
+                    jobject.Add(new JProperty("language", config.Language));
+                }
             }
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR

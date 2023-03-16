@@ -90,7 +90,7 @@ namespace Network.Particle.Scripts.Model
     public enum PlatONChainId
     {
         Mainnet = 210425,
-        Testnet = 2203181
+        Testnet = 2206132
     }
     
     public enum TronChainId: long
@@ -144,8 +144,7 @@ namespace Network.Particle.Scripts.Model
     
     public enum ScrollChainId
     {
-        TestnetL1 = 534351,
-        TestnetL2 = 534354
+        Testnet = 534353,
     }
     
     public enum ZkSyncChainId
