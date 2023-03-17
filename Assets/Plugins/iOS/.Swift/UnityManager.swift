@@ -596,7 +596,7 @@ extension UnityManager {
         buyConfig.fixFiatCoin = fixFiatCoin
         buyConfig.fixFiatAmt = fixFiatAmt
         buyConfig.theme = theme
-        buyConfig.language = language.rawValue
+        buyConfig.language = language.webString
         
         PNRouter.navigatorBuy(buyCryptoConfig: buyConfig)
     }
