@@ -580,13 +580,13 @@ extension UnityManager {
         let cryptoCoin = data["crypto_coin"].string
         let fixCryptoCoin = data["fix_crypto_coin"].boolValue
         let fixFiatAmt = data["fix_fiat_amt"].boolValue
-        let FixFiatCoin = data["fix_fiat_coin"].boolValue
+        let fixFiatCoin = data["fix_fiat_coin"].boolValue
         let theme = data["theme"].stringValue.lowercased()
         let language = getLanguage(from: data["language"].stringValue.lowercased())
         
-        let buyConfig = BuyCryptoConfig(walletAddress: walletAddress, network: network, cryptoCoin: cryptoCoin, fiatAmt: fiatAmt, fiatCoin: fiatCoin, fixFiatCoin: fixCryptoCoin, fixFiatAmt: fixFiatAmt, fixCryptoCoin: fixCryptoCoin, theme: theme, language: language.webString)
+        let buyConfig = BuyCryptoConfig(walletAddress: walletAddress, network: network, cryptoCoin: cryptoCoin, fiatAmt: fiatAmt, fiatCoin: fiatCoin, fixFiatCoin: fixFiatCoin, fixFiatAmt: fixFiatAmt, fixCryptoCoin: fixCryptoCoin, theme: theme, language: language.webString)
         
-        PNRouter.navigatorBuy(walletAddress: walletAddress, network: network, cryptoCoin: cryptoCoin, fiatCoin: fiatCoin, fiatAmt: fiatAmt)
+        PNRouter.navigatorBuy(buyCryptoConfig: buyConfig)
     }
     
     func navigatorSwap(_ json: String?) {
