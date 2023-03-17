@@ -575,7 +575,7 @@ extension UnityManager {
         } else {
             network = nil
         }
-        let fiatCoin = data["fiat_coin"].string ?? "USD"
+        let fiatCoin = data["fiat_coin"].string
         let fiatAmt = data["fiat_amt"].int
         let cryptoCoin = data["crypto_coin"].string
         let fixCryptoCoin = data["fix_crypto_coin"].boolValue
@@ -584,7 +584,19 @@ extension UnityManager {
         let theme = data["theme"].stringValue.lowercased()
         let language = getLanguage(from: data["language"].stringValue.lowercased())
         
-        let buyConfig = BuyCryptoConfig(walletAddress: walletAddress, network: network, cryptoCoin: cryptoCoin, fiatAmt: fiatAmt, fiatCoin: fiatCoin, fixFiatCoin: fixFiatCoin, fixFiatAmt: fixFiatAmt, fixCryptoCoin: fixCryptoCoin, theme: theme, language: language.webString)
+        var buyConfig = BuyCryptoConfig()
+        buyConfig.network = network
+        buyConfig.walletAddress = walletAddress
+        buyConfig.cryptoCoin = cryptoCoin
+        buyConfig.fiatAmt = fiatAmt
+        if fiatCoin != nil {
+            buyConfig.fiatCoin = fiatCoin!
+        }
+        buyConfig.fixCryptoCoin = fixCryptoCoin
+        buyConfig.fixFiatCoin = fixFiatCoin
+        buyConfig.fixFiatAmt = fixFiatAmt
+        buyConfig.theme = theme
+        buyConfig.language = language.rawValue
         
         PNRouter.navigatorBuy(buyCryptoConfig: buyConfig)
     }
