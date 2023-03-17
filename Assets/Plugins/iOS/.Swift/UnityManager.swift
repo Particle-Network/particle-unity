@@ -557,13 +557,7 @@ extension UnityManager {
         let walletAddress = data["wallet_address"].string
         let networkString = data["network"].stringValue.lowercased()
         var network: OpenBuyNetwork?
-        /*
-         Solana,
-         Ethereum,
-         BinanceSmartChain,
-         Avalanche,
-         Polygon,
-         */
+        
         if networkString == "solana" {
             network = .solana
         } else if networkString == "ethereum" {
@@ -695,9 +689,9 @@ extension UnityManager {
         var language: Language = .en
         if json.lowercased() == "en" {
             language = Language.en
-        } else if json.lowercased() == "zh_hans" {
+        } else if json.lowercased() == "zh_cn" {
             language = Language.zh_Hans
-        } else if json.lowercased() == "zh_hant" {
+        } else if json.lowercased() == "zh_tw" {
             language = Language.zh_Hant
         } else if json.lowercased() == "ko" {
             language = Language.ko
