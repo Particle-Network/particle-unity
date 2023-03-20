@@ -42,8 +42,7 @@ namespace Network.Particle.Scripts.Core
         internal static void SetUserInfo(string json)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("login",json);
+            ParticleNetwork.CallNative("setUserInfo",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setUserInfo(json);
 #else
@@ -65,8 +64,7 @@ namespace Network.Particle.Scripts.Core
         internal static void FastLogout()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("logout");
+            ParticleNetwork.CallNative("fastLogout");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.fastLogout();
 #else
@@ -248,9 +246,9 @@ namespace Network.Particle.Scripts.Core
         public static void OpenWebWallet()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            // todo
+            ParticleNetwork.CallNative("openWebWallet");
 #elif UNITY_IOS &&!UNITY_EDITOR
-        ParticleNetworkIOSBridge.openWebWallet();
+            ParticleNetworkIOSBridge.openWebWallet();
 #else
 
 #endif
@@ -259,7 +257,7 @@ namespace Network.Particle.Scripts.Core
         internal static void OpenAccountAndSecurity()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            // todo
+        ParticleNetwork.CallNative("openAccountAndSecurity");
 #elif UNITY_IOS &&!UNITY_EDITOR
         ParticleNetworkIOSBridge.openAccountAndSecurity();
 #else
@@ -272,7 +270,7 @@ namespace Network.Particle.Scripts.Core
         {
             var json = JsonConvert.SerializeObject(config);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
+            ParticleNetwork.CallNative("setSecurityAccountConfig",json);
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.setSecurityAccountConfig(json);
 #else

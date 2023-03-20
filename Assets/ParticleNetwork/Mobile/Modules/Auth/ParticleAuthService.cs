@@ -393,7 +393,7 @@ namespace Network.Particle.Scripts.Core
         }
 
         /// <summary>
-        /// Open account and security call back
+        /// Open account and security call back,only failed will return data.
         /// </summary>
         /// <param name="json">Result</param>
         public void OpenAccountAndSecurityCallBack(string json)
