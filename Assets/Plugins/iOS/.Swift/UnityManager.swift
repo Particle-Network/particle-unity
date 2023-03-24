@@ -548,10 +548,6 @@ extension UnityManager {
         PNRouter.navigatorNFTDetails(nftDetailsConfig: config)
     }
     
-    func navigatorPay() {
-        PNRouter.navigatorBuy()
-    }
-    
     func navigatorBuyCrypto(_ json: String) {
         let data = JSON(parseJSON: json)
         let walletAddress = data["wallet_address"].string
@@ -575,6 +571,31 @@ extension UnityManager {
         } else {
             network = nil
         }
+        if network == nil {
+            let chainInfo = ParticleNetwork.getChainInfo()
+            switch chainInfo.chain {
+            case .solana:
+                network = OpenBuyNetwork.solana
+            case .ethereum:
+                network = OpenBuyNetwork.ethereum
+            case .bsc:
+                network = OpenBuyNetwork.binanceSmartChain
+            case .optimism:
+                network = OpenBuyNetwork.optimism
+            case .polygon:
+                network = OpenBuyNetwork.polygon
+            case .tron:
+                network = OpenBuyNetwork.tron
+            case .arbitrum:
+                if chainInfo == .arbitrum(.one) {
+                    network = OpenBuyNetwork.arbitrumOne
+                } else {
+                    network = nil
+                }
+            default:
+                network = nil
+            }
+        }
         let fiatCoin = data["fiat_coin"].string
         let fiatAmt = data["fiat_amt"].int
         let cryptoCoin = data["crypto_coin"].string
@@ -587,7 +608,7 @@ extension UnityManager {
         var buyConfig = BuyCryptoConfig()
         buyConfig.network = network
         buyConfig.walletAddress = walletAddress
-        buyConfig.cryptoCoin = cryptoCoin
+        buyConfig.cryptoCoin = cryptoCoin ?? TokenInfo.nativeToken.symbol
         buyConfig.fiatAmt = fiatAmt
         if fiatCoin != nil {
             buyConfig.fiatCoin = fiatCoin!
@@ -596,7 +617,7 @@ extension UnityManager {
         buyConfig.fixFiatCoin = fixFiatCoin
         buyConfig.fixFiatAmt = fixFiatAmt
         buyConfig.theme = theme
-        buyConfig.language = language.webString
+        buyConfig.language = language.rawValue
         
         PNRouter.navigatorBuy(buyCryptoConfig: buyConfig)
     }
@@ -640,8 +661,65 @@ extension UnityManager {
         ParticleWalletGUI.getEnableSwap()
     }
     
-    func navigatorLoginList() {
-        PNRouter.navigatorLoginList().subscribe { [weak self] result in
+    func navigatorLoginList(_ json: String?) {
+        var observable: Single<(WalletType, Account?)>
+        if let json = json {
+            let array = JSON(parseJSON: json).arrayValue.map {
+                $0.stringValue.lowercased()
+            }
+            
+            var loginListPageSupportType: [LoginListSupportType] = []
+            
+            if array.contains("all") {
+                loginListPageSupportType = LoginListSupportType.allCases
+            } else {
+                array.forEach { if $0 == "email" {
+                    loginListPageSupportType.append(.email)
+                } else if $0 == "phone" {
+                    loginListPageSupportType.append(.phone)
+                } else if $0 == "apple" {
+                    loginListPageSupportType.append(.apple)
+                } else if $0 == "google" {
+                    loginListPageSupportType.append(.google)
+                } else if $0 == "facebook" {
+                    loginListPageSupportType.append(.facebook)
+                } else if $0 == "github" {
+                    loginListPageSupportType.append(.github)
+                } else if $0 == "twitch" {
+                    loginListPageSupportType.append(.twitch)
+                } else if $0 == "microsoft" {
+                    loginListPageSupportType.append(.microsoft)
+                } else if $0 == "linkedin" {
+                    loginListPageSupportType.append(.linkedin)
+                } else if $0 == "discord" {
+                    loginListPageSupportType.append(.discord)
+                } else if $0 == "privatekey" {
+                    loginListPageSupportType.append(.privateKey)
+                } else if $0 == "metamask" {
+                    loginListPageSupportType.append(.metamask)
+                } else if $0 == "rainbow" {
+                    loginListPageSupportType.append(.rainbow)
+                } else if $0 == "trust" {
+                    loginListPageSupportType.append(.trust)
+                } else if $0 == "imtoken" {
+                    loginListPageSupportType.append(.imtoken)
+                } else if $0 == "bitkeep" {
+                    loginListPageSupportType.append(.bitkeep)
+                } else if $0 == "walletConnect" {
+                    loginListPageSupportType.append(.walletConnect)
+                } else if $0 == "gnosis" {
+                    loginListPageSupportType.append(.gnosis)
+                } else if $0 == "twitter" {
+                    loginListPageSupportType.append(.twitter)
+                }
+                }
+            }
+            observable = PNRouter.navigatorLoginList(supportTypes: loginListPageSupportType)
+        } else {
+            observable = PNRouter.navigatorLoginList()
+        }
+        
+        observable.subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -850,11 +928,28 @@ extension UnityManager {
 #endif
         
 #if canImport(ConnectWalletConnectAdapter)
-        adapters.append(MetaMaskConnectAdapter())
-        adapters.append(RainbowConnectAdapter())
-        adapters.append(BitkeepConnectAdapter())
-        adapters.append(ImtokenConnectAdapter())
-        adapters.append(WalletConnectAdapter())
+        adapters.append(contentsOf: [
+            MetaMaskConnectAdapter(),
+            RainbowConnectAdapter(),
+            BitkeepConnectAdapter(),
+            ImtokenConnectAdapter(),
+            TrustConnectAdapter(),
+            WalletConnectAdapter(),
+            GnosisConnectAdapter()
+        ])
+        
+        let moreAdapterClasses: [WalletConnectAdapter.Type] =
+            [ZerionConnectAdapter.self,
+             MathConnectAdapter.self,
+             OmniConnectAdapter.self,
+             Inch1ConnectAdapter.self,
+             ZengoConnectAdapter.self,
+             AlphaConnectAdapter.self,
+             BitpieConnectAdapter.self]
+
+        adapters.append(contentsOf: moreAdapterClasses.map {
+            $0.init()
+        })
 #endif
         
         ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData) {
@@ -1719,6 +1814,20 @@ extension UnityManager {
             walletType = .walletConnect
         } else if str == "phantom" {
             walletType = .phantom
+        } else if str == "zerion" {
+            walletType = .zerion
+        } else if str == "math" {
+            walletType = .math
+        } else if str == "omni" {
+            walletType = .omni
+        } else if str == "zengo" {
+            walletType = .zengo
+        } else if str == "alpha" {
+            walletType = .alpha
+        } else if str == "bitpie" {
+            walletType = .bitpie
+        } else if str == "inch1" {
+            walletType = .inch1
         } else {
             walletType = nil
         }

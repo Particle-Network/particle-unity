@@ -118,15 +118,12 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void navigatorNFTDetails(string json);
-            
-        [DllImport("__Internal")]
-        public static extern void navigatorPay();
-        
+
         [DllImport("__Internal")]
         public static extern void navigatorBuyCrypto(string json);
         
         [DllImport("__Internal")]
-        public static extern void navigatorLoginList();
+        public static extern void navigatorLoginList(string json);
         
         [DllImport("__Internal")]
         public static extern void showTestNetwork(bool show);

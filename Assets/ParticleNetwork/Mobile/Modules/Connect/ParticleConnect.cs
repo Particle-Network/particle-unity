@@ -31,32 +31,6 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> switchEthereumChainTask;
         private TaskCompletionSource<NativeResultData> addEthereumChainTask;
 
-        public Task<NativeResultData> NavigatorLoginList()
-        {
-            loginListTask = new TaskCompletionSource<NativeResultData>();
-#if UNITY_EDITOR
-            DevModeService.Login();
-#elif UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("navigatorLoginList");
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.navigatorLoginList();
-#endif
-            return loginListTask.Task;
-        }
-
-        public void LoginListCallBack(string json)
-        {
-            Debug.Log($"LoginListCallBack:{json}");
-#if UNITY_EDITOR
-            var data = new NativeResultData(true, json);
-            loginListTask?.TrySetResult(data);
-#else
-            var resultData = JObject.Parse(json);
-            var status = (int)resultData["status"];
-            loginListTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
-        }
-
         /// <summary>
         /// Set Chain Info Async, because ParticleAuthService support both solana and evm, if switch to solana from evm,
         /// Auth Service will create a evm address if the user doesn't has a evm address.

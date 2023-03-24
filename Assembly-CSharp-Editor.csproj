@@ -280,12 +280,6 @@
      <Reference Include="UnityEditor.UnityConnectModule">
      <HintPath>/Applications/Unity/Hub/Editor/2020.3.26f1/Unity.app/Contents/Managed/UnityEngine/UnityEditor.UnityConnectModule.dll</HintPath>
      </Reference>
-     <Reference Include="Assembly-CSharp-firstpass">
-     <HintPath>/Users/link2/Documents/particle-unity-github/Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll</HintPath>
-     </Reference>
-     <Reference Include="Assembly-CSharp-Editor-firstpass">
-     <HintPath>/Users/link2/Documents/particle-unity-github/Library/ScriptAssemblies/Assembly-CSharp-Editor-firstpass.dll</HintPath>
-     </Reference>
      <Reference Include="UnityEditor.Graphs">
      <HintPath>/Applications/Unity/Hub/Editor/2020.3.26f1/Unity.app/Contents/Managed/UnityEditor.Graphs.dll</HintPath>
      </Reference>

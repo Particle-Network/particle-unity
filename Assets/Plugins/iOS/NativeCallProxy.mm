@@ -161,10 +161,6 @@ extern "C" {
         [api navigatorNFTDetails:[NSString stringWithUTF8String: json]];
     }
     
-    void navigatorPay() {
-        [api navigatorPay];
-    }
-    
     void navigatorBuyCrypto(const char* json) {
         [api navigatorBuyCrypto:[NSString stringWithUTF8String: json]];
     }
@@ -173,8 +169,8 @@ extern "C" {
         [api navigatorSwap:[NSString stringWithUTF8String: json]];
     }
     
-    void navigatorLoginList() {
-         [api navigatorLoginList];
+    void navigatorLoginList(const char* json)  {
+        [api navigatorLoginList:[NSString stringWithUTF8String: json]];
     }
     
     void showTestNetwork(bool show) {

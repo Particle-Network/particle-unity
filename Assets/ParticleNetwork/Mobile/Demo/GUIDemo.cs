@@ -111,21 +111,20 @@ namespace Network.Particle.Scripts.Test
             ParticleWalletGUI.NavigatorNFTDetails(mint, tokenId);
         }
 
-        public void NavigatorPay()
-        {
-            ParticleWalletGUI.NavigatorPay();
-        }
-
         public void NavigatorBuyBnb()
         {
-            BuyCryptoConfig config = new BuyCryptoConfig(TestAccount.EVM.PublicAddress,
-                OpenBuyNetwork.BinanceSmartChain, "BNB", "USD", 100);
-            ParticleWalletGUI.NavigatorBuyCrypto(config);
+            ParticleWalletGUI.NavigatorBuyCrypto(null);
+            // BuyCryptoConfig config = new BuyCryptoConfig(TestAccount.EVM.PublicAddress,
+            //     OpenBuyNetwork.BinanceSmartChain, "BNB", "USD", 100);
+            // ParticleWalletGUI.NavigatorBuyCrypto(config);
         }
 
         public async void NavigatorLoginList()
         {
-            var nativeResultData = await ParticleWalletGUI.Instance.NavigatorLoginList();
+            var nativeResultData = await ParticleWalletGUI.Instance.NavigatorLoginList(new List<LoginListPageSupportType>
+                {
+                    LoginListPageSupportType.all
+                });
 
             Debug.Log(nativeResultData.data);
 

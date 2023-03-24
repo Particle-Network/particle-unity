@@ -187,20 +187,6 @@ namespace Network.Particle.Scripts.Core
         }
 
         /// <summary>
-        /// Open Pay page
-        /// </summary>
-        public static void NavigatorPay()
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("openBuy", "");
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.navigatorPay();
-#else
-
-#endif
-        }
-
-        /// <summary>
         /// Open buy crypto page
         /// </summary>
         /// <param name="config">Buy crypto config</param>
@@ -209,7 +195,7 @@ namespace Network.Particle.Scripts.Core
             string json = "";
             if (config != null)
             {
-                var jobject = new JObject
+                var jObject = new JObject
                 {
                     { "wallet_address", config.WalletAddress },
                     { "network", config.Network.ToString() },
@@ -222,13 +208,13 @@ namespace Network.Particle.Scripts.Core
                 };
                 if (config.Theme != null)
                 {
-                    jobject.Add(new JProperty("theme", config.Theme));
+                    jObject.Add(new JProperty("theme", config.Theme));
                 }
                 if (config.Language != null)
                 {
-                    jobject.Add(new JProperty("language", config.Language));
+                    jObject.Add(new JProperty("language", config.Language));
                 }
-                json = JsonConvert.SerializeObject(jobject);
+                json = JsonConvert.SerializeObject(jObject);
             }
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -267,15 +253,18 @@ namespace Network.Particle.Scripts.Core
         /// Open Login List page
         /// </summary>
         /// <returns></returns>
-        public Task<NativeResultData> NavigatorLoginList()
+        public Task<NativeResultData> NavigatorLoginList(List<LoginListPageSupportType> supportTypes)
         {
             loginListTask = new TaskCompletionSource<NativeResultData>();
+           
+            var json = JsonConvert.SerializeObject(supportTypes.Select(x => x.ToString()));
 #if UNITY_EDITOR
             DevModeService.Login();
 #elif UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.CallNative("navigatorLoginList");
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.navigatorLoginList();
+            ParticleNetworkIOSBridge.navigatorLoginList(json);
 #endif
             return loginListTask.Task;
         }

@@ -12,5 +12,17 @@ namespace Network.Particle.Scripts.Model
         BitKeep,
         WalletConnect,
         Phantom,
+        
+        Gnosis,
+        Zerion,
+        Math,
+        Omin,
+        Inch1,
+        Zengo,
+        Alpha,
+        Bitpie,
+        
+        TokenPocket, // iOS not support
     }
+
 }
