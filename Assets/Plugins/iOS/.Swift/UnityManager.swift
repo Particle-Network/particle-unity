@@ -714,7 +714,11 @@ extension UnityManager {
                 }
                 }
             }
-            observable = PNRouter.navigatorLoginList(supportTypes: loginListPageSupportType)
+            if loginListPageSupportType.isEmpty {
+                observable = PNRouter.navigatorLoginList()
+            } else {
+                observable = PNRouter.navigatorLoginList(supportTypes: loginListPageSupportType)
+            }
         } else {
             observable = PNRouter.navigatorLoginList()
         }
