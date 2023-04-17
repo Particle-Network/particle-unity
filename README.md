@@ -13,8 +13,8 @@ Install Unity 2020.3.26f1 or later. Earlier versions may also be compatible but 
 
 *(iOS only)* Install the following:
 
-- Xcode 13.3.1 or higher
-- CocoaPods 1.10.0 or higher
+- Xcode 14.1 or higher
+- CocoaPods 1.11.0 or higher
 
 Make sure that your Unity project meets these requirements:
 
