@@ -39,6 +39,18 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
+        internal static void IsLoginAsync()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo 
+            ParticleNetwork.CallNative("IsLoginAsync");
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.isLoginAsync();
+#else
+
+#endif
+        }
+
         internal static void SetUserInfo(string json)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR

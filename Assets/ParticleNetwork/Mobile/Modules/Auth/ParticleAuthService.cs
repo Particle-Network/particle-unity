@@ -16,6 +16,7 @@ namespace Network.Particle.Scripts.Core
     {
         
         private TaskCompletionSource<NativeResultData> loginTask;
+        private TaskCompletionSource<NativeResultData> isLoginAsyncTask;
         private TaskCompletionSource<NativeResultData> logoutTask;
         private TaskCompletionSource<NativeResultData> fastLogoutTask;
         private TaskCompletionSource<NativeResultData> setChainTask;
@@ -69,6 +70,35 @@ namespace Network.Particle.Scripts.Core
         }
         
         /// <summary>
+        /// Check is user login from server
+        /// </summary>
+        /// <returns>If user login state is valid, return userinfo, otherwise return error</returns>
+        public Task<NativeResultData> IsLoginAsync()
+        {
+            isLoginAsyncTask = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+#else
+            ParticleAuthServiceInteraction.IsLoginAsync();
+#endif
+            return isLoginAsyncTask.Task;
+        }
+        
+        /// <summary>
+        /// IsLoginAsync call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void IsLoginAsyncCallBack(string json)
+        {
+            Debug.Log($"IsLoginAsyncCallBack:{json}");
+#if UNITY_EDITOR
+#else
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            isLoginAsyncTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+#endif
+        }
+        
+        /// <summary>
         /// Login
         /// </summary>
         /// <param name="loginType">Login type</param>
@@ -115,7 +145,7 @@ namespace Network.Particle.Scripts.Core
             logoutTask = new TaskCompletionSource<NativeResultData>();
             ParticleAuthServiceInteraction.Logout();
 #if UNITY_EDITOR
-              DevModeService.Logout();
+            DevModeService.Logout();
             logoutTask?.TrySetResult(new NativeResultData(true, ""));
 #endif
             return logoutTask.Task;

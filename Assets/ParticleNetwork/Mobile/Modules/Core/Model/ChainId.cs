@@ -12,6 +12,7 @@ namespace Network.Particle.Scripts.Model
     {
         Mainnet = 1,
         Goerli = 5,
+        Sepolia = 11155111,
     }
 
     public enum BscChainId
@@ -157,5 +158,29 @@ namespace Network.Particle.Scripts.Model
     {
         Mainnet = 1088,
         Testnet = 599
+    }
+    
+    public enum ConfluxESpaceChainId
+    {
+        Mainnet = 1030,
+        Testnet = 71
+    }
+    
+    public enum MapoChainId
+    {
+        Mainnet = 22776,
+        Testnet = 212
+    }
+    
+    public enum PolygonZkEVMChainId
+    {
+        Mainnet = 1101,
+        Testnet = 1442
+    }
+    
+    public enum BaseChainId
+    {
+        // Mainnet = 1101,
+        Testnet = 84531
     }
 }

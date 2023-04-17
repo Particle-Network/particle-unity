@@ -287,6 +287,25 @@ extension UnityManager {
         return ParticleAuthService.isLogin()
     }
     
+    func isLoginAsync() {
+        ParticleAuthService.isLoginAsync().subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            case .success(let userInfo):
+                let statusModel = UnityStatusModel(status: true, data: userInfo)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            }
+        }.disposed(by: bag)
+    }
+    
     func signMessage(_ message: String) {
         var serializedMessage = ""
         switch ParticleNetwork.getChainInfo().chain {
@@ -536,8 +555,9 @@ extension UnityManager {
         let address = data["mint"].stringValue
         let toAddress = data["receiver_address"].stringValue
         let tokenId = data["token_id"].stringValue
-        let config = NFTSendConfig(address: address, toAddress: toAddress.isEmpty ? nil : toAddress, tokenId: tokenId)
-        PNRouter.navigatroNFTSend(nftSendConfig: config)
+        let amount = data["amount"].intValue
+        let config = NFTSendConfig(address: address, toAddress: toAddress.isEmpty ? nil : toAddress, tokenId: tokenId, amount: UInt(amount))
+        PNRouter.navigatorNFTSend(nftSendConfig: config)
     }
     
     func navigatorNFTDetails(_ json: String) {
@@ -1865,6 +1885,8 @@ extension UnityManager {
                 chainInfo = .ethereum(.mainnet)
             } else if chainId == 5 {
                 chainInfo = .ethereum(.goerli)
+            } else if chainId == 11155111 {
+                chainInfo = .ethereum(.sepolia)
             }
         } else if name == "bsc" {
             if chainId == 56 {
@@ -2012,6 +2034,28 @@ extension UnityManager {
             } else if chainId == 599 {
                 chainInfo = .metis(.goerli)
             }
+        } else if name == "confluxespace" {
+            if chainId == 1030 {
+                chainInfo = .confluxESpace(.mainnet)
+            } else if chainId == 71 {
+                chainInfo = .confluxESpace(.testnet)
+            }
+        } else if name == "mapo" {
+            if chainId == 22776 {
+                chainInfo = .mapo(.mainnet)
+            } else if chainId == 212 {
+                chainInfo = .mapo(.testnet)
+            }
+        } else if name == "polygonzkevm" {
+            if chainId == 1101 {
+                chainInfo = .polygonZkEVM(.mainnet)
+            } else if chainId == 1442 {
+                chainInfo = .polygonZkEVM(.testnet)
+            }
+        } else if name == "base" {
+            if chainId == 84531 {
+                chainInfo = .base(.testnet)
+            }
         }
         return chainInfo
     }
@@ -2071,6 +2115,14 @@ extension UnityManager {
             chain = .zkSync
         } else if name == "metis" {
             chain = .metis
+        } else if name == "confluxespace" {
+            chain = .confluxESpace
+        } else if name == "mapo" {
+            chain = .mapo
+        } else if name == "polygonzkevm" {
+            chain = .polygonZkEVM
+        } else if name == "base" {
+            chain = .base
         }
                     
         return chain

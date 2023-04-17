@@ -77,6 +77,10 @@ extern "C" {
         return [api isLogin];
     }
 
+    void isLoginAsync() {
+        return [api isLoginAsync];
+    }
+
     void signMessage(const char* message) {
         [api signMessage:[NSString stringWithUTF8String: message]];
     }

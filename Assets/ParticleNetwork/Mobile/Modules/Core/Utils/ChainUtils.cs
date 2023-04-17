@@ -303,6 +303,46 @@ namespace Network.Particle.Scripts.Core.Utils
                     chainInfo = new MetisChain(MetisChainId.Testnet);
                 }
             }
+            else if (name == "confluxespace")
+            {
+                if (chainId == 1030)
+                {
+                    chainInfo = new ConfluxESpaceChain(ConfluxESpaceChainId.Mainnet);
+                }
+                else if (chainId == 71)
+                {
+                    chainInfo = new ConfluxESpaceChain(ConfluxESpaceChainId.Testnet);
+                }
+            }
+            else if (name == "mapo")
+            {
+                if (chainId == 22776)
+                {
+                    chainInfo = new MapoChain(MapoChainId.Mainnet);
+                }
+                else if (chainId == 212)
+                {
+                    chainInfo = new MapoChain(MapoChainId.Testnet);
+                }
+            } 
+            else if (name == "polygonzkevm")
+            {
+                if (chainId == 1101)
+                {
+                    chainInfo = new PolygonZkEVMChain(PolygonZkEVMChainId.Mainnet);
+                }
+                else if (chainId == 1442)
+                {
+                    chainInfo = new PolygonZkEVMChain(PolygonZkEVMChainId.Testnet);
+                }
+            }
+            else if (name == "base")
+            {
+                if (chainId == 84531)
+                {
+                    chainInfo = new BaseChain(BaseChainId.Testnet);
+                }
+            }
             
 
             return chainInfo;

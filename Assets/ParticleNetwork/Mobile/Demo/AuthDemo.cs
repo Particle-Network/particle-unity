@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
@@ -32,7 +33,8 @@ namespace Network.Particle.Scripts.Test
         public async void Login()
         {
             // login email
-            var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, null, SupportAuthType.ALL, false, SocialLoginPrompt.Select_account);
+            var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, null, SupportAuthType.ALL,
+                false, SocialLoginPrompt.Select_account);
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
@@ -65,7 +67,7 @@ namespace Network.Particle.Scripts.Test
                 Debug.Log(errorData);
             }
         }
-        
+
         public async void FastLogout()
         {
             var nativeResultData = await ParticleAuthService.Instance.FastLogout();
@@ -87,6 +89,24 @@ namespace Network.Particle.Scripts.Test
         public void IsLogin()
         {
             Debug.Log(ParticleAuthServiceInteraction.IsLogin());
+        }
+
+        public async void IsLoginAsync()
+        {
+            var nativeResultData = await ParticleAuthService.Instance.IsLoginAsync();
+            Debug.Log(nativeResultData.data);
+
+            if (nativeResultData.isSuccess)
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log(nativeResultData.data);
+            }
+            else
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                Debug.Log(errorData);
+            }
         }
 
         private string GetAddress()
@@ -326,7 +346,7 @@ namespace Network.Particle.Scripts.Test
         {
             var nativeResultData =
                 await ParticleAuthService.Instance.OpenAccountAndSecurity();
-            
+
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)

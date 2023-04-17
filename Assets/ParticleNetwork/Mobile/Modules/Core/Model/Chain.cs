@@ -450,6 +450,68 @@ namespace Network.Particle.Scripts.Model
             return chainId == (long)MetisChainId.Mainnet;
         }
     }
+    
+    class ConfluxESpaceChain : EvmBaseChain
+    {
+        public ConfluxESpaceChain(ConfluxESpaceChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.ConfluxESpace.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)ConfluxESpaceChainId.Mainnet;
+        }
+    }
+    class MapoChain : EvmBaseChain
+    {
+        public MapoChain(MapoChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Mapo.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)MapoChainId.Mainnet;
+        }
+    }
+    
+    class PolygonZkEVMChain : EvmBaseChain
+    {
+        public PolygonZkEVMChain(PolygonZkEVMChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.PolygonZkEVM.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return chainId == (long)PolygonZkEVMChainId.Mainnet;
+        }
+    }
+    
+    class BaseChain : EvmBaseChain
+    {
+        public BaseChain(BaseChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Base.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return false;
+            // return chainId == (long)BaseChainId.Mainnet;
+        }
+    }
+    
+    
 
 
     public enum ChainName
@@ -479,6 +541,11 @@ namespace Network.Particle.Scripts.Model
         Klaytn,
         Scroll,
         ZkSync,
-        Metis
+        Metis,
+        ConfluxESpace,
+        Mapo,
+        PolygonZkEVM,
+        Base,
+        
     }
 }

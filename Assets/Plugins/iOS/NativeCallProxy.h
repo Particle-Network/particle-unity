@@ -27,6 +27,7 @@
 - (void) logout;
 - (void) fastLogout;
 - (BOOL) isLogin;
+- (void) isLoginAsync;
 - (void) signMessage:(NSString* _Nonnull)message;
 - (void) signTransaction:(NSString* _Nonnull)transaction;
 - (void) signAllTransactions:(NSString* _Nonnull)transactions;

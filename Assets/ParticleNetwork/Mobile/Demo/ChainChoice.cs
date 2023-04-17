@@ -93,6 +93,17 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         
         chainInfos.Add(new MetisChain(MetisChainId.Mainnet));
         chainInfos.Add(new MetisChain(MetisChainId.Testnet));
+        
+        chainInfos.Add(new ConfluxESpaceChain(ConfluxESpaceChainId.Mainnet));
+        chainInfos.Add(new ConfluxESpaceChain(ConfluxESpaceChainId.Testnet));
+        
+        chainInfos.Add(new MapoChain(MapoChainId.Mainnet));
+        chainInfos.Add(new MapoChain(MapoChainId.Testnet));
+        
+        chainInfos.Add(new PolygonZkEVMChain(PolygonZkEVMChainId.Mainnet));
+        chainInfos.Add(new PolygonZkEVMChain(PolygonZkEVMChainId.Testnet));
+        
+        chainInfos.Add(new BaseChain(BaseChainId.Testnet));
 
         foreach (var chainInfo in chainInfos)
         {

@@ -187,7 +187,13 @@ namespace Network.Particle.Scripts.Core
         /// <summary>
         /// Call custom abi encode function
         /// </summary>
-        /// <param name="parameters">Parameters in a list</param>
+        /// <param name="parameters">Parameters in a list.
+        /// order in list
+        /// 0, contract address.
+        /// 1, method name, you should add "custom_" before your method name, like "custom_balanceOf", "custom_mint".
+        /// 2. method parameters.
+        /// 3. optional, method abi json string. you can get it from your contract developer.
+        /// </param>
         /// <returns>Data</returns>
         public static async Task<string> AbiEncodeFunctionCall(List<object> parameters)
         {
@@ -222,6 +228,37 @@ namespace Network.Particle.Scripts.Core
         {
             return await Rpc(EvmReqBodyMethod.particleGetTokensByTokenAddresses,
                 new List<object> { address, tokenAddresses });
+        }
+        
+        /// <summary>
+        /// Read contract
+        /// </summary>
+        /// <param name="from">Your public address</param>
+        /// <param name="contractAddress">Contract address</param>
+        /// <param name="methodName">Method name, you should add "custom_" before your method name, like "custom_balanceOf", "custom_mint"</param>
+        /// <param name="parameters">Method parameters</param>
+        /// <param name="abiJsonString">Abi json string</param>
+        /// <returns></returns>
+        public static async Task<string> ReadContract(string from, string contractAddress, string methodName, List<object> parameters, string abiJsonString = "")
+        {
+            // Combine above into a ordered list
+            var list = new List<object> { contractAddress, methodName, parameters };
+            if (!string.IsNullOrEmpty(abiJsonString)) list.Add(abiJsonString);
+            
+            string dataResult = await EvmService.AbiEncodeFunctionCall(list);
+            var data = (string)JObject.Parse(dataResult)["result"];
+
+            var obj = new JObject
+            {
+                { "from", from },
+                { "to", contractAddress },
+                { "data", data },
+                { "value", "0x0"}
+            };
+            
+            // read contract
+            var result = await EvmService.Rpc("eth_call", new List<object>{obj, "latest"});
+            return result;
         }
     }
 

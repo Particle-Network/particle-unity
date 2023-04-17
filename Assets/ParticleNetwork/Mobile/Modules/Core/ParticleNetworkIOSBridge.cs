@@ -44,6 +44,9 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern bool isLogin();
+        
+        [DllImport("__Internal")]
+        public static extern void isLoginAsync();
 
         [DllImport("__Internal")]
         public static extern void signMessage(string message);
