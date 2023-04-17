@@ -90,7 +90,7 @@ namespace Network.Particle.Scripts.Core
         /// <param name="mint">NFT mint address</param>
         /// <param name="tokenId">NFT token id</param>
         /// <param name="receiveAddress">Receiver address</param>
-        /// <param name="amount">For solana nft or erc721 nft, it is a useless parameter, for erc1155 nft, you can pass amount, such as "1", "100", "10000", default value is "1"</param>
+        /// <param name="amount">Optional, For solana nft or erc721 nft, it is a useless parameter, for erc1155 nft, you can pass amount, such as "1", "100", "10000"</param>
         public static void NavigatorNFTSend(string mint, string tokenId, [CanBeNull] string receiveAddress, [CanBeNull] string amount)
         {
             var json = JsonConvert.SerializeObject(new JObject
