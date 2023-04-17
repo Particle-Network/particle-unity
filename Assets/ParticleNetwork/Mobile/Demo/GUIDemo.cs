@@ -100,8 +100,7 @@ namespace Network.Particle.Scripts.Test
             // This is a test NFT
             string mint = TestAccount.EVM.NFTContractAddress;
             string tokenId = TestAccount.EVM.NFTTokenId;
-            string receiveAddress = "";
-            ParticleWalletGUI.NavigatorNFTSend(mint, tokenId, receiveAddress);
+            ParticleWalletGUI.NavigatorNFTSend(mint, tokenId, null, null);
         }
 
         public void NavigatorNFTDetails()
