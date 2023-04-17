@@ -90,13 +90,15 @@ namespace Network.Particle.Scripts.Core
         /// <param name="mint">NFT mint address</param>
         /// <param name="tokenId">NFT token id</param>
         /// <param name="receiveAddress">Receiver address</param>
-        public static void NavigatorNFTSend(string mint, string tokenId, string receiveAddress = "")
+        /// <param name="amount">For solana nft or erc721 nft, it is a useless parameter, for erc1155 nft, you can pass amount, such as "1", "100", "10000", default value is "1"</param>
+        public static void NavigatorNFTSend(string mint, string tokenId, string receiveAddress = "", string amount = "1")
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
                 { "mint", mint },
                 { "receiver_address", receiveAddress },
                 { "token_id", tokenId },
+                { "amount", amount },
             });
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
