@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 dependencies {
         implementation project(':unityLibrary')
-        def sdkVersion = "0.11.3" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+        def sdkVersion = "0.13.2" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
      
         //tips
         //auth-service and auth-service-tiramisu are the same library,
