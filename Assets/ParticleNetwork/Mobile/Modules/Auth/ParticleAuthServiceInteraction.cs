@@ -42,7 +42,6 @@ namespace Network.Particle.Scripts.Core
         internal static void IsLoginAsync()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo 
             ParticleNetwork.CallNative("IsLoginAsync");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.isLoginAsync();

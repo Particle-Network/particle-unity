@@ -263,7 +263,6 @@ namespace Network.Particle.Scripts.Core
 #if UNITY_EDITOR
             DevModeService.Login();
 #elif UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("navigatorLoginList");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.navigatorLoginList(json);

@@ -389,7 +389,7 @@ namespace Network.Particle.Scripts.Core
             var readyState = "";
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-            readyState = ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("adapterWalletReadyState",json);
+            // readyState = ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("adapterWalletReadyState",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             readyState = ParticleNetworkIOSBridge.adapterWalletReadyState(json);
 #else
