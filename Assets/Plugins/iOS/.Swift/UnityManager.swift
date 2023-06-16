@@ -85,7 +85,7 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainName = matchChain(name: name, chainId: chainId) else {
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else {
             return print("initialize error, can't find right chain for \(name), chainId \(chainId)")
         }
         let env = data["env"].stringValue.lowercased()
@@ -98,7 +98,7 @@ extension UnityManager {
             devEnv = .production
         }
         
-        let config = ParticleNetworkConfiguration(chainInfo: chainName, devEnv: devEnv)
+        let config = ParticleNetworkConfiguration(chainInfo: chainInfo, devEnv: devEnv)
         ParticleNetwork.initialize(config: config)
     }
     
@@ -108,9 +108,8 @@ extension UnityManager {
     
     func setChainInfo(_ json: String) -> Bool {
         let data = JSON(parseJSON: json)
-        let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = matchChain(name: name, chainId: chainId) else { return false }
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else { return false }
         ParticleNetwork.setChainInfo(chainInfo)
         return true
     }
@@ -431,9 +430,8 @@ extension UnityManager {
     
     func setChainInfoAsync(_ json: String) {
         let data = JSON(parseJSON: json)
-        let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = matchChain(name: name, chainId: chainId) else { return }
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else { return }
         ParticleAuthService.setChainInfo(chainInfo).subscribe { [weak self] result in
             guard let self = self else { return }
 
@@ -553,10 +551,10 @@ extension UnityManager {
     func navigatorNFTSend(_ json: String) {
         let data = JSON(parseJSON: json)
         let address = data["mint"].stringValue
-        let toAddress = data["receiver_address"].stringValue
         let tokenId = data["token_id"].stringValue
-        let amount = data["amount"].intValue
-        let config = NFTSendConfig(address: address, toAddress: toAddress.isEmpty ? nil : toAddress, tokenId: tokenId, amount: UInt(amount))
+        let toAddress = data["receiver_address"].string
+        let amount = data["amount"].int
+        let config = NFTSendConfig(address: address, toAddress: toAddress, tokenId: tokenId, amount: BInt(amount ?? 1))
         PNRouter.navigatorNFTSend(nftSendConfig: config)
     }
     
@@ -666,9 +664,9 @@ extension UnityManager {
     
     func supportChain(_ json: String) {
         let chains = JSON(parseJSON: json).arrayValue.map {
-            $0.stringValue.lowercased()
+            $0["chain_Id"].intValue
         }.compactMap {
-            self.matchChain(name: $0)
+            ParticleNetwork.searchChainInfo(by: $0)?.chain
         }
         ParticleWalletGUI.supportChain(chains)
     }
@@ -884,8 +882,23 @@ extension UnityManager {
     }
 
     func setFiatCoin(_ json: String) {
-        let fiatCoin = json
-        ParticleWalletGUI.setFiatCoin(fiatCoin)
+        /*
+         USD, CNY, JPY, HKD, INR, KRW.
+         */
+        
+        if json.lowercased() == "usd" {
+            ParticleNetwork.setFiatCoin(.usd)
+        } else if json.lowercased() == "cny" {
+            ParticleNetwork.setFiatCoin(.cny)
+        } else if json.lowercased() == "jpy" {
+            ParticleNetwork.setFiatCoin(.jpy)
+        } else if json.lowercased() == "hkd" {
+            ParticleNetwork.setFiatCoin(.hkd)
+        } else if json.lowercased() == "inr" {
+            ParticleNetwork.setFiatCoin(.inr)
+        } else if json.lowercased() == "krw" {
+            ParticleNetwork.setFiatCoin(.krw)
+        }
     }
 
     func loadCustomUIJsonString(_ json: String) {
@@ -905,7 +918,7 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let chainName = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = matchChain(name: chainName, chainId: chainId) else {
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else {
             return print("initialize error, can't find right chain for \(chainName), chainId \(chainId)")
         }
         let env = data["env"].stringValue.lowercased()
@@ -983,18 +996,16 @@ extension UnityManager {
     
     func particleConnectSetChainInfo(_ json: String) -> Bool {
         let data = JSON(parseJSON: json)
-        let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = matchChain(name: name, chainId: chainId) else { return false }
-        ParticleConnect.setChain(chainInfo: chainInfo)
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else { return false }
+        ParticleNetwork.setChainInfo(chainInfo)
         return true
     }
     
     func particleConnectSetChainInfoAsync(_ json: String) {
         let data = JSON(parseJSON: json)
-        let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = matchChain(name: name, chainId: chainId) else { return }
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else { return }
         
         if ParticleAuthService.isLogin() {
             ParticleAuthService.setChainInfo(chainInfo).subscribe { [weak self] result in
@@ -1348,7 +1359,7 @@ extension UnityManager {
             return
         }
         
-        adapter.signTypeData(publicAddress: publicAddress, data: message).subscribe { [weak self] result in
+        adapter.signTypedData(publicAddress: publicAddress, data: message).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -1709,89 +1720,6 @@ extension Dictionary {
 }
 
 extension UnityManager {
-    private func map2UnityTokenResult(from tokenResult: TokenResult) -> UnityTokenResult {
-        let tokens = tokenResult.tokens.map {
-            map2UnityTokenModel(from: $0)
-        }
-        
-        let nfts = tokenResult.nfts.map {
-            map2UnityNFTModel(from: $0)
-        }
-        return UnityTokenResult(tokens: tokens, nfts: nfts)
-    }
-    
-    private func map2UnityTokenModel(from tokenModel: TokenModel) -> UnityTokenModel {
-        UnityTokenModel(mintAddress: tokenModel.mintAddress,
-                        amount: tokenModel.amount.asString(radix: 10),
-                        decimals: Int(tokenModel.decimals),
-                        updateAt: Int(tokenModel.updateAt),
-                        symbol: tokenModel.symbol,
-                        logoURI: tokenModel.imageUrl)
-    }
-    
-    private func map2UnityNFTModel(from nftModel: NFTModel) -> UnityNFTModel {
-        UnityNFTModel(mintAddress: nftModel.mintAddress,
-                      image: nftModel.image,
-                      symbol: nftModel.symbol,
-                      name: nftModel.name,
-                      sellerFeeBasisPoints: nftModel.sellerFeeBasisPoints,
-                      description: nftModel.descriptionString,
-                      externalUrl: nftModel.externalUrl,
-                      animationUrl: nftModel.animationUrl,
-                      data: nftModel.data,
-                      isSemiFungible: nftModel.isSemiFungible,
-                      tokenId: nftModel.tokenId,
-                      tokenBalance: nftModel.tokenBalance.asString(radix: 10))
-    }
-    
-    private func map2UnityTokenInfo(from tokenInfo: TokenInfo) -> UnityTokenInfo {
-        return UnityTokenInfo(chainId: tokenInfo.chainId,
-                              address: tokenInfo.mintAddress,
-                              symbol: tokenInfo.symbol,
-                              name: tokenInfo.name,
-                              decimals: Int(tokenInfo.decimals),
-                              logoURI: tokenInfo.logoURI)
-    }
-    
-    private func map2UnitySolanaTransaction(from transaction: SolanaTransactionModel) -> UnitySolanaTransactionModel {
-        var data = ""
-        if transaction.data != nil {
-            data = String(data: try! JSONEncoder().encode(transaction.data!), encoding: .utf8) ?? ""
-        }
-        return UnitySolanaTransactionModel(from: transaction.from,
-                                           to: transaction.to,
-                                           type: transaction.type.rawValue,
-                                           lamportsChange: transaction.lamportsChange.asString(radix: 10),
-                                           lamportsFee: transaction.lamportsFee.asString(radix: 10),
-                                           signature: transaction.signature,
-                                           blockTime: transaction.blockTime,
-                                           status: transaction.status.rawValue,
-                                           data: data,
-                                           mint: transaction.mintAddress ?? "")
-    }
-    
-    private func map2UnityEvmTransaction(from transaction: EVMTransactionModel) -> UnityEvmTransactionModel {
-        UnityEvmTransactionModel(from: transaction.from,
-                                 to: transaction.to,
-                                 hash: transaction.hashString,
-                                 value: transaction.value.asString(radix: 10),
-                                 data: transaction.data,
-                                 gasLimit: transaction.gasLimit.asString(radix: 10),
-                                 gasSpent: transaction.gasSpent.asString(radix: 10),
-                                 gasPrice: transaction.gasPrice.asString(radix: 10),
-                                 fees: transaction.fees.asString(radix: 10),
-                                 type: transaction.type,
-                                 nonce: "0x" + transaction.nonce.asString(radix: 16),
-                                 maxPriorityFeePerGas: transaction.maxPriorityFeePerGas.asString(radix: 10),
-                                 maxFeePerGas: transaction.maxFeePerGas.asString(radix: 10),
-                                 timestamp: transaction.timestamp,
-                                 status: transaction.status.rawValue)
-    }
-    
-    private func getMethodName(_ methodName: String = #function) -> String {
-        let methodName = methodName.replacingOccurrences(of: "\\([\\w\\s:]*\\)", with: "", options: .regularExpression)
-        return methodName
-    }
     
     private func ResponseFromError(_ error: Error) -> UnityResponseError {
         if let responseError = error as? ParticleNetwork.ResponseError {
@@ -1866,336 +1794,6 @@ extension UnityManager {
         let adapter = adapters.first
         return adapter
     }
-}
-
-extension UnityManager {
-    func matchChain(name: String, chainId: Int) -> ParticleNetwork.ChainInfo? {
-        var chainInfo: ParticleNetwork.ChainInfo?
-        
-        if name == "solana" {
-            if chainId == 101 {
-                chainInfo = .solana(.mainnet)
-            } else if chainId == 102 {
-                chainInfo = .solana(.testnet)
-            } else if chainId == 103 {
-                chainInfo = .solana(.devnet)
-            }
-        } else if name == "ethereum" {
-            if chainId == 1 {
-                chainInfo = .ethereum(.mainnet)
-            } else if chainId == 5 {
-                chainInfo = .ethereum(.goerli)
-            } else if chainId == 11155111 {
-                chainInfo = .ethereum(.sepolia)
-            }
-        } else if name == "bsc" {
-            if chainId == 56 {
-                chainInfo = .bsc(.mainnet)
-            } else if chainId == 97 {
-                chainInfo = .bsc(.testnet)
-            }
-        } else if name == "polygon" {
-            if chainId == 137 {
-                chainInfo = .polygon(.mainnet)
-            } else if chainId == 80001 {
-                chainInfo = .polygon(.mumbai)
-            }
-        } else if name == "avalanche" {
-            if chainId == 43114 {
-                chainInfo = .avalanche(.mainnet)
-            } else if chainId == 43113 {
-                chainInfo = .avalanche(.testnet)
-            }
-        } else if name == "fantom" {
-            if chainId == 250 {
-                chainInfo = .fantom(.mainnet)
-            } else if chainId == 4002 {
-                chainInfo = .fantom(.testnet)
-            }
-        } else if name == "arbitrum" {
-            if chainId == 42161 {
-                chainInfo = .arbitrum(.one)
-            } else if chainId == 42170 {
-                chainInfo = .arbitrum(.nova)
-            } else if chainId == 421613 {
-                chainInfo = .arbitrum(.goerli)
-            }
-        } else if name == "moonbeam" {
-            if chainId == 1284 {
-                chainInfo = .moonbeam(.mainnet)
-            } else if chainId == 1287 {
-                chainInfo = .moonbeam(.testnet)
-            }
-        } else if name == "moonriver" {
-            if chainId == 1285 {
-                chainInfo = .moonriver(.mainnet)
-            } else if chainId == 1287 {
-                chainInfo = .moonriver(.testnet)
-            }
-        } else if name == "heco" {
-            if chainId == 128 {
-                chainInfo = .heco(.mainnet)
-            } else if chainId == 256 {
-                chainInfo = .heco(.testnet)
-            }
-        } else if name == "aurora" {
-            if chainId == 1313161554 {
-                chainInfo = .aurora(.mainnet)
-            } else if chainId == 1313161555 {
-                chainInfo = .aurora(.testnet)
-            }
-        } else if name == "harmony" {
-            if chainId == 1666600000 {
-                chainInfo = .harmony(.mainnet)
-            } else if chainId == 1666700000 {
-                chainInfo = .harmony(.testnet)
-            }
-        } else if name == "kcc" {
-            if chainId == 321 {
-                chainInfo = .kcc(.mainnet)
-            } else if chainId == 322 {
-                chainInfo = .kcc(.testnet)
-            }
-        } else if name == "optimism" {
-            if chainId == 10 {
-                chainInfo = .optimism(.mainnet)
-            } else if chainId == 420 {
-                chainInfo = .optimism(.goerli)
-            }
-        } else if name == "platon" {
-            if chainId == 210425 {
-                chainInfo = .platON(.mainnet)
-            } else if chainId == 2206132 {
-                chainInfo = .platON(.testnet)
-            }
-        } else if name == "tron" {
-            if chainId == 728126428 {
-                chainInfo = .tron(.mainnet)
-            } else if chainId == 2494104990 {
-                chainInfo = .tron(.shasta)
-            } else if chainId == 3448148188 {
-                chainInfo = .tron(.nile)
-            }
-        } else if name == "okc" {
-            if chainId == 66 {
-                chainInfo = .okc(.mainnet)
-            } else if chainId == 65 {
-                chainInfo = .okc(.testnet)
-            }
-        } else if name == "thundercore" {
-            if chainId == 108 {
-                chainInfo = .thunderCore(.mainnet)
-            } else if chainId == 18 {
-                chainInfo = .thunderCore(.testnet)
-            }
-        } else if name == "cronos" {
-            if chainId == 25 {
-                chainInfo = .cronos(.mainnet)
-            } else if chainId == 338 {
-                chainInfo = .cronos(.testnet)
-            }
-        } else if name == "oasisemerald" {
-            if chainId == 42262 {
-                chainInfo = .oasisEmerald(.mainnet)
-            } else if chainId == 42261 {
-                chainInfo = .oasisEmerald(.testnet)
-            }
-        } else if name == "gnosis" {
-            if chainId == 100 {
-                chainInfo = .gnosis(.mainnet)
-            } else if chainId == 10200 {
-                chainInfo = .gnosis(.testnet)
-            }
-        } else if name == "celo" {
-            if chainId == 42220 {
-                chainInfo = .celo(.mainnet)
-            } else if chainId == 44787 {
-                chainInfo = .celo(.testnet)
-            }
-        } else if name == "klaytn" {
-            if chainId == 8217 {
-                chainInfo = .klaytn(.mainnet)
-            } else if chainId == 1001 {
-                chainInfo = .klaytn(.testnet)
-            }
-        } else if name == "scroll" {
-            if chainId == 534353 {
-                chainInfo = .scroll(.testnet)
-            }
-        } else if name == "zksync" {
-            if chainId == 324 {
-                chainInfo = .zkSync(.mainnet)
-            } else if chainId == 280 {
-                chainInfo = .zkSync(.testnet)
-            }
-        } else if name == "metis" {
-            if chainId == 1088 {
-                chainInfo = .metis(.mainnet)
-            } else if chainId == 599 {
-                chainInfo = .metis(.goerli)
-            }
-        } else if name == "confluxespace" {
-            if chainId == 1030 {
-                chainInfo = .confluxESpace(.mainnet)
-            } else if chainId == 71 {
-                chainInfo = .confluxESpace(.testnet)
-            }
-        } else if name == "mapo" {
-            if chainId == 22776 {
-                chainInfo = .mapo(.mainnet)
-            } else if chainId == 212 {
-                chainInfo = .mapo(.testnet)
-            }
-        } else if name == "polygonzkevm" {
-            if chainId == 1101 {
-                chainInfo = .polygonZkEVM(.mainnet)
-            } else if chainId == 1442 {
-                chainInfo = .polygonZkEVM(.testnet)
-            }
-        } else if name == "base" {
-            if chainId == 84531 {
-                chainInfo = .base(.testnet)
-            }
-        }
-        return chainInfo
-    }
-    
-    func matchChain(name: String) -> ParticleNetwork.Chain? {
-        var chain: ParticleNetwork.Chain?
-        
-        if name == "solana" {
-            chain = .solana
-        } else if name == "ethereum" {
-            chain = .ethereum
-        } else if name == "bsc" {
-            chain = .bsc
-        } else if name == "polygon" {
-            chain = .polygon
-        } else if name == "avalanche" {
-            chain = .avalanche
-        } else if name == "fantom" {
-            chain = .fantom
-        } else if name == "arbitrum" {
-            chain = .arbitrum
-        } else if name == "moonbeam" {
-            chain = .moonbeam
-        } else if name == "moonriver" {
-            chain = .moonriver
-        } else if name == "heco" {
-            chain = .heco
-        } else if name == "aurora" {
-            chain = .aurora
-        } else if name == "harmony" {
-            chain = .harmony
-        } else if name == "kcc" {
-            chain = .kcc
-        } else if name == "optimism" {
-            chain = .optimism
-        } else if name == "platon" {
-            chain = .platON
-        } else if name == "tron" {
-            chain = .tron
-        } else if name == "okc" {
-            chain = .okc
-        } else if name == "thundercore" {
-            chain = .thunderCore
-        } else if name == "cronos" {
-            chain = .cronos
-        } else if name == "oasisemerald" {
-            chain = .oasisEmerald
-        } else if name == "gnosis" {
-            chain = .gnosis
-        } else if name == "celo" {
-            chain = .celo
-        } else if name == "klaytn" {
-            chain = .klaytn
-        } else if name == "scroll" {
-            chain = .scroll
-        } else if name == "zksync" {
-            chain = .zkSync
-        } else if name == "metis" {
-            chain = .metis
-        } else if name == "confluxespace" {
-            chain = .confluxESpace
-        } else if name == "mapo" {
-            chain = .mapo
-        } else if name == "polygonzkevm" {
-            chain = .polygonZkEVM
-        } else if name == "base" {
-            chain = .base
-        }
-                    
-        return chain
-    }
-}
-
-struct UnityTokenInfo: Codable {
-    let chainId: Int
-    let address: String
-    let symbol: String
-    let name: String
-    let decimals: Int
-    let logoURI: String
-}
-
-struct UnityTokenResult: Codable {
-    let tokens: [UnityTokenModel]
-    let nfts: [UnityNFTModel]
-}
-
-struct UnityTokenModel: Codable {
-    let mintAddress: String
-    let amount: String
-    let decimals: Int
-    let updateAt: Int
-    let symbol: String
-    let logoURI: String
-}
-
-struct UnityNFTModel: Codable {
-    let mintAddress: String
-    let image: String
-    let symbol: String
-    let name: String
-    let sellerFeeBasisPoints: Int
-    let description: String
-    let externalUrl: String
-    let animationUrl: String
-    let data: String
-    let isSemiFungible: Bool
-    let tokenId: String
-    let tokenBalance: String
-}
-
-struct UnitySolanaTransactionModel: Codable {
-    let from: String
-    let to: String
-    let type: String
-    let lamportsChange: String
-    let lamportsFee: String
-    let signature: String
-    let blockTime: Int
-    let status: Int
-    let data: String
-    let mint: String
-}
-
-struct UnityEvmTransactionModel: Codable {
-    let from: String
-    let to: String
-    let hash: String
-    let value: String
-    let data: String
-    let gasLimit: String
-    let gasSpent: String
-    let gasPrice: String
-    let fees: String
-    let type: Int
-    let nonce: String
-    let maxPriorityFeePerGas: String
-    let maxFeePerGas: String
-    let timestamp: Int
-    let status: Int
 }
 
 struct UnityResponseError: Codable {
