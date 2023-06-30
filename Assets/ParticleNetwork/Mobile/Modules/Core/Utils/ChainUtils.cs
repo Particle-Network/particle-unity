@@ -122,10 +122,6 @@ namespace Network.Particle.Scripts.Core.Utils
                 {
                     chainInfo = new HecoChain(HecoChainId.Mainnet);
                 }
-                else if (chainId == 256)
-                {
-                    chainInfo = new HecoChain(HecoChainId.Testnet);
-                }
             }
             else if (name == "aurora")
             {

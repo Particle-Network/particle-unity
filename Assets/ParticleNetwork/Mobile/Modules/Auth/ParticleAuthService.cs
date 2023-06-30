@@ -29,7 +29,7 @@ namespace Network.Particle.Scripts.Core
 
         private TaskCompletionSource<NativeResultData> openAccountAndSecurityTask;
         private TaskCompletionSource<NativeResultData> setUserInfoTask;
-        
+
         /// <summary>
         /// Login
         /// </summary>
@@ -38,15 +38,16 @@ namespace Network.Particle.Scripts.Core
         /// <param name="supportAuthTypes">Support auth types, default value is all</param>
         /// <param name="loginFormMode">Login form mode</param>
         /// <param name="socialLoginPrompt">Social login prompt</param>
+        /// <param name="authorization">LoginAuthorization, optional, login and sign message, its message request hex in evm, base58 in solana </param>
         /// <returns></returns>
         public Task<NativeResultData> Login(LoginType loginType, string account = "",
-            SupportAuthType supportAuthTypes = SupportAuthType.ALL, bool loginFormMode = false, SocialLoginPrompt? socialLoginPrompt = null)
+            SupportAuthType supportAuthTypes = SupportAuthType.ALL, bool loginFormMode = false, SocialLoginPrompt? socialLoginPrompt = null, [CanBeNull] LoginAuthorization authorization = null)
         {
             loginTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
             DevModeService.Login();
 #else
-            ParticleAuthServiceInteraction.Login(loginType, account, supportAuthTypes, loginFormMode, socialLoginPrompt);
+            ParticleAuthServiceInteraction.Login(loginType: loginType, account: account, supportAuthTypes: supportAuthTypes, loginFormMode: loginFormMode, socialLoginPrompt: socialLoginPrompt, authorization: authorization);
 #endif
             return loginTask.Task;
         }

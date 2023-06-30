@@ -61,7 +61,6 @@ namespace Network.Particle.Scripts.Model
     public enum HecoChainId
     {
         Mainnet = 128,
-        Testnet = 256
     }
 
     public enum AuroraChainId

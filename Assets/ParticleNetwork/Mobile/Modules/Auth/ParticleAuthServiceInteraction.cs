@@ -13,7 +13,8 @@ namespace Network.Particle.Scripts.Core
     public static class ParticleAuthServiceInteraction
     {
         internal static void Login(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes,
-            bool loginFormMode, SocialLoginPrompt? socialLoginPrompt)
+            bool loginFormMode, SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginAuthorization authorization
+            )
         {
             var authTypeList = ParticleTools.GetSupportAuthTypeValues(supportAuthTypes);
             string accountNative = "";
@@ -21,14 +22,21 @@ namespace Network.Particle.Scripts.Core
                 accountNative = "";
             else
                 accountNative = account;
-            var json = JsonConvert.SerializeObject(new JObject
+
+            
+            var obj = new JObject
             {
                 { "loginType", loginType.ToString() },
                 { "account", accountNative },
                 { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
                 { "loginFormMode", loginFormMode },
                 { "socialLoginPrompt", socialLoginPrompt.ToString() },
-            });
+            };
+            
+            if (authorization != null) obj["authorization"] = JToken.FromObject(authorization);
+
+            var json = JsonConvert.SerializeObject(obj);
+            
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallNative("login",json);

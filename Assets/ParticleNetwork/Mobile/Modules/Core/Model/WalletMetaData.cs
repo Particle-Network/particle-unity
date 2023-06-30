@@ -6,12 +6,14 @@ namespace Network.Particle.Scripts.Model
         public string icon; // your dapp icon url
         public string url; // your dapp website url
         public string description; // your dapp description
-        public WalletMetaData(string name, string icon, string url, string description)
+        public string walletConnectProjectId;
+        public WalletMetaData(string name, string icon, string url, string description, string walletConnectProjectId)
         {
             this.name = name;
             this.icon = icon;
             this.url = url;
             this.description = description;
+            this.walletConnectProjectId = walletConnectProjectId;
         }
         
     }

@@ -79,6 +79,9 @@
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;
 - (BOOL) particleConnectSetChainInfo:(NSString* _Nonnull)json;
 - (void) particleConnectSetChainInfoAsync:(NSString* _Nonnull)json;
+- (void) setWalletConnectV2ProjectId:(NSString* _Nonnull)json;
+- (void) setWalletConnectV2SupportChainInfos:(NSString* _Nonnull)json;
+
 // Particle Connect Service
 - (NSString* _Nonnull) adapterGetAccounts:(NSString* _Nonnull)json;
 - (void) adapterConnect:(NSString* _Nonnull)json configJson:(NSString* _Nonnull)account;
@@ -97,6 +100,7 @@
 - (void) adapterSwitchEthereumChain:(NSString* _Nonnull)json;
 - (void) adapterAddEthereumChain:(NSString* _Nonnull)json;
 - (NSString* _Nonnull) adapterWalletReadyState:(NSString* _Nonnull)json;
+
 @end
 
 __attribute__ ((visibility("default")))

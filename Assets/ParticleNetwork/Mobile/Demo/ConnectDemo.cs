@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Reflection;
@@ -52,9 +53,13 @@ namespace Network.Particle.Scripts.Test
         {
             var metadata = new DAppMetaData("Particle Connect",
                 "https://connect.particle.network/icons/512.png",
-                "https://connect.particle.network");
+                "https://connect.particle.network",
+                "");
             ParticleNetwork.Init(_chainInfo);
             ParticleConnectInteraction.Init(_chainInfo, metadata);
+            List<ChainInfo> chainInfos = new List<ChainInfo>{new EthereumChain(EthereumChainId.Mainnet), new EthereumChain(EthereumChainId.Goerli), new EthereumChain(EthereumChainId.Sepolia)};
+            ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
+            ParticleConnectInteraction.SetWalletConnectV2ProjectId("75ac08814504606fc06126541ace9df6");
         }
         string publicAddress = "";
         /// <summary>

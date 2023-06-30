@@ -196,6 +196,11 @@ namespace Network.Particle.Scripts.Core
         [DllImport("__Internal")]
         public static extern bool particleConnectSetChainInfoAsync(string json);
         
+        [DllImport("__Internal")]
+        public static extern void setWalletConnectV2ProjectId(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setWalletConnectV2SupportChainInfos(string json);
 #endif 
             
        // Connect Service
@@ -251,7 +256,8 @@ namespace Network.Particle.Scripts.Core
         [DllImport("__Internal")]
         public static extern string adapterWalletReadyState(string json);
         
-
+        
+        
 #endif
 
     }

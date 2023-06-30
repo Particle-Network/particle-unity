@@ -480,8 +480,10 @@ namespace Network.Particle.Scripts.Core
                 { "icon", metaData.icon },
                 { "url", metaData.url },
                 { "description", metaData.description },
+                { "walletConnectProjectId", metaData.walletConnectProjectId}
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.particleWalletConnectInitialize(json);

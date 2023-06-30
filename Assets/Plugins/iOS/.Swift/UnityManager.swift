@@ -39,6 +39,8 @@ import UIKit
 
 @objcMembers
 class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
+    
+    
     let bag = DisposeBag()
     static var shared = UnityManager()
     
@@ -725,8 +727,6 @@ extension UnityManager {
                     loginListPageSupportType.append(.bitkeep)
                 } else if $0 == "walletConnect" {
                     loginListPageSupportType.append(.walletConnect)
-                } else if $0 == "gnosis" {
-                    loginListPageSupportType.append(.gnosis)
                 } else if $0 == "twitter" {
                     loginListPageSupportType.append(.twitter)
                 }
@@ -836,6 +836,8 @@ extension UnityManager {
         let urlString = data["url"].stringValue
         let description = data["description"].string
         
+        let walletConnectV2ProjectId = data["walletConnectProjectId"].stringValue
+        
         let icon = URL(string: iconString) != nil ? URL(string: iconString)! : URL(string: "https://static.particle.network/wallet-icons/Particle.png")!
         
         let url = URL(string: urlString) != nil ? URL(string: urlString)! : URL(string: "https://static.particle.network")!
@@ -843,6 +845,7 @@ extension UnityManager {
         let walletMetaData = WalletMetaData(name: name, icon: icon, url: url, description: description)
         
         ParticleWalletConnect.initialize(walletMetaData)
+        ParticleWalletConnect.setWalletConnectV2ProjectId(walletConnectV2ProjectId)
     }
     
     func setSupportAddToken(_ enable: Bool) {
@@ -938,8 +941,9 @@ extension UnityManager {
         let dAppIconUrl = URL(string: dAppIconString) != nil ? URL(string: dAppIconString)! : URL(string: "https://static.particle.network/wallet-icons/Particle.png")!
         
         let dAppUrl = URL(string: dAppUrlString) != nil ? URL(string: dAppUrlString)! : URL(string: "https://static.particle.network")!
+        let description = data["metaData"]["description"].stringValue
         
-        let dAppData = DAppMetaData(name: dAppName, icon: dAppIconUrl, url: dAppUrl)
+        let dAppData = DAppMetaData(name: dAppName, icon: dAppIconUrl, url: dAppUrl, description: description)
         
         var adapters: [ConnectAdapter] = [ParticleConnectAdapter()]
 #if canImport(ConnectEVMAdapter)
@@ -971,8 +975,7 @@ extension UnityManager {
             BitkeepConnectAdapter(),
             ImtokenConnectAdapter(),
             TrustConnectAdapter(),
-            WalletConnectAdapter(),
-            GnosisConnectAdapter()
+            WalletConnectAdapter()
         ])
         
         let moreAdapterClasses: [WalletConnectAdapter.Type] =
@@ -1696,6 +1699,19 @@ extension UnityManager {
 
         return str
     }
+    
+    func setWalletConnectV2ProjectId(_ json: String) {
+        ParticleConnect.setWalletConnectV2ProjectId(json)
+    }
+
+    func setWalletConnectV2SupportChainInfos(_ json: String) {
+        let chainInfos = JSON(parseJSON: json).arrayValue.map {
+            $0["chain_Id"].intValue
+        }.compactMap {
+            ParticleNetwork.searchChainInfo(by: $0)
+        }
+        ParticleConnect.setWalletConnectV2SupportChainInfos(chainInfos)
+    }
 }
 
 // MARK: - Help methods
@@ -1720,7 +1736,6 @@ extension Dictionary {
 }
 
 extension UnityManager {
-    
     private func ResponseFromError(_ error: Error) -> UnityResponseError {
         if let responseError = error as? ParticleNetwork.ResponseError {
             return UnityResponseError(code: responseError.code, message: responseError.message ?? "", data: responseError.data)

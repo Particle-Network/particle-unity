@@ -189,6 +189,7 @@
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/CanvasViewportMaterialView.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/NativeResultData.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/UnityRpc/ParticleUnityRpc.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/LoginAuthorization.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/NetService/NodeService.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/SecurityAccountConfig.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/IWithTouch.cs" />

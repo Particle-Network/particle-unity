@@ -37,7 +37,6 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         chainInfos.Add(new MoonriverChain(MoonriverChainId.Testnet));
 
         chainInfos.Add(new HecoChain(HecoChainId.Mainnet));
-        chainInfos.Add(new HecoChain(HecoChainId.Testnet));
 
         chainInfos.Add(new FantomChain(FantomChainId.Mainnet));
         chainInfos.Add(new FantomChain(FantomChainId.Testnet));

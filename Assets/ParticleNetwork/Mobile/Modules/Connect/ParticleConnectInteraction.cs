@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Network.Particle.Scripts.Core.UnityEditorTestMode;
 using Newtonsoft.Json;
@@ -43,6 +45,50 @@ namespace Network.Particle.Scripts.Core
             Debug.Log($"ParticleConnect Init json: {json}");
 #endif
         }
+
+
+        public static void SetWalletConnectV2ProjectId(string walletConnectV2ProjectId)
+        {
+#if UNITY_ANDROID&& !UNITY_EDITOR
+// todo
+                // ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("init",json);
+#elif UNITY_IOS&& !UNITY_EDITOR
+                ParticleNetworkIOSBridge.setWalletConnectV2ProjectId(walletConnectV2ProjectId);
+#else
+            Debug.Log($"setWalletConnectV2ProjectId: {walletConnectV2ProjectId}");
+#endif
+        }
+
+        public static void SetWalletConnectV2SupportChainInfos(ChainInfo[] chainInfos)
+        {
+            List<JObject> allInfos = new List<JObject>();
+            foreach (var chainInfo in chainInfos)
+            {
+                if (!chainInfo.IsMainnet()) continue;
+                var info = new JObject
+                {
+                    { "chain_name", chainInfo.getChainName() },
+                    { "chain_id", chainInfo.getChainId() },
+                    { "chain_id_name", chainInfo.getChainIdName() },
+                };
+                allInfos.Add(info);
+            }
+            var json = JsonConvert.SerializeObject(allInfos);
+            
+#if UNITY_ANDROID && !UNITY_EDITOR
+
+// todo
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("setSupportChain",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            json = JsonConvert.SerializeObject(chainInfos.Select(x => x.getChainName()));
+            ParticleNetworkIOSBridge.setWalletConnectV2SupportChainInfos(json);
+#else
+
+#endif
+            
+        }
+            
+       
 
         public static bool SetChainInfo(ChainInfo chainInfo)
         {
