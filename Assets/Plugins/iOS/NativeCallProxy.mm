@@ -333,10 +333,6 @@ extern "C" {
         return cStringCopyPN([[api adapterWalletReadyState:[NSString stringWithUTF8String: json]] UTF8String]);
     }
     
-    void setWalletConnectV2ProjectId(const char* json) {
-         [api setWalletConnectV2ProjectId:[NSString stringWithUTF8String: json]];
-    }
-    
     void setWalletConnectV2SupportChainInfos(const char* json) {
          [api setWalletConnectV2SupportChainInfos:[NSString stringWithUTF8String: json]];
     }

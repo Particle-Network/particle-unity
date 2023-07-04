@@ -80,7 +80,6 @@
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;
 - (BOOL) particleConnectSetChainInfo:(NSString* _Nonnull)json;
 - (void) particleConnectSetChainInfoAsync:(NSString* _Nonnull)json;
-- (void) setWalletConnectV2ProjectId:(NSString* _Nonnull)json;
 - (void) setWalletConnectV2SupportChainInfos:(NSString* _Nonnull)json;
 
 // Particle Connect Service

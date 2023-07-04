@@ -53,6 +53,7 @@
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/CachingGetter.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/IWithMutableAudio.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Singleton/SingletonException.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Model/TestConfig.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/WebViewPrefab.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/ScrolledEventArgs.cs" />
      <Compile Include="Assets/ParticleNetwork/Windows/Modules/Models/ParticleConfig.cs" />

@@ -59,7 +59,6 @@ namespace Network.Particle.Scripts.Test
             ParticleConnectInteraction.Init(_chainInfo, metadata);
             List<ChainInfo> chainInfos = new List<ChainInfo>{new EthereumChain(EthereumChainId.Mainnet), new EthereumChain(EthereumChainId.Goerli), new EthereumChain(EthereumChainId.Sepolia)};
             ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
-            ParticleConnectInteraction.SetWalletConnectV2ProjectId("75ac08814504606fc06126541ace9df6");
         }
         string publicAddress = "";
         /// <summary>

@@ -46,19 +46,6 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-
-        public static void SetWalletConnectV2ProjectId(string walletConnectV2ProjectId)
-        {
-#if UNITY_ANDROID&& !UNITY_EDITOR
-// todo
-                // ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("init",json);
-#elif UNITY_IOS&& !UNITY_EDITOR
-                ParticleNetworkIOSBridge.setWalletConnectV2ProjectId(walletConnectV2ProjectId);
-#else
-            Debug.Log($"setWalletConnectV2ProjectId: {walletConnectV2ProjectId}");
-#endif
-        }
-
         public static void SetWalletConnectV2SupportChainInfos(ChainInfo[] chainInfos)
         {
             List<JObject> allInfos = new List<JObject>();
