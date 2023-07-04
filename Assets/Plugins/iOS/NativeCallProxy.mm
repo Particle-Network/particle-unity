@@ -120,6 +120,10 @@ extern "C" {
     void setModalPresentStyle(const char* style) {
         [api setModalPresentStyle:[NSString stringWithUTF8String: style]];
     }
+
+    void getSecurityAccount() {
+        [api getSecurityAccount];
+    }
 }
 
 

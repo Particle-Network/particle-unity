@@ -95,6 +95,7 @@
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/PopupRequestedEventArgs.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/BridgeMessage.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/IWithNativeJavaScriptDialogs.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/SecurityAccount.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/EventArgs.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/PageLoadFailedException.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/ParticleNetwork.cs" />

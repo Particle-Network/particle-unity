@@ -34,7 +34,8 @@ namespace Network.Particle.Scripts.Test
         {
             // login email
             var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, null, SupportAuthType.ALL,
-                false, SocialLoginPrompt.Select_account, new LoginAuthorization("0xa0869E99886e1b6737A4364F2cf9Bb454FD637E4", false));
+                false, SocialLoginPrompt.Select_account,
+                new LoginAuthorization("0xa0869E99886e1b6737A4364F2cf9Bb454FD637E4", false));
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
@@ -365,6 +366,47 @@ namespace Network.Particle.Scripts.Test
         public void OpenWebWallet()
         {
             ParticleAuthServiceInteraction.OpenWebWallet();
+        }
+
+        public void HasMasterPassword()
+        {
+            var result = ParticleAuthServiceInteraction.HasMasterPassword();
+            Debug.Log($"HasMasterPassword {result}");
+        }
+
+        public void HasPaymentPassword()
+        {
+            var result = ParticleAuthServiceInteraction.HasPaymentPassword();
+            Debug.Log($"HasPaymentPassword {result}");
+        }
+
+        public void HasSecurityAccount()
+        {
+            var result = ParticleAuthServiceInteraction.HasSecurityAccount();
+            Debug.Log($"HasSecurityAccount {result}");
+        }
+
+        public async void GetSecurityAccount()
+        {
+            var nativeResultData = await ParticleAuthService.Instance.GetSecurityAccount();
+            Debug.Log(nativeResultData.data);
+
+            if (nativeResultData.isSuccess)
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log(nativeResultData.data);
+                var securityAccount = JsonConvert.DeserializeObject<SecurityAccount>(nativeResultData.data);
+                var hasSecurityAccount = !string.IsNullOrEmpty(securityAccount.Email) ||
+                                         !string.IsNullOrEmpty(securityAccount.Phone);
+                Debug.Log(securityAccount);
+                Debug.Log($"HasMasterPassword {securityAccount.HasMasterPassword}, HasPaymentPassword {securityAccount.HasPaymentPassword}, HasSecurityAccount {hasSecurityAccount}");
+            }
+            else
+            {
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                Debug.Log(errorData);
+            }
         }
     }
 }
