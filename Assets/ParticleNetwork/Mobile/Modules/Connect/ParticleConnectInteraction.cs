@@ -51,7 +51,6 @@ namespace Network.Particle.Scripts.Core
             List<JObject> allInfos = new List<JObject>();
             foreach (var chainInfo in chainInfos)
             {
-                if (!chainInfo.IsMainnet()) continue;
                 var info = new JObject
                 {
                     { "chain_name", chainInfo.getChainName() },
@@ -63,9 +62,7 @@ namespace Network.Particle.Scripts.Core
             var json = JsonConvert.SerializeObject(allInfos);
             
 #if UNITY_ANDROID && !UNITY_EDITOR
-
-// todo
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("setSupportChain",json);
+            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("setWalletConnectV2SupportChainInfos",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             json = JsonConvert.SerializeObject(chainInfos.Select(x => x.getChainName()));
             ParticleNetworkIOSBridge.setWalletConnectV2SupportChainInfos(json);

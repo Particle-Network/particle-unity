@@ -221,8 +221,7 @@ namespace Network.Particle.Scripts.Core
         public static void GetSecurityAccount()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            // return ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getUserInfo");
+             ParticleNetwork.GetUnityBridgeClass().CallStatic("getSecurityAccount");
 #elif UNITY_IOS && !UNITY_EDITOR
              ParticleNetworkIOSBridge.getSecurityAccount();
 #else
