@@ -87,6 +87,8 @@ namespace Network.Particle.Scripts.Core
         [DllImport("__Internal")]
         public static extern void setSecurityAccountConfig(string json);
         
+        [DllImport("__Internal")]
+        public static extern void getSecurityAccount();
         
 #endif
 

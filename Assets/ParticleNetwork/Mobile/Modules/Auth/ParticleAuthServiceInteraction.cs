@@ -196,6 +196,40 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
+        public static bool HasMasterPassword()
+        {
+            var userInfo = GetUserInfo();
+            var hasMasterPassword = (bool)JObject.Parse(userInfo)["security_account"]?["has_set_master_password"];
+            return hasMasterPassword;
+        }
+
+        public static bool HasPaymentPassword()
+        {
+            var userInfo = GetUserInfo();
+            var result = (bool)JObject.Parse(userInfo)["security_account"]?["has_set_payment_password"];
+            return result;
+        }
+        
+        public static bool HasSecurityAccount()
+        {
+            var userInfo = GetUserInfo();
+            var email = (string)JObject.Parse(userInfo)["security_account"]?["email"];
+            var phone = (string)JObject.Parse(userInfo)["security_account"]?["phone"];
+            return !string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(phone);
+        }
+
+        public static void GetSecurityAccount()
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            // return ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getUserInfo");
+#elif UNITY_IOS && !UNITY_EDITOR
+             ParticleNetworkIOSBridge.getSecurityAccount();
+#else
+        
+#endif
+        }
+
         public static void SetChainInfoAsync(ChainInfo chainInfo)
         {
             var json = JsonConvert.SerializeObject(new JObject
@@ -258,7 +292,7 @@ namespace Network.Particle.Scripts.Core
             authTiramisu.CallStatic("setBrowserHeightPercent", percent);
 #elif UNITY_IOS &&!UNITY_EDITOR
 #else
-
+        
 #endif
         }
 

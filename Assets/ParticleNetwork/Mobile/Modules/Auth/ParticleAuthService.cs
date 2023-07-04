@@ -30,6 +30,7 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> openAccountAndSecurityTask;
         private TaskCompletionSource<NativeResultData> setUserInfoTask;
 
+        private TaskCompletionSource<NativeResultData> getSecurityAccountTask;
         /// <summary>
         /// Login
         /// </summary>
@@ -436,6 +437,27 @@ namespace Network.Particle.Scripts.Core
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             openAccountAndSecurityTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+#endif
+        }
+
+
+        public Task<NativeResultData> GetSecurityAccount()
+        {
+            getSecurityAccountTask = new TaskCompletionSource<NativeResultData>();
+            ParticleAuthServiceInteraction.GetSecurityAccount();
+            return getSecurityAccountTask.Task;
+        }
+        
+        public void GetSecurityAccountCallBack(string json)
+        {
+            Debug.Log($"GetSecurityAccountCallBack:{json}");
+#if UNITY_EDITOR
+            var data = new NativeResultData(true, json);
+            getSecurityAccountTask?.TrySetResult(data);
+#else
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            getSecurityAccountTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
 #endif
         }
     }

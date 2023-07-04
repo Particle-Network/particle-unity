@@ -41,6 +41,7 @@
 - (void) openWebWallet;
 - (void) openAccountAndSecurity;
 - (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
+- (void) getSecurityAccount;
 
 // Particle Wallet GUI
 - (void) enablePay:(BOOL)enable;
