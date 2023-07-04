@@ -176,10 +176,54 @@ namespace Network.Particle.Scripts.Model
         Mainnet = 1101,
         Testnet = 1442
     }
-    
+
     public enum BaseChainId
     {
         // Mainnet = 1101,
         Testnet = 84531
     }
+    
+    public enum LineaChainId
+    {
+        // Mainnet = 1101,
+        Testnet = 59140
+    }
+    
+    public enum ComboChainId
+    {
+        // Mainnet = 1101,
+        Testnet = 91715
+    }
+    
+    public enum MantleChainId
+    {
+        // Mainnet = 1101,
+        Testnet = 5001
+    }
+    
+    public enum ZkMetaChainId
+    {
+        // Mainnet = 1101,
+        Testnet = 12009
+    }
+    
+    public enum OpBNBChainId
+    {
+        // Mainnet = 1101,
+        Testnet = 5611
+    }
+    
+    public enum OKBCChainId
+    {
+        // Mainnet = 1101,
+        Testnet = 195
+    }
+    
+    public enum TaikoChainId
+    {
+        // Mainnet = 1101,
+        Testnet = 167005
+    }
+    
+    
 }

@@ -511,6 +511,118 @@ namespace Network.Particle.Scripts.Model
         }
     }
     
+    class LineaChain : EvmBaseChain
+    {
+        public LineaChain(LineaChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Linea.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return false;
+            // return chainId == (long)BaseChainId.Mainnet;
+        }
+    }
+    
+    class ComboChain : EvmBaseChain
+    {
+        public ComboChain(ComboChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Combo.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return false;
+            // return chainId == (long)BaseChainId.Mainnet;
+        }
+    }
+    
+    class MantleChain : EvmBaseChain
+    {
+        public MantleChain(MantleChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Mantle.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return false;
+            // return chainId == (long)BaseChainId.Mainnet;
+        }
+    }
+    
+    class ZkMetaChain : EvmBaseChain
+    {
+        public ZkMetaChain(ZkMetaChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.ZkMeta.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return false;
+            // return chainId == (long)BaseChainId.Mainnet;
+        }
+    }
+    
+    class OpBNBChain : EvmBaseChain
+    {
+        public OpBNBChain(OpBNBChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.OpBNB.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return false;
+            // return chainId == (long)BaseChainId.Mainnet;
+        }
+    }
+    
+    class OKBCChain : EvmBaseChain
+    {
+        public OKBCChain(OKBCChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.OKBC.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return false;
+            // return chainId == (long)BaseChainId.Mainnet;
+        }
+    }
+    
+    class TaikoChain : EvmBaseChain
+    {
+        public TaikoChain(TaikoChainId chainId)
+        {
+            this.chainId = (long)chainId;
+            chainIdName = chainId.ToString();
+            chainName = ChainName.Taiko.ToString();
+        }
+
+        public override bool IsMainnet()
+        {
+            return false;
+            // return chainId == (long)BaseChainId.Mainnet;
+        }
+    }
+    
     
 
 
@@ -546,6 +658,12 @@ namespace Network.Particle.Scripts.Model
         Mapo,
         PolygonZkEVM,
         Base,
-        
+        Linea, 
+        Combo, 
+        Mantle, 
+        ZkMeta, 
+        OpBNB, 
+        OKBC,
+        Taiko
     }
 }

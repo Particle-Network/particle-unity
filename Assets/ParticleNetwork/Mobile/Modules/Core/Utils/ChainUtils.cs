@@ -339,6 +339,56 @@ namespace Network.Particle.Scripts.Core.Utils
                     chainInfo = new BaseChain(BaseChainId.Testnet);
                 }
             }
+            else if (name == "linea")
+            {
+                if (chainId == 59140)
+                {
+                    chainInfo = new LineaChain(LineaChainId.Testnet);
+                }
+            }
+            else if (name == "combo")
+            {
+                if (chainId == 91715)
+                {
+                    chainInfo = new ComboChain(ComboChainId.Testnet);
+                }
+            }
+            else if (name == "mantle")
+            {
+                if (chainId == 5001)
+                {
+                    chainInfo = new MantleChain(MantleChainId.Testnet);
+                }
+            }
+            else if (name == "zkmeta")
+            {
+                if (chainId == 12009)
+                {
+                    chainInfo = new ZkMetaChain(ZkMetaChainId.Testnet);
+                }
+            }
+            else if (name == "opbnb")
+            {
+                if (chainId == 5611)
+                {
+                    chainInfo = new OpBNBChain(OpBNBChainId.Testnet);
+                }
+            }
+            else if (name == "okbc")
+            {
+                if (chainId == 195)
+                {
+                    chainInfo = new OKBCChain(OKBCChainId.Testnet);
+                }
+            }
+            else if (name == "taiko")
+            {
+                if (chainId == 167005)
+                {
+                    chainInfo = new TaikoChain(TaikoChainId.Testnet);
+                }
+            }
+            
             
 
             return chainInfo;

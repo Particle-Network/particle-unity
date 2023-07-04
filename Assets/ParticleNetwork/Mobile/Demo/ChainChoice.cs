@@ -103,7 +103,14 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         chainInfos.Add(new PolygonZkEVMChain(PolygonZkEVMChainId.Testnet));
         
         chainInfos.Add(new BaseChain(BaseChainId.Testnet));
-
+        chainInfos.Add(new LineaChain(LineaChainId.Testnet));
+        chainInfos.Add(new ComboChain(ComboChainId.Testnet));
+        chainInfos.Add(new MantleChain(MantleChainId.Testnet));
+        chainInfos.Add(new ZkMetaChain(ZkMetaChainId.Testnet));
+        chainInfos.Add(new OpBNBChain(OpBNBChainId.Testnet));
+        chainInfos.Add(new OKBCChain(OKBCChainId.Testnet));
+        chainInfos.Add(new TaikoChain(TaikoChainId.Testnet));
+        
         foreach (var chainInfo in chainInfos)
         {
             var chainItem = Instantiate(chainItemTemplate);
