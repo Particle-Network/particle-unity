@@ -15,7 +15,7 @@ namespace Network.Particle.Scripts.Test
     {
         public void Init()
         {
-            var metadata = new DAppMetaData("Particle Connect",
+            var metadata = new DAppMetaData(TestConfig.walletConnectProjectId,"Particle Connect",
                 "https://connect.particle.network/icons/512.png",
                 "https://connect.particle.network", "");
 

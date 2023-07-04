@@ -12,7 +12,8 @@ namespace Network.Particle.Scripts.Model
         [CanBeNull] public string redirect;
         [CanBeNull] public string verifyUrl;
 
-        public DAppMetaData(string walletConnectProjectId, string name, string icon, string url, string description, [CanBeNull] string redirect, [CanBeNull] string verifyUrl)
+        public DAppMetaData(string walletConnectProjectId, string name, string icon, string url, string description,
+            [CanBeNull] string redirect = null, [CanBeNull] string verifyUrl = null)
         {
             this.walletConnectProjectId = walletConnectProjectId;
             this.name = name;
