@@ -12,12 +12,15 @@ namespace Network.Particle.Scripts.Model
         [CanBeNull] public string redirect;
         [CanBeNull] public string verifyUrl;
 
-        public DAppMetaData(string name, string icon, string url, string description)
+        public DAppMetaData(string walletConnectProjectId, string name, string icon, string url, string description, [CanBeNull] string redirect, [CanBeNull] string verifyUrl)
         {
+            this.walletConnectProjectId = walletConnectProjectId;
             this.name = name;
             this.icon = icon;
             this.url = url;
             this.description = description;
+            this.redirect = redirect;
+            this.verifyUrl = verifyUrl;
         }
     }
 }
