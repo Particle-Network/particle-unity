@@ -18,7 +18,7 @@ Install Unity 2020.3.26f1 or later. Earlier versions may also be compatible but 
 
 Make sure that your Unity project meets these requirements:
 
-- **For iOS** — targets iOS 13 or higher
+- **For iOS** — targets iOS 14 or higher
 - **For Android** — Minimum API Level 23 or higher,Targets API level 31 or higher，Pack apk must be with exporting project to Android Studio, [change Java SDK version to 11](https://stackoverflow.com/questions/66449161/how-to-upgrade-an-android-project-to-java-11)
 
 
