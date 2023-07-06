@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Singleton;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
@@ -26,7 +27,7 @@ namespace Network.Particle.Scripts.Core
             return rpcGetFeeQuotesTask.Task;
         }
 
-        public void RpcGetFeeQuotesTaskCallBack(string json)
+        public void RpcGetFeeQuotesCallBack(string json)
         {
             Debug.Log($"RpcGetFeeQuotesTaskCallBack:{json}");
 
@@ -39,7 +40,6 @@ namespace Network.Particle.Scripts.Core
         {
             isDeployTask = new TaskCompletionSource<NativeResultData>();
             ParticleBiconomyInteraction.IsDeploy(eoaAddress);
-
             return isDeployTask.Task;
         }
         
@@ -49,7 +49,7 @@ namespace Network.Particle.Scripts.Core
 
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
-            rpcGetFeeQuotesTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+            isDeployTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
         
     }

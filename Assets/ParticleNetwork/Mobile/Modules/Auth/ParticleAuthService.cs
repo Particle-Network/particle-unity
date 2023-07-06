@@ -404,9 +404,9 @@ namespace Network.Particle.Scripts.Core
         /// Batch Send Transaction call back
         /// </summary>
         /// <param name="json">Result</param>
-        public void batchSendTransactionTaskCallBack(string json)
+        public void BatchSendTransactionsCallBack(string json)
         {
-            Debug.Log($"batchSendTransactionTaskCallBack:{json}");
+            Debug.Log($"BatchSendTransactionsCallBack:{json}");
             var resultData = JObject.Parse(json);
             var status = (int) resultData["status"];
             batchSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));

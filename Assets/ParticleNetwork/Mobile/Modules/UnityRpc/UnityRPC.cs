@@ -345,6 +345,8 @@ namespace Network.Particle.Scripts.Core
                     null,
                     null);
             }
+            
+            Debug.Log($"transaction {transaction}");
 
             var json = JsonConvert.SerializeObject(transaction);
             var serialized = BitConverter.ToString(Encoding.Default.GetBytes(json));

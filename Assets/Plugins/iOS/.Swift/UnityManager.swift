@@ -53,7 +53,7 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     // work with connect sdk
     var latestPublicAddress: String?
     var latestWalletType: WalletType?
-    
+    var isLatestBatchAuth: Bool = false
     let biconomy = BiconomyService()
     
     override init() {
@@ -451,6 +451,7 @@ extension UnityManager {
             return
         }
         
+        isLatestBatchAuth = true
         biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self).subscribe {
             [weak self] result in
                 guard let self = self else { return }
@@ -1401,6 +1402,7 @@ extension UnityManager {
             return
         }
         
+        isLatestBatchAuth = false
         biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self).subscribe {
             [weak self] result in
                 guard let self = self else { return }
@@ -1893,6 +1895,18 @@ extension UnityManager {
 extension UnityManager {
     func particleBiconomyInitialize(_ json: String) {
         let data = JSON(parseJSON: json)
+        let version = data["version"].stringValue.lowercased()
+        let dappAppKeysDict = data["dapp_api_keys"].dictionaryValue
+        var dappAppKeys: [Int: String] = [:]
+        
+        for (key, value) in dappAppKeysDict {
+            if let chainId = Int(key) {
+                dappAppKeys[chainId] = value.stringValue
+            }
+        }
+        
+        BiconomyService.initialize(version: .init(rawValue: version) ?? .v1_0_0, dappApiKeys: dappAppKeys)
+        ParticleNetwork.setBiconomyService(self.biconomy)
     }
     
     func enableBiconomyMode() {
@@ -2065,33 +2079,46 @@ extension UnityManager {
 
 extension UnityManager: MessageSigner {
     public func signTypedData(_ message: String) -> RxSwift.Single<String> {
-        guard let walletType = latestWalletType else {
-            print("walletType is nil")
-            return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
+        if isLatestBatchAuth {
+            return ParticleAuthService.signTypedData(message, version: .v4)
+        } else {
+            guard let walletType = latestWalletType else {
+                print("walletType is nil")
+                return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
+            }
+            
+            guard let adapter = map2ConnectAdapter(from: walletType) else {
+                print("adapter for \(walletType) is not init")
+                return .error(ParticleNetwork.ResponseError(code: nil, message: "adapter for \(walletType) is not init"))
+            }
+            return adapter.signTypedData(publicAddress: getEoaAddress(), data: message)
         }
         
-        guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletType) is not init")
-            return .error(ParticleNetwork.ResponseError(code: nil, message: "adapter for \(walletType) is not init"))
-        }
-        return adapter.signTypedData(publicAddress: getEoaAddress(), data: message)
     }
     
     public func signMessage(_ message: String) -> RxSwift.Single<String> {
-        guard let walletType = latestWalletType else {
-            print("walletType is nil")
-            return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
+        if isLatestBatchAuth {
+            return ParticleAuthService.signMessage(message)
+        } else {
+            guard let walletType = latestWalletType else {
+                print("walletType is nil")
+                return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
+            }
+            
+            guard let adapter = map2ConnectAdapter(from: walletType) else {
+                print("adapter for \(walletType) is not init")
+                return .error(ParticleNetwork.ResponseError(code: nil, message: "adapter for \(walletType) is not init"))
+            }
+            return adapter.signMessage(publicAddress: getEoaAddress(), message: message)
         }
-        
-        guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletType) is not init")
-            return .error(ParticleNetwork.ResponseError(code: nil, message: "adapter for \(walletType) is not init"))
-        }
-        return adapter.signMessage(publicAddress: getEoaAddress(), message: message)
     }
     
     public func getEoaAddress() -> String {
-        return latestPublicAddress ?? ""
+        if isLatestBatchAuth {
+            return ParticleAuthService.getAddress()
+        } else {
+            return latestPublicAddress ?? ""
+        }
     }
 }
 

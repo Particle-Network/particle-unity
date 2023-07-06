@@ -302,6 +302,12 @@ namespace Network.Particle.Scripts.Test
             ParticleNetwork.SetChainInfo(_chainInfo);
         }
 
+        public void GetChainInfo()
+        {
+            var chainInfo = ParticleNetwork.GetChainInfo();
+            Debug.Log($"chain name {chainInfo.getChainName()}, chain id {chainInfo.getChainId()}, chain id name {chainInfo.getChainIdName()}");
+        }
+
         public void SetiOSModalStyle()
         {
             ParticleAuthServiceInteraction.SetiOSModalPresentStyle(iOSModalPresentStyle.FullScreen);

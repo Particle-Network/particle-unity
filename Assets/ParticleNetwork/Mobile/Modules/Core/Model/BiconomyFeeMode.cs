@@ -1,10 +1,12 @@
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 
 namespace Network.Particle.Scripts.Model
 {
     public class BiconomyFeeMode
     {
         public string option;
+        [JsonProperty(PropertyName = "fee_quote")] 
         [CanBeNull] public object feeQuote;
         
         /// <summary>

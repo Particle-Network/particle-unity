@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Generic;
 using System.Numerics;
@@ -17,16 +18,7 @@ namespace Network.Particle.Scripts.Test
         private static AndroidJavaObject activityObject;
 
         private ChainInfo _chainInfo = new EthereumChain(EthereumChainId.Goerli);
-
-        public void SelectChain()
-        {
-            ChainChoice.Instance.Show((chainInfo) =>
-            {
-                Debug.Log($"xxhong {chainInfo.getChainName()} {chainInfo.getChainId()} {chainInfo.getChainIdName()}");
-                this._chainInfo = chainInfo;
-            });
-        }
-
+        
         private static AndroidJavaObject GetAndroidJavaObject()
         {
             if (activityObject != null)
@@ -74,12 +66,12 @@ namespace Network.Particle.Scripts.Test
             var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
             var nativeResultData = await ParticleBiconomy.Instance.IsDepoly(eoaAddress);
 
-            Debug.Log(nativeResultData.data);
-
+            Debug.Log("result" + nativeResultData.data);
             if (nativeResultData.isSuccess)
             {
+                var isDeploy = Convert.ToBoolean(nativeResultData.data);
+                Debug.Log($"isDeploy {isDeploy}");
                 ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                Debug.Log(nativeResultData.data);
             }
             else
             {
@@ -93,7 +85,7 @@ namespace Network.Particle.Scripts.Test
         {
             var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
             var transaction = await GetEVMTransacion();
-            var nativeResultData = await ParticleBiconomy.Instance.RpcGetFeeQuotes(eoaAddress, new List<string>());
+            var nativeResultData = await ParticleBiconomy.Instance.RpcGetFeeQuotes(eoaAddress, new List<string>{transaction});
 
             Debug.Log(nativeResultData.data);
 
@@ -209,7 +201,7 @@ namespace Network.Particle.Scripts.Test
         public async void SendTransactionBiconomyAutoWithConnect()
         {
             var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-            var transaction = await GetEVMTransacion();
+            var transaction = await GetEVMTransactionWithConnect();
             var nativeResultData =
                 await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
                     BiconomyFeeMode.Auto());
@@ -232,7 +224,7 @@ namespace Network.Particle.Scripts.Test
         public async void SendTransactionBiconomyGaslessWithConnect()
         {
             var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-            var transaction = await GetEVMTransacion();
+            var transaction = await GetEVMTransactionWithConnect();
             var nativeResultData =
                 await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
                     BiconomyFeeMode.Gasless());
@@ -255,7 +247,7 @@ namespace Network.Particle.Scripts.Test
         public async void SendTransactionBiconomyCustomWithConnect()
         {
             var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-            var transaction = await GetEVMTransacion();
+            var transaction = await GetEVMTransactionWithConnect();
 
             var feeQuotesResult =
                 await ParticleBiconomy.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
@@ -284,7 +276,7 @@ namespace Network.Particle.Scripts.Test
         public async void BatchSendTransactionsWithConnect()
         {
             var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-            var transaction = await GetEVMTransacion();
+            var transaction = await GetEVMTransactionWithConnect();
 
             List<string> transactions = new List<string> { transaction, transaction };
             var nativeResultData = await ParticleConnect.Instance.BatchSendTransactions(WalletType.MetaMask, eoaAddress,
@@ -309,6 +301,17 @@ namespace Network.Particle.Scripts.Test
         {
             // mock send some chain link token from send to receiver.
             string from = ParticleAuthServiceInteraction.GetAddress();
+            string receiver = TestAccount.EVM.ReceiverAddress;
+            string contractAddress = TestAccount.EVM.TokenContractAddress;
+            BigInteger amount = TestAccount.EVM.Amount;
+            var dataResult = await EvmService.Erc20Transfer(contractAddress, receiver, amount);
+            var data = (string)JObject.Parse(dataResult)["result"];
+            return await EvmService.CreateTransaction(from, data, amount, receiver, true);
+        }
+
+        async Task<string> GetEVMTransactionWithConnect()
+        {
+            string from = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
             string receiver = TestAccount.EVM.ReceiverAddress;
             string contractAddress = TestAccount.EVM.TokenContractAddress;
             BigInteger amount = TestAccount.EVM.Amount;

@@ -90,7 +90,7 @@ return false;
             var obj = new JObject
             {
                 { "eoa_address", eoaAddress },
-                { "transactions", JObject.FromObject(transactions) },
+                { "transactions", JToken.FromObject(transactions) },
             };
             
             var json = JsonConvert.SerializeObject(obj);
