@@ -31,7 +31,8 @@
 - (void) signMessage:(NSString* _Nonnull)message;
 - (void) signTransaction:(NSString* _Nonnull)transaction;
 - (void) signAllTransactions:(NSString* _Nonnull)transactions;
-- (void) signAndSendTransaction:(NSString* _Nonnull)message;
+- (void) signAndSendTransaction:(NSString* _Nonnull)json;
+- (void) batchSendTransactions:(NSString* _Nonnull)json;
 - (void) signTypedData:(NSString* _Nonnull)json;
 - (NSString* _Nonnull) getAddress;
 - (NSString* _Nonnull) getUserInfo;
@@ -88,6 +89,7 @@
 - (void) adapterDisconnect:(NSString* _Nonnull)json;
 - (BOOL) adapterIsConnected:(NSString* _Nonnull)json;
 - (void) adapterSignAndSendTransaction:(NSString* _Nonnull)json;
+- (void) adapterBatchSendTransactions:(NSString* _Nonnull)json;
 - (void) adapterSignTransaction:(NSString* _Nonnull)json;
 - (void) adapterSignAllTransactions:(NSString* _Nonnull)json;
 - (void) adapterSignMessage:(NSString* _Nonnull)json;
@@ -101,6 +103,15 @@
 - (void) adapterAddEthereumChain:(NSString* _Nonnull)json;
 - (NSString* _Nonnull) adapterWalletReadyState:(NSString* _Nonnull)json;
 
+
+// Particle Biconomy
+- (void) particleBiconomyInitialize:(NSString* _Nonnull)json;
+- (void) enableBiconomyMode;
+- (void) disableBiconomyMode;
+- (BOOL) isBiconomyModeEnable;
+- (void) isDeploy:(NSString* _Nonnull)json;
+- (void) rpcGetFeeQuotes:(NSString* _Nonnull)json;
+- (BOOL) isSupportChainInfo:(NSString* _Nonnull)json;
 @end
 
 __attribute__ ((visibility("default")))

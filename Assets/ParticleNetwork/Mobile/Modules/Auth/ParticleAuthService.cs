@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Network.Particle.Scripts.Core.UnityEditorTestMode;
@@ -25,6 +26,7 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> signTransactionTask;
         private TaskCompletionSource<NativeResultData> signAllTransactionsTask;
         private TaskCompletionSource<NativeResultData> signAndSendTransactionTask;
+        private TaskCompletionSource<NativeResultData> batchSendTransactionTask;
         private TaskCompletionSource<NativeResultData> signTypedDataTask;
 
         private TaskCompletionSource<NativeResultData> openAccountAndSecurityTask;
@@ -350,11 +352,12 @@ namespace Network.Particle.Scripts.Core
         /// Sign And Send Transaction
         /// </summary>
         /// <param name="transaction">Transaction</param>
+        /// <param name="feeMode">BiconomyFeeMode, works with biconomy mode, default value is auto</param>
         /// <returns></returns>
-        public Task<NativeResultData> SignAndSendTransaction(string transaction)
+        public Task<NativeResultData> SignAndSendTransaction(string transaction, [CanBeNull] BiconomyFeeMode feeMode = null)
         {
             signAndSendTransactionTask = new TaskCompletionSource<NativeResultData>();
-            ParticleAuthServiceInteraction.SignAndSendTransaction(transaction);
+            ParticleAuthServiceInteraction.SignAndSendTransaction(transaction, feeMode);
 #if UNITY_EDITOR
             LoginCallBack(JsonConvert.SerializeObject(new JObject
             {
@@ -375,6 +378,38 @@ namespace Network.Particle.Scripts.Core
             var resultData = JObject.Parse(json);
             var status = (int) resultData["status"];
             signAndSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+        
+        /// <summary>
+        /// Batch Send Transaction, should init and enable particle biconomy.
+        /// </summary>
+        /// <param name="transactions">Transactions</param>
+        /// /// <param name="feeMode">BiconomyFeeMode, default is auto</param>
+        /// <returns></returns>
+        public Task<NativeResultData> BatchSendTransactions(List<string> transactions, [CanBeNull] BiconomyFeeMode feeMode = null)
+        {
+            batchSendTransactionTask = new TaskCompletionSource<NativeResultData>();
+            ParticleAuthServiceInteraction.BatchSendTransactions(transactions, feeMode);
+#if UNITY_EDITOR
+            LoginCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                {"status", 0},
+                {"data", ""},
+            }));
+#endif
+            return batchSendTransactionTask.Task;
+        }
+
+        /// <summary>
+        /// Batch Send Transaction call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void batchSendTransactionTaskCallBack(string json)
+        {
+            Debug.Log($"batchSendTransactionTaskCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int) resultData["status"];
+            batchSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
         /// <summary>

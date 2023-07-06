@@ -11,6 +11,7 @@ import SwiftyJSON
 import UnityFramework
 
 import ParticleAuthService
+import ParticleBiconomy
 import ParticleNetworkBase
 import ParticleWalletAPI
 import ParticleWalletConnect
@@ -47,6 +48,13 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     static let authSystemName = "ParticleAuthService"
     static let connectSystemName = "ParticleConnect"
     static let guiSystemName = "ParticleWalletGUI"
+    static let biconomySystemName = "ParticleBiconomy"
+    
+    // work with connect sdk
+    var latestPublicAddress: String?
+    var latestWalletType: WalletType?
+    
+    let biconomy = BiconomyService()
     
     override init() {
         super.init()
@@ -383,8 +391,22 @@ extension UnityManager {
         }.disposed(by: bag)
     }
     
-    func signAndSendTransaction(_ message: String) {
-        ParticleAuthService.signAndSendTransaction(message).subscribe { [weak self] result in
+    func signAndSendTransaction(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let transaction = data["transaction"].stringValue
+        let mode = data["fee_mode"]["option"].stringValue
+        var feeMode: Biconomy.FeeMode = .auto
+        if mode == "auto" {
+            feeMode = .auto
+        } else if mode == "gasless" {
+            feeMode = .gasless
+        } else if mode == "custom" {
+            let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson)
+            feeMode = .custom(feeQuote)
+        }
+        
+        ParticleAuthService.signAndSendTransaction(transaction, feeMode: feeMode).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -399,6 +421,52 @@ extension UnityManager {
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
             }
+        }.disposed(by: bag)
+    }
+    
+    func batchSendTransactions(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let transactions = data["transactions"].arrayValue.map {
+            $0.stringValue
+        }
+        let mode = data["fee_mode"]["option"].stringValue
+        var feeMode: Biconomy.FeeMode = .auto
+        if mode == "auto" {
+            feeMode = .auto
+        } else if mode == "gasless" {
+            feeMode = .gasless
+        } else if mode == "custom" {
+            let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson)
+            feeMode = .custom(feeQuote)
+        }
+        
+        guard let biconomy = ParticleNetwork.getBiconomyService() else {
+            print("biconomy is not init")
+            return
+        }
+        
+        guard biconomy.isBiconomyModeEnable() else {
+            print("biconomy is not enable")
+            return
+        }
+        
+        biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self).subscribe {
+            [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .failure(let error):
+                    let response = self.ResponseFromError(error)
+                    let statusModel = UnityStatusModel(status: false, data: response)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    self.callBackMessage(json, unityName: UnityManager.authSystemName)
+                case .success(let signature):
+                    let statusModel = UnityStatusModel(status: true, data: signature)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    self.callBackMessage(json, unityName: UnityManager.authSystemName)
+                }
         }.disposed(by: bag)
     }
     
@@ -1036,8 +1104,6 @@ extension UnityManager {
         ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData) {
             adapters
         }
-        
-        
     }
     
     func particleConnectSetChainInfo(_ json: String) -> Bool {
@@ -1258,6 +1324,18 @@ extension UnityManager {
         let publicAddress = data["public_address"].stringValue
         let transaction = data["transaction"].stringValue
         
+        let mode = data["fee_mode"]["option"].stringValue
+        var feeMode: Biconomy.FeeMode = .auto
+        if mode == "auto" {
+            feeMode = .auto
+        } else if mode == "gasless" {
+            feeMode = .gasless
+        } else if mode == "custom" {
+            let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson)
+            feeMode = .custom(feeQuote)
+        }
+        
         guard let walletType = map2WalletType(from: walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
@@ -1267,7 +1345,7 @@ extension UnityManager {
             return
         }
         
-        adapter.signAndSendTransaction(publicAddress: publicAddress, transaction: transaction).subscribe { [weak self] result in
+        adapter.signAndSendTransaction(publicAddress: publicAddress, transaction: transaction, feeMode: feeMode).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -1282,6 +1360,63 @@ extension UnityManager {
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signAndSendTransaction")
             }
+        }.disposed(by: bag)
+    }
+    
+    func adapterBatchSendTransactions(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let transactions = data["transactions"].arrayValue.map {
+            $0.stringValue
+        }
+        let walletTypeString = data["wallet_type"].stringValue
+        let publicAddress = data["public_address"].stringValue
+        
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
+            return
+        }
+        
+        latestPublicAddress = publicAddress
+        latestWalletType = walletType
+        
+        let mode = data["fee_mode"]["option"].stringValue
+        var feeMode: Biconomy.FeeMode = .auto
+        if mode == "auto" {
+            feeMode = .auto
+        } else if mode == "gasless" {
+            feeMode = .gasless
+        } else if mode == "custom" {
+            let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson)
+            feeMode = .custom(feeQuote)
+        }
+        
+        guard let biconomy = ParticleNetwork.getBiconomyService() else {
+            print("biconomy is not init")
+            return
+        }
+        
+        guard biconomy.isBiconomyModeEnable() else {
+            print("biconomy is not enable")
+            return
+        }
+        
+        biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self).subscribe {
+            [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .failure(let error):
+                    let response = self.ResponseFromError(error)
+                    let statusModel = UnityStatusModel(status: false, data: response)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "batchSendTransactions")
+                case .success(let signature):
+                    let statusModel = UnityStatusModel(status: true, data: signature)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "batchSendTransactions")
+                }
         }.disposed(by: bag)
     }
     
@@ -1756,6 +1891,84 @@ extension UnityManager {
 // MARK: - Help methods
 
 extension UnityManager {
+    func particleBiconomyInitialize(_ json: String) {
+        let data = JSON(parseJSON: json)
+    }
+    
+    func enableBiconomyMode() {
+        biconomy.enableBiconomyMode()
+    }
+    
+    func disableBiconomyMode() {
+        biconomy.disableBiconomyMode()
+    }
+    
+    func isBiconomyModeEnable() -> Bool {
+        return biconomy.isBiconomyModeEnable()
+    }
+    
+    func isDeploy(_ json: String) {
+        let eoaAddress = json
+        biconomy.isDeploy(eoaAddress: eoaAddress).subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let flag):
+                let statusModel = UnityStatusModel(status: true, data: flag)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.biconomySystemName)
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.biconomySystemName)
+            }
+        }.disposed(by: bag)
+    }
+    
+    func rpcGetFeeQuotes(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let eoaAddress = data["eoa_address"].stringValue
+        let transactions = data["transactions"].arrayValue.map {
+            $0.stringValue
+        }
+        
+        biconomy.rpcGetFeeQuotes(eoaAddress: eoaAddress, transactions: transactions).subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let quotes):
+                let feeQuotes = quotes.map {
+                    $0.jsonObject
+                }
+                let statusModel = UnityStatusModel(status: true, data: feeQuotes)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.biconomySystemName)
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.biconomySystemName)
+            }
+        }.disposed(by: bag)
+    }
+    
+    func isSupportChainInfo(_ json: String) -> Bool {
+        let data = JSON(parseJSON: json)
+        let chainId = data["chain_id"].intValue
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else {
+            return false
+        }
+        let result = biconomy.isSupportChainInfo(chainInfo)
+        return result
+    }
+}
+
+// MARK: - Help methods
+
+extension UnityManager {
     func callBackMessage(_ message: String, unityName: String, methodName: String = #function) {
         var methodName = methodName.replacingOccurrences(of: "\\([\\w\\s:]*\\)", with: "", options: .regularExpression)
         methodName = methodName.prefix(1).uppercased() + methodName.dropFirst() + "CallBack"
@@ -1847,6 +2060,38 @@ extension UnityManager {
         }
         let adapter = adapters.first
         return adapter
+    }
+}
+
+extension UnityManager: MessageSigner {
+    public func signTypedData(_ message: String) -> RxSwift.Single<String> {
+        guard let walletType = latestWalletType else {
+            print("walletType is nil")
+            return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
+        }
+        
+        guard let adapter = map2ConnectAdapter(from: walletType) else {
+            print("adapter for \(walletType) is not init")
+            return .error(ParticleNetwork.ResponseError(code: nil, message: "adapter for \(walletType) is not init"))
+        }
+        return adapter.signTypedData(publicAddress: getEoaAddress(), data: message)
+    }
+    
+    public func signMessage(_ message: String) -> RxSwift.Single<String> {
+        guard let walletType = latestWalletType else {
+            print("walletType is nil")
+            return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
+        }
+        
+        guard let adapter = map2ConnectAdapter(from: walletType) else {
+            print("adapter for \(walletType) is not init")
+            return .error(ParticleNetwork.ResponseError(code: nil, message: "adapter for \(walletType) is not init"))
+        }
+        return adapter.signMessage(publicAddress: getEoaAddress(), message: message)
+    }
+    
+    public func getEoaAddress() -> String {
+        return latestPublicAddress ?? ""
     }
 }
 

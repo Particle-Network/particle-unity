@@ -61,6 +61,9 @@ namespace Network.Particle.Scripts.Core
         public static extern void signAndSendTransaction(string message);
 
         [DllImport("__Internal")]
+        public static extern void batchSendTransactions(string message);
+        
+        [DllImport("__Internal")]
         public static extern void signTypedData(string json);
 
         [DllImport("__Internal")]
@@ -220,6 +223,9 @@ namespace Network.Particle.Scripts.Core
         public static extern void adapterSignAndSendTransaction(string json);
         
         [DllImport("__Internal")]
+        public static extern void adapterBatchSendTransactions(string json);
+        
+        [DllImport("__Internal")]
         public static extern void adapterSignTransaction(string json);
         
         [DllImport("__Internal")]
@@ -254,10 +260,32 @@ namespace Network.Particle.Scripts.Core
         
         [DllImport("__Internal")]
         public static extern string adapterWalletReadyState(string json);
-        
-        
-        
 #endif
+            
+            // Particle Biconomy
+#if UNITY_IOS
+            [DllImport("__Internal")]
+            public static extern void particleBiconomyInitialize(string json);
+            
+            [DllImport("__Internal")]
+            public static extern void enableBiconomyMode();
+            
+            [DllImport("__Internal")]
+            public static extern void disableBiconomyMode();
+            
+            [DllImport("__Internal")]
+            public static extern bool isBiconomyModeEnable();
+            
+            [DllImport("__Internal")]
+            public static extern void isDeploy(string json);
+            
+            [DllImport("__Internal")]
+            public static extern void rpcGetFeeQuotes(string json);
+            
+            [DllImport("__Internal")]
+            public static extern bool isSupportChainInfo(string json);
+            
+#endif 
 
     }
 }

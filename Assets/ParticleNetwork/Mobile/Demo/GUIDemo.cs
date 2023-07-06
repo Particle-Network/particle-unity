@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-
 using System.Collections.Generic;
 using System.Reflection;
 using Network.Particle.Scripts.Core;
@@ -14,18 +13,19 @@ namespace Network.Particle.Scripts.Test
     public class GUIDemo : MonoBehaviour
     {
         private static AndroidJavaObject activityObject;
-        
+
         private ChainInfo _chainInfo = new EthereumChain(EthereumChainId.Goerli);
+
         public void SelectChain()
         {
             ChainChoice.Instance.Show((chainInfo) =>
             {
                 Debug.Log($"xxhong {chainInfo.getChainName()} {chainInfo.getChainId()} {chainInfo.getChainIdName()}");
                 this._chainInfo =
-                    chainInfo; 
+                    chainInfo;
             });
         }
-        
+
         private static AndroidJavaObject GetAndroidJavaObject()
         {
             if (activityObject != null)
@@ -41,7 +41,7 @@ namespace Network.Particle.Scripts.Test
 
         public void Init()
         {
-            var metadata = new DAppMetaData(TestConfig.walletConnectProjectId,"Particle Connect",
+            var metadata = new DAppMetaData(TestConfig.walletConnectProjectId, "Particle Connect",
                 "https://connect.particle.network/icons/512.png",
                 "https://connect.particle.network", "");
 
@@ -123,7 +123,8 @@ namespace Network.Particle.Scripts.Test
 
         public async void NavigatorLoginList()
         {
-            var nativeResultData = await ParticleWalletGUI.Instance.NavigatorLoginList(new List<LoginListPageSupportType>
+            var nativeResultData = await ParticleWalletGUI.Instance.NavigatorLoginList(
+                new List<LoginListPageSupportType>
                 {
                     LoginListPageSupportType.all
                 });
@@ -153,7 +154,7 @@ namespace Network.Particle.Scripts.Test
             var walletType = WalletType.MetaMask;
             var publicAddress = "";
             var nativeResultData = await ParticleWalletGUI.Instance.SwitchWallet(walletType, publicAddress);
-            
+
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
@@ -183,7 +184,7 @@ namespace Network.Particle.Scripts.Test
         {
             ParticleWalletGUI.ShowLanguageSetting(true);
         }
-        
+
         public void ShowAppearanceSetting()
         {
             ParticleWalletGUI.ShowAppearanceSetting(true);
@@ -198,7 +199,7 @@ namespace Network.Particle.Scripts.Test
         {
             ParticleWalletGUI.EnablePay(true);
         }
-        
+
         public void SetEnableSwapFeature()
         {
             ParticleWalletGUI.EnableSwap(true);
@@ -209,7 +210,7 @@ namespace Network.Particle.Scripts.Test
             ChainInfo avalanche = new AvalancheChain(AvalancheChainId.Mainnet);
             ChainInfo ethereum = new EthereumChain(EthereumChainId.Mainnet);
             ChainInfo bsc = new BSCChain(BscChainId.Mainnet);
-            ParticleWalletGUI.SupportChain(new []{avalanche, bsc, ethereum});
+            ParticleWalletGUI.SupportChain(new[] { avalanche, bsc, ethereum });
         }
 
         public void GetSwapEnableState()
@@ -217,7 +218,7 @@ namespace Network.Particle.Scripts.Test
             var result = ParticleWalletGUI.GetEnableSwap();
             Debug.Log($"Swap enable state = {result}");
         }
-        
+
         public void GetBuyCryptoEnableState()
         {
             var result = ParticleWalletGUI.GetEnablePay();
@@ -232,7 +233,7 @@ namespace Network.Particle.Scripts.Test
         public void SetCustomUI()
         {
             ParticleWalletGUI.SetSupportAddToken(true);
-            
+
             List<string> displayTokenAddresses = new List<string>();
             displayTokenAddresses.Add("0x326C977E6efc84E512bB9C30f76E30c160eD06FB");
             displayTokenAddresses.Add("0xaFF4481D10270F50f203E0763e2597776068CBc5");
@@ -242,7 +243,7 @@ namespace Network.Particle.Scripts.Test
             nftContractAddresses.Add("0xD000F000Aa1F8accbd5815056Ea32A54777b2Fc4");
             nftContractAddresses.Add("0x225140E33a113CC616A5d5F06D01e258f5a19B7D");
             ParticleWalletGUI.SetDisplayNFTContractAddresses(nftContractAddresses.ToArray());
-            
+
             ParticleWalletGUI.SetFiatCoin("JPY");
 
             // your custom ui json
@@ -252,7 +253,7 @@ namespace Network.Particle.Scripts.Test
             string json = txtAsset.text;
             ParticleWalletGUI.LoadCustomUIJsonString(json);
         }
-        
+
 
         public void ShowToast(string message)
         {

@@ -54,6 +54,7 @@
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/IWithMutableAudio.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Singleton/SingletonException.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Model/TestConfig.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Biconomy/ParticleBiconomyInteraction.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/WebViewPrefab.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/ScrolledEventArgs.cs" />
      <Compile Include="Assets/ParticleNetwork/Windows/Modules/Models/ParticleConfig.cs" />
@@ -85,12 +86,14 @@
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/IWithNativeOnScreenKeyboard.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/WalletChoiceItem.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ChainId.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Biconomy/ParticleBiconomy.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/IWebView.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/TerminationType.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Model/TestAccount.cs" />
      <Compile Include="Assets/Vuplex/WebView/Demos/Scripts/SimpleWebViewDemo.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/FileSelectionEventArgs.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/UnityEditorTestMode/DevModeService.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/GasFeeLevel.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/DefaultPointerInputDetector.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/TouchEvent.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/PopupRequestedEventArgs.cs" />
@@ -115,6 +118,7 @@
      <Compile Include="Assets/ParticleNetwork/Windows/Demo/ParticleWebDemo.cs" />
      <Compile Include="Assets/Vuplex/WebView/Standalone/Windows/Scripts/WindowsWebPlugin.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/XritPointerEventHelper.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/BiconomyFeeMode.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/RpcUrl.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/NetService/NetParams.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/IWithFind.cs" />
@@ -139,6 +143,7 @@
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/BaseWebView.cs" />
      <Compile Include="Assets/Vuplex/WebView/Standalone/Scripts/StandaloneWebView.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/BaseWebViewPrefab.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/BiconomyDemo.cs" />
      <Compile Include="Assets/Vuplex/WebView/Demos/Scripts/PopupDemo.cs" />
      <Compile Include="Assets/Vuplex/WebView/Demos/Scripts/HardwareKeyboardListener.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/WebPluginType.cs" />
@@ -174,6 +179,7 @@
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/WebViewLogger.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/UnityRPCDemo.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ParticleRpcRequest.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/BiconomyVersion.cs" />
      <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/StringBridgeMessage.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ConnectConfig.cs" />
      <Compile Include="Assets/Vuplex/WebView/Standalone/Mac/Scripts/MacWebView.cs" />

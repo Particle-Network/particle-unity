@@ -1,5 +1,4 @@
 
-using System;
 using System.Linq;
 using Network.Particle.Scripts.Core.Utils;
 using Newtonsoft.Json;

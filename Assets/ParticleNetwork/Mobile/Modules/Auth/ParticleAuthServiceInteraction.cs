@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Network.Particle.Scripts.Core.UnityEditorTestMode;
 using Newtonsoft.Json;
@@ -14,7 +15,7 @@ namespace Network.Particle.Scripts.Core
     {
         internal static void Login(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes,
             bool loginFormMode, SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginAuthorization authorization
-            )
+        )
         {
             var authTypeList = ParticleTools.GetSupportAuthTypeValues(supportAuthTypes);
             string accountNative = "";
@@ -23,7 +24,7 @@ namespace Network.Particle.Scripts.Core
             else
                 accountNative = account;
 
-            
+
             var obj = new JObject
             {
                 { "loginType", loginType.ToString() },
@@ -32,11 +33,11 @@ namespace Network.Particle.Scripts.Core
                 { "loginFormMode", loginFormMode },
                 { "socialLoginPrompt", socialLoginPrompt.ToString() },
             };
-            
+
             if (authorization != null) obj["authorization"] = JToken.FromObject(authorization);
 
             var json = JsonConvert.SerializeObject(obj);
-            
+
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallNative("login",json);
@@ -136,12 +137,38 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        internal static void SignAndSendTransaction(string message)
+        internal static void SignAndSendTransaction(string transaction, [CanBeNull] BiconomyFeeMode feeMode = null)
         {
+            var json = JsonConvert.SerializeObject(new JObject
+            {
+                { "transaction", transaction },
+                { "fee_mode", feeMode == null ? null : JToken.FromObject(feeMode) },
+            });
+
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.CallNative("signAndSendTransaction",message);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.signAndSendTransaction(message);
+            ParticleNetworkIOSBridge.signAndSendTransaction(json);
+#else
+
+#endif
+        }
+
+        internal static void BatchSendTransactions(List<string> transactions, [CanBeNull] BiconomyFeeMode feeMode = null)
+        
+        {
+            var json = JsonConvert.SerializeObject(new JObject
+            {
+                { "transactions", JToken.FromObject(transactions) },
+                { "fee_mode", feeMode == null ? null : JToken.FromObject(feeMode) },
+            });
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("signAndSendTransaction",message);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.batchSendTransactions(json);
 #else
 
 #endif
@@ -209,7 +236,7 @@ namespace Network.Particle.Scripts.Core
             var result = (bool)JObject.Parse(userInfo)["security_account"]?["has_set_payment_password"];
             return result;
         }
-        
+
         public static bool HasSecurityAccount()
         {
             var userInfo = GetUserInfo();
@@ -226,7 +253,7 @@ namespace Network.Particle.Scripts.Core
 #elif UNITY_IOS && !UNITY_EDITOR
              ParticleNetworkIOSBridge.getSecurityAccount();
 #else
-        
+
 #endif
         }
 
@@ -292,7 +319,7 @@ namespace Network.Particle.Scripts.Core
             authTiramisu.CallStatic("setBrowserHeightPercent", percent);
 #elif UNITY_IOS &&!UNITY_EDITOR
 #else
-        
+
 #endif
         }
 

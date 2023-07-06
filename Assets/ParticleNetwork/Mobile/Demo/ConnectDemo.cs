@@ -111,7 +111,7 @@ namespace Network.Particle.Scripts.Test
         public async void Disconnect()
         {
             // Test public address
-            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             
             var nativeResultData = await ParticleConnect.Instance.Disconnect(this._walletType, publicAddress);
 
@@ -132,7 +132,7 @@ namespace Network.Particle.Scripts.Test
 
         public void IsConnected()
         {
-            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var isConnect = ParticleConnectInteraction.IsConnected(this._walletType, publicAddress);
             Tips.Instance.Show(
                 $"Particle Connect is Connect = {isConnect}, publicAddress = {publicAddress}, walletType = {this._walletType.ToString()}");
@@ -142,7 +142,7 @@ namespace Network.Particle.Scripts.Test
 
         public async void SignAndSendTransaction()
         {
-            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             string transaction;
             if (!_account.PublicAddress.StartsWith("0x"))
             {
@@ -170,11 +170,12 @@ namespace Network.Particle.Scripts.Test
                 Debug.Log(errorData);
             }
         }
-
+        
+        
         public async void SignTransaction()
         {
             // sign transaction doesn't support evm.
-            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var transaction = await GetSolanaTransacion();
             Debug.Log("transaction = " + transaction);
             var nativeResultData =
@@ -196,7 +197,7 @@ namespace Network.Particle.Scripts.Test
         public async void SignAllTransactions()
         {
             // sign all transactions doesn't support evm.
-            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var transaction1 = await GetSolanaTransacion();
             var transaction2 = await GetSolanaTransacion();
             Debug.Log("transaction1 = " + transaction1);
@@ -222,7 +223,7 @@ namespace Network.Particle.Scripts.Test
         public async void SignMessage()
         {
             // string publicAddress;
-            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var message = "Hello world";
             Debug.Log($"SignMessage-> publicAddress:{publicAddress} message:{message}");
             var nativeResultData =
@@ -245,7 +246,7 @@ namespace Network.Particle.Scripts.Test
         public async void SignTypedData()
         {
             // sign typed data doesn't support solana
-            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
             string typedData = txtAsset.text;
             Debug.Log(typedData);
@@ -269,7 +270,7 @@ namespace Network.Particle.Scripts.Test
 
         public async void Login()
         {
-            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var domain = "login.xyz";
             var uri = "https://login.xyz/demo#login";
             var nativeResultData =
@@ -298,7 +299,7 @@ namespace Network.Particle.Scripts.Test
 
         public async void Verify()
         {
-            if (String.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
+            if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
 
             var message = this.loginSourceMessage;
             var signature = this.loginSignature;
@@ -497,6 +498,18 @@ namespace Network.Particle.Scripts.Test
             Debug.Log(chainInfo.getChainId());
             Debug.Log(chainInfo.getChainName());
             Debug.Log(chainInfo.getChainIdName());
+        }
+        
+        public void ShowToast(string message)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        AndroidJavaClass Toast = new AndroidJavaClass("android.widget.Toast");
+        currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() => {
+            Toast.CallStatic<AndroidJavaObject>("makeText", currentActivity, message, Toast.GetStatic<int>("LENGTH_LONG")).Call("show");
+        }));
+#endif
         }
 
 

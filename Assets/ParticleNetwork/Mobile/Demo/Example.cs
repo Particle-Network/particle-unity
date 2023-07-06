@@ -15,7 +15,7 @@ namespace Network.Particle.Scripts.Test
     {
         public void Init()
         {
-            var metadata = new DAppMetaData(TestConfig.walletConnectProjectId,"Particle Connect",
+            var metadata = new DAppMetaData(TestConfig.walletConnectProjectId, "Particle Connect",
                 "https://connect.particle.network/icons/512.png",
                 "https://connect.particle.network", "");
 
@@ -167,7 +167,7 @@ namespace Network.Particle.Scripts.Test
 
             var result = (string)JObject.Parse(rpcResult)["result"];
 
-            if (!String.IsNullOrEmpty(result))
+            if (!string.IsNullOrEmpty(result))
             {
                 Debug.Log($"result={result}");
             }
@@ -179,9 +179,9 @@ namespace Network.Particle.Scripts.Test
                 Debug.Log($"code={code}, message={message}");
             }
         }
-        
-        
-        public async Task<string> WriteContract()
+
+
+        public async void WriteContract()
         {
             // write contract, structure a transaction
             // your public address
@@ -195,52 +195,56 @@ namespace Network.Particle.Scripts.Test
             // This is your contact abjJsonString, you can get it from your contract developer.
             string abiJsonString = "";
 
-            var dataResult =
-                await EvmService.AbiEncodeFunctionCall(contractAddress, methodName, parameters, abiJsonString);
-            // get data
-            var data = (string)JObject.Parse(dataResult)["result"];
-            
-            // the following code is to get other transaction parameters, if your contract is deployed on a chain which doesn't support EIP1559,
-            // pass isSupportEip1559 false, otherwise true.
-            var isSupportEip1559 = true;
-            return CreateContractTransaction(from, contractAddress, data, isSupportEip1559).Result;
+            // If your chain support EUP1559
+            var isSupportEIP1559 = true;
+            var rpcResult = await EvmService.WriteContract(from, contractAddress, methodName, parameters, abiJsonString,
+                isSupportEIP1559);
+
+            var result = (string)JObject.Parse(rpcResult)["result"];
+
+            if (!string.IsNullOrEmpty(result))
+            {
+                Debug.Log($"result={result}");
+            }
+            else
+            {
+                var error = JObject.Parse(rpcResult)["error"];
+                var code = error?["code"];
+                var message = error?["message"];
+                Debug.Log($"code={code}, message={message}");
+            }
         }
 
 
-        private async Task<string> CreateContractTransaction(string from, string contractAddress, string data, bool isSupportEip1559)
+        private async void CreateTransaction()
         {
-            
-            var gasLimitResult = await EvmService.EstimateGas(from, contractAddress, "0x0", data);
-            var gasLimit = (string)JObject.Parse(gasLimitResult)["result"];
-            var gasFeesResult = await EvmService.SuggestedGasFees();
-            var maxFeePerGas = (double)JObject.Parse(gasFeesResult)["result"]["high"]["maxFeePerGas"];
-            var maxFeePerGasHex = "0x" + ((BigInteger)(maxFeePerGas * Mathf.Pow(10, 9))).ToString("x");
+            // your public address
+            string from = "";
+            // your receiver address
+            string reciver = "";
+            // send native, data should be "0x"
+            string data = "0x";
+            // native value 
+            BigInteger value = 1000000000;
 
-            var maxPriorityFeePerGas = (double)JObject.Parse(gasFeesResult)["result"]["high"]["maxPriorityFeePerGas"];
-            var maxPriorityFeePerGasHex = "0x" + ((BigInteger)(maxPriorityFeePerGas * Mathf.Pow(10, 9))).ToString("x");
-            var chainId = TestAccount.EVM.ChainId;
+            // If your chain support EUP1559
+            var isSupportEIP1559 = true;
 
-            EthereumTransaction transaction;
-            
-            if (isSupportEip1559)
+            var rpcResult = await EvmService.CreateTransaction(from, data, value, reciver, isSupportEIP1559);
+
+            var result = (string)JObject.Parse(rpcResult)["result"];
+
+            if (!string.IsNullOrEmpty(result))
             {
-                transaction = new EthereumTransaction(from, contractAddress, data, gasLimit, gasPrice: null,
-                    value: "0x0",
-                    nonce: null, 
-                    type: "0x2",
-                    chainId: "0x" + chainId.ToString("x"), maxPriorityFeePerGasHex, maxFeePerGasHex);
-            } else
-            {
-                transaction = new EthereumTransaction(from, contractAddress, data, gasLimit, gasPrice: maxFeePerGasHex,
-                    value: "0x0",
-                    nonce: null, 
-                    type: "0x0",
-                    chainId: "0x" + chainId.ToString("x"), null, null);
+                Debug.Log($"result={result}");
             }
-            var json = JsonConvert.SerializeObject(transaction);
-            var serialized = BitConverter.ToString(Encoding.Default.GetBytes(json));
-            serialized = serialized.Replace("-", "");
-            return "0x" + serialized;
+            else
+            {
+                var error = JObject.Parse(rpcResult)["error"];
+                var code = error?["code"];
+                var message = error?["message"];
+                Debug.Log($"code={code}, message={message}");
+            }
         }
     }
 }

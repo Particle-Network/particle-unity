@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Network.Particle.Scripts.Model;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using UnityEngine;
 
 
 namespace Network.Particle.Scripts.Core
@@ -12,7 +17,6 @@ namespace Network.Particle.Scripts.Core
     /// </summary>
     public class EvmService
     {
-        
         /// <summary>
         /// Call rpc method
         /// </summary>
@@ -47,7 +51,7 @@ namespace Network.Particle.Scripts.Core
         {
             return await Rpc(EvmReqBodyMethod.particleGetTokensAndNFTs, new List<object> { address, tokenAddresses });
         }
-        
+
         /// <summary>
         /// Get tokens 
         /// </summary>
@@ -58,7 +62,7 @@ namespace Network.Particle.Scripts.Core
         {
             return await Rpc(EvmReqBodyMethod.particleGetTokens, new List<object> { address, tokenAddresses });
         }
-        
+
         /// <summary>
         /// Get tokens 
         /// </summary>
@@ -229,7 +233,7 @@ namespace Network.Particle.Scripts.Core
             return await Rpc(EvmReqBodyMethod.particleGetTokensByTokenAddresses,
                 new List<object> { address, tokenAddresses });
         }
-        
+
         /// <summary>
         /// Read contract
         /// </summary>
@@ -239,12 +243,13 @@ namespace Network.Particle.Scripts.Core
         /// <param name="parameters">Method parameters</param>
         /// <param name="abiJsonString">Abi json string</param>
         /// <returns></returns>
-        public static async Task<string> ReadContract(string from, string contractAddress, string methodName, List<object> parameters, string abiJsonString = "")
+        public static async Task<string> ReadContract(string from, string contractAddress, string methodName,
+            List<object> parameters, string abiJsonString = "")
         {
             // Combine above into a ordered list
             var list = new List<object> { contractAddress, methodName, parameters };
             if (!string.IsNullOrEmpty(abiJsonString)) list.Add(abiJsonString);
-            
+
             string dataResult = await EvmService.AbiEncodeFunctionCall(list);
             var data = (string)JObject.Parse(dataResult)["result"];
 
@@ -253,12 +258,98 @@ namespace Network.Particle.Scripts.Core
                 { "from", from },
                 { "to", contractAddress },
                 { "data", data },
-                { "value", "0x0"}
+                { "value", "0x0" }
             };
-            
+
             // read contract
-            var result = await EvmService.Rpc("eth_call", new List<object>{obj, "latest"});
+            var result = await EvmService.Rpc("eth_call", new List<object> { obj, "latest" });
             return result;
+        }
+
+        /// <summary>
+        /// Write contract 
+        /// </summary>
+        /// <param name="from">Your public address</param>
+        /// <param name="contractAddress">Contract address</param>
+        /// <param name="methodName">Method name, you should add "custom_" before your method name, like "custom_balanceOf", "custom_mint"</param>
+        /// <param name="parameters">Method parameters</param>
+        /// <param name="abiJsonString">Abi json string</param>
+        /// <param name="isSupportEIP1559">If your chain support EIP1559</param>
+        /// <param name="gasFeeLevel">Gas fee level, default is high</param>
+        /// <returns></returns>
+        public static async Task<string> WriteContract(string from, string contractAddress, string methodName,
+            List<object> parameters, [CanBeNull] string abiJsonString, bool isSupportEIP1559, GasFeeLevel gasFeeLevel = GasFeeLevel.High)
+        {
+            var data = await AbiEncodeFunctionCall(contractAddress, methodName, parameters, abiJsonString);
+            return await CreateTransaction(from, data, 0, contractAddress, isSupportEIP1559, gasFeeLevel);
+        }
+
+        /// <summary>
+        /// Create transaction
+        /// </summary>
+        /// <param name="from">Your public address</param>
+        /// <param name="data">Transaction data, if you are sending native, data should be "0x", if your are sending tokens, you should get data from other methods, such as
+        /// "AbiEncodeFunctionCall", "Erc20Transfer" and so on</param>
+        /// <param name="value">Native value </param>
+        /// <param name="to">If your are sending native, it is receiver address, if you are sending token, it is the token contract address</param>
+        /// <param name="isSupportEIP1559">If your chain support EIP1559</param>
+        /// <param name="gasFeeLevel">Gas fee level, default is high</param>
+        /// <returns></returns>
+        public static async Task<string> CreateTransaction(string from, string data, BigInteger value, string to,
+            bool isSupportEIP1559, GasFeeLevel gasFeeLevel = GasFeeLevel.High)
+        {
+            var valueHex = "0x" + value.ToString("x");
+            var gasLimitResult = await EstimateGas(from, to, "0x0", data);
+            var gasLimit = (string)JObject.Parse(gasLimitResult)["result"];
+            var gasFeesResult = await SuggestedGasFees();
+            var level = "";
+            switch (gasFeeLevel)
+            {
+                case GasFeeLevel.High:
+                    level = "high";
+                    break;
+                case GasFeeLevel.Medium:
+                    level = "medium";
+                    break;
+                case GasFeeLevel.Low:
+                    level = "low";
+                    break;
+            }
+
+            var maxFeePerGas = (double)JObject.Parse(gasFeesResult)["result"][level]["maxFeePerGas"];
+            var maxFeePerGasHex = "0x" + ((BigInteger)(maxFeePerGas * Mathf.Pow(10, 9))).ToString("x");
+
+            var maxPriorityFeePerGas = (double)JObject.Parse(gasFeesResult)["result"][level]["maxPriorityFeePerGas"];
+            var maxPriorityFeePerGasHex = "0x" + ((BigInteger)(maxPriorityFeePerGas * Mathf.Pow(10, 9))).ToString("x");
+            var chainId = ParticleNetwork.GetChainInfo().getChainId();
+
+            EthereumTransaction transaction;
+
+            if (isSupportEIP1559)
+            {
+                transaction = new EthereumTransaction(from, to, data, gasLimit, gasPrice: null,
+                    value: valueHex,
+                    nonce: null,
+                    type: "0x2",
+                    chainId: "0x" + chainId.ToString("x"),
+                    maxPriorityFeePerGasHex,
+                    maxFeePerGasHex);
+            }
+            else
+            {
+                transaction = new EthereumTransaction(from, to, data, gasLimit, gasPrice: maxFeePerGasHex,
+                    value: valueHex,
+                    nonce: null,
+                    type: "0x0",
+                    chainId: "0x" + chainId.ToString("x"),
+                    null,
+                    null);
+            }
+
+            var json = JsonConvert.SerializeObject(transaction);
+            var serialized = BitConverter.ToString(Encoding.Default.GetBytes(json));
+            serialized = serialized.Replace("-", "");
+            return "0x" + serialized;
         }
     }
 

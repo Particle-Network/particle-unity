@@ -267,30 +267,13 @@ namespace Network.Particle.Scripts.Test
         async Task<string> GetEVMTransacion()
         {
             // mock send some chain link token from send to receiver.
-            string sender = GetAddress();
+            string from = GetAddress();
             string receiver = TestAccount.EVM.ReceiverAddress;
             string contractAddress = TestAccount.EVM.TokenContractAddress;
             BigInteger amount = TestAccount.EVM.Amount;
             var dataResult = await EvmService.Erc20Transfer(contractAddress, receiver, amount);
             var data = (string)JObject.Parse(dataResult)["result"];
-            var gasLimitResult = await EvmService.EstimateGas(sender, contractAddress, "0x0", data);
-            var gasLimit = (string)JObject.Parse(gasLimitResult)["result"];
-            var gasFeesResult = await EvmService.SuggestedGasFees();
-            var maxFeePerGas = (double)JObject.Parse(gasFeesResult)["result"]["high"]["maxFeePerGas"];
-            var maxFeePerGasHex = "0x" + ((BigInteger)(maxFeePerGas * Mathf.Pow(10, 9))).ToString("x");
-
-            var maxPriorityFeePerGas = (double)JObject.Parse(gasFeesResult)["result"]["high"]["maxPriorityFeePerGas"];
-            var maxPriorityFeePerGasHex = "0x" + ((BigInteger)(maxPriorityFeePerGas * Mathf.Pow(10, 9))).ToString("x");
-            var chainId = TestAccount.EVM.ChainId;
-
-            var transaction = new EthereumTransaction(sender, contractAddress, data, gasLimit, gasPrice: null,
-                value: "0x0",
-                nonce: null, type: "0x2",
-                chainId: "0x" + chainId.ToString("x"), maxPriorityFeePerGasHex, maxFeePerGasHex);
-            var json = JsonConvert.SerializeObject(transaction);
-            var serialized = BitConverter.ToString(Encoding.Default.GetBytes(json));
-            serialized = serialized.Replace("-", "");
-            return "0x" + serialized;
+            return await EvmService.CreateTransaction(from, data, amount, receiver, true);
         }
 
         public async void SetChainInfoASync()
@@ -311,12 +294,6 @@ namespace Network.Particle.Scripts.Test
                 var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                 Debug.Log(errorData);
             }
-        }
-
-        public void GetPnAddress()
-        {
-            var address = GetAddress();
-            Tips.Instance.Show("GetPnAddress:" + address);
         }
 
         public void SetChainInfoSync()

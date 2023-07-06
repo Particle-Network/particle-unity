@@ -93,8 +93,12 @@ extern "C" {
         [api signAllTransactions:[NSString stringWithUTF8String: transactions]];
     }
 
-    void signAndSendTransaction(const char* message) {
-        [api signAndSendTransaction:[NSString stringWithUTF8String: message]];
+    void signAndSendTransaction(const char* json) {
+        [api signAndSendTransaction:[NSString stringWithUTF8String: json]];
+    }
+
+    void batchSendTransactions(const char* json) {
+        [api batchSendTransactions:[NSString stringWithUTF8String: json]];
     }
 
     void signTypedData(const char* json) {
@@ -293,7 +297,11 @@ extern "C" {
     void adapterSignAllTransactions(const char* json) {
         [api adapterSignAllTransactions:[NSString stringWithUTF8String: json]];
     }
-    
+
+    void adapterBatchSendTransactions(const char* json) {
+        [api adapterBatchSendTransactions:[NSString stringWithUTF8String: json]];
+    }
+
     void adapterSignMessage(const char* json) {
         [api adapterSignMessage:[NSString stringWithUTF8String: json]];
     }
@@ -337,6 +345,36 @@ extern "C" {
          [api setWalletConnectV2SupportChainInfos:[NSString stringWithUTF8String: json]];
     }
     
+}
+
+extern "C" {
+    void particleBiconomyInitialize(const char* json) {
+         [api particleBiconomyInitialize:[NSString stringWithUTF8String: json]];
+    }
+
+    void enableBiconomyMode() {
+        [api enableBiconomyMode];
+    }
+
+    void disableBiconomyMode() {
+        [api disableBiconomyMode];
+    }
+
+    bool isBiconomyModeEnable() {
+        return [api isBiconomyModeEnable];
+    }
+
+    void isDeploy(const char* json) {
+        [api isDeploy:[NSString stringWithUTF8String: json]];
+    }
+
+    void rpcGetFeeQuotes(const char* json) {
+        [api rpcGetFeeQuotes:[NSString stringWithUTF8String: json]];
+    }
+
+    bool isSupportChainInfo(const char* json) {
+        return [api isSupportChainInfo:[NSString stringWithUTF8String: json]];
+    }
 }
 
 // rename to cStringCopyPN in case meet same name function from other library.

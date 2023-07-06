@@ -233,9 +233,7 @@ namespace Network.Particle.Scripts.Core
             {
                 { "wallet_type", walletType.ToString() },
                 { "public_address", publicAddress },
-                {
-                    "transactions", JToken.FromObject(transactions)
-                },
+                { "transactions", JToken.FromObject(transactions) },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("signAllTransactions",json);
@@ -245,16 +243,38 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
+        
+        internal static void BatchSendTransactions(WalletType walletType, string publicAddress, List<string> transactions, [CanBeNull] BiconomyFeeMode feeMode = null)
+        {
+            var json = JsonConvert.SerializeObject(new JObject
+            {
+                { "wallet_type", walletType.ToString() },
+                { "public_address", publicAddress },
+                { "transactions", JToken.FromObject(transactions) },
+                { "fee_mode", feeMode == null ? null : JToken.FromObject(feeMode) },
+            });
 
-        public static void SignAndSendTransaction(WalletType walletType, string publicAddress, string transaction)
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("signAndSendTransaction",message);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.adapterBatchSendTransactions(json);
+#else
+
+#endif
+        }
+
+        public static void SignAndSendTransaction(WalletType walletType, string publicAddress, string transaction, [CanBeNull] BiconomyFeeMode feeMode = null)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
                 { "wallet_type", walletType.ToString() },
                 { "public_address", publicAddress },
                 { "transaction", transaction },
+                { "fee_mode", feeMode == null ? null : JToken.FromObject(feeMode) },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("signAndSendTransaction",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.adapterSignAndSendTransaction(json);

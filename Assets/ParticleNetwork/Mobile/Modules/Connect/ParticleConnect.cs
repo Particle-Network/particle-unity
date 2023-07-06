@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Network.Particle.Scripts.Core.UnityEditorTestMode;
@@ -18,6 +19,7 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> signTransactionTask;
         private TaskCompletionSource<NativeResultData> signAllTransactionsTask;
         private TaskCompletionSource<NativeResultData> signAndSendTransactionTask;
+        private TaskCompletionSource<NativeResultData> batchSendTransactionsTask;
         private TaskCompletionSource<NativeResultData> signTypedDataTask;
         private TaskCompletionSource<NativeResultData> loginTask;
         private TaskCompletionSource<NativeResultData> verifyTask;
@@ -250,16 +252,59 @@ namespace Network.Particle.Scripts.Core
         /// </summary>
         /// <param name="walletType">Wallet type</param>
         /// <param name="publicAddress">Public address</param>
-        /// <param name="message">Message</param>
+        /// <param name="transactions">Transactions</param>
+        /// <param name="feeMode">BiconomyFeeMode, works with biconomy mode, default value is auto</param>
+        /// <returns></returns>
+        public Task<NativeResultData> BatchSendTransactions(WalletType walletType, string publicAddress,
+            List<string> transactions, [CanBeNull] BiconomyFeeMode feeMode = null)
+        {
+            batchSendTransactionsTask = new TaskCompletionSource<NativeResultData>();
+
+#if UNITY_EDITOR
+            SignAndSendTransactionCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                {"status", 0},
+                {"data", ""},
+            }));
+#else
+            ParticleConnectInteraction.BatchSendTransactions(walletType,publicAddress, transactions, feeMode);
+#endif
+            return batchSendTransactionsTask.Task;
+        }
+
+        /// <summary>
+        /// Sign and send transaction call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void BatchSendTransactionsCallBack(string json)
+        {
+            Debug.Log($"BatchSendTransactionsCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            batchSendTransactionsTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+        
+        /// <summary>
+        /// Sign and send transaction
+        /// </summary>
+        /// <param name="walletType">Wallet type</param>
+        /// <param name="publicAddress">Public address</param>
+        /// <param name="transaction">Transaction</param>
+        /// <param name="feeMode">BiconomyFeeMode, works with biconomy mode, default value is auto</param>
         /// <returns></returns>
         public Task<NativeResultData> SignAndSendTransaction(WalletType walletType, string publicAddress,
-            string message)
+            string transaction, [CanBeNull] BiconomyFeeMode feeMode = null)
         {
             signAndSendTransactionTask = new TaskCompletionSource<NativeResultData>();
 
 #if UNITY_EDITOR
+            SignAndSendTransactionCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                {"status", 0},
+                {"data", ""},
+            }));
 #else
-            ParticleConnectInteraction.SignAndSendTransaction(walletType,publicAddress,message);
+            ParticleConnectInteraction.SignAndSendTransaction(walletType,publicAddress, transaction, feeMode);
 #endif
             return signAndSendTransactionTask.Task;
         }

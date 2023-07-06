@@ -19,7 +19,7 @@ public class Tips : SingletonMonoBehaviour<Tips>
     public void Show(string message)
     {
         gameObject.SetActive(true);
-        if (String.IsNullOrEmpty(message)) message = strMsg;
+        if (string.IsNullOrEmpty(message)) message = strMsg;
         this.message.text = message;
         // Invoke("HideTips", 2f);
     }
