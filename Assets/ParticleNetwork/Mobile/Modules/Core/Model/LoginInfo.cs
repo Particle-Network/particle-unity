@@ -38,6 +38,6 @@ namespace Network.Particle.Scripts.Model
     {
         None,
         Consent,
-        Select_account,
+        SelectAccount,
     }
 }
