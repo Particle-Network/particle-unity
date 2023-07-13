@@ -8,7 +8,7 @@ dependencies {
             }
         }
         implementation project(':unityLibrary')
-        def sdkVersion = "0.14.2" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+        def sdkVersion = "0.14.5" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
      
         //tips
         //auth-service and auth-service-tiramisu are the same library,
@@ -25,6 +25,8 @@ dependencies {
         implementation "network.particle:wallet-service:${sdkVersion}"
         //particle unity bridge (Required) 
         implementation "network.particle:unity-bridge:${sdkVersion}"
+        //particle biconomy (Optional.) If you don't want to use the biconomy service, you can remove this dependency.
+        implementation("network.particle:biconomy-service:$sdkVersion")
         
         //if only use connect sdk, you must add the following dependencies 
 //         def sdkVersion = "0.9.31" find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle

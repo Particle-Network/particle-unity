@@ -253,7 +253,7 @@ namespace Network.Particle.Scripts.Core
 
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            ParticleNetwork.CallNative("signAndSendTransaction",message);
+            ParticleNetwork.CallNative("adapterBatchSendTransactions",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.adapterBatchSendTransactions(json);
 #else

@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
@@ -16,56 +15,55 @@ namespace Network.Particle.Scripts.Core
             {
                 versionString = "1.0.0";
             }
+
             var obj = new JObject
             {
                 { "version", versionString },
                 { "dapp_api_keys", JObject.FromObject(dappApiKeys) },
             };
-            
+
             var json = JsonConvert.SerializeObject(obj);
-            
+
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            // ParticleNetwork.CallNative("login",json);
+            ParticleNetwork.CallNative("particleBiconomyInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.particleBiconomyInitialize(json);
 #else
 
 #endif
-            
         }
 
         public static void EnableBiconomyMode()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            // ParticleNetwork.CallNative("login",json);
+            ParticleNetwork.CallNative("enableBiconomyMode");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.enableBiconomyMode();
 #else
 
 #endif
         }
-        
+
         public static void DisableBiconomyMode()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            // ParticleNetwork.CallNative("login",json);
+            ParticleNetwork.CallNative("disableBiconomyMode");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.disableBiconomyMode();
 #else
 
 #endif
         }
-        
+
         public static bool IsBiconomyModeEnable()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-return false;
-            // ParticleNetwork.CallNative("login",json);
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("isBiconomyModeEnable");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.isBiconomyModeEnable();
 #else
@@ -77,7 +75,7 @@ return false;
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            // ParticleNetwork.CallNative("login",json);
+            ParticleNetwork.CallNative("isDeploy",eoaAddress);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.isDeploy(eoaAddress);
 #else
@@ -92,13 +90,13 @@ return false;
                 { "eoa_address", eoaAddress },
                 { "transactions", JToken.FromObject(transactions) },
             };
-            
+
             var json = JsonConvert.SerializeObject(obj);
-            
+
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            // ParticleNetwork.CallNative("login",json);
+            ParticleNetwork.CallNative("rpcGetFeeQuotes",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.rpcGetFeeQuotes(json);
 #else
@@ -114,17 +112,15 @@ return false;
                 { "chain_id", chainInfo.getChainId() },
                 { "chain_id_name", chainInfo.getChainIdName() },
             });
-            
+
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-return false;
-            // ParticleNetwork.CallNative("login",json);
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("isSupportChainInfo",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.isSupportChainInfo(json);
 #else
             return false;
 #endif
-
         }
     }
 }
