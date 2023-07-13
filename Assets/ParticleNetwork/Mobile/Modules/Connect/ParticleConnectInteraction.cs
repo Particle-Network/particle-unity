@@ -252,7 +252,6 @@ namespace Network.Particle.Scripts.Core
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("adapterBatchSendTransactions",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.adapterBatchSendTransactions(json);
@@ -271,7 +270,6 @@ namespace Network.Particle.Scripts.Core
                 { "fee_mode", feeMode == null ? null : JToken.FromObject(feeMode) },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("signAndSendTransaction",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.adapterSignAndSendTransaction(json);

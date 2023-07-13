@@ -146,7 +146,6 @@ namespace Network.Particle.Scripts.Core
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("signAndSendTransaction",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.signAndSendTransaction(json);
@@ -165,7 +164,6 @@ namespace Network.Particle.Scripts.Core
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("batchSendTransactions",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.batchSendTransactions(json);
