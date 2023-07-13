@@ -209,10 +209,16 @@ extension UnityManager {
         if account != nil, account!.isEmpty {
             account = nil
         }
-        let loginFormMode = data["loginFormMode"].bool
+        let loginFormMode = data["loginFormMode"].boolValue
         let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
-        let socialLoginPrompt: SocialLoginPrompt? = SocialLoginPrompt(rawValue: socialLoginPromptString)
-        
+        var socialLoginPrompt: SocialLoginPrompt?
+        if socialLoginPromptString == "none" {
+            socialLoginPrompt = SocialLoginPrompt.none
+        } else if socialLoginPromptString == "consent" {
+            socialLoginPrompt = SocialLoginPrompt.consent
+        } else if socialLoginPromptString == "selectaccount" {
+            socialLoginPrompt = SocialLoginPrompt.selectAccount
+        }
         let message: String? = data["authorization"]["message"].string
         let isUnique: Bool = data["authorization"]["uniq"].bool ?? false
         
@@ -1222,9 +1228,18 @@ extension UnityManager {
                 account = nil
             }
             
+
             let loginFormMode = data["loginFormMode"].boolValue
             let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
-            let socialLoginPrompt: SocialLoginPrompt? = SocialLoginPrompt(rawValue: socialLoginPromptString)
+            var socialLoginPrompt: SocialLoginPrompt?
+            if socialLoginPromptString == "none" {
+                socialLoginPrompt = SocialLoginPrompt.none
+            } else if socialLoginPromptString == "consent" {
+                socialLoginPrompt = SocialLoginPrompt.consent
+            } else if socialLoginPromptString == "selectaccount" {
+                socialLoginPrompt = SocialLoginPrompt.selectAccount
+            }
+
             connectConfig = ParticleConnectConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt)
         }
         

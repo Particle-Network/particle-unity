@@ -1,8 +1,14 @@
 apply plugin: 'com.android.application'
 
 dependencies {
+        //require
+        modules {
+            module("org.bouncycastle:bcprov-jdk15to18") {
+                replacedBy("org.bouncycastle:bcprov-jdk15on")
+            }
+        }
         implementation project(':unityLibrary')
-        def sdkVersion = "0.13.2" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+        def sdkVersion = "0.14.2" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
      
         //tips
         //auth-service and auth-service-tiramisu are the same library,

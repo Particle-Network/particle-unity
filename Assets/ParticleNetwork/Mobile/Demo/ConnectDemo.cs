@@ -57,8 +57,8 @@ namespace Network.Particle.Scripts.Test
                 "");
             ParticleNetwork.Init(_chainInfo);
             ParticleConnectInteraction.Init(_chainInfo, metadata);
-            List<ChainInfo> chainInfos = new List<ChainInfo>{new EthereumChain(EthereumChainId.Mainnet), new EthereumChain(EthereumChainId.Goerli), new EthereumChain(EthereumChainId.Sepolia)};
-            ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
+            // List<ChainInfo> chainInfos = new List<ChainInfo>{new EthereumChain(EthereumChainId.Mainnet), new PolygonChain(PolygonChainId.Mainnet), new EthereumChain(EthereumChainId.Sepolia)};
+            // ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
         }
         string publicAddress = "";
         /// <summary>
