@@ -34,8 +34,7 @@ namespace Network.Particle.Scripts.Test
         {
             // login email
             var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, null, SupportAuthType.ALL,
-                false, SocialLoginPrompt.SelectAccount,
-                new LoginAuthorization("0xa0869E99886e1b6737A4364F2cf9Bb454FD637E4", false));
+                false, SocialLoginPrompt.SelectAccount);
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
