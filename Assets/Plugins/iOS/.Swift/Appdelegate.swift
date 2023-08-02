@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         UnityManager.shared.startGame()
 
-        ParticleWalletGUI.showTestNetwork(true)
         return true
     }
 

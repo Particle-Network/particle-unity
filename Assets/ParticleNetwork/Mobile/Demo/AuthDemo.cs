@@ -34,7 +34,7 @@ namespace Network.Particle.Scripts.Test
         {
             // login email
             var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, null, SupportAuthType.ALL,
-                false, SocialLoginPrompt.SelectAccount);
+                SocialLoginPrompt.SelectAccount);
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
@@ -204,12 +204,18 @@ namespace Network.Particle.Scripts.Test
         public async void SignTypedData()
         {
             var publicAddress = GetAddress();
-            var txtAsset = Resources.Load<TextAsset>("TypedDataV1");
+            var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
             string typedData = txtAsset.text;
 
+            var chainId = ParticleNetwork.GetChainInfo().getChainId();
+            JObject json = JObject.Parse(typedData);
+            json["domain"]["chainId"] = chainId;
+            string newTypedData = json.ToString();
+            
             var nativeResultData =
-                await ParticleAuthService.Instance.SignTypedData(typedData,
-                    SignTypedDataVersion.V1);
+                await ParticleAuthService.Instance.SignTypedData(newTypedData,
+                    SignTypedDataVersion.V4);
+            
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
@@ -231,10 +237,19 @@ namespace Network.Particle.Scripts.Test
             ParticleNetwork.SetLanguage(language);
         }
 
-        public void SetInterfaceStyle()
+        public void SetAppearance()
         {
-            UserInterfaceStyle style = UserInterfaceStyle.DARK;
-            ParticleNetwork.SetInterfaceStyle(style);
+            ParticleNetwork.SetAppearance(Appearance.DARK);
+        }
+
+        public void SetFiatCoin()
+        {
+            ParticleNetwork.SetFiatCoin(FiatCoin.KRW);
+        }
+
+        public void SetWebAuthConfig()
+        {
+            ParticleNetwork.SetWebAuthConfig(true, Appearance.DARK);
         }
 
 
@@ -304,7 +319,8 @@ namespace Network.Particle.Scripts.Test
         public void GetChainInfo()
         {
             var chainInfo = ParticleNetwork.GetChainInfo();
-            Debug.Log($"chain name {chainInfo.getChainName()}, chain id {chainInfo.getChainId()}, chain id name {chainInfo.getChainIdName()}");
+            Debug.Log(
+                $"chain name {chainInfo.getChainName()}, chain id {chainInfo.getChainId()}, chain id name {chainInfo.getChainIdName()}");
         }
 
         public void SetiOSModalStyle()
@@ -347,7 +363,8 @@ namespace Network.Particle.Scripts.Test
 
         public void OpenWebWallet()
         {
-            ParticleAuthServiceInteraction.OpenWebWallet();
+            var jsonString = "";
+            ParticleAuthServiceInteraction.OpenWebWallet(jsonString);
         }
 
         public void HasMasterPassword()
@@ -381,7 +398,8 @@ namespace Network.Particle.Scripts.Test
                 var hasSecurityAccount = !string.IsNullOrEmpty(securityAccount.Email) ||
                                          !string.IsNullOrEmpty(securityAccount.Phone);
                 Debug.Log(securityAccount);
-                Debug.Log($"HasMasterPassword {securityAccount.HasMasterPassword}, HasPaymentPassword {securityAccount.HasPaymentPassword}, HasSecurityAccount {hasSecurityAccount}");
+                Debug.Log(
+                    $"HasMasterPassword {securityAccount.HasMasterPassword}, HasPaymentPassword {securityAccount.HasPaymentPassword}, HasSecurityAccount {hasSecurityAccount}");
             }
             else
             {

@@ -34,35 +34,35 @@ extern "C" {
         [api setLanguage:[NSString stringWithUTF8String: json]];
     }
 
-    void setInterfaceStyle(const char* json) {
-        [api setInterfaceStyle:[NSString stringWithUTF8String: json]];
+    void setFiatCoin(const char* json) {
+        [api setFiatCoin:[NSString stringWithUTF8String: json]];
+    }
+
+    void setWebAuthConfig(const char* json) {
+        [api setWebAuthConfig:[NSString stringWithUTF8String: json]];
+    }
+
+    void setAppearance(const char* json) {
+        [api setAppearance:[NSString stringWithUTF8String: json]];
     }
 
     void setMediumScreen(bool isMedium) {
         [api setMediumScreen: isMedium];
     }
 
-    void openWebWallet() {
-        [api openWebWallet];
-    }
-
-    void openAccountAndSecurity() {
-        [api openAccountAndSecurity];
+    void getSecurityAccount() {
+        [api getSecurityAccount];
     }
 
     void setSecurityAccountConfig(const char* json) {
         [api setSecurityAccountConfig:[NSString stringWithUTF8String: json]];
     }
-
 }
 
 // Particle Auth Service
 extern "C" {
     void login(const char* json) {
         [api login:[NSString stringWithUTF8String: json]];
-    }
-    void setUserInfo(const char* json) {
-        [api setUserInfo:[NSString stringWithUTF8String: json]];
     }
 
     void logout() {
@@ -83,6 +83,10 @@ extern "C" {
 
     void signMessage(const char* message) {
         [api signMessage:[NSString stringWithUTF8String: message]];
+    }
+
+    void signMessageUnique(const char* message) {
+        [api signMessageUnique:[NSString stringWithUTF8String: message]];
     }
 
     void signTransaction(const char* transaction) {
@@ -125,28 +129,33 @@ extern "C" {
         [api setModalPresentStyle:[NSString stringWithUTF8String: style]];
     }
 
-    void getSecurityAccount() {
-        [api getSecurityAccount];
+    
+    void openWebWallet(const char* chainInfo) {
+        [api openWebWallet:[NSString stringWithUTF8String: chainInfo]];
+    }
+
+    void openAccountAndSecurity() {
+        [api openAccountAndSecurity];
     }
 }
 
 
 // Particle Wallet GUI
 extern "C" {
-    void enablePay(bool enable) {
-        [api enablePay:enable];
+    void setPayDisabled(bool enable) {
+        [api setPayDisabled:enable];
     }
 
-    bool getEnablePay() {
-        return [api getEnablePay];
+    bool getPayDisabled() {
+        return [api getPayDisabled];
     }
     
-    void enableSwap(bool enable) {
-            [api enableSwap:enable];
+    void setSwapDisabled(bool enable) {
+            [api setSwapDisabled:enable];
         }
     
-    bool getEnableSwap() {
-        return [api getEnableSwap];
+    bool getSwapDisabled() {
+        return [api getSwapDisabled];
     }
 
     void navigatorWallet(int display) {
@@ -185,40 +194,36 @@ extern "C" {
         [api navigatorLoginList:[NSString stringWithUTF8String: json]];
     }
     
-    void showTestNetwork(bool show) {
-        [api showTestNetwork:show];
+    void setShowTestNetwork(bool show) {
+        [api setShowTestNetwork:show];
     } 
     
-    void showManageWallet(bool show) {
-        [api showManageWallet:show];
+    void setShowManageWallet(bool show) {
+        [api setShowManageWallet:show];
     }
     
-    void supportChain(const char* json) {
-        [api supportChain:[NSString stringWithUTF8String: json]];
+    void setSupportChain(const char* json) {
+        [api setSupportChain:[NSString stringWithUTF8String: json]];
     }
     
     void switchWallet(const char* json) {
         [api switchWallet:[NSString stringWithUTF8String: json]];
     }
 
-    void guiSetLanguage(const char* json) {
-        [api guiSetLanguage:[NSString stringWithUTF8String: json]];
+    void setShowLanguageSetting(bool show) {
+        [api setShowLanguageSetting:show];
     }
 
-    void showLanguageSetting(bool show) {
-        [api showLanguageSetting:show];
+    void setShowAppearanceSetting(bool show) {
+        [api setShowAppearanceSetting:show];
     }
 
-    void showAppearanceSetting(bool show) {
-        [api showAppearanceSetting:show];
-    }
-
-    void supportWalletConnect(bool enable) {
-        [api supportWalletConnect: enable];
+    void setSupportWalletConnect(bool enable) {
+        [api setSupportWalletConnect: enable];
     }
     
-    void supportDappBrowser(bool enable) {
-        [api supportDappBrowser: enable];
+    void setSupportDappBrowser(bool enable) {
+        [api setSupportDappBrowser: enable];
     }
     
     void particleWalletConnectInitialize(const char* json) {
@@ -226,7 +231,7 @@ extern "C" {
     }
 
     void setSupportAddToken(bool enable) {
-        [api supportWalletConnect: enable];
+        [api setSupportWalletConnect: enable];
     }
 
     void setDisplayTokenAddresses(const char* json) {
@@ -245,9 +250,6 @@ extern "C" {
         [api setPriorityNFTContractAddresses:[NSString stringWithUTF8String: json]];
     }
 
-    void setFiatCoin(const char* json) {
-        [api setFiatCoin:[NSString stringWithUTF8String: json]];
-    }
 
     void loadCustomUIJsonString(const char* json) {
         [api loadCustomUIJsonString:[NSString stringWithUTF8String: json]];
@@ -259,13 +261,8 @@ extern "C" {
     void particleConnectInitialize(const char* json) {
         [api particleConnectInitialize:[NSString stringWithUTF8String: json]];
     }
-    
-    bool particleConnectSetChainInfo(const char* chainInfo) {
-         return [api particleConnectSetChainInfo:[NSString stringWithUTF8String: chainInfo]];
-    }
-
-    void particleConnectSetChainInfoAsync(const char* chainInfo) {
-         return [api particleConnectSetChainInfoAsync:[NSString stringWithUTF8String: chainInfo]];
+    void setWalletConnectV2SupportChainInfos(const char* json) {
+         [api setWalletConnectV2SupportChainInfos:[NSString stringWithUTF8String: json]];
     }
 }
 
@@ -339,10 +336,6 @@ extern "C" {
     char* adapterWalletReadyState(const char* json) {
         char* cStringCopyPN(const char* string);
         return cStringCopyPN([[api adapterWalletReadyState:[NSString stringWithUTF8String: json]] UTF8String]);
-    }
-    
-    void setWalletConnectV2SupportChainInfos(const char* json) {
-         [api setWalletConnectV2SupportChainInfos:[NSString stringWithUTF8String: json]];
     }
     
 }

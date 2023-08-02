@@ -1,6 +1,6 @@
 namespace Network.Particle.Scripts.Model
 {
-    public enum UserInterfaceStyle
+    public enum Appearance
     {
         SYSTEM,
         LIGHT,

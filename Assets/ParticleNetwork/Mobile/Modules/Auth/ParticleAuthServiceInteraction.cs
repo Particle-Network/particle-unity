@@ -14,7 +14,7 @@ namespace Network.Particle.Scripts.Core
     public static class ParticleAuthServiceInteraction
     {
         internal static void Login(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes,
-            bool loginFormMode, SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginAuthorization authorization
+            SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginAuthorization authorization
         )
         {
             var authTypeList = ParticleTools.GetSupportAuthTypeValues(supportAuthTypes);
@@ -30,7 +30,6 @@ namespace Network.Particle.Scripts.Core
                 { "loginType", loginType.ToString() },
                 { "account", accountNative },
                 { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
-                { "loginFormMode", loginFormMode },
                 { "socialLoginPrompt", socialLoginPrompt.ToString() },
             };
 
@@ -54,17 +53,6 @@ namespace Network.Particle.Scripts.Core
             ParticleNetwork.CallNative("IsLoginAsync");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.isLoginAsync();
-#else
-
-#endif
-        }
-
-        internal static void SetUserInfo(string json)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.CallNative("setUserInfo",json);
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.setUserInfo(json);
 #else
 
 #endif
@@ -105,12 +93,55 @@ namespace Network.Particle.Scripts.Core
 
         internal static void SignMessage(string message)
         {
+            string serializedMessage;
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            {
+                if (HexUtils.IsHexadecimal(message))
+                {
+                    serializedMessage = message;
+                }
+                else
+                {
+                    serializedMessage = HexUtils.ConvertHex(message);
+                }
+            }
+            else
+            {
+                serializedMessage = message;
+            }
+
 #if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.CallNative("signMessage",message);
+            ParticleNetwork.CallNative("signMessage",serializedMessage);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.signMessage(message);
+            ParticleNetworkIOSBridge.signMessage(serializedMessage);
 #else
             DevModeService.SolanaSignMessages(new[] { message });
+#endif
+        }
+
+        internal static void SignMessageUnique(string message)
+        {
+            string serializedMessage;
+
+            if (HexUtils.IsHexadecimal(message))
+            {
+                serializedMessage = message;
+            }
+            else
+            {
+                serializedMessage = HexUtils.ConvertHex(message);
+            }
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("signMessage",serializedMessage);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.signMessageUnique(serializedMessage);
+#else
+            DevModeService.EvmSignMessages(new[]
+            {
+                message
+            });
 #endif
         }
 
@@ -154,8 +185,9 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        internal static void BatchSendTransactions(List<string> transactions, [CanBeNull] BiconomyFeeMode feeMode = null)
-        
+        internal static void BatchSendTransactions(List<string> transactions,
+            [CanBeNull] BiconomyFeeMode feeMode = null)
+
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -174,9 +206,20 @@ namespace Network.Particle.Scripts.Core
 
         internal static void SignTypedData(string message, SignTypedDataVersion signTypedDataVersion)
         {
+            string serializedMessage;
+
+            if (HexUtils.IsHexadecimal(message))
+            {
+                serializedMessage = message;
+            }
+            else
+            {
+                serializedMessage = HexUtils.ConvertHex(message);
+            }
+
             var json = JsonConvert.SerializeObject(new JObject
             {
-                { "message", message },
+                { "message", serializedMessage },
                 { "version", signTypedDataVersion.ToString() },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -200,16 +243,16 @@ namespace Network.Particle.Scripts.Core
         }
 
         /**
-            {
-	            "uuid": "",
-	            "token": "",
-	            "wallets": [{
-		            "chain_name": "",
-		            "public_address": "",
-		            "uuid": ""
-	            }]
-            }
-         */
+        {
+            "uuid": "",
+            "token": "",
+            "wallets": [{
+                "chain_name": "",
+                "public_address": "",
+                "uuid": ""
+            }]
+        }
+     */
         public static string GetUserInfo()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -320,12 +363,13 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void OpenWebWallet()
+        public static void OpenWebWallet(string jsonString)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.CallNative("openWebWallet");
 #elif UNITY_IOS &&!UNITY_EDITOR
-            ParticleNetworkIOSBridge.openWebWallet();
+            ParticleNetworkIOSBridge.openWebWallet(jsonString);
 #else
 
 #endif
@@ -339,18 +383,6 @@ namespace Network.Particle.Scripts.Core
         ParticleNetworkIOSBridge.openAccountAndSecurity();
 #else
 
-#endif
-        }
-
-
-        public static void SetSecurityAccountConfig(SecurityAccountConfig config)
-        {
-            var json = JsonConvert.SerializeObject(config);
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.CallNative("setSecurityAccountConfig",json);
-#elif UNITY_IOS &&!UNITY_EDITOR
-            ParticleNetworkIOSBridge.setSecurityAccountConfig(json);
-#else
 #endif
         }
     }

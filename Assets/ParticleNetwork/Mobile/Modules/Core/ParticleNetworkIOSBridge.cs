@@ -22,19 +22,26 @@ namespace Network.Particle.Scripts.Core
         public static extern int getDevEnv();
         
         [DllImport("__Internal")]
-        public static extern void setInterfaceStyle(string json);
+        public static extern void setAppearance(string json);
         
         [DllImport("__Internal")]
         public static extern void setLanguage(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setFiatCoin(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setSecurityAccountConfig(string json);
+        
+        
+        [DllImport("__Internal")]
+        public static extern void setWebAuthConfig(string json);
 #endif
 
         // Particle Auth Service
 #if UNITY_IOS
         [DllImport("__Internal")]
         public static extern void login(string json);
-
-        [DllImport("__Internal")]
-        public static extern void setUserInfo(string json);
 
         [DllImport("__Internal")]
         public static extern void logout();
@@ -50,7 +57,10 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void signMessage(string message);
-
+        
+        [DllImport("__Internal")]
+        public static extern void signMessageUnique(string message);
+        
         [DllImport("__Internal")]
         public static extern void signTransaction(string transaction);
 
@@ -82,14 +92,11 @@ namespace Network.Particle.Scripts.Core
         public static extern void setMediumScreen(bool isMedium);
         
         [DllImport("__Internal")]
-        public static extern void openWebWallet();
+        public static extern void openWebWallet(string json);
         
         [DllImport("__Internal")]
         public static extern void openAccountAndSecurity();
-        
-        [DllImport("__Internal")]
-        public static extern void setSecurityAccountConfig(string json);
-        
+
         [DllImport("__Internal")]
         public static extern void getSecurityAccount();
         
@@ -98,16 +105,16 @@ namespace Network.Particle.Scripts.Core
         // Particle Wallet GUI
 #if UNITY_IOS
         [DllImport("__Internal")]
-        public static extern void enablePay(bool enable);
+        public static extern void setPayDisabled(bool enable);
         
         [DllImport("__Internal")]
-        public static extern bool getEnablePay();
+        public static extern bool getPayDisabled();
         
         [DllImport("__Internal")]
-        public static extern void enableSwap(bool enable);
+        public static extern void setSwapDisabled(bool enable);
         
         [DllImport("__Internal")]
-        public static extern bool getEnableSwap();
+        public static extern bool getSwapDisabled();
         
         [DllImport("__Internal")]
         public static extern void navigatorWallet(int display);
@@ -134,34 +141,31 @@ namespace Network.Particle.Scripts.Core
         public static extern void navigatorLoginList(string json);
         
         [DllImport("__Internal")]
-        public static extern void showTestNetwork(bool show);
+        public static extern void setShowTestNetwork(bool show);
         
         [DllImport("__Internal")]
-        public static extern void showManageWallet(bool show);
+        public static extern void setShowManageWallet(bool show);
         
         [DllImport("__Internal")]
-        public static extern void showAppearanceSetting(bool show);
+        public static extern void setShowAppearanceSetting(bool show);
         
         [DllImport("__Internal")]
-        public static extern void showLanguageSetting(bool show);
+        public static extern void setShowLanguageSetting(bool show);
         
         [DllImport("__Internal")]
-        public static extern void supportChain(string json);
+        public static extern void setSupportChain(string json);
         
         [DllImport("__Internal")]
         public static extern void switchWallet(string json);
-        
-        [DllImport("__Internal")]
-        public static extern void guiSetLanguage(string json);
 
         [DllImport("__Internal")]
         public static extern void navigatorSwap(string json);
         
         [DllImport("__Internal")]
-        public static extern void supportWalletConnect(bool enable);
+        public static extern void setSupportWalletConnect(bool enable);
         
         [DllImport("__Internal")]
-        public static extern void supportDappBrowser(bool enable);
+        public static extern void setSupportDappBrowser(bool enable);
         
         
         [DllImport("__Internal")]
@@ -181,10 +185,7 @@ namespace Network.Particle.Scripts.Core
         
         [DllImport("__Internal")]
         public static extern void setPriorityNFTContractAddresses(string json);
-        
-        [DllImport("__Internal")]
-        public static extern void setFiatCoin(string json);
-        
+
         [DllImport("__Internal")]
         public static extern void loadCustomUIJsonString(string json);
         
@@ -194,12 +195,6 @@ namespace Network.Particle.Scripts.Core
 #if UNITY_IOS
         [DllImport("__Internal")]
         public static extern void particleConnectInitialize(string json);
-        
-        [DllImport("__Internal")]
-        public static extern bool particleConnectSetChainInfo(string json);
-
-        [DllImport("__Internal")]
-        public static extern bool particleConnectSetChainInfoAsync(string json);
 
         [DllImport("__Internal")]
         public static extern void setWalletConnectV2SupportChainInfos(string json);

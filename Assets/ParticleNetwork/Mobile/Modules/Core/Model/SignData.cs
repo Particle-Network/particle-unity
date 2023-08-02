@@ -5,5 +5,6 @@ namespace Network.Particle.Scripts.Model
         V1,
         V3,
         V4,
+        V4Unique,
     }
 }

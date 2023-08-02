@@ -249,10 +249,14 @@ namespace Network.Particle.Scripts.Test
             if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
             var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
             string typedData = txtAsset.text;
-            Debug.Log(typedData);
+
+            var chainId = ParticleNetwork.GetChainInfo().getChainId();
+            JObject json = JObject.Parse(typedData);
+            json["domain"]["chainId"] = chainId;
+            string newTypedData = json.ToString();
 
             var nativeResultData =
-                await ParticleConnect.Instance.SignTypedData(this._walletType, publicAddress, typedData);
+                await ParticleConnect.Instance.SignTypedData(this._walletType, publicAddress, newTypedData);
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)
@@ -401,33 +405,6 @@ namespace Network.Particle.Scripts.Test
             {
                 Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                 Debug.Log(nativeResultData.data);
-            }
-            else
-            {
-                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
-            }
-        }
-
-        public void SetChainInfoSync()
-        {
-            var result = ParticleConnectInteraction.SetChainInfo(_chainInfo);
-            Debug.Log("SetChainInfoSync:" + result);
-            Tips.Instance.Show("SetChainInfoSync:" + result);
-        }
-
-        public async void SetChainInfoAsync()
-        {
-            var nativeResultData =
-                await ParticleConnect.Instance.SetChainInfoAsync(_chainInfo);
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
-            {
-                Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                Debug.Log("SetChainInfoAsync:" + nativeResultData.data);
-                Tips.Instance.Show(nativeResultData.data);
             }
             else
             {

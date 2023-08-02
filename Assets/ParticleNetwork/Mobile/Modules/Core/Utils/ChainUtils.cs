@@ -1,395 +1,184 @@
-using System;
 using Network.Particle.Scripts.Model;
 
 namespace Network.Particle.Scripts.Core.Utils
 {
     public class ChainUtils
     {
-        public static ChainInfo FindChain(string chainName, long chainId)
+        public static ChainInfo FindChain(string chainNameString, long chainId)
         {
-            string name = chainName.ToLower();
+            var chainName = chainNameString.GetChainName();
+
             ChainInfo chainInfo = new EthereumChain(EthereumChainId.Mainnet);
-            if (name == "solana")
+            if (chainName == ChainName.Solana)
             {
-                if (chainId == 101)
-                {
-                    chainInfo = new SolanaChain(SolanaChainId.Mainnet);
-                }
-                else if (chainId == 102)
-                {
-                    chainInfo = new SolanaChain(SolanaChainId.Testnet);
-                }
-                else if (chainId == 103)
-                {
-                    chainInfo = new SolanaChain(SolanaChainId.Devnet);
-                }
+                chainInfo = new SolanaChain((SolanaChainId)chainId);
             }
-            else if (name == "ethereum")
+            else if (chainName == ChainName.Ethereum)
             {
-                if (chainId == 1)
-                {
-                    chainInfo = new EthereumChain(EthereumChainId.Mainnet);
-                }
-                else if (chainId == 5)
-                {
-                    chainInfo = new EthereumChain(EthereumChainId.Goerli);
-                }
+                chainInfo = new EthereumChain((EthereumChainId)chainId);
             }
-            else if (name == "bsc")
+            else if (chainName == ChainName.BSC)
             {
-                if (chainId == 56)
-                {
-                    chainInfo = new BSCChain(BscChainId.Mainnet);
-                }
-                else if (chainId == 97)
-                {
-                    chainInfo = new BSCChain(BscChainId.Testnet);
-                }
+                chainInfo = new BSCChain((BSCChainId)chainId);
             }
-            else if (name == "polygon")
+            else if (chainName == ChainName.Polygon)
             {
-                if (chainId == 137)
-                {
-                    chainInfo = new PolygonChain(PolygonChainId.Mainnet);
-                }
-                else if (chainId == 80001)
-                {
-                    chainInfo = new PolygonChain(PolygonChainId.Mumbai);
-                }
+                chainInfo = new PolygonChain((PolygonChainId)chainId);
             }
-            else if (name == "avalanche")
+            else if (chainName == ChainName.Avalanche)
             {
-                if (chainId == 43114)
-                {
-                    chainInfo = new AvalancheChain(AvalancheChainId.Mainnet);
-                }
-                else if (chainId == 43113)
-                {
-                    chainInfo = new AvalancheChain(AvalancheChainId.Testnet);
-                }
+                chainInfo = new AvalancheChain((AvalancheChainId)chainId);
             }
-            else if (name == "fantom")
+            else if (chainName == ChainName.Fantom)
             {
-                if (chainId == 250)
-                {
-                    chainInfo = new FantomChain(FantomChainId.Mainnet);
-                }
-                else if (chainId == 4002)
-                {
-                    chainInfo = new FantomChain(FantomChainId.Testnet);
-                }
+                chainInfo = new FantomChain((FantomChainId)chainId);
             }
-            else if (name == "arbitrum")
+            else if (chainName == ChainName.Arbitrum)
             {
-                if (chainId == 42161)
-                {
-                    chainInfo = new ArbitrumChain(ArbitrumChainId.One);
-                }
-                else if (chainId == 42170)
-                {
-                    chainInfo = new ArbitrumChain(ArbitrumChainId.Nova);
-                }
-                else if (chainId == 421613)
-                {
-                    chainInfo = new ArbitrumChain(ArbitrumChainId.Goerli);
-                }
+                chainInfo = new ArbitrumChain((ArbitrumChainId)chainId);
             }
-            else if (name == "moonbeam")
+
+            else if (chainName == ChainName.Moonbeam)
             {
-                if (chainId == 1284)
-                {
-                    chainInfo = new MoonbeamChain(MoonbeamChainId.Mainnet);
-                }
-                else if (chainId == 1287)
-                {
-                    chainInfo = new MoonbeamChain(MoonbeamChainId.Testnet);
-                }
+                chainInfo = new MoonbeamChain((MoonbeamChainId)chainId);
             }
-            else if (name == "moonriver")
+            else if (chainName == ChainName.Moonriver)
             {
-                if (chainId == 1285)
-                {
-                    chainInfo = new MoonriverChain(MoonriverChainId.Mainnet);
-                }
-                else if (chainId == 1287)
-                {
-                    chainInfo = new MoonriverChain(MoonriverChainId.Testnet);
-                }
+                chainInfo = new MoonriverChain((MoonriverChainId)chainId);
             }
-            else if (name == "heco")
+            else if (chainName == ChainName.Heco)
             {
-                if (chainId == 128)
-                {
-                    chainInfo = new HecoChain(HecoChainId.Mainnet);
-                }
+                chainInfo = new HecoChain((HecoChainId)chainId);
             }
-            else if (name == "aurora")
+            else if (chainName == ChainName.Aurora)
             {
-                if (chainId == 1313161554)
-                {
-                    chainInfo = new AuroraChain(AuroraChainId.Mainnet);
-                }
-                else if (chainId == 1313161555)
-                {
-                    chainInfo = new AuroraChain(AuroraChainId.Testnet);
-                }
+                chainInfo = new AuroraChain((AuroraChainId)chainId);
             }
-            else if (name == "harmony")
+            else if (chainName == ChainName.Harmony)
             {
-                if (chainId == 1666600000)
-                {
-                    chainInfo = new HarmonyChain(HarmonyChainId.Mainnet);
-                }
-                else if (chainId == 1666700000)
-                {
-                    chainInfo = new HarmonyChain(HarmonyChainId.Testnet);
-                }
+                chainInfo = new HarmonyChain((HarmonyChainId)chainId);
             }
-            else if (name == "kcc")
+            else if (chainName == ChainName.KCC)
             {
-                if (chainId == 321)
-                {
-                    chainInfo = new KccChain(KccChainId.Mainnet);
-                }
-                else if (chainId == 322)
-                {
-                    chainInfo = new KccChain(KccChainId.Testnet);
-                }
+                chainInfo = new KccChain((KccChainId)chainId);
             }
-            else if (name == "optimism")
+            else if (chainName == ChainName.Optimism)
             {
-                if (chainId == 10)
-                {
-                    chainInfo = new OptimismChain(OptimismChainId.Mainnet);
-                }
-                else if (chainId == 420)
-                {
-                    chainInfo = new OptimismChain(OptimismChainId.Goerli);
-                }
+                chainInfo = new OptimismChain((OptimismChainId)chainId);
             }
-            else if (name == "platon")
+            else if (chainName == ChainName.PlatON)
             {
-                if (chainId == 210425)
-                {
-                    chainInfo = new PlatONChain(PlatONChainId.Mainnet);
-                }
-                else if (chainId == 2203181)
-                {
-                    chainInfo = new PlatONChain(PlatONChainId.Testnet);
-                }
+                chainInfo = new PlatONChain((PlatONChainId)chainId);
             }
-            else if (name == "tron")
+            else if (chainName == ChainName.Tron)
             {
-                if (chainId == 728126428)
-                {
-                    chainInfo = new TronChain(TronChainId.Mainnet);
-                }
-                else if (chainId == 2494104990)
-                {
-                    chainInfo = new TronChain(TronChainId.Shasta);
-                }
-                else if (chainId == 3448148188)
-                {
-                    chainInfo = new TronChain(TronChainId.Nile);
-                }
+                chainInfo = new TronChain((TronChainId)chainId);
             }
-            else if (name == "okc")
+            else if (chainName == ChainName.OKC)
             {
-                if (chainId == 66)
-                {
-                    chainInfo = new OKCChain(OKCChainId.Mainnet);
-                }
-                else if (chainId == 65)
-                {
-                    chainInfo = new OKCChain(OKCChainId.Mainnet);
-                }
+                chainInfo = new OKCChain((OKCChainId)chainId);
             }
-            else if (name == "thundercore")
+            else if (chainName == ChainName.ThunderCore)
             {
-                if (chainId == 108)
-                {
-                    chainInfo = new ThunderCoreChain(ThunderCoreChainId.Mainnet);
-                }
-                else if (chainId == 18)
-                {
-                    chainInfo = new ThunderCoreChain(ThunderCoreChainId.Testnet);
-                }
+                chainInfo = new ThunderCoreChain((ThunderCoreChainId)chainId);
             }
-            else if (name == "cronos")
+            else if (chainName == ChainName.Cronos)
             {
-                if (chainId == 25)
-                {
-                    chainInfo = new CronosChain(CronosChainId.Mainnet);
-                }
-                else if (chainId == 338)
-                {
-                    chainInfo = new CronosChain(CronosChainId.Testnet);
-                }
+                chainInfo = new CronosChain((CronosChainId)chainId);
             }
-            else if (name == "oasisemerald")
+            else if (chainName == ChainName.OasisEmerald)
             {
-                if (chainId == 42262)
-                {
-                    chainInfo = new OasisEmeraldChain(OasisEmeraldChainId.Mainnet);
-                }
-                else if (chainId == 42261)
-                {
-                    chainInfo = new OasisEmeraldChain(OasisEmeraldChainId.Testnet);
-                }
+                chainInfo = new OasisEmeraldChain((OasisEmeraldChainId)chainId);
             }
-            else if (name == "gnosis")
+            else if (chainName == ChainName.Gnosis)
             {
-                if (chainId == 100)
-                {
-                    chainInfo = new GnosisChain(GnosisChainId.Mainnet);
-                }
-                else if (chainId == 10200)
-                {
-                    chainInfo = new GnosisChain(GnosisChainId.Testnet);
-                }
+                chainInfo = new GnosisChain((GnosisChainId)chainId);
             }
-            else if (name == "celo")
+            else if (chainName == ChainName.Celo)
             {
-                if (chainId == 42220)
-                {
-                    chainInfo = new CeloChain(CeloChainId.Mainnet);
-                }
-                else if (chainId == 44787)
-                {
-                    chainInfo = new CeloChain(CeloChainId.Testnet);
-                }
+                chainInfo = new CeloChain((CeloChainId)chainId);
             }
-            else if (name == "klaytn")
+            else if (chainName == ChainName.Klaytn)
             {
-                if (chainId == 8217)
-                {
-                    chainInfo = new KlaytnChain(KlaytnChainId.Mainnet);
-                }
-                else if (chainId == 1001)
-                {
-                    chainInfo = new KlaytnChain(KlaytnChainId.Testnet);
-                }
+                chainInfo = new KlaytnChain((KlaytnChainId)chainId);
             }
-            else if (name == "scroll")
+            else if (chainName == ChainName.Scroll)
             {
-                if (chainId == 534353)
-                {
-                    chainInfo = new ScrollChain(ScrollChainId.Testnet);
-                }
+                chainInfo = new ScrollChain((ScrollChainId)chainId);
             }
-            else if (name == "zksync")
+            else if (chainName == ChainName.ZkSync)
             {
-                if (chainId == 324)
-                {
-                    chainInfo = new ZkSyncChain(ZkSyncChainId.Mainnet);
-                }
-                else if (chainId == 280)
-                {
-                    chainInfo = new ZkSyncChain(ZkSyncChainId.Mainnet);
-                }
+                chainInfo = new ZkSyncChain((ZkSyncChainId)chainId);
             }
-            else if (name == "metis")
+            else if (chainName == ChainName.Metis)
             {
-                if (chainId == 1088)
-                {
-                    chainInfo = new MetisChain(MetisChainId.Mainnet);
-                }
-                else if (chainId == 599)
-                {
-                    chainInfo = new MetisChain(MetisChainId.Testnet);
-                }
+                chainInfo = new MetisChain((MetisChainId)chainId);
             }
-            else if (name == "confluxespace")
+            else if (chainName == ChainName.ConfluxESpace)
             {
-                if (chainId == 1030)
-                {
-                    chainInfo = new ConfluxESpaceChain(ConfluxESpaceChainId.Mainnet);
-                }
-                else if (chainId == 71)
-                {
-                    chainInfo = new ConfluxESpaceChain(ConfluxESpaceChainId.Testnet);
-                }
+                chainInfo = new ConfluxESpaceChain((ConfluxESpaceChainId)chainId);
             }
-            else if (name == "mapo")
+            else if (chainName == ChainName.Mapo)
             {
-                if (chainId == 22776)
-                {
-                    chainInfo = new MapoChain(MapoChainId.Mainnet);
-                }
-                else if (chainId == 212)
-                {
-                    chainInfo = new MapoChain(MapoChainId.Testnet);
-                }
-            } 
-            else if (name == "polygonzkevm")
-            {
-                if (chainId == 1101)
-                {
-                    chainInfo = new PolygonZkEVMChain(PolygonZkEVMChainId.Mainnet);
-                }
-                else if (chainId == 1442)
-                {
-                    chainInfo = new PolygonZkEVMChain(PolygonZkEVMChainId.Testnet);
-                }
+                chainInfo = new MapoChain((MapoChainId)chainId);
             }
-            else if (name == "base")
+            else if (chainName == ChainName.PolygonZkEVM)
             {
-                if (chainId == 84531)
-                {
-                    chainInfo = new BaseChain(BaseChainId.Testnet);
-                }
+                chainInfo = new PolygonZkEVMChain((PolygonZkEVMChainId)chainId);
             }
-            else if (name == "linea")
+            else if (chainName == ChainName.Base)
             {
-                if (chainId == 59140)
-                {
-                    chainInfo = new LineaChain(LineaChainId.Testnet);
-                }
+                chainInfo = new BaseChain((BaseChainId)chainId);
             }
-            else if (name == "combo")
+            else if (chainName == ChainName.Linea)
             {
-                if (chainId == 91715)
-                {
-                    chainInfo = new ComboChain(ComboChainId.Testnet);
-                }
+                chainInfo = new LineaChain((LineaChainId)chainId);
             }
-            else if (name == "mantle")
+            else if (chainName == ChainName.Combo)
             {
-                if (chainId == 5001)
-                {
-                    chainInfo = new MantleChain(MantleChainId.Testnet);
-                }
+                chainInfo = new ComboChain((ComboChainId)chainId);
             }
-            else if (name == "zkmeta")
+            else if (chainName == ChainName.Mantle)
             {
-                if (chainId == 12009)
-                {
-                    chainInfo = new ZkMetaChain(ZkMetaChainId.Testnet);
-                }
+                chainInfo = new MantleChain((MantleChainId)chainId);
             }
-            else if (name == "opbnb")
+            else if (chainName == ChainName.ZkMeta)
             {
-                if (chainId == 5611)
-                {
-                    chainInfo = new OpBNBChain(OpBNBChainId.Testnet);
-                }
+                chainInfo = new ZkMetaChain((ZkMetaChainId)chainId);
             }
-            else if (name == "okbc")
+            else if (chainName == ChainName.OpBNB)
             {
-                if (chainId == 195)
-                {
-                    chainInfo = new OKBCChain(OKBCChainId.Testnet);
-                }
+                chainInfo = new OpBNBChain((OpBNBChainId)chainId);
             }
-            else if (name == "taiko")
+            else if (chainName == ChainName.OKBC)
             {
-                if (chainId == 167005)
-                {
-                    chainInfo = new TaikoChain(TaikoChainId.Testnet);
-                }
+                chainInfo = new OKBCChain((OKBCChainId)chainId);
             }
-            
-            
+            else if (chainName == ChainName.Taiko)
+            {
+                chainInfo = new TaikoChain((TaikoChainId)chainId);
+            }
+            else if (chainName == ChainName.ReadOn)
+            {
+                chainInfo = new ReadOnChain((ReadOnChainId)chainId);
+            }
+            else if (chainName == ChainName.Zora)
+            {
+                chainInfo = new ZoraChain((ZoraChainId)chainId);
+            }
+            else if (chainName == ChainName.PGN)
+            {
+                chainInfo = new PGNChain((PGNChainId)chainId);
+            }
+            else if (chainName == ChainName.Manta)
+            {
+                chainInfo = new MantaChain((MantaChainId)chainId);
+            }
+            else if (chainName == ChainName.Nebula)
+            {
+                chainInfo = new NebulaChain((NebulaChainId)chainId);
+            }
+
 
             return chainInfo;
         }

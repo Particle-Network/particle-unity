@@ -34,27 +34,6 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> addEthereumChainTask;
 
         /// <summary>
-        /// Set Chain Info Async, because ParticleAuthService support both solana and evm, if switch to solana from evm,
-        /// Auth Service will create a evm address if the user doesn't has a evm address.
-        /// </summary>
-        /// <param name="chainInfo">Chain info</param>
-        /// <returns></returns>
-        public Task<NativeResultData> SetChainInfoAsync(ChainInfo chainInfo)
-        {
-            Debug.Log(chainInfo);
-            setChainTask = new TaskCompletionSource<NativeResultData>();
-            ParticleConnectInteraction.SetChainInfoAsync(chainInfo);
-#if UNITY_EDITOR
-            LoginCallBack(JsonConvert.SerializeObject(new JObject
-            {
-                { "status", 1 },
-                { "data", "" },
-            }));
-#endif
-            return setChainTask.Task;
-        }
-
-        /// <summary>
         /// Set Chain Info Async call back
         /// </summary>
         /// <param name="json"></param>

@@ -24,6 +24,8 @@ namespace Network.Particle.Scripts.Model
         /// 
         /// 2 show prompt when sign every time.
         ///
+        /// 3 force user set payment password
+        ///
         /// default value is 1.
         /// </param>
         ///  <param name="promptMasterPasswordSettingWhenLogin">
@@ -34,6 +36,8 @@ namespace Network.Particle.Scripts.Model
         /// 1 show prompt when first login only.
         /// 
         /// 2 show prompt when login every time.
+        ///
+        /// 3 force user set master password
         ///
         /// default value is 1.
         /// </param>

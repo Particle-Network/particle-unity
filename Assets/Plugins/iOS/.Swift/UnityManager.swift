@@ -5,11 +5,13 @@
 //  Created by link on 2022/6/30.
 //
 
+import Base58_swift
 import Foundation
 import RxSwift
 import SwiftyJSON
 import UnityFramework
 
+import ParticleAuthAdapter
 import ParticleAuthService
 import ParticleBiconomy
 import ParticleNetworkBase
@@ -40,7 +42,9 @@ import UIKit
 
 @objcMembers
 class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
+    
     let bag = DisposeBag()
+    
     static var shared = UnityManager()
     
     var ufw: UnityFramework?
@@ -148,19 +152,45 @@ extension UnityManager {
         }
     }
     
-    func setInterfaceStyle(_ json: String) {
+    func setWebAuthConfig(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let appearanceString = data["appearance"].stringValue.lowercased()
+        let displayWallet = data["display_wallet"].boolValue
+        
+        var appearance: UIUserInterfaceStyle = .unspecified
+        if appearanceString == "system" {
+            appearance = UIUserInterfaceStyle.unspecified
+        } else if appearanceString == "light" {
+            appearance = UIUserInterfaceStyle.light
+        } else if appearanceString == "dark" {
+            appearance = UIUserInterfaceStyle.dark
+        }
+        
+        ParticleAuthService.setWebAuthConfig(options: .init(isDisplayWallet: displayWallet, appearance: appearance))
+    }
+    
+    func setAppearance(_ json: String) {
         /**
          SYSTEM,
          LIGHT,
          DARK,
          */
+        var appearance: UIUserInterfaceStyle = .unspecified
         if json.lowercased() == "system" {
-            ParticleNetwork.setInterfaceStyle(UIUserInterfaceStyle.unspecified)
+            appearance = UIUserInterfaceStyle.unspecified
         } else if json.lowercased() == "light" {
-            ParticleNetwork.setInterfaceStyle(UIUserInterfaceStyle.light)
+            appearance = UIUserInterfaceStyle.light
         } else if json.lowercased() == "dark" {
-            ParticleNetwork.setInterfaceStyle(UIUserInterfaceStyle.dark)
+            appearance = UIUserInterfaceStyle.dark
         }
+        ParticleNetwork.setAppearance(appearance)
+    }
+    
+    func setSecurityAccountConfig(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let promptSettingWhenSign = data["prompt_setting_when_sign"].intValue
+        let promptMasterPasswordSettingWhenLogin = data["prompt_master_password_setting_when_login"].intValue
+        ParticleNetwork.setSecurityAccountConfig(config: .init(promptSettingWhenSign: promptSettingWhenSign, promptMasterPasswordSettingWhenLogin: promptMasterPasswordSettingWhenLogin))
     }
 }
 
@@ -209,7 +239,6 @@ extension UnityManager {
         if account != nil, account!.isEmpty {
             account = nil
         }
-        let loginFormMode = data["loginFormMode"].boolValue
         let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
         var socialLoginPrompt: SocialLoginPrompt?
         if socialLoginPromptString == "none" {
@@ -228,7 +257,7 @@ extension UnityManager {
             loginAuthorization = .init(message: message!, isUnique: isUnique)
         }
         
-        ParticleAuthService.login(type: loginType, account: account, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization).subscribe { [weak self] result in
+        ParticleAuthService.login(type: loginType, account: account, supportAuthType: supportAuthTypeArray, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -243,26 +272,6 @@ extension UnityManager {
                 let newUserInfo = JSON(parseJSON: userInfoJsonString)
                 
                 let statusModel = UnityStatusModel(status: true, data: newUserInfo)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
-    }
-    
-    func setUserInfo(_ json: String) {
-        ParticleAuthService.setUserInfo(json: json).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let userInfo):
-                guard let userInfo = userInfo else { return }
-                let statusModel = UnityStatusModel(status: true, data: userInfo)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: UnityManager.authSystemName)
@@ -337,10 +346,29 @@ extension UnityManager {
         case .solana:
             serializedMessage = Base58.encode(message.data(using: .utf8)!)
         default:
-            serializedMessage = "0x" + message.data(using: .utf8)!.map { String(format: "%02x", $0) }.joined()
+            serializedMessage = message
         }
         
         ParticleAuthService.signMessage(serializedMessage).subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            case .success(let signedMessage):
+                let statusModel = UnityStatusModel(status: true, data: signedMessage)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: UnityManager.authSystemName)
+            }
+        }.disposed(by: bag)
+    }
+    
+    func signMessageUnique(_ message: String) {
+        ParticleAuthService.signMessageUnique(message).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -481,10 +509,18 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let message = data["message"].stringValue
         let version = data["version"].stringValue.lowercased()
+        var signTypedDataVersion: EVMSignTypedDataVersion?
+        if version == "v1" {
+            signTypedDataVersion = .v1
+        } else if version == "v3" {
+            signTypedDataVersion = .v3
+        } else if version == "v4" {
+            signTypedDataVersion = .v4
+        } else if version == "v4unique" {
+            signTypedDataVersion = .v4Unique
+        }
         
-        let hexString = "0x" + message.data(using: .utf8)!.map { String(format: "%02x", $0) }.joined()
-       
-        ParticleAuthService.signTypedData(hexString, version: EVMSignTypedDataVersion(rawValue: version) ?? .v1).subscribe { [weak self] result in
+        ParticleAuthService.signTypedData(message, version: signTypedDataVersion ?? .v4).subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
@@ -548,25 +584,35 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let chainId = data["chain_id"].intValue
         guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else { return }
-        ParticleAuthService.setChainInfo(chainInfo).subscribe { [weak self] result in
-            guard let self = self else { return }
+        if ParticleAuthService.isLogin() == false {
+            ParticleNetwork.setChainInfo(chainInfo)
+            let null: String? = nil
+            let statusModel = UnityStatusModel(status: true, data: null)
+            let data = try! JSONEncoder().encode(statusModel)
+            guard let json = String(data: data, encoding: .utf8) else { return }
+            callBackMessage(json, unityName: UnityManager.authSystemName)
+            
+        } else {
+            ParticleAuthService.switchChain(chainInfo).subscribe { [weak self] result in
+                guard let self = self else { return }
 
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let userInfo):
-                guard let userInfo = userInfo else { return }
-                let statusModel = UnityStatusModel(status: true, data: userInfo)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+                switch result {
+                case .failure(let error):
+                    let response = self.ResponseFromError(error)
+                    let statusModel = UnityStatusModel(status: false, data: response)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    
+                    self.callBackMessage(json, unityName: UnityManager.authSystemName)
+                case .success(let userInfo):
+                    guard let userInfo = userInfo else { return }
+                    let statusModel = UnityStatusModel(status: true, data: userInfo)
+                    let data = try! JSONEncoder().encode(statusModel)
+                    guard let json = String(data: data, encoding: .utf8) else { return }
+                    self.callBackMessage(json, unityName: UnityManager.authSystemName)
+                }
+            }.disposed(by: bag)
+        }
     }
     
     func setModalPresentStyle(_ style: String) {
@@ -585,8 +631,8 @@ extension UnityManager {
         }
     }
     
-    func openWebWallet() {
-        ParticleAuthService.openWebWallet()
+    func openWebWallet(_ json: String) {
+        ParticleAuthService.openWebWallet(styleJsonString: json)
     }
     
     func openAccountAndSecurity() {
@@ -609,26 +655,11 @@ extension UnityManager {
             }
         }.disposed(by: bag)
     }
-    
-    func setSecurityAccountConfig(_ json: String) {
-        let data = JSON(parseJSON: json)
-        let promptSettingWhenSign = data["prompt_setting_when_sign"].intValue
-        let promptMasterPasswordSettingWhenLogin = data["prompt_master_password_setting_when_login"].intValue
-        ParticleAuthService.setSecurityAccountConfig(config: .init(promptSettingWhenSign: promptSettingWhenSign, promptMasterPasswordSettingWhenLogin: promptMasterPasswordSettingWhenLogin))
-    }
 }
 
 // MARK: - Particle Wallet GUI
 
 extension UnityManager {
-    func enablePay(_ enable: Bool) {
-        ParticleWalletGUI.enablePay(enable)
-    }
-    
-    func getEnablePay() -> Bool {
-        ParticleWalletGUI.getEnablePay()
-    }
-    
     func navigatorWallet(_ display: Int) {
         if display != 0 {
             PNRouter.navigatorWallet(display: .nft)
@@ -770,29 +801,37 @@ extension UnityManager {
         }
     }
     
-    func showTestNetwork(_ show: Bool) {
-        ParticleWalletGUI.showTestNetwork(show)
+    func setShowTestNetwork(_ show: Bool) {
+        ParticleWalletGUI.setShowTestNetwork(show)
     }
     
-    func showManageWallet(_ show: Bool) {
-        ParticleWalletGUI.showManageWallet(show)
+    func setShowManageWallet(_ show: Bool) {
+        ParticleWalletGUI.setShowManageWallet(show)
     }
     
-    func supportChain(_ json: String) {
+    func setSupportChain(_ json: String) {
         let chains = JSON(parseJSON: json).arrayValue.map {
-            $0["chain_Id"].intValue
+            $0["chain_id"].intValue
         }.compactMap {
             ParticleNetwork.searchChainInfo(by: $0)?.chain
         }
-        ParticleWalletGUI.supportChain(chains)
+        ParticleWalletGUI.setSupportChain(chains)
     }
     
-    func enableSwap(_ enable: Bool) {
-        ParticleWalletGUI.enableSwap(enable)
+    func setSwapDisabled(_ disabled: Bool) {
+        ParticleWalletGUI.setSwapDisabled(disabled)
     }
     
-    func getEnableSwap() -> Bool {
-        ParticleWalletGUI.getEnableSwap()
+    func getSwapDisabled() -> Bool {
+        ParticleWalletGUI.getSwapDisabled()
+    }
+    
+    func setPayDisabled(_ disabled: Bool) {
+        ParticleWalletGUI.setPayDisabled(disabled)
+    }
+    
+    func getPayDisabled() -> Bool {
+        ParticleWalletGUI.getPayDisabled()
     }
     
     func navigatorLoginList(_ json: String?) {
@@ -899,18 +938,6 @@ extension UnityManager {
         }
     }
     
-    func guiSetLanguage(_ json: String) {
-        /**
-         EN,
-         ZH_HANS,
-         ZH_HANT,
-         JA,
-         KO
-         */
-        let language = getLanguage(from: json)
-        ParticleWalletGUI.setLanguage(language)
-    }
-    
     private func getLanguage(from json: String) -> Language {
         var language: Language = .en
         if json.lowercased() == "en" {
@@ -927,20 +954,20 @@ extension UnityManager {
         return language
     }
     
-    func showLanguageSetting(_ show: Bool) {
-        ParticleWalletGUI.showLanguageSetting(show)
+    func setShowLanguageSetting(_ show: Bool) {
+        ParticleWalletGUI.setShowLanguageSetting(show)
     }
     
-    func showAppearanceSetting(_ show: Bool) {
-        ParticleWalletGUI.showAppearanceSetting(show)
+    func setShowAppearanceSetting(_ show: Bool) {
+        ParticleWalletGUI.setShowAppearanceSetting(show)
     }
     
-    func supportWalletConnect(_ enable: Bool) {
-        ParticleWalletGUI.supportWalletConnect(enable)
+    func setSupportWalletConnect(_ enable: Bool) {
+        ParticleWalletGUI.setSupportWalletConnect(enable)
     }
     
-    func supportDappBrowser(_ enable: Bool) {
-        ParticleWalletGUI.supportDappBrowser(enable)
+    func setSupportDappBrowser(_ enable: Bool) {
+        ParticleWalletGUI.setSupportDappBrowser(enable)
     }
     
     func particleWalletConnectInitialize(_ json: String) {
@@ -1061,7 +1088,7 @@ extension UnityManager {
         
         let dAppData = DAppMetaData(name: dAppName, icon: dAppIconUrl, url: dAppUrl, description: description)
         
-        var adapters: [ConnectAdapter] = [ParticleConnectAdapter()]
+        var adapters: [ConnectAdapter] = [ParticleAuthAdapter()]
 #if canImport(ConnectEVMAdapter)
         let evmRpcUrl = data["rpc_url"]["evm_url"].stringValue
         if evmRpcUrl.isEmpty {
@@ -1113,47 +1140,6 @@ extension UnityManager {
         }
     }
     
-    func particleConnectSetChainInfo(_ json: String) -> Bool {
-        let data = JSON(parseJSON: json)
-        let chainId = data["chain_id"].intValue
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else { return false }
-        ParticleNetwork.setChainInfo(chainInfo)
-        return true
-    }
-    
-    func particleConnectSetChainInfoAsync(_ json: String) {
-        let data = JSON(parseJSON: json)
-        let chainId = data["chain_id"].intValue
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else { return }
-        
-        if ParticleAuthService.isLogin() {
-            ParticleAuthService.setChainInfo(chainInfo).subscribe { [weak self] result in
-                guard let self = self else { return }
-
-                switch result {
-                case .failure(let error):
-                    let response = self.ResponseFromError(error)
-                    let statusModel = UnityStatusModel(status: false, data: response)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "SetChainInfoAsync")
-                case .success(let userInfo):
-                    guard let userInfo = userInfo else { return }
-                    let statusModel = UnityStatusModel(status: true, data: true)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "SetChainInfoAsync")
-                }
-            }.disposed(by: bag)
-        } else {
-            ParticleNetwork.setChainInfo(chainInfo)
-            let statusModel = UnityStatusModel(status: true, data: true)
-            let data = try! JSONEncoder().encode(statusModel)
-            guard let json = String(data: data, encoding: .utf8) else { return }
-            callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "SetChainInfoAsync")
-        }
-    }
-    
     func adapterGetAccounts(_ json: String) -> String {
         let walletTypeString = json
         guard let walletType = map2WalletType(from: walletTypeString) else {
@@ -1184,7 +1170,7 @@ extension UnityManager {
     func adapterConnect(_ json: String, configJson: String) {
         let walletTypeString = json
         
-        var connectConfig: ParticleConnectConfig?
+        var connectConfig: ParticleAuthConfig?
         if !configJson.isEmpty {
             let data = JSON(parseJSON: configJson)
             let loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
@@ -1228,7 +1214,6 @@ extension UnityManager {
                 account = nil
             }
             
-
             let loginFormMode = data["loginFormMode"].boolValue
             let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
             var socialLoginPrompt: SocialLoginPrompt?
@@ -1240,7 +1225,7 @@ extension UnityManager {
                 socialLoginPrompt = SocialLoginPrompt.selectAccount
             }
 
-            connectConfig = ParticleConnectConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, loginFormMode: loginFormMode, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt)
+            connectConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt)
         }
         
         guard let walletType = map2WalletType(from: walletTypeString) else {
@@ -1897,7 +1882,7 @@ extension UnityManager {
 
     func setWalletConnectV2SupportChainInfos(_ json: String) {
         let chainInfos = JSON(parseJSON: json).arrayValue.map {
-            $0["chain_Id"].intValue
+            $0["chain_id"].intValue
         }.compactMap {
             ParticleNetwork.searchChainInfo(by: $0)
         }
@@ -1921,7 +1906,7 @@ extension UnityManager {
         }
         
         BiconomyService.initialize(version: .init(rawValue: version) ?? .v1_0_0, dappApiKeys: dappAppKeys)
-        ParticleNetwork.setBiconomyService(self.biconomy)
+        ParticleNetwork.setBiconomyService(biconomy)
     }
     
     func enableBiconomyMode() {
@@ -2108,7 +2093,6 @@ extension UnityManager: MessageSigner {
             }
             return adapter.signTypedData(publicAddress: getEoaAddress(), data: message)
         }
-        
     }
     
     public func signMessage(_ message: String) -> RxSwift.Single<String> {

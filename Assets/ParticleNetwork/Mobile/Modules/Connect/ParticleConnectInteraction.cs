@@ -59,8 +59,9 @@ namespace Network.Particle.Scripts.Core
                 };
                 allInfos.Add(info);
             }
+
             var json = JsonConvert.SerializeObject(allInfos);
-            
+
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("setWalletConnectV2SupportChainInfos",json);
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -69,48 +70,7 @@ namespace Network.Particle.Scripts.Core
 #else
 
 #endif
-            
         }
-            
-       
-
-        public static bool SetChainInfo(ChainInfo chainInfo)
-        {
-            var json = JsonConvert.SerializeObject(new JObject
-            {
-                { "chain_name", chainInfo.getChainName() },
-                { "chain_id", chainInfo.getChainId() },
-                { "chain_id_name", chainInfo.getChainIdName() },
-            });
-            Debug.Log("SetChainInfo: " + json);
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-            return ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<int>("setChainInfo", json) ==1;
-#elif UNITY_IOS &&!UNITY_EDITOR
-            return ParticleNetworkIOSBridge.particleConnectSetChainInfo(json);
-#else
-            Debug.Log($"ParticleConnectSetChainInfoSync json: {json}");
-            return true;
-#endif
-        }
-
-        public static void SetChainInfoAsync(ChainInfo chainInfo)
-        {
-            var json = JsonConvert.SerializeObject(new JObject
-            {
-                { "chain_name", chainInfo.getChainName() },
-                { "chain_id", chainInfo.getChainId() },
-                { "chain_id_name", chainInfo.getChainIdName() },
-            });
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("setChainInfoAsync",json);
-#elif UNITY_IOS &&!UNITY_EDITOR
-            ParticleNetworkIOSBridge.particleConnectSetChainInfoAsync(json);
-#else
-            Debug.Log($"SetChainInfoAsync json: {json}");
-#endif
-        }
-
 
         public static void Connect(WalletType walletType, [CanBeNull] ConnectConfig config)
         {
@@ -190,11 +150,28 @@ namespace Network.Particle.Scripts.Core
 
         public static void SignMessage(WalletType walletType, string publicAddress, string message)
         {
+            string serializedMessage;
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            {
+                if (HexUtils.IsHexadecimal(message))
+                {
+                    serializedMessage = message;
+                }
+                else
+                {
+                    serializedMessage = HexUtils.ConvertHex(message);
+                }
+            }
+            else
+            {
+                serializedMessage = message;
+            }
+
             var json = JsonConvert.SerializeObject(new JObject
             {
                 { "wallet_type", walletType.ToString() },
                 { "public_address", publicAddress },
-                { "message", message },
+                { "message", serializedMessage },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("signMessage",json);
@@ -240,8 +217,9 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
-        
-        internal static void BatchSendTransactions(WalletType walletType, string publicAddress, List<string> transactions, [CanBeNull] BiconomyFeeMode feeMode = null)
+
+        internal static void BatchSendTransactions(WalletType walletType, string publicAddress,
+            List<string> transactions, [CanBeNull] BiconomyFeeMode feeMode = null)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -260,7 +238,8 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void SignAndSendTransaction(WalletType walletType, string publicAddress, string transaction, [CanBeNull] BiconomyFeeMode feeMode = null)
+        public static void SignAndSendTransaction(WalletType walletType, string publicAddress, string transaction,
+            [CanBeNull] BiconomyFeeMode feeMode = null)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -280,11 +259,23 @@ namespace Network.Particle.Scripts.Core
 
         public static void SignTypedData(WalletType walletType, string publicAddress, string message)
         {
+            string serializedMessage;
+
+            if (HexUtils.IsHexadecimal(message))
+            {
+                serializedMessage = message;
+            }
+            else
+            {
+                serializedMessage = HexUtils.ConvertHex(message);
+            }
+
+
             var json = JsonConvert.SerializeObject(new JObject
             {
                 { "wallet_type", walletType.ToString() },
                 { "public_address", publicAddress },
-                { "message", message },
+                { "message", serializedMessage },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("signTypedData",json);

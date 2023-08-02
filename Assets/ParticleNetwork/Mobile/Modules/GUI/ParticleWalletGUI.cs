@@ -131,58 +131,62 @@ namespace Network.Particle.Scripts.Core
         }
 
         /// <summary>
-        /// Enable pay feature
+        /// Set pay disabled
         /// </summary>
-        /// <param name="enable">Enable, default value is true</param>
-        public static void EnablePay(bool enable = true)
+        /// <param name="disabled"></param>
+        public static void SetPayDisabled(bool disabled)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.CallNative("enablePay",enable);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.enablePay(enable);
+            ParticleNetworkIOSBridge.setPayDisabled(disabled);
 #else
 #endif
         }
 
         /// <summary>
-        /// Get is pay feature enable
+        /// Get pay disabled
         /// </summary>
-        /// <returns>If pay feature is enable, return true, vice versa</returns>
-        public static bool GetEnablePay()
+        /// <returns></returns>
+        public static bool GetPayDisabled()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getEnablePay");
 #elif UNITY_IOS && !UNITY_EDITOR
-            return ParticleNetworkIOSBridge.getEnablePay();
+            return ParticleNetworkIOSBridge.getPayDisabled();
 #else
             return true;
 #endif
         }
 
         /// <summary>
-        /// Enable swap feature
+        /// Set swap disabled
         /// </summary>
-        /// <param name="enable">Enable, default value is true</param>
-        public static void EnableSwap(bool enable = true)
+        /// <param name="disabled"></param>
+        public static void SetSwapDisabled(bool disabled)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.CallNative("enableSwap",enable);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.enableSwap(enable);
+            ParticleNetworkIOSBridge.setSwapDisabled(disabled);
 #else
 #endif
         }
 
         /// <summary>
-        /// Get is swap feature enable
+        /// Get swap disabled
         /// </summary>
-        /// <returns>If swap feature is enable, return true, vice versa</returns>
-        public static bool GetEnableSwap()
+        /// <returns></returns>
+        public static bool GetSwapDisabled()
         {
 #if UNITY_ANDROID && !UNITY_EDITO
+// todo
             return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getEnableSwap");
 #elif UNITY_IOS && !UNITY_EDITOR
-            return ParticleNetworkIOSBridge.getEnableSwap();
+            return ParticleNetworkIOSBridge.getSwapDisabled();
 #else
             return true;
 #endif
@@ -291,12 +295,13 @@ namespace Network.Particle.Scripts.Core
         /// Set Show Test Network
         /// </summary>
         /// <param name="show">Set false to hide test network, vice versa, default value is false</param>
-        public static void ShowTestNetwork(bool show = false)
+        public static void SetShowTestNetwork(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.GetUnityBridgeClass().CallStatic("showTestNetwork",show);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.showTestNetwork(show);
+            ParticleNetworkIOSBridge.setShowTestNetwork(show);
 #else
 
 #endif
@@ -306,12 +311,13 @@ namespace Network.Particle.Scripts.Core
         /// Set Show Manage Wallet page
         /// </summary>
         /// <param name="show">Set true to show manage wallet page button in setting page, vice versa, default value is true</param>
-        public static void ShowManageWallet(bool show = true)
+        public static void SetShowManageWallet(bool show = true)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.GetUnityBridgeClass().CallStatic("showManageWallet",show);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.showManageWallet(show);
+            ParticleNetworkIOSBridge.setShowManageWallet(show);
 #else
 
 #endif
@@ -325,12 +331,13 @@ namespace Network.Particle.Scripts.Core
         /// Set Show Appearance Setting in Setting page
         /// </summary>
         /// <param name="show">Set true to show appearance setting in setting page, vice versa, default value is false.</param>
-        public static void ShowAppearanceSetting(bool show = false)
+        public static void SetShowAppearanceSetting(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todi
         ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingAppearance",show);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.showAppearanceSetting(show);
+            ParticleNetworkIOSBridge.setShowAppearanceSetting(show);
 #else
 
 #endif
@@ -340,12 +347,13 @@ namespace Network.Particle.Scripts.Core
         /// Set Show Language Setting in Setting page
         /// </summary>
         /// <param name="show">Set true to show language setting in setting page, vice versa, default value is false.</param>
-        public static void ShowLanguageSetting(bool show = false)
+        public static void SetShowLanguageSetting(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingLanguage",show);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.showLanguageSetting(show);
+            ParticleNetworkIOSBridge.setShowLanguageSetting(show);
 #else
 
 #endif
@@ -355,7 +363,7 @@ namespace Network.Particle.Scripts.Core
         /// Set Support Chain
         /// </summary>
         /// <param name="chainInfos">ChainInfo array</param>
-        public static void SupportChain(ChainInfo[] chainInfos)
+        public static void SetSupportChain(ChainInfo[] chainInfos)
         {
             List<JObject> allInfos = new List<JObject>();
             foreach (var chainInfo in chainInfos)
@@ -375,8 +383,7 @@ namespace Network.Particle.Scripts.Core
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityBridgeClass().CallStatic("setSupportChain",json);
 #elif UNITY_IOS && !UNITY_EDITOR
-            json = JsonConvert.SerializeObject(chainInfos.Select(x => x.getChainName()));
-            ParticleNetworkIOSBridge.supportChain(json);
+            ParticleNetworkIOSBridge.setSupportChain(json);
 #else
 
 #endif
@@ -422,31 +429,16 @@ namespace Network.Particle.Scripts.Core
         }
 
         /// <summary>
-        /// Set Language
-        /// </summary>
-        /// <param name="language">Language</param>
-        public static void SetLanguage(Language language)
-        {
-            Debug.Log(language);
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("guiSetLanguage",language.ToString());
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.guiSetLanguage(language.ToString());
-#else
-
-#endif
-        }
-
-        /// <summary>
         /// Set support wallet connect as a wallet
         /// </summary>
         /// <param name="enable">Enable</param>
-        public static void SupportWalletConnect(bool enable)
+        public static void SetSupportWalletConnect(bool enable)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
            ParticleNetwork.GetUnityBridgeClass().CallStatic("supportWalletConnect",enable);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.supportWalletConnect(enable);
+            ParticleNetworkIOSBridge.setSupportWalletConnect(enable);
 #else
 
 #endif
@@ -456,13 +448,13 @@ namespace Network.Particle.Scripts.Core
         /// Set support dapp browser in wallet page
         /// </summary>
         /// <param name="enable">Enable</param>
-        public static void SupportDappBrowser(bool enable)
+        public static void SetSupportDappBrowser(bool enable)
         {
 
 #if UNITY_ANDROID && !UNITY_EDITOR
            ParticleNetwork.GetUnityBridgeClass().CallStatic("supportWalletConnect",enable);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.supportDappBrowser(enable);
+            ParticleNetworkIOSBridge.setSupportDappBrowser(enable);
 #else
 
 #endif
@@ -581,27 +573,7 @@ namespace Network.Particle.Scripts.Core
 #endif
             
         }
-        
-        
-        /// <summary>
-        /// Set fait coin, currently support USD, CNY, JPY, HKD, INR, KRW.
-        /// If you called this method, we will hide currency change button in setting page.
-        /// You can pass nil to reset, after reset default fiat coin is USD and currency change button will show in setting page.
-        /// </summary>
-        /// <param name="fiatCoin">Fiat coin symbol.</param>
-        public static void SetFiatCoin(string fiatCoin)
-        {
-            
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("setFiatCoin",fiatCoin);
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.setFiatCoin(fiatCoin);
-#else
 
-#endif
-            
-        }
-        
         /// <summary>
         /// Load custom ui json string
         /// </summary>

@@ -170,64 +170,64 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public void ShowTestNetwork()
+        public void SetShowTestNetwork()
         {
-            ParticleWalletGUI.ShowTestNetwork(false);
+            ParticleWalletGUI.SetShowTestNetwork(true);
         }
 
-        public void ShowManageWallet()
+        public void SetShowManageWallet()
         {
-            ParticleWalletGUI.ShowManageWallet(false);
+            ParticleWalletGUI.SetShowManageWallet(true);
         }
 
-        public void ShowLanguageSetting()
+        public void SetShowLanguageSetting()
         {
-            ParticleWalletGUI.ShowLanguageSetting(true);
+            ParticleWalletGUI.SetShowLanguageSetting(true);
         }
 
-        public void ShowAppearanceSetting()
+        public void SetShowAppearanceSetting()
         {
-            ParticleWalletGUI.ShowAppearanceSetting(true);
+            ParticleWalletGUI.SetShowAppearanceSetting(true);
         }
 
-        public void SetLanguage()
+        public void SetSupportDappBrowser()
         {
-            ParticleWalletGUI.SetLanguage(Language.KO);
+            ParticleWalletGUI.SetSupportDappBrowser(true);
         }
 
-        public void SetEnableBuyCryptoFeature()
+        public void SetPayDisabled()
         {
-            ParticleWalletGUI.EnablePay(true);
+            ParticleWalletGUI.SetPayDisabled(true);
         }
 
-        public void SetEnableSwapFeature()
+        public void SetSwapDisabled()
         {
-            ParticleWalletGUI.EnableSwap(true);
+            ParticleWalletGUI.SetSwapDisabled(true);
         }
 
         public void SetSupportChainInfos()
         {
             ChainInfo avalanche = new AvalancheChain(AvalancheChainId.Mainnet);
             ChainInfo ethereum = new EthereumChain(EthereumChainId.Mainnet);
-            ChainInfo bsc = new BSCChain(BscChainId.Mainnet);
-            ParticleWalletGUI.SupportChain(new[] { avalanche, bsc, ethereum });
+            ChainInfo bsc = new BSCChain(BSCChainId.Mainnet);
+            ParticleWalletGUI.SetSupportChain(new[] { avalanche, bsc, ethereum });
         }
 
-        public void GetSwapEnableState()
+        public void GetSwapDisabled()
         {
-            var result = ParticleWalletGUI.GetEnableSwap();
-            Debug.Log($"Swap enable state = {result}");
+            var result = ParticleWalletGUI.GetSwapDisabled();
+            Debug.Log($"Is swap disabled = {result}");
         }
 
-        public void GetBuyCryptoEnableState()
+        public void GetPayDisabled()
         {
-            var result = ParticleWalletGUI.GetEnablePay();
-            Debug.Log($"Buy crypto enable state = {result}");
+            var result = ParticleWalletGUI.GetPayDisabled();
+            Debug.Log($"Is pay disabled = {result}");
         }
 
-        public void SupportWalletConnect()
+        public void SetSupportWalletConnect()
         {
-            ParticleWalletGUI.SupportWalletConnect(true);
+            ParticleWalletGUI.SetSupportWalletConnect(true);
         }
 
         public void SetCustomUI()
@@ -244,7 +244,7 @@ namespace Network.Particle.Scripts.Test
             nftContractAddresses.Add("0x225140E33a113CC616A5d5F06D01e258f5a19B7D");
             ParticleWalletGUI.SetDisplayNFTContractAddresses(nftContractAddresses.ToArray());
 
-            ParticleWalletGUI.SetFiatCoin("JPY");
+            ParticleNetwork.SetFiatCoin(FiatCoin.JPY);
 
             // your custom ui json
             // format is here.

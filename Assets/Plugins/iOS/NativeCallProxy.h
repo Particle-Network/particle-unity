@@ -18,17 +18,20 @@
 - (NSString* _Nonnull) getChainInfo;
 - (NSInteger) getDevEnv;
 - (BOOL) setChainInfo:(NSString* _Nonnull)json;
-- (void) setInterfaceStyle:(NSString* _Nonnull)json;
+- (void) setAppearance:(NSString* _Nonnull)json;
 - (void) setLanguage:(NSString* _Nonnull)json;
+- (void) setWebAuthConfig:(NSString* _Nonnull)json;
+- (void) setFiatCoin:(NSString*_Nonnull)json;
+- (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
 
 // Particle Auth Service
 - (void) login:(NSString* _Nonnull)json;
-- (void) setUserInfo:(NSString* _Nonnull)json;
 - (void) logout;
 - (void) fastLogout;
 - (BOOL) isLogin;
 - (void) isLoginAsync;
 - (void) signMessage:(NSString* _Nonnull)message;
+- (void) signMessageUnique:(NSString* _Nonnull)message;
 - (void) signTransaction:(NSString* _Nonnull)transaction;
 - (void) signAllTransactions:(NSString* _Nonnull)transactions;
 - (void) signAndSendTransaction:(NSString* _Nonnull)json;
@@ -39,16 +42,15 @@
 - (void) setChainInfoAsync:(NSString* _Nonnull)json;
 - (void) setModalPresentStyle:(NSString* _Nonnull)style;
 - (void) setMediumScreen:(BOOL)isMedium;
-- (void) openWebWallet;
+- (void) openWebWallet:(NSString* _Nonnull)json;
 - (void) openAccountAndSecurity;
-- (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
 - (void) getSecurityAccount;
 
 // Particle Wallet GUI
-- (void) enablePay:(BOOL)enable;
-- (BOOL) getEnablePay;
-- (void) enableSwap:(BOOL)enable;
-- (BOOL) getEnableSwap;
+- (void) setPayDisabled:(BOOL)disabled;
+- (BOOL) getPayDisabled;
+- (void) setSwapDisabled:(BOOL)disabled;
+- (BOOL) getSwapDisabled;
 - (void) navigatorWallet:(NSInteger)display;
 - (void) navigatorTokenReceive:(NSString* _Nullable)json;
 - (void) navigatorTokenSend:(NSString* _Nullable)json;
@@ -58,29 +60,26 @@
 - (void) navigatorBuyCrypto:(NSString*_Nonnull)json;
 - (void) navigatorSwap:(NSString* _Nullable)json;
 - (void) navigatorLoginList:(NSString* _Nullable)json;
-- (void) showTestNetwork:(BOOL)show; 
-- (void) showManageWallet:(BOOL)show;
-- (void) supportChain:(NSString*_Nonnull)json;
+- (void) setShowTestNetwork:(BOOL)show;
+- (void) setShowManageWallet:(BOOL)show;
+- (void) setSupportChain:(NSString*_Nonnull)json;
 - (void) switchWallet:(NSString*_Nonnull)json;
-- (void) guiSetLanguage:(NSString* _Nonnull)json;
-- (void) showAppearanceSetting:(BOOL)show;
-- (void) showLanguageSetting:(BOOL)show;
-- (void) supportWalletConnect:(BOOL)enable;
-- (void) supportDappBrowser:(BOOL)enable;
+- (void) setShowAppearanceSetting:(BOOL)show;
+- (void) setShowLanguageSetting:(BOOL)show;
+- (void) setSupportWalletConnect:(BOOL)enable;
+- (void) setSupportDappBrowser:(BOOL)enable;
 - (void) particleWalletConnectInitialize:(NSString*_Nonnull)json;
 - (void) setSupportAddToken:(BOOL)enable;
 - (void) setDisplayTokenAddresses:(NSString*_Nonnull)json;
 - (void) setDisplayNFTContractAddresses:(NSString*_Nonnull)json;
 - (void) setPriorityTokenAddresses:(NSString*_Nonnull)json;
 - (void) setPriorityNFTContractAddresses:(NSString*_Nonnull)json;
-- (void) setFiatCoin:(NSString*_Nonnull)json;
+
 - (void) loadCustomUIJsonString:(NSString*_Nonnull)json;
 
 
 // Particle Connect
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;
-- (BOOL) particleConnectSetChainInfo:(NSString* _Nonnull)json;
-- (void) particleConnectSetChainInfoAsync:(NSString* _Nonnull)json;
 - (void) setWalletConnectV2SupportChainInfos:(NSString* _Nonnull)json;
 
 // Particle Connect Service

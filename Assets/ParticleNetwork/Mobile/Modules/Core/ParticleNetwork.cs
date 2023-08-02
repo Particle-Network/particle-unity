@@ -1,4 +1,3 @@
-
 using System.Linq;
 using Network.Particle.Scripts.Core.Utils;
 using Newtonsoft.Json;
@@ -79,7 +78,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             var chainInfo = ChainUtils.FindChain(nativeChainInfo.chainName, nativeChainInfo.chainId);
             return chainInfo;
 #elif UNITY_EDITOR
-             return currChainInfo;
+            return currChainInfo;
 #endif
         }
 
@@ -93,19 +92,20 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             return 0;
 #endif
         }
-        
-        
+
+
         /// <summary>
         /// Set Interface Style
         /// </summary>
         /// <param name="style">Style</param>
-        public static void SetInterfaceStyle(UserInterfaceStyle style)
+        public static void SetAppearance(Appearance style)
         {
             Debug.Log(style);
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.GetUnityBridgeClass().CallStatic("setInterfaceStyle",style.ToString());
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.setInterfaceStyle(style.ToString());
+            ParticleNetworkIOSBridge.setAppearance(style.ToString());
 #else
 
 #endif
@@ -127,15 +127,56 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
 #endif
         }
 
+        /// <summary>
+        /// Set fiat coin, currently support USD, CNY, JPY, HKD, INR, KRW.
+        /// </summary>
+        /// <param name="fiatCoin">Fiat coin</param>
+        public static void SetFiatCoin(FiatCoin fiatCoin)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("setFiatCoin",fiatCoin);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setFiatCoin(fiatCoin.ToString());
+#else
+
+#endif
+        }
+
+        public static void SetSecurityAccountConfig(SecurityAccountConfig config)
+        {
+            var json = JsonConvert.SerializeObject(config);
+#if UNITY_ANDROID && !UNITY_EDITOR
+            ParticleNetwork.CallNative("setSecurityAccountConfig",json);
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.setSecurityAccountConfig(json);
+#else
+#endif
+        }
+
+        public static void SetWebAuthConfig(bool displayWallet, Appearance appearance)
+        {
+            var json = JsonConvert.SerializeObject(new JObject
+            {
+                { "display_wallet", displayWallet },
+                { "appearance", appearance.ToString() },
+            });
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("setSecurityAccountConfig",json);
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.setWebAuthConfig(json);
+#else
+#endif
+        }
+
         public static void CallNative(string methodName, params object[] args)
         {
             Debug.Log("CallNative_methodName " + methodName);
 
             GetAndroidJavaObject().Call("runOnUiThread",
-                new AndroidJavaRunnable(() =>
-                {
-                    GetUnityBridgeClass().CallStatic(methodName, args);
-                }));
+                new AndroidJavaRunnable(() => { GetUnityBridgeClass().CallStatic(methodName, args); }));
         }
 
         public static void CallConnectNative(string methodName, params object[] args)
@@ -143,11 +184,9 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             Debug.Log("CallConnectNative_methodName " + methodName);
 
             GetAndroidJavaObject().Call("runOnUiThread",
-                new AndroidJavaRunnable(() =>
-                {
-                    GetUnityConnectBridgeClass().CallStatic(methodName, args);
-                }));
+                new AndroidJavaRunnable(() => { GetUnityConnectBridgeClass().CallStatic(methodName, args); }));
         }
+
         private static AndroidJavaObject GetAndroidJavaObject()
         {
             if (activityObject != null)
@@ -171,7 +210,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             unityBridge = new AndroidJavaClass("network.particle.unity.UnityBridge");
             return unityBridge;
         }
-        
+
         public static AndroidJavaClass GetUnityConnectBridgeClass()
         {
             if (unityConnectBridge != null)
@@ -183,7 +222,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             return unityConnectBridge;
         }
 
-        
+
         public static string GetPrivateKey()
         {
             Assert.IsNotNull(currChainInfo, "currChainInfo is null,you must call ParticleNetwork.Init() first");
@@ -207,3 +246,4 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
         }
     }
 }
+

@@ -23,15 +23,13 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> setChainTask;
 
         private TaskCompletionSource<NativeResultData> signMessageTask;
+        private TaskCompletionSource<NativeResultData> signMessageUniqueTask;
         private TaskCompletionSource<NativeResultData> signTransactionTask;
         private TaskCompletionSource<NativeResultData> signAllTransactionsTask;
         private TaskCompletionSource<NativeResultData> signAndSendTransactionTask;
         private TaskCompletionSource<NativeResultData> batchSendTransactionTask;
         private TaskCompletionSource<NativeResultData> signTypedDataTask;
-
         private TaskCompletionSource<NativeResultData> openAccountAndSecurityTask;
-        private TaskCompletionSource<NativeResultData> setUserInfoTask;
-
         private TaskCompletionSource<NativeResultData> getSecurityAccountTask;
         /// <summary>
         /// Login
@@ -39,18 +37,17 @@ namespace Network.Particle.Scripts.Core
         /// <param name="loginType">Login type</param>
         /// <param name="account">Account, default value is empty</param>
         /// <param name="supportAuthTypes">Support auth types, default value is all</param>
-        /// <param name="loginFormMode">Login form mode</param>
         /// <param name="socialLoginPrompt">Social login prompt</param>
         /// <param name="authorization">LoginAuthorization, optional, login and sign message, its message request hex in evm, base58 in solana </param>
         /// <returns></returns>
         public Task<NativeResultData> Login(LoginType loginType, string account = "",
-            SupportAuthType supportAuthTypes = SupportAuthType.ALL, bool loginFormMode = false, SocialLoginPrompt? socialLoginPrompt = null, [CanBeNull] LoginAuthorization authorization = null)
+            SupportAuthType supportAuthTypes = SupportAuthType.ALL, SocialLoginPrompt? socialLoginPrompt = null, [CanBeNull] LoginAuthorization authorization = null)
         {
             loginTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
             DevModeService.Login();
 #else
-            ParticleAuthServiceInteraction.Login(loginType: loginType, account: account, supportAuthTypes: supportAuthTypes, loginFormMode: loginFormMode, socialLoginPrompt: socialLoginPrompt, authorization: authorization);
+            ParticleAuthServiceInteraction.Login(loginType: loginType, account: account, supportAuthTypes: supportAuthTypes, socialLoginPrompt: socialLoginPrompt, authorization: authorization);
 #endif
             return loginTask.Task;
         }
@@ -102,43 +99,8 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
         
-        /// <summary>
-        /// Login
-        /// </summary>
-        /// <param name="loginType">Login type</param>
-        /// <param name="account">Account, default value is empty</param>
-        /// <param name="supportAuthTypes">Support auth types, default value is all</param>
-        /// <param name="loginFormMode">Login form mode</param>
-        /// <param name="socialLoginPrompt">Social login prompt</param>
-        /// <returns></returns>
-        public Task<NativeResultData> SetUserInfo(string json)
-        {
-            setUserInfoTask = new TaskCompletionSource<NativeResultData>();
-#if UNITY_EDITOR
-            DevModeService.Login();
-#else
-            ParticleAuthServiceInteraction.SetUserInfo(json);
-#endif
-            return setUserInfoTask.Task;
-        }
+        
 
-        /// <summary>
-        /// SetUserInfo call back
-        /// </summary>
-        /// <param name="json">Result</param>
-        public void SetUserInfoCallBack(string json)
-        {
-            Debug.Log($"SetUserInfoCallBack:{json}");
-#if UNITY_EDITOR
-            var data = new NativeResultData(true, json);
-            setUserInfoTask?.TrySetResult(data);
-            PersistTools.SaveUserInfo(json);
-#else
-            var resultData = JObject.Parse(json);
-            var status = (int)resultData["status"];
-            setUserInfoTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
-        }
 
         /// <summary>
         /// Logout
@@ -240,6 +202,45 @@ namespace Network.Particle.Scripts.Core
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             signMessageTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+#endif
+        }
+        
+        /// <summary>
+        /// Sign Message
+        /// </summary>
+        /// <param name="message">Message</param>
+        /// <returns></returns>
+        public Task<NativeResultData> SignMessageUnique(string message)
+        {
+            signMessageUniqueTask = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            {
+                DevModeService.EvmSignMessages(new[] {message});
+            }
+            else
+            {
+                DevModeService.SolanaSignMessages(new[] {message});
+            }
+#else
+            ParticleAuthServiceInteraction.SignMessageUnique(message);
+#endif
+            return signMessageUniqueTask.Task;
+        }
+
+        /// <summary>
+        /// Sign Message call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void SignMessageUniqueCallBack(string json)
+        {
+            Debug.Log($"SignMessageCallBack:{json}");
+#if UNITY_EDITOR
+            signMessageUniqueTask?.TrySetResult(new NativeResultData(true, json));
+#else
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            signMessageUniqueTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
 #endif
         }
 
