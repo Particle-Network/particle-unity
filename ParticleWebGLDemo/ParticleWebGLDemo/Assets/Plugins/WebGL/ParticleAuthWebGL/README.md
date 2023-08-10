@@ -30,7 +30,7 @@ Learn more about [Interaction with browser scripting](https://docs.unity3d.com/c
 ```C#
 
 // login
-var userInfo = await ParticleAuth.Instance.Login();
+var userInfo = await ParticleAuth.Instance.Login(options);
 
 // logout
 var result = await ParticleAuth.Instance.Logout();
