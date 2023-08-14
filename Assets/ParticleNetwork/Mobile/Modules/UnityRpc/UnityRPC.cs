@@ -280,7 +280,8 @@ namespace Network.Particle.Scripts.Core
         public static async Task<string> WriteContract(string from, string contractAddress, string methodName,
             List<object> parameters, [CanBeNull] string abiJsonString, bool isSupportEIP1559, GasFeeLevel gasFeeLevel = GasFeeLevel.High)
         {
-            var data = await AbiEncodeFunctionCall(contractAddress, methodName, parameters, abiJsonString);
+            var dataResult = await AbiEncodeFunctionCall(contractAddress, methodName, parameters, abiJsonString);
+            var data = (string)JObject.Parse(dataResult)["result"];
             return await CreateTransaction(from, data, 0, contractAddress, isSupportEIP1559, gasFeeLevel);
         }
 
