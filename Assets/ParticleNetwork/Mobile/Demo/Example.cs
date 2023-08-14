@@ -197,22 +197,11 @@ namespace Network.Particle.Scripts.Test
 
             // If your chain support EUP1559
             var isSupportEIP1559 = true;
-            var rpcResult = await EvmService.WriteContract(from, contractAddress, methodName, parameters, abiJsonString,
+            var transaction = await EvmService.WriteContract(from, contractAddress, methodName, parameters,
+                abiJsonString,
                 isSupportEIP1559);
-
-            var result = (string)JObject.Parse(rpcResult)["result"];
-
-            if (!string.IsNullOrEmpty(result))
-            {
-                Debug.Log($"result={result}");
-            }
-            else
-            {
-                var error = JObject.Parse(rpcResult)["error"];
-                var code = error?["code"];
-                var message = error?["message"];
-                Debug.Log($"code={code}, message={message}");
-            }
+            
+            Debug.Log($"transaction = {transaction}");
         }
 
 
