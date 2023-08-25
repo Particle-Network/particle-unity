@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Network.Particle.Scripts.Core
 {
-    public class ParticleBiconomy : SingletonMonoBehaviour<ParticleBiconomy>
+    public class ParticleAA : SingletonMonoBehaviour<ParticleAA>
     {
         private TaskCompletionSource<NativeResultData> rpcGetFeeQuotesTask;
         private TaskCompletionSource<NativeResultData> isDeployTask;
@@ -23,7 +23,7 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> RpcGetFeeQuotes(string eoaAddress, List<string> transactions)
         {
             rpcGetFeeQuotesTask = new TaskCompletionSource<NativeResultData>();
-            ParticleBiconomyInteraction.RpcGetFeeQuotes(eoaAddress, transactions);
+            ParticleAAInteraction.RpcGetFeeQuotes(eoaAddress, transactions);
             return rpcGetFeeQuotesTask.Task;
         }
 
@@ -39,7 +39,7 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> IsDepoly(string eoaAddress)
         {
             isDeployTask = new TaskCompletionSource<NativeResultData>();
-            ParticleBiconomyInteraction.IsDeploy(eoaAddress);
+            ParticleAAInteraction.IsDeploy(eoaAddress);
             return isDeployTask.Task;
         }
         

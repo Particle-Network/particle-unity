@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Network.Particle.Scripts.Model
 {
-    public class BiconomyFeeMode
+    public class AAFeeMode
     {
         public string option;
         [JsonProperty(PropertyName = "fee_quote")] 
@@ -14,7 +14,7 @@ namespace Network.Particle.Scripts.Model
         /// </summary>
         /// <param name="option">A wallet address to receive the purchased crypto</param>
         /// <param name="feeQuote">Choose a chain network to receive crypto</param>
-        private BiconomyFeeMode(string option, [CanBeNull] object feeQuote)
+        private AAFeeMode(string option, [CanBeNull] object feeQuote)
         {
             this.option = option;
             this.feeQuote = feeQuote;
@@ -24,9 +24,9 @@ namespace Network.Particle.Scripts.Model
         /// Auto mode, use native to pay gas fee.
         /// </summary>
         /// <returns></returns>
-        public static BiconomyFeeMode Auto()
+        public static AAFeeMode Auto()
         {
-            return new BiconomyFeeMode("auto", null);
+            return new AAFeeMode("auto", null);
         }
 
 
@@ -34,9 +34,9 @@ namespace Network.Particle.Scripts.Model
         /// Gasless mode, user doesn't pay gas fee.
         /// </summary>
         /// <returns></returns>
-        public static BiconomyFeeMode Gasless()
+        public static AAFeeMode Gasless()
         {
-            return new BiconomyFeeMode("gasless", null);
+            return new AAFeeMode("gasless", null);
         }
         
         /// <summary>
@@ -44,9 +44,9 @@ namespace Network.Particle.Scripts.Model
         /// </summary>
         /// <param name="feeQuote">Fee quote, get from RpcGetFeeQuotes</param>
         /// <returns></returns>
-        public static BiconomyFeeMode Custom(object feeQuote)
+        public static AAFeeMode Custom(object feeQuote)
         {
-            return new BiconomyFeeMode("custom", feeQuote);
+            return new AAFeeMode("custom", feeQuote);
         }
     }
 }

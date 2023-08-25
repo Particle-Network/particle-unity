@@ -168,7 +168,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        internal static void SignAndSendTransaction(string transaction, [CanBeNull] BiconomyFeeMode feeMode = null)
+        internal static void SignAndSendTransaction(string transaction, [CanBeNull] AAFeeMode feeMode = null)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -186,7 +186,7 @@ namespace Network.Particle.Scripts.Core
         }
 
         internal static void BatchSendTransactions(List<string> transactions,
-            [CanBeNull] BiconomyFeeMode feeMode = null)
+            [CanBeNull] AAFeeMode feeMode = null)
 
         {
             var json = JsonConvert.SerializeObject(new JObject

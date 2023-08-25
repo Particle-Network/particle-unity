@@ -6,19 +6,12 @@ using UnityEngine;
 
 namespace Network.Particle.Scripts.Core
 {
-    public static class ParticleBiconomyInteraction
+    public static class ParticleAAInteraction
     {
-        public static void Init(BiconomyVersion version, Dictionary<int, string> dappApiKeys)
+        public static void Init(Dictionary<int, string> dappApiKeys)
         {
-            var versionString = "";
-            if (version == BiconomyVersion.V1_0_0)
-            {
-                versionString = "1.0.0";
-            }
-
             var obj = new JObject
             {
-                { "version", versionString },
                 { "dapp_api_keys", JObject.FromObject(dappApiKeys) },
             };
 
@@ -27,45 +20,45 @@ namespace Network.Particle.Scripts.Core
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            ParticleNetwork.CallNative("particleBiconomyInitialize",json);
+            ParticleNetwork.CallNative("particleAAInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.particleBiconomyInitialize(json);
+            ParticleNetworkIOSBridge.particleAAInitialize(json);
 #else
 
 #endif
         }
 
-        public static void EnableBiconomyMode()
+        public static void EnableAAMode()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            ParticleNetwork.CallNative("enableBiconomyMode");
+            ParticleNetwork.CallNative("enableAAMode");
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.enableBiconomyMode();
+            ParticleNetworkIOSBridge.enableAAMode();
 #else
 
 #endif
         }
 
-        public static void DisableBiconomyMode()
+        public static void DisableAAMode()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            ParticleNetwork.CallNative("disableBiconomyMode");
+            ParticleNetwork.CallNative("disableAAMode");
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.disableBiconomyMode();
+            ParticleNetworkIOSBridge.disableAAMode();
 #else
 
 #endif
         }
 
-        public static bool IsBiconomyModeEnable()
+        public static bool IsAAModeEnable()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("isBiconomyModeEnable");
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("isAAModeEnable");
 #elif UNITY_IOS && !UNITY_EDITOR
-            return ParticleNetworkIOSBridge.isBiconomyModeEnable();
+            return ParticleNetworkIOSBridge.isAAModeEnable();
 #else
             return false;
 #endif

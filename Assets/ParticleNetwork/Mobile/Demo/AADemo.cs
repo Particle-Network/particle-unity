@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Network.Particle.Scripts.Test
 {
-    public class BiconomyDemo : MonoBehaviour
+    public class AADemo : MonoBehaviour
     {
         private static AndroidJavaObject activityObject;
 
@@ -42,29 +42,29 @@ namespace Network.Particle.Scripts.Test
                 { 80001, "hYZIwIsf2.e18c790b-cafb-4c4e-a438-0289fc25dba1" }
             };
 
-            ParticleBiconomyInteraction.Init(BiconomyVersion.V1_0_0, dappApiKeys);
+            ParticleAAInteraction.Init(dappApiKeys);
         }
 
-        public void EnableBiconomyMode()
+        public void EnableAAMode()
         {
-            ParticleBiconomyInteraction.EnableBiconomyMode();
+            ParticleAAInteraction.EnableAAMode();
         }
 
-        public void DisableBiconomyMode()
+        public void DisableAAMode()
         {
-            ParticleBiconomyInteraction.DisableBiconomyMode();
+            ParticleAAInteraction.DisableAAMode();
         }
 
-        public void IsBiconomyModeEnable()
+        public void IsAAModeEnable()
         {
-            var result = ParticleBiconomyInteraction.IsBiconomyModeEnable();
-            Debug.Log($"IsBiconomyModeEnable {result}");
+            var result = ParticleAAInteraction.IsAAModeEnable();
+            Debug.Log($"IsAAModeEnable {result}");
         }
 
         public async void IsDeploy()
         {
             var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-            var nativeResultData = await ParticleBiconomy.Instance.IsDepoly(eoaAddress);
+            var nativeResultData = await ParticleAA.Instance.IsDepoly(eoaAddress);
 
             Debug.Log("result" + nativeResultData.data);
             if (nativeResultData.isSuccess)
@@ -85,7 +85,7 @@ namespace Network.Particle.Scripts.Test
         {
             var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
             var transaction = await GetEVMTransacion();
-            var nativeResultData = await ParticleBiconomy.Instance.RpcGetFeeQuotes(eoaAddress, new List<string>{transaction});
+            var nativeResultData = await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string>{transaction});
 
             Debug.Log(nativeResultData.data);
 
@@ -102,12 +102,12 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void SendTransactionBiconomyAutoWithAuth()
+        public async void SendTransactionWithNativeByAuth()
         {
             var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
             var transaction = await GetEVMTransacion();
             var nativeResultData =
-                await ParticleAuthService.Instance.SignAndSendTransaction(transaction, BiconomyFeeMode.Auto());
+                await ParticleAuthService.Instance.SignAndSendTransaction(transaction, AAFeeMode.Auto());
 
             Debug.Log(nativeResultData.data);
 
@@ -124,12 +124,12 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void SendTransactionBiconomyGaslessWithAuth()
+        public async void SendTransactionWithGaslessByAuth()
         {
             var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
             var transaction = await GetEVMTransacion();
             var nativeResultData =
-                await ParticleAuthService.Instance.SignAndSendTransaction(transaction, BiconomyFeeMode.Gasless());
+                await ParticleAuthService.Instance.SignAndSendTransaction(transaction, AAFeeMode.Gasless());
 
             Debug.Log(nativeResultData.data);
 
@@ -146,19 +146,19 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void SendTransactionBiconomyCustomWithAuth()
+        public async void SendTransactionWithTokenByAuth()
         {
             var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
             var transaction = await GetEVMTransacion();
 
             var feeQuotesResult =
-                await ParticleBiconomy.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
+                await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
 
             List<object> feeQuotes = JsonConvert.DeserializeObject<List<object>>(feeQuotesResult.data);
 
             var nativeResultData =
                 await ParticleAuthService.Instance.SignAndSendTransaction(transaction,
-                    BiconomyFeeMode.Custom(feeQuotes[0]));
+                    AAFeeMode.Custom(feeQuotes[0]));
 
             Debug.Log(nativeResultData.data);
 
@@ -175,7 +175,7 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void BatchSendTransactionsWithAuth()
+        public async void BatchSendTransactionsByAuth()
         {
             var transaction = await GetEVMTransacion();
 
@@ -198,13 +198,13 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void SendTransactionBiconomyAutoWithConnect()
+        public async void SendTransactionWithNativeByConnect()
         {
             var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
             var transaction = await GetEVMTransactionWithConnect();
             var nativeResultData =
                 await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
-                    BiconomyFeeMode.Auto());
+                    AAFeeMode.Auto());
 
             Debug.Log(nativeResultData.data);
 
@@ -221,13 +221,13 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void SendTransactionBiconomyGaslessWithConnect()
+        public async void SendTransactionWithGaslessByConnect()
         {
             var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
             var transaction = await GetEVMTransactionWithConnect();
             var nativeResultData =
                 await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
-                    BiconomyFeeMode.Gasless());
+                    AAFeeMode.Gasless());
 
             Debug.Log(nativeResultData.data);
 
@@ -244,19 +244,19 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void SendTransactionBiconomyCustomWithConnect()
+        public async void SendTransactionWithTokenByConnect()
         {
             var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
             var transaction = await GetEVMTransactionWithConnect();
 
             var feeQuotesResult =
-                await ParticleBiconomy.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
+                await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
 
             List<object> feeQuotes = JsonConvert.DeserializeObject<List<object>>(feeQuotesResult.data);
 
             var nativeResultData =
                 await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
-                    BiconomyFeeMode.Custom(feeQuotes[0]));
+                    AAFeeMode.Custom(feeQuotes[0]));
 
             Debug.Log(nativeResultData.data);
 
@@ -273,14 +273,14 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void BatchSendTransactionsWithConnect()
+        public async void BatchSendTransactionsByConnect()
         {
             var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
             var transaction = await GetEVMTransactionWithConnect();
 
             List<string> transactions = new List<string> { transaction, transaction };
             var nativeResultData = await ParticleConnect.Instance.BatchSendTransactions(WalletType.MetaMask, eoaAddress,
-                transactions, BiconomyFeeMode.Auto());
+                transactions, AAFeeMode.Auto());
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)

@@ -1893,7 +1893,7 @@ extension UnityManager {
 // MARK: - Help methods
 
 extension UnityManager {
-    func particleBiconomyInitialize(_ json: String) {
+    func particleAAInitialize(_ json: String) {
         let data = JSON(parseJSON: json)
         let version = data["version"].stringValue.lowercased()
         let dappAppKeysDict = data["dapp_api_keys"].dictionaryValue
@@ -1909,7 +1909,7 @@ extension UnityManager {
         ParticleNetwork.setBiconomyService(biconomy)
     }
     
-    func enableBiconomyMode() {
+    func enableAAMode() {
         biconomy.enableBiconomyMode()
     }
     
@@ -1917,7 +1917,7 @@ extension UnityManager {
         biconomy.disableBiconomyMode()
     }
     
-    func isBiconomyModeEnable() -> Bool {
+    func isAAModeEnable() -> Bool {
         return biconomy.isBiconomyModeEnable()
     }
     

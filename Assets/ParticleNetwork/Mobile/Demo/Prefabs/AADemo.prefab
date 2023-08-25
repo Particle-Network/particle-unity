@@ -202,7 +202,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: SendTransactionBiconomyCustomWithConnect
+        m_MethodName: SendTransactionWithTokenByConnect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -493,7 +493,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: BatchSendTransactionsWithConnect
+        m_MethodName: BatchSendTransactionsByConnect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -626,7 +626,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: SendTransactionBiconomyGaslessWithConnect
+        m_MethodName: SendTransactionWithGaslessByConnect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -759,7 +759,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: SendTransactionBiconomyAutoWithConnect
+        m_MethodName: SendTransactionWithNativeByConnect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1046,7 +1046,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: IsBiconomyModeEnable
+        m_MethodName: IsAAModeEnable
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1517,7 +1517,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: SendTransactionBiconomyCustomWithAuth
+        m_MethodName: SendTransactionWithTokenByAuth
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1939,7 +1939,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: BatchSendTransactionsWithAuth
+        m_MethodName: BatchSendTransactionsByAuth
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2241,7 +2241,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: SendTransactionBiconomyGaslessWithAuth
+        m_MethodName: SendTransactionWithGaslessByAuth
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2374,7 +2374,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: EnableBiconomyMode
+        m_MethodName: EnableAAMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2956,7 +2956,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: SendTransactionBiconomyAutoWithAuth
+        m_MethodName: SendTransactionWithNativeByAuth
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3283,7 +3283,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.BiconomyDemo, Assembly-CSharp
-        m_MethodName: DisableBiconomyMode
+        m_MethodName: DisableAAMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -341,20 +341,20 @@ extern "C" {
 }
 
 extern "C" {
-    void particleBiconomyInitialize(const char* json) {
-         [api particleBiconomyInitialize:[NSString stringWithUTF8String: json]];
+    void particleAAInitialize(const char* json) {
+         [api particleAAInitialize:[NSString stringWithUTF8String: json]];
     }
 
-    void enableBiconomyMode() {
-        [api enableBiconomyMode];
+    void enableAAMode() {
+        [api enableAAMode];
     }
 
-    void disableBiconomyMode() {
-        [api disableBiconomyMode];
+    void disableAAMode() {
+        [api disableAAMode];
     }
 
-    bool isBiconomyModeEnable() {
-        return [api isBiconomyModeEnable];
+    bool isAAModeEnable() {
+        return [api isAAModeEnable];
     }
 
     void isDeploy(const char* json) {
@@ -367,6 +367,53 @@ extern "C" {
 
     bool isSupportChainInfo(const char* json) {
         return [api isSupportChainInfo:[NSString stringWithUTF8String: json]];
+    }
+}
+
+extern "C" {
+
+    void authCoreInitialize() {
+         [api authCoreInitialize];
+    }
+
+    void authCoreConnect(const char* json) {
+         [api authCoreConnect: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreDisconnect() {
+         [api authCoreDisconnect];
+    }
+
+    void authCoreIsConnected() {
+         [api authCoreIsConnected];
+    }
+
+    void authCoreGetUserInfo() {
+        [api authCoreGetUserInfo];
+    }
+
+    void authCoreSwitchChain(const char* json) {
+         [api authCoreSwitchChain: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreChangeMasterPassword() {
+        [api authCoreChangeMasterPassword];
+    }
+
+    bool authCoreHasMasterPassword() {
+        return [api authCoreHasMasterPassword];
+    }
+
+    bool authCoreHasPaymentPassword() {
+        return [api authCoreHasPaymentPassword];
+    }
+
+    void authCoreOpenAccountAndSecurity() {
+        [api authCoreOpenAccountAndSecurity];
+    }
+
+    void authCoreOpenWebWallet(const char* json) {
+        [api authCoreOpenWebWallet: [NSString stringWithUTF8String: json]];
     }
 }
 

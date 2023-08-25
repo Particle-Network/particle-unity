@@ -586,7 +586,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1140793918, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1061.3834
+      value: 1173.503
       objectReference: {fileID: 0}
     - target: {fileID: 1140793918, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -594,7 +594,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1140793918, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 530.6917
+      value: 586.7515
       objectReference: {fileID: 0}
     - target: {fileID: 1140793918, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1912,6 +1912,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5641678639062402579, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5706385501844323054, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -2868,7 +2872,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 926650126659779301, guid: 6d57083067d0a4c48839de91bf110990, type: 3}
       propertyPath: m_Name
-      value: ParticleBiconomy
+      value: ParticleAA
       objectReference: {fileID: 0}
     - target: {fileID: 926650126659779303, guid: 6d57083067d0a4c48839de91bf110990, type: 3}
       propertyPath: m_RootOrder

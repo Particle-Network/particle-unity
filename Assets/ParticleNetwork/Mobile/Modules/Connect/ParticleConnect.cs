@@ -232,10 +232,10 @@ namespace Network.Particle.Scripts.Core
         /// <param name="walletType">Wallet type</param>
         /// <param name="publicAddress">Public address</param>
         /// <param name="transactions">Transactions</param>
-        /// <param name="feeMode">BiconomyFeeMode, works with biconomy mode, default value is auto</param>
+        /// <param name="feeMode">AAFeeMode, works with aa mode, default value is auto</param>
         /// <returns></returns>
         public Task<NativeResultData> BatchSendTransactions(WalletType walletType, string publicAddress,
-            List<string> transactions, [CanBeNull] BiconomyFeeMode feeMode = null)
+            List<string> transactions, [CanBeNull] AAFeeMode feeMode = null)
         {
             batchSendTransactionsTask = new TaskCompletionSource<NativeResultData>();
 
@@ -269,10 +269,10 @@ namespace Network.Particle.Scripts.Core
         /// <param name="walletType">Wallet type</param>
         /// <param name="publicAddress">Public address</param>
         /// <param name="transaction">Transaction</param>
-        /// <param name="feeMode">BiconomyFeeMode, works with biconomy mode, default value is auto</param>
+        /// <param name="feeMode">AAFeeMode, works with aa mode, default value is auto</param>
         /// <returns></returns>
         public Task<NativeResultData> SignAndSendTransaction(WalletType walletType, string publicAddress,
-            string transaction, [CanBeNull] BiconomyFeeMode feeMode = null)
+            string transaction, [CanBeNull] AAFeeMode feeMode = null)
         {
             signAndSendTransactionTask = new TaskCompletionSource<NativeResultData>();
 

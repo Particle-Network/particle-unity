@@ -78,11 +78,9 @@
 - (void) loadCustomUIJsonString:(NSString*_Nonnull)json;
 
 
-// Particle Connect
+// Particle Connect Service
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;
 - (void) setWalletConnectV2SupportChainInfos:(NSString* _Nonnull)json;
-
-// Particle Connect Service
 - (NSString* _Nonnull) adapterGetAccounts:(NSString* _Nonnull)json;
 - (void) adapterConnect:(NSString* _Nonnull)json configJson:(NSString* _Nonnull)account;
 - (void) adapterDisconnect:(NSString* _Nonnull)json;
@@ -103,14 +101,29 @@
 - (NSString* _Nonnull) adapterWalletReadyState:(NSString* _Nonnull)json;
 
 
-// Particle Biconomy
-- (void) particleBiconomyInitialize:(NSString* _Nonnull)json;
-- (void) enableBiconomyMode;
-- (void) disableBiconomyMode;
-- (BOOL) isBiconomyModeEnable;
+// Particle AA
+- (void) particleAAInitialize:(NSString* _Nonnull)json;
+- (void) enableAAMode;
+- (void) disableAAMode;
+- (BOOL) isAAModeEnable;
 - (void) isDeploy:(NSString* _Nonnull)json;
 - (void) rpcGetFeeQuotes:(NSString* _Nonnull)json;
 - (BOOL) isSupportChainInfo:(NSString* _Nonnull)json;
+
+
+// Particle Auth Core
+- (void) authCoreInitialize;
+- (void) authCoreConnect:(NSString* _Nonnull)json;
+- (void) authCoreDisconnect;
+- (void) authCoreIsConnected;
+- (void) authCoreGetUserInfo;
+- (void) authCoreSwitchChain:(NSString* _Nonnull)json;
+- (void) authCoreChangeMasterPassword;
+- (BOOL) authCoreHasMasterPassword;
+- (BOOL) authCoreHasPaymentPassword;
+- (void) authCoreOpenAccountAndSecurity;
+- (void) authCoreOpenWebWallet:(NSString* _Nonnull)json;
+
 @end
 
 __attribute__ ((visibility("default")))

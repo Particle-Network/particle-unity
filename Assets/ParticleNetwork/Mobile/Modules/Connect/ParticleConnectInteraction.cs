@@ -219,7 +219,7 @@ namespace Network.Particle.Scripts.Core
         }
 
         internal static void BatchSendTransactions(WalletType walletType, string publicAddress,
-            List<string> transactions, [CanBeNull] BiconomyFeeMode feeMode = null)
+            List<string> transactions, [CanBeNull] AAFeeMode feeMode = null)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -239,7 +239,7 @@ namespace Network.Particle.Scripts.Core
         }
 
         public static void SignAndSendTransaction(WalletType walletType, string publicAddress, string transaction,
-            [CanBeNull] BiconomyFeeMode feeMode = null)
+            [CanBeNull] AAFeeMode feeMode = null)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {

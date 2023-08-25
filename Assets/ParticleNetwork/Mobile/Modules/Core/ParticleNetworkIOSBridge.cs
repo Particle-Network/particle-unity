@@ -257,19 +257,19 @@ namespace Network.Particle.Scripts.Core
         public static extern string adapterWalletReadyState(string json);
 #endif
             
-            // Particle Biconomy
+            // Particle AA
 #if UNITY_IOS
             [DllImport("__Internal")]
-            public static extern void particleBiconomyInitialize(string json);
+            public static extern void particleAAInitialize(string json);
             
             [DllImport("__Internal")]
-            public static extern void enableBiconomyMode();
+            public static extern void enableAAMode();
             
             [DllImport("__Internal")]
-            public static extern void disableBiconomyMode();
+            public static extern void disableAAMode();
             
             [DllImport("__Internal")]
-            public static extern bool isBiconomyModeEnable();
+            public static extern bool isAAModeEnable();
             
             [DllImport("__Internal")]
             public static extern void isDeploy(string json);

@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace Network.Particle.Scripts.Core
 {
-    public class ParticleAuthService : SingletonMonoBehaviour<ParticleAuthService>
+    public class ParticleAuthCoreService : SingletonMonoBehaviour<ParticleAuthCoreService>
     {
         
         private TaskCompletionSource<NativeResultData> loginTask;
