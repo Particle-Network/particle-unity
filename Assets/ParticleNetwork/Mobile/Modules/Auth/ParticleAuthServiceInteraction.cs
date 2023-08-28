@@ -50,7 +50,7 @@ namespace Network.Particle.Scripts.Core
         internal static void IsLoginAsync()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.CallNative("IsLoginAsync");
+            ParticleNetwork.CallNative("isLoginAsync");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.isLoginAsync();
 #else
@@ -83,7 +83,7 @@ namespace Network.Particle.Scripts.Core
         public static bool IsLogin()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("isLogin")==1;
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("isLogin");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.isLogin();
 #else
@@ -133,8 +133,7 @@ namespace Network.Particle.Scripts.Core
             }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("signMessage",serializedMessage);
+            ParticleNetwork.CallNative("signMessageUnique",serializedMessage);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.signMessageUnique(serializedMessage);
 #else
@@ -366,7 +365,6 @@ namespace Network.Particle.Scripts.Core
         public static void OpenWebWallet(string jsonString)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("openWebWallet");
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.openWebWallet(jsonString);

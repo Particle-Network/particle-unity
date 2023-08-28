@@ -26,7 +26,4 @@ class NativeChainInfo
 
     [JsonProperty(PropertyName = "chain_id")]
     public int chainId;
-
-    [JsonProperty(PropertyName = "chain_id_name")]
-    public string chainIdName;
 }

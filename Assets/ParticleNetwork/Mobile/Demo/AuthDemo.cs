@@ -113,6 +113,12 @@ namespace Network.Particle.Scripts.Test
         {
             return ParticleAuthServiceInteraction.GetAddress();
         }
+        
+        public void GetAddressBtn()
+        {
+            var address=  ParticleAuthServiceInteraction.GetAddress();
+            Debug.Log("address = " + address);
+        }
 
 
         public async void SignAndSendTransaction()

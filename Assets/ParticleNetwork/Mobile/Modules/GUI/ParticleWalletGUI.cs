@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ namespace Network.Particle.Scripts.Core
     public class ParticleWalletGUI : SingletonMonoBehaviour<ParticleWalletGUI>
     {
         private TaskCompletionSource<NativeResultData> switchWallet;
-        
+
         private TaskCompletionSource<NativeResultData> loginListTask;
 
         /// <summary>
@@ -91,7 +90,8 @@ namespace Network.Particle.Scripts.Core
         /// <param name="tokenId">NFT token id</param>
         /// <param name="receiveAddress">Receiver address</param>
         /// <param name="amount">Optional, For solana nft or erc721 nft, it is a useless parameter, for erc1155 nft, you can pass amount, such as "1", "100", "10000"</param>
-        public static void NavigatorNFTSend(string mint, string tokenId, [CanBeNull] string receiveAddress, [CanBeNull] string amount)
+        public static void NavigatorNFTSend(string mint, string tokenId, [CanBeNull] string receiveAddress,
+            [CanBeNull] string amount)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -137,8 +137,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetPayDisabled(bool disabled)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("enablePay",enable);
+            ParticleNetwork.CallNative("setPayDisabled",disabled);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setPayDisabled(disabled);
 #else
@@ -152,8 +151,7 @@ namespace Network.Particle.Scripts.Core
         public static bool GetPayDisabled()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getEnablePay");
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getPayDisabled");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.getPayDisabled();
 #else
@@ -168,8 +166,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetSwapDisabled(bool disabled)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("enableSwap",enable);
+            ParticleNetwork.CallNative("setSwapDisabled",disabled);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setSwapDisabled(disabled);
 #else
@@ -183,8 +180,7 @@ namespace Network.Particle.Scripts.Core
         public static bool GetSwapDisabled()
         {
 #if UNITY_ANDROID && !UNITY_EDITO
-// todo
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getEnableSwap");
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getSwapDisabled");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.getSwapDisabled();
 #else
@@ -216,12 +212,15 @@ namespace Network.Particle.Scripts.Core
                 {
                     jObject.Add(new JProperty("theme", config.Theme));
                 }
+
                 if (config.Language != null)
                 {
                     jObject.Add(new JProperty("language", config.Language));
                 }
+
                 json = JsonConvert.SerializeObject(jObject);
             }
+
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityBridgeClass().CallStatic("openBuy", json);
@@ -231,6 +230,7 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
+
         /// <summary>
         /// Open Swap page
         /// </summary>
@@ -262,7 +262,7 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> NavigatorLoginList(List<LoginListPageSupportType> supportTypes)
         {
             loginListTask = new TaskCompletionSource<NativeResultData>();
-           
+
             var json = JsonConvert.SerializeObject(supportTypes.Select(x => x.ToString()));
 #if UNITY_EDITOR
             DevModeService.Login();
@@ -298,8 +298,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetShowTestNetwork(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showTestNetwork",show);
+            ParticleNetwork.CallNative("setShowTestNetwork",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setShowTestNetwork(show);
 #else
@@ -314,8 +313,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetShowManageWallet(bool show = true)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showManageWallet",show);
+            ParticleNetwork.CallNative("setShowManageWallet",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setShowManageWallet(show);
 #else
@@ -324,9 +322,6 @@ namespace Network.Particle.Scripts.Core
         }
 
 
-
-        
-        
         /// <summary>
         /// Set Show Appearance Setting in Setting page
         /// </summary>
@@ -342,7 +337,7 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
-        
+
         /// <summary>
         /// Set Show Language Setting in Setting page
         /// </summary>
@@ -350,8 +345,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetShowLanguageSetting(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingLanguage",show);
+            ParticleNetwork.CallNative("setShowLanguageSetting",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setShowLanguageSetting(show);
 #else
@@ -435,22 +429,20 @@ namespace Network.Particle.Scripts.Core
         public static void SetSupportWalletConnect(bool enable)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-           ParticleNetwork.GetUnityBridgeClass().CallStatic("supportWalletConnect",enable);
+            ParticleNetwork.CallNative("setSupportWalletConnect",enable);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setSupportWalletConnect(enable);
 #else
 
 #endif
         }
-        
+
         /// <summary>
         /// Set support dapp browser in wallet page
         /// </summary>
         /// <param name="enable">Enable</param>
         public static void SetSupportDappBrowser(bool enable)
         {
-
 #if UNITY_ANDROID && !UNITY_EDITOR
            ParticleNetwork.GetUnityBridgeClass().CallStatic("supportWalletConnect",enable);
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -472,11 +464,10 @@ namespace Network.Particle.Scripts.Core
                 { "icon", metaData.icon },
                 { "url", metaData.url },
                 { "description", metaData.description },
-                { "walletConnectProjectId", metaData.walletConnectProjectId}
+                { "walletConnectProjectId", metaData.walletConnectProjectId }
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+            ParticleNetwork.CallNative("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.particleWalletConnectInitialize(json);
 #else
@@ -490,7 +481,6 @@ namespace Network.Particle.Scripts.Core
         /// <param name="enable">Default value is true</param>
         public static void SetSupportAddToken(bool enable)
         {
-           
 #if UNITY_ANDROID && !UNITY_EDITOR
            ParticleNetwork.GetUnityBridgeClass().CallStatic("setSupportAddToken",enable);
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -515,9 +505,8 @@ namespace Network.Particle.Scripts.Core
 #else
 
 #endif
-            
         }
-        
+
         /// <summary>
         /// Set display NFT contract addresses
         /// If you called this method, Wallet SDK will only show NFTs in the NFT contract addresses.
@@ -525,7 +514,6 @@ namespace Network.Particle.Scripts.Core
         /// <param name="nftContractAddresses"></param>
         public static void SetDisplayNFTContractAddresses(string[] nftContractAddresses)
         {
-            
             var json = JsonConvert.SerializeObject(nftContractAddresses);
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityBridgeClass().CallStatic("setDisplayNFTContractAddresses",json);
@@ -534,9 +522,8 @@ namespace Network.Particle.Scripts.Core
 #else
 
 #endif
-            
         }
-        
+
         /// <summary>
         /// Set display token addresses,
         /// If you called this method, Wallet SDK will show these tokens in the token addresses.
@@ -552,9 +539,8 @@ namespace Network.Particle.Scripts.Core
 #else
 
 #endif
-            
         }
-        
+
         /// <summary>
         /// Set display NFT contract addresses
         /// If you called this method, Wallet SDK will only show NFTs in the NFT contract addresses.
@@ -562,7 +548,6 @@ namespace Network.Particle.Scripts.Core
         /// <param name="nftContractAddresses"></param>
         public static void SetPriorityNFTContractAddresses(string[] nftContractAddresses)
         {
-            
             var json = JsonConvert.SerializeObject(nftContractAddresses);
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityBridgeClass().CallStatic("setPriorityNFTContractAddresses",json);
@@ -571,7 +556,6 @@ namespace Network.Particle.Scripts.Core
 #else
 
 #endif
-            
         }
 
         /// <summary>
@@ -588,9 +572,6 @@ namespace Network.Particle.Scripts.Core
 #else
 
 #endif
-            
         }
-
-        
     }
 }
