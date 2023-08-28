@@ -19,6 +19,7 @@ namespace Network.Particle.Scripts.Test
         private WalletType _walletType;
         private TestAccount _account;
 
+        private string publicAddress = "";
         private void Start()
         {
             this._walletType = WalletType.MetaMask;
@@ -54,8 +55,6 @@ namespace Network.Particle.Scripts.Test
             // List<ChainInfo> chainInfos = new List<ChainInfo>{new EthereumChain(EthereumChainId.Mainnet), new PolygonChain(PolygonChainId.Mainnet), new EthereumChain(EthereumChainId.Sepolia)};
             // ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
         }
-
-        string publicAddress = "";
 
         /// <summary>
         /// Before test connect to wallet connect, like metamask wallet, you should login metamask with our evm test account.
@@ -167,11 +166,11 @@ namespace Network.Particle.Scripts.Test
                 string transaction;
                 if (!_account.PublicAddress.StartsWith("0x"))
                 {
-                    transaction = await TransactionHelper.GetSolanaTransacion();
+                    transaction = await TransactionHelper.GetSolanaTransacion(publicAddress);
                 }
                 else
                 {
-                    transaction = await TransactionHelper.GetEVMTransacion();
+                    transaction = await TransactionHelper.GetEVMTransacion(publicAddress);
                 }
 
                 Debug.Log("transaction = " + transaction);
@@ -204,7 +203,7 @@ namespace Network.Particle.Scripts.Test
             {
                 // sign transaction doesn't support evm.
                 if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
-                var transaction = await TransactionHelper.GetSolanaTransacion();
+                var transaction = await TransactionHelper.GetSolanaTransacion(publicAddress);
                 Debug.Log("transaction = " + transaction);
                 var nativeResultData =
                     await ParticleConnect.Instance.SignTransaction(this._walletType, publicAddress, transaction);
@@ -233,8 +232,8 @@ namespace Network.Particle.Scripts.Test
             {
                 // sign all transactions doesn't support evm.
                 if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
-                var transaction1 = await TransactionHelper.GetSolanaTransacion();
-                var transaction2 = await TransactionHelper.GetSolanaTransacion();
+                var transaction1 = await TransactionHelper.GetSolanaTransacion(publicAddress);
+                var transaction2 = await TransactionHelper.GetSolanaTransacion(publicAddress);
                 Debug.Log("transaction1 = " + transaction1);
                 Debug.Log("transaction2 = " + transaction2);
                 string[] transactions = new[] { transaction1, transaction2 };

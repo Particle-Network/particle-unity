@@ -5,6 +5,7 @@ using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Network.Particle.Scripts.Test
 {
@@ -145,7 +146,8 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var transaction = await TransactionHelper.GetEVMTransacion();
+                var address = ParticleAuthServiceInteraction.GetAddress();
+                var transaction = await TransactionHelper.GetEVMTransacion(address);
                 Debug.Log("transaction = " + transaction);
                 var nativeResultData =
                     await ParticleAuthService.Instance.SignAndSendTransaction(transaction);
@@ -173,7 +175,8 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var transaction = await TransactionHelper.GetSolanaTransacion();
+                var address = ParticleAuthServiceInteraction.GetAddress();
+                var transaction = await TransactionHelper.GetSolanaTransacion(address);
                 Debug.Log("transaction = " + transaction);
                 var nativeResultData =
                     await ParticleAuthService.Instance.SignTransaction(transaction);
@@ -201,8 +204,9 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var transaction1 = await TransactionHelper.GetSolanaTransacion();
-                var transaction2 = await TransactionHelper.GetSolanaTransacion();
+                var address = ParticleAuthServiceInteraction.GetAddress();
+                var transaction1 = await TransactionHelper.GetSolanaTransacion(address);
+                var transaction2 = await TransactionHelper.GetSolanaTransacion(address);
                 Debug.Log("transaction1 = " + transaction1);
                 Debug.Log("transaction2 = " + transaction2);
                 string[] transactions = new[] { transaction1, transaction2 };
@@ -315,13 +319,18 @@ namespace Network.Particle.Scripts.Test
 
         public void ShowToast(string message)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
+
+#if UNITY_EDITOR
+            
+#elif UNITY_ANDROID && !UNITY_EDITOR
         AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
         AndroidJavaClass Toast = new AndroidJavaClass("android.widget.Toast");
         currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() => {
             Toast.CallStatic<AndroidJavaObject>("makeText", currentActivity, message, Toast.GetStatic<int>("LENGTH_LONG")).Call("show");
         }));
+#elif UNITY_IOS && !UNITY_EDITOR
+
 #endif
         }
 

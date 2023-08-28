@@ -354,6 +354,12 @@ namespace Network.Particle.Scripts.Core
             serialized = serialized.Replace("-", "");
             return "0x" + serialized;
         }
+
+        public static async Task<string> GetSmartAccount(string[] eoaAddresses)
+        {
+            var result = await Rpc("particle_aa_getSmartAccount", new List<object> { eoaAddresses });
+            return result;
+        }
     }
 
     /// <summary>

@@ -91,7 +91,6 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> IsConnected()
         {
             isConnectedTask = new TaskCompletionSource<NativeResultData>();
-            ParticleAuthServiceInteraction.FastLogout();
 #if UNITY_EDITOR
             IsConnectedCallBack(JsonConvert.SerializeObject(new JObject
             {
@@ -270,7 +269,7 @@ namespace Network.Particle.Scripts.Core
                 { "data", "" },
             }));
 #endif
-            ParticleAuthCoreInteraction.EvmPersonalSign(message);
+            ParticleAuthCoreInteraction.EvmPersonalSignUnique(message);
             return evmPersonalSignUniqueTask.Task;
         }
 

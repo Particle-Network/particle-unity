@@ -63,7 +63,6 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     // work with connect sdk
     var latestPublicAddress: String?
     var latestWalletType: WalletType?
-    var isLatestBatchAuth: Bool = false
     let biconomy = BiconomyService()
     
 #if canImport(ParticleAuthCore)
@@ -349,6 +348,11 @@ extension UnityManager {
             sendObservable = ParticleAuthService.signAndSendTransaction(transaction, feeMode: feeMode)
         }
         
+        if ParticleNetwork.getChainInfo().chain != .solana {
+            latestPublicAddress = ParticleAuthService.getAddress()
+            latestWalletType = .particle
+        }
+        
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authSystemName)
     }
     
@@ -384,7 +388,8 @@ extension UnityManager {
             return
         }
         
-        isLatestBatchAuth = true
+        latestPublicAddress = ParticleAuthService.getAddress()
+        latestWalletType = .particle
         
         let sendObservable: Single<String> = biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
                 
@@ -1118,9 +1123,6 @@ extension UnityManager {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
-        
-        latestPublicAddress = publicAddress
-        latestWalletType = walletType
                 
         let mode = data["fee_mode"]["option"].stringValue
         var feeMode: Biconomy.FeeMode = .native
@@ -1143,7 +1145,11 @@ extension UnityManager {
             print("adapter for \(walletTypeString) is not init ")
             return
         }
-                
+        if ParticleNetwork.getChainInfo().chain != .solana {
+            latestPublicAddress = publicAddress
+            latestWalletType = walletType
+        }
+        
         let biconomy = ParticleNetwork.getBiconomyService()
         var sendObservable: Single<String>
         if biconomy != nil, biconomy!.isBiconomyModeEnable() {
@@ -1167,9 +1173,6 @@ extension UnityManager {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
-                
-        latestPublicAddress = publicAddress
-        latestWalletType = walletType
                 
         let mode = data["fee_mode"]["option"].stringValue
         var feeMode: Biconomy.FeeMode = .native
@@ -1197,7 +1200,9 @@ extension UnityManager {
             return
         }
               
-        isLatestBatchAuth = false
+        latestPublicAddress = publicAddress
+        latestWalletType = walletType
+                
         let sendObservable = biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.connectSystemName, methodName: "batchSendTransactions")
     }
@@ -1760,6 +1765,9 @@ extension UnityManager {
             sendObservable = Single<Void>.fromAsync { try await self.auth.evm.sendTransaction(transaction, feeMode: feeMode) }
         }
         
+        latestWalletType = .authCore
+        latestPublicAddress = auth.evm.getAddress()
+        
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
       
 #endif
@@ -1915,28 +1923,34 @@ extension UnityManager {
 
 extension UnityManager: MessageSigner {
     public func signMessage(_ message: String) -> RxSwift.Single<String> {
-        if isLatestBatchAuth {
+        guard let walletType = latestWalletType else {
+            print("walletType is nil")
+            return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
+        }
+        
+        if walletType == .particle {
             return ParticleAuthService.signMessage(message)
-        } else {
-            guard let walletType = latestWalletType else {
-                print("walletType is nil")
-                return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
+        } else if walletType == .authCore {
+#if canImport(ParticleAuthCore)
+            return Single<String>.fromAsync {
+                try await self.auth.evm.personalSign(message)
             }
-            
+#else
+            print("authCore framework is not added")
+            return .error(ParticleNetwork.ResponseError(code: nil, message: "authCore framework is not added"))
+#endif
+        } else {
             guard let adapter = map2ConnectAdapter(from: walletType) else {
                 print("adapter for \(walletType) is not init")
                 return .error(ParticleNetwork.ResponseError(code: nil, message: "adapter for \(walletType) is not init"))
             }
+        
             return adapter.signMessage(publicAddress: getEoaAddress(), message: message)
         }
     }
     
     public func getEoaAddress() -> String {
-        if isLatestBatchAuth {
-            return ParticleAuthService.getAddress()
-        } else {
-            return latestPublicAddress ?? ""
-        }
+        return latestPublicAddress ?? ""
     }
 }
 

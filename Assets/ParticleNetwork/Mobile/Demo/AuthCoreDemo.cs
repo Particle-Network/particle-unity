@@ -35,7 +35,8 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var jwt = "";
+                var jwt =
+                    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IndVUE05RHNycml0Sy1jVHE2OWNKcCJ9.eyJlbWFpbCI6InBhbnRhb3ZheUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHBzOi8vZGV2LXFyNi01OWVlLnVzLmF1dGgwLmNvbS8iLCJhdWQiOiJFVmpLMVpaUFN0UWNkV3VoandQZGRBdGdSaXdwNTRWUSIsImlhdCI6MTY5MzIxMjQzMywiZXhwIjoxNjkzMjQ4NDMzLCJzdWIiOiJhdXRoMHw2MzAzMjE0YjZmNjE1NjM2YWM5MTdmMWIiLCJzaWQiOiJCcjlQUG1rSEdTT3NraF9aNnlWVlpYcldsRjVZOVRQQSJ9.B03ZkQ0dz3AsxP7sOaZOAniUsn0WZ_cKZYCqVZOJZlojQIYbJFH5SX9BJI6-VLMX4GkjT6WKmTGyInwx4T1KspAOzVwn42Rl4X-geXRaj5f1e4av2KWkeLbJfY4pWlaW3G23MkqpUO_70DQGFME0Z3zHe-Q9VkL4vbTir1m0JtestPIOVt4Rzu6YDQRb-kCdwk3WW9sXgCCN-uRUI4G3bwCZiFaAOlGsDzPwGblt42mK9msBR9XdFtJ6EpczlQRcnvfW7Kl4OvOgZ8tLO1-78rHbvioQcBGfi0AlSd8UbO0nX1cemEs5TSeA8QudsfDOZWCvub2o0aktjAON28DvRg";
                 var nativeResultData = await ParticleAuthCore.Instance.Connect(jwt);
 
                 Debug.Log(nativeResultData.data);
@@ -375,7 +376,8 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var transaction = await TransactionHelper.GetEVMTransacion();
+                var address = ParticleAuthCoreInteraction.EvmGetAddress();
+                var transaction = await TransactionHelper.GetEVMTransacion(address);
 
                 var nativeResultData =
                     await ParticleAuthCore.Instance.EvmSendTransaction(transaction);
@@ -439,7 +441,8 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var transaction = await TransactionHelper.GetSolanaTransacion();
+                var address = ParticleAuthCoreInteraction.SolanaGetAddress();
+                var transaction = await TransactionHelper.GetSolanaTransacion(address);
 
                 var nativeResultData =
                     await ParticleAuthCore.Instance.SolanaSignTransaction(transaction);
@@ -468,8 +471,9 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var transaction1 = await TransactionHelper.GetSolanaTransacion();
-                var transaction2 = await TransactionHelper.GetSolanaTransacion();
+                var address = ParticleAuthCoreInteraction.SolanaGetAddress();
+                var transaction1 = await TransactionHelper.GetSolanaTransacion(address);
+                var transaction2 = await TransactionHelper.GetSolanaTransacion(address);
 
                 var nativeResultData =
                     await ParticleAuthCore.Instance.SolanaSignAllTransactions(new[] { transaction1, transaction2 });
@@ -498,7 +502,8 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var transaction = await TransactionHelper.GetSolanaTransacion();
+                var address = ParticleAuthCoreInteraction.SolanaGetAddress();
+                var transaction = await TransactionHelper.GetSolanaTransacion(address);
 
                 var nativeResultData =
                     await ParticleAuthCore.Instance.SolanaSignAndSendTransaction(transaction);
