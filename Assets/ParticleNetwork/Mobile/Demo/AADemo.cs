@@ -17,8 +17,6 @@ namespace Network.Particle.Scripts.Test
     {
         private static AndroidJavaObject activityObject;
 
-        private ChainInfo _chainInfo = new EthereumChain(EthereumChainId.Goerli);
-        
         private static AndroidJavaObject GetAndroidJavaObject()
         {
             if (activityObject != null)
@@ -63,262 +61,311 @@ namespace Network.Particle.Scripts.Test
 
         public async void IsDeploy()
         {
-            var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-            var nativeResultData = await ParticleAA.Instance.IsDepoly(eoaAddress);
+            try
+            {
+                var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
+                var nativeResultData = await ParticleAA.Instance.IsDepoly(eoaAddress);
 
-            Debug.Log("result" + nativeResultData.data);
-            if (nativeResultData.isSuccess)
-            {
-                var isDeploy = Convert.ToBoolean(nativeResultData.data);
-                Debug.Log($"isDeploy {isDeploy}");
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                Debug.Log("result" + nativeResultData.data);
+                if (nativeResultData.isSuccess)
+                {
+                    var isDeploy = Convert.ToBoolean(nativeResultData.data);
+                    Debug.Log($"isDeploy {isDeploy}");
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
         public async void RpcGetFeeQuotes()
         {
-            var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-            var transaction = await GetEVMTransacion();
-            var nativeResultData = await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string>{transaction});
-
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
+            try
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
+                var transaction = await TransactionHelper.GetEVMTransacion();
+                var nativeResultData =
+                    await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
+
                 Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
         public async void SendTransactionWithNativeByAuth()
         {
-            var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-            var transaction = await GetEVMTransacion();
-            var nativeResultData =
-                await ParticleAuthService.Instance.SignAndSendTransaction(transaction, AAFeeMode.Auto());
-
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
+            try
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
+                var transaction = await TransactionHelper.GetEVMTransacion();
+                var nativeResultData =
+                    await ParticleAuthService.Instance.SignAndSendTransaction(transaction, AAFeeMode.Auto());
+
                 Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
         public async void SendTransactionWithGaslessByAuth()
         {
-            var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-            var transaction = await GetEVMTransacion();
-            var nativeResultData =
-                await ParticleAuthService.Instance.SignAndSendTransaction(transaction, AAFeeMode.Gasless());
-
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
+            try
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
+                var transaction = await TransactionHelper.GetEVMTransacion();
+                var nativeResultData =
+                    await ParticleAuthService.Instance.SignAndSendTransaction(transaction, AAFeeMode.Gasless());
+
                 Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
         public async void SendTransactionWithTokenByAuth()
         {
-            var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-            var transaction = await GetEVMTransacion();
-
-            var feeQuotesResult =
-                await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
-
-            List<object> feeQuotes = JsonConvert.DeserializeObject<List<object>>(feeQuotesResult.data);
-
-            var nativeResultData =
-                await ParticleAuthService.Instance.SignAndSendTransaction(transaction,
-                    AAFeeMode.Custom(feeQuotes[0]));
-
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
+            try
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
+                var transaction = await TransactionHelper.GetEVMTransacion();
+
+                var feeQuotesResult =
+                    await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
+
+                List<object> feeQuotes = JsonConvert.DeserializeObject<List<object>>(feeQuotesResult.data);
+
+                var nativeResultData =
+                    await ParticleAuthService.Instance.SignAndSendTransaction(transaction,
+                        AAFeeMode.Custom(feeQuotes[0]));
+
                 Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
         public async void BatchSendTransactionsByAuth()
         {
-            var transaction = await GetEVMTransacion();
-
-            List<string> transactions = new List<string> { transaction, transaction };
-            Debug.Log($"BatchSendTransactionsWithAuth {transactions}");
-
-            var nativeResultData = await ParticleAuthService.Instance.BatchSendTransactions(transactions);
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
+            try
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                var transaction = await TransactionHelper.GetEVMTransacion();
+
+                List<string> transactions = new List<string> { transaction, transaction };
+                Debug.Log($"BatchSendTransactionsWithAuth {transactions}");
+
+                var nativeResultData = await ParticleAuthService.Instance.BatchSendTransactions(transactions);
                 Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
         public async void SendTransactionWithNativeByConnect()
         {
-            var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-            var transaction = await GetEVMTransactionWithConnect();
-            var nativeResultData =
-                await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
-                    AAFeeMode.Auto());
-
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
+            try
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
+                var transaction = await TransactionHelper.GetEVMTransactionWithConnect();
+                var nativeResultData =
+                    await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
+                        AAFeeMode.Auto());
+
                 Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
         public async void SendTransactionWithGaslessByConnect()
         {
-            var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-            var transaction = await GetEVMTransactionWithConnect();
-            var nativeResultData =
-                await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
-                    AAFeeMode.Gasless());
-
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
+            try
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
+                var transaction = await TransactionHelper.GetEVMTransactionWithConnect();
+                var nativeResultData =
+                    await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
+                        AAFeeMode.Gasless());
+
                 Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
         public async void SendTransactionWithTokenByConnect()
         {
-            var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-            var transaction = await GetEVMTransactionWithConnect();
-
-            var feeQuotesResult =
-                await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
-
-            List<object> feeQuotes = JsonConvert.DeserializeObject<List<object>>(feeQuotesResult.data);
-
-            var nativeResultData =
-                await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
-                    AAFeeMode.Custom(feeQuotes[0]));
-
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
+            try
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
+                var transaction = await TransactionHelper.GetEVMTransactionWithConnect();
+
+                var feeQuotesResult =
+                    await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
+
+                List<object> feeQuotes = JsonConvert.DeserializeObject<List<object>>(feeQuotesResult.data);
+
+                var nativeResultData =
+                    await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
+                        AAFeeMode.Custom(feeQuotes[0]));
+
                 Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
         public async void BatchSendTransactionsByConnect()
         {
-            var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-            var transaction = await GetEVMTransactionWithConnect();
-
-            List<string> transactions = new List<string> { transaction, transaction };
-            var nativeResultData = await ParticleConnect.Instance.BatchSendTransactions(WalletType.MetaMask, eoaAddress,
-                transactions, AAFeeMode.Auto());
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
+            try
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
+                var transaction = await TransactionHelper.GetEVMTransactionWithConnect();
+
+                List<string> transactions = new List<string> { transaction, transaction };
+                var nativeResultData = await ParticleConnect.Instance.BatchSendTransactions(WalletType.MetaMask,
+                    eoaAddress,
+                    transactions, AAFeeMode.Auto());
                 Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
             }
-            else
+            catch (Exception e)
             {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
+                Debug.LogError($"An error occurred: {e.Message}");
             }
         }
 
-
-        async Task<string> GetEVMTransacion()
-        {
-            // mock send some chain link token from send to receiver.
-            string from = ParticleAuthServiceInteraction.GetAddress();
-            string receiver = TestAccount.EVM.ReceiverAddress;
-            string contractAddress = TestAccount.EVM.TokenContractAddress;
-            BigInteger amount = TestAccount.EVM.Amount;
-            var dataResult = await EvmService.Erc20Transfer(contractAddress, receiver, amount);
-            var data = (string)JObject.Parse(dataResult)["result"];
-            return await EvmService.CreateTransaction(from, data, amount, receiver, true);
-        }
-
-        async Task<string> GetEVMTransactionWithConnect()
-        {
-            string from = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-            string receiver = TestAccount.EVM.ReceiverAddress;
-            string contractAddress = TestAccount.EVM.TokenContractAddress;
-            BigInteger amount = TestAccount.EVM.Amount;
-            var dataResult = await EvmService.Erc20Transfer(contractAddress, receiver, amount);
-            var data = (string)JObject.Parse(dataResult)["result"];
-            return await EvmService.CreateTransaction(from, data, amount, receiver, true);
-        }
 
         public void ShowToast(string message)
         {

@@ -94,7 +94,7 @@ namespace Network.Particle.Scripts.Core
         internal static void SignMessage(string message)
         {
             string serializedMessage;
-            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            if (ParticleNetwork.GetChainInfo().isEvmChain())
             {
                 if (HexUtils.IsHexadecimal(message))
                 {
@@ -301,9 +301,9 @@ namespace Network.Particle.Scripts.Core
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
-                { "chain_name", chainInfo.getChainName() },
-                { "chain_id", chainInfo.getChainId() },
-                { "chain_id_name", chainInfo.getChainIdName() },
+                { "chain_name", chainInfo.Name },
+                { "chain_id", chainInfo.Id },
+                { "chain_id_name", chainInfo.Network },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallNative("setChainInfoAsync",json);

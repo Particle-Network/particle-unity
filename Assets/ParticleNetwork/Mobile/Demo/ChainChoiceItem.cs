@@ -10,7 +10,7 @@ public class ChainChoiceItem : MonoBehaviour
 
     public void InitItem(ChainInfo chainInfo)
     {
-        chainName.text = chainInfo.getChainName() + " " + chainInfo.getChainIdName();
+        chainName.text = chainInfo.Name + " " + chainInfo.Network + " " + chainInfo.Id.ToString();
     }
  
 }

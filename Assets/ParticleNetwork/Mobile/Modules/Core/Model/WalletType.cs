@@ -3,6 +3,7 @@ namespace Network.Particle.Scripts.Model
     public enum WalletType
     {
         Particle,
+        AuthCore,
         EvmPrivateKey,
         SolanaPrivateKey,
         MetaMask,
@@ -21,6 +22,7 @@ namespace Network.Particle.Scripts.Model
         Zengo,
         Alpha,
         Bitpie,
+        OKX,
         
         TokenPocket, // iOS not support
     }

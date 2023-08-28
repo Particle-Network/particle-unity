@@ -1,5 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Numerics;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
@@ -8,7 +12,7 @@ using UnityEngine;
 
 namespace Network.Particle.Scripts.Test
 {
-    public class AuthDemo : MonoBehaviour
+    public class AuthCoreDemo : MonoBehaviour
     {
         private ChainInfo _chainInfo = ChainInfo.EthereumGoerli;
 
@@ -24,16 +28,16 @@ namespace Network.Particle.Scripts.Test
         public void Init()
         {
             ParticleNetwork.Init(this._chainInfo);
+            ParticleAuthCoreInteraction.Init();
         }
 
-        public async void Login()
+        public async void Connect()
         {
             try
             {
-                // login email
-                var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, null,
-                    SupportAuthType.ALL,
-                    SocialLoginPrompt.SelectAccount);
+                var jwt = "";
+                var nativeResultData = await ParticleAuthCore.Instance.Connect(jwt);
+
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)
@@ -54,11 +58,11 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void Logout()
+        public async void Disconnect()
         {
             try
             {
-                var nativeResultData = await ParticleAuthService.Instance.Logout();
+                var nativeResultData = await ParticleAuthCore.Instance.Disconnect();
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)
@@ -79,11 +83,11 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void FastLogout()
+        public async void IsConnected()
         {
             try
             {
-                var nativeResultData = await ParticleAuthService.Instance.FastLogout();
+                var nativeResultData = await ParticleAuthCore.Instance.IsConnected();
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)
@@ -104,16 +108,17 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public void IsLogin()
+        public void GetUserInfo()
         {
-            Debug.Log(ParticleAuthServiceInteraction.IsLogin());
+            var userInfo = ParticleAuthCoreInteraction.GetUserInfo();
+            Debug.Log($"get user info {userInfo}");
         }
 
-        public async void IsLoginAsync()
+        public async void SwitchChain()
         {
             try
             {
-                var nativeResultData = await ParticleAuthService.Instance.IsLoginAsync();
+                var nativeResultData = await ParticleAuthCore.Instance.SwitchChain(this._chainInfo);
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)
@@ -134,21 +139,13 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public void GetAddress()
-        {
-            var address = ParticleAuthServiceInteraction.GetAddress();
-            Debug.Log($"address {address}");
-        }
 
-
-        public async void SignAndSendTransaction()
+        public async void ChangeMasterPassword()
         {
             try
             {
-                var transaction = await TransactionHelper.GetEVMTransacion();
-                Debug.Log("transaction = " + transaction);
                 var nativeResultData =
-                    await ParticleAuthService.Instance.SignAndSendTransaction(transaction);
+                    await ParticleAuthCore.Instance.ChangeMasterPassword();
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)
@@ -169,147 +166,17 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void SignTransaction()
-        {
-            try
-            {
-                var transaction = await TransactionHelper.GetSolanaTransacion();
-                Debug.Log("transaction = " + transaction);
-                var nativeResultData =
-                    await ParticleAuthService.Instance.SignTransaction(transaction);
-                Debug.Log(nativeResultData.data);
 
-                if (nativeResultData.isSuccess)
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
-                }
-                else
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                    Debug.Log(errorData);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred: {e.Message}");
-            }
+        public void HasMasterPassword()
+        {
+            var result = ParticleAuthCoreInteraction.HasMasterPassword();
+            Debug.Log($"has master password {result}");
         }
 
-        public async void SignAllTransactions()
+        public void HasPaymentPassword()
         {
-            try
-            {
-                var transaction1 = await TransactionHelper.GetSolanaTransacion();
-                var transaction2 = await TransactionHelper.GetSolanaTransacion();
-                Debug.Log("transaction1 = " + transaction1);
-                Debug.Log("transaction2 = " + transaction2);
-                string[] transactions = new[] { transaction1, transaction2 };
-                var nativeResultData =
-                    await ParticleAuthService.Instance.SignAllTransactions(transactions);
-                Debug.Log(nativeResultData.data);
-
-                if (nativeResultData.isSuccess)
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
-                }
-                else
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                    Debug.Log(errorData);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred: {e.Message}");
-            }
-        }
-
-        public async void SignMessage()
-        {
-            try
-            {
-                var message = "Hello world";
-                var nativeResultData =
-                    await ParticleAuthService.Instance.SignMessage(message);
-                Debug.Log(nativeResultData.data);
-
-                if (nativeResultData.isSuccess)
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
-                }
-                else
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                    Debug.Log(errorData);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred: {e.Message}");
-            }
-        }
-
-        public async void SignTypedData()
-        {
-            try
-            {
-                var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
-                string typedData = txtAsset.text;
-
-                var chainId = ParticleNetwork.GetChainInfo().Id;
-                JObject json = JObject.Parse(typedData);
-                json["domain"]["chainId"] = chainId;
-                string newTypedData = json.ToString();
-
-                var nativeResultData =
-                    await ParticleAuthService.Instance.SignTypedData(newTypedData,
-                        SignTypedDataVersion.V4);
-
-                Debug.Log(nativeResultData.data);
-
-                if (nativeResultData.isSuccess)
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
-                }
-                else
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                    Debug.Log(errorData);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred: {e.Message}");
-            }
-        }
-
-        public void SetLanguage()
-        {
-            Language language = Language.JA;
-            ParticleNetwork.SetLanguage(language);
-        }
-
-        public void SetAppearance()
-        {
-            ParticleNetwork.SetAppearance(Appearance.DARK);
-        }
-
-        public void SetFiatCoin()
-        {
-            ParticleNetwork.SetFiatCoin(FiatCoin.KRW);
-        }
-
-        public void SetWebAuthConfig()
-        {
-            ParticleNetwork.SetWebAuthConfig(true, Appearance.DARK);
+            var result = ParticleAuthCoreInteraction.HasPaymentPassword();
+            Debug.Log($"has master password {result}");
         }
 
 
@@ -326,34 +193,7 @@ namespace Network.Particle.Scripts.Test
         }
 
 
-        public async void SetChainInfoAsync()
-        {
-            try
-            {
-                // call this method to change chain info and auto create public address if that is not existed.
-                var nativeResultData =
-                    await ParticleAuthService.Instance.SetChainInfoAsync(_chainInfo);
-                Debug.Log(nativeResultData.data);
-
-                if (nativeResultData.isSuccess)
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
-                }
-                else
-                {
-                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                    Debug.Log(errorData);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred: {e.Message}");
-            }
-        }
-
-        public void SetChainInfoSync()
+        public void SetChainInfo()
         {
             // call this method to change chain info. 
             ParticleNetwork.SetChainInfo(_chainInfo);
@@ -366,30 +206,12 @@ namespace Network.Particle.Scripts.Test
                 $"chain name {chainInfo.Name}, chain id {chainInfo.Id}, chain id name {chainInfo.Network}");
         }
 
-        public void SetiOSModalStyle()
-        {
-            ParticleAuthServiceInteraction.SetiOSModalPresentStyle(iOSModalPresentStyle.FullScreen);
-        }
-
-        public void SetiOSMediumScreen()
-        {
-            ParticleAuthServiceInteraction.SetiOSMediumScreen(true);
-        }
-
-        /// <summary>
-        /// Set browser height percent, only support android.
-        /// </summary>
-        public void SetBrowserHeightPercent()
-        {
-            ParticleAuthServiceInteraction.SetBrowserHeightPercent(0.7f);
-        }
-
         public async void OpenAccountAndSecurity()
         {
             try
             {
                 var nativeResultData =
-                    await ParticleAuthService.Instance.OpenAccountAndSecurity();
+                    await ParticleAuthCore.Instance.OpenAccountAndSecurity();
 
                 Debug.Log(nativeResultData.data);
 
@@ -414,44 +236,279 @@ namespace Network.Particle.Scripts.Test
         public void OpenWebWallet()
         {
             var jsonString = "";
-            ParticleAuthServiceInteraction.OpenWebWallet(jsonString);
+            ParticleAuthCoreInteraction.OpenWebWallet(jsonString);
         }
 
-        public void HasMasterPassword()
+        public void EvmGetAddress()
         {
-            var result = ParticleAuthServiceInteraction.HasMasterPassword();
-            Debug.Log($"HasMasterPassword {result}");
+            var address = ParticleAuthCoreInteraction.EvmGetAddress();
+            Debug.LogError($"evm address: {address}");
         }
 
-        public void HasPaymentPassword()
-        {
-            var result = ParticleAuthServiceInteraction.HasPaymentPassword();
-            Debug.Log($"HasPaymentPassword {result}");
-        }
-
-        public void HasSecurityAccount()
-        {
-            var result = ParticleAuthServiceInteraction.HasSecurityAccount();
-            Debug.Log($"HasSecurityAccount {result}");
-        }
-
-        public async void GetSecurityAccount()
+        public async void EvmPersonalSign()
         {
             try
             {
-                var nativeResultData = await ParticleAuthService.Instance.GetSecurityAccount();
+                var message = "Hello world";
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.EvmPersonalSign(message);
+
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                     Debug.Log(nativeResultData.data);
-                    var securityAccount = JsonConvert.DeserializeObject<SecurityAccount>(nativeResultData.data);
-                    var hasSecurityAccount = !string.IsNullOrEmpty(securityAccount.Email) ||
-                                             !string.IsNullOrEmpty(securityAccount.Phone);
-                    Debug.Log(securityAccount);
-                    Debug.Log(
-                        $"HasMasterPassword {securityAccount.HasMasterPassword}, HasPaymentPassword {securityAccount.HasPaymentPassword}, HasSecurityAccount {hasSecurityAccount}");
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void EvmPersonalSignUnique()
+        {
+            try
+            {
+                var message = "Hello world";
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.EvmPersonalSignUnique(message);
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void EvmSignTypedData()
+        {
+            try
+            {
+                var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
+                string typedData = txtAsset.text;
+
+                var chainId = ParticleNetwork.GetChainInfo().Id;
+                JObject json = JObject.Parse(typedData);
+                json["domain"]["chainId"] = chainId;
+                string newTypedData = json.ToString();
+
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.EvmSignTypedData(newTypedData);
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void EvmSignTypedDataUnique()
+        {
+            try
+            {
+                var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
+                string typedData = txtAsset.text;
+
+                var chainId = ParticleNetwork.GetChainInfo().Id;
+                JObject json = JObject.Parse(typedData);
+                json["domain"]["chainId"] = chainId;
+                string newTypedData = json.ToString();
+
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.EvmSignTypedDataUnique(newTypedData);
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void EvmSendTransaction()
+        {
+            try
+            {
+                var transaction = await TransactionHelper.GetEVMTransacion();
+
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.EvmSendTransaction(transaction);
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public void SolanaGetAddress()
+        {
+            var address = ParticleAuthCoreInteraction.SolanaGetAddress();
+            Debug.LogError($"solana address: {address}");
+        }
+
+        public async void SolanaSignMessage()
+        {
+            try
+            {
+                var message = "Hello Particle!";
+
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.SolanaSignMessage(message);
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void SolanaSignTransaction()
+        {
+            try
+            {
+                var transaction = await TransactionHelper.GetSolanaTransacion();
+
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.SolanaSignTransaction(transaction);
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void SolanaSignAllTransactions()
+        {
+            try
+            {
+                var transaction1 = await TransactionHelper.GetSolanaTransacion();
+                var transaction2 = await TransactionHelper.GetSolanaTransacion();
+
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.SolanaSignAllTransactions(new[] { transaction1, transaction2 });
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void SolanaSignAndSendTransaction()
+        {
+            try
+            {
+                var transaction = await TransactionHelper.GetSolanaTransacion();
+
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.SolanaSignAndSendTransaction(transaction);
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
                 }
                 else
                 {

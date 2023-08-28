@@ -1,11 +1,8 @@
 using System.Collections.Generic;
-using System.Collections.Generic;
 using System.Reflection;
 using Network.Particle.Scripts.Core;
-using Network.Particle.Scripts.Core.Utils;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace Network.Particle.Scripts.Test
@@ -14,13 +11,13 @@ namespace Network.Particle.Scripts.Test
     {
         private static AndroidJavaObject activityObject;
 
-        private ChainInfo _chainInfo = new EthereumChain(EthereumChainId.Goerli);
+        private ChainInfo _chainInfo = ChainInfo.Ethereum;
 
         public void SelectChain()
         {
             ChainChoice.Instance.Show((chainInfo) =>
             {
-                Debug.Log($"xxhong {chainInfo.getChainName()} {chainInfo.getChainId()} {chainInfo.getChainIdName()}");
+                Debug.Log($"select chain{chainInfo.Name} {chainInfo.Id} {chainInfo.Network}");
                 this._chainInfo =
                     chainInfo;
             });
@@ -207,10 +204,10 @@ namespace Network.Particle.Scripts.Test
 
         public void SetSupportChainInfos()
         {
-            ChainInfo avalanche = new AvalancheChain(AvalancheChainId.Mainnet);
-            ChainInfo ethereum = new EthereumChain(EthereumChainId.Mainnet);
-            ChainInfo bsc = new BSCChain(BSCChainId.Mainnet);
-            ParticleWalletGUI.SetSupportChain(new[] { avalanche, bsc, ethereum });
+            ChainInfo avalanche = ChainInfo.Avalanche;
+            ChainInfo ethereum = ChainInfo.Ethereum;
+            ChainInfo bnb = ChainInfo.BNBChain;
+            ParticleWalletGUI.SetSupportChain(new[] { avalanche, bnb, ethereum });
         }
 
         public void GetSwapDisabled()

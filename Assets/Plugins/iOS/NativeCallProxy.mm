@@ -118,7 +118,6 @@ extern "C" {
     char* getUserInfo() {
         char* cStringCopyPN(const char* string);
         return cStringCopyPN([[api getUserInfo] UTF8String]);
-        
     }
 
     void setChainInfoAsync(const char* chainInfo) {
@@ -388,8 +387,9 @@ extern "C" {
          [api authCoreIsConnected];
     }
 
-    void authCoreGetUserInfo() {
-        [api authCoreGetUserInfo];
+    char* authCoreGetUserInfo() {
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api authCoreGetUserInfo] UTF8String]);
     }
 
     void authCoreSwitchChain(const char* json) {
@@ -414,6 +414,52 @@ extern "C" {
 
     void authCoreOpenWebWallet(const char* json) {
         [api authCoreOpenWebWallet: [NSString stringWithUTF8String: json]];
+    }
+
+    char* authCoreEvmGetAddress() {
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api authCoreEvmGetAddress] UTF8String]);
+    }
+
+    void authCoreEvmPersonalSign(const char* json) {
+        [api authCoreEvmPersonalSign: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreEvmPersonalSignUnique(const char* json) {
+        [api authCoreEvmPersonalSignUnique: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreEvmSignTypedData(const char* json) {
+        [api authCoreEvmSignTypedData: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreEvmSignTypedDataUnique(const char* json) {
+        [api authCoreEvmSignTypedDataUnique: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreEvmSendTransaction(const char* json) {
+        [api authCoreEvmSendTransaction: [NSString stringWithUTF8String: json]];
+    }
+
+    char* authCoreSolanaGetAddress() {
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api authCoreSolanaGetAddress] UTF8String]);
+    }
+
+    void authCoreSolanaSignMessage(const char* json) {
+        [api authCoreSolanaSignMessage: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreSolanaSignTransaction(const char* json) {
+        [api authCoreSolanaSignTransaction: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreSolanaSignAllTransactions(const char* json) {
+        [api authCoreSolanaSignAllTransactions: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreSolanaSignAndSendTransaction(const char* json) {
+        [api authCoreSolanaSignAndSendTransaction: [NSString stringWithUTF8String: json]];
     }
 }
 

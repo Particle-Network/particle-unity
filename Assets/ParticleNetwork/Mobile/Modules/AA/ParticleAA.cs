@@ -23,6 +23,13 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> RpcGetFeeQuotes(string eoaAddress, List<string> transactions)
         {
             rpcGetFeeQuotesTask = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+            RpcGetFeeQuotesCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
+#endif
             ParticleAAInteraction.RpcGetFeeQuotes(eoaAddress, transactions);
             return rpcGetFeeQuotesTask.Task;
         }
@@ -30,7 +37,6 @@ namespace Network.Particle.Scripts.Core
         public void RpcGetFeeQuotesCallBack(string json)
         {
             Debug.Log($"RpcGetFeeQuotesTaskCallBack:{json}");
-
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             rpcGetFeeQuotesTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
@@ -39,6 +45,13 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> IsDepoly(string eoaAddress)
         {
             isDeployTask = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+            IsDeployCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
+#endif
             ParticleAAInteraction.IsDeploy(eoaAddress);
             return isDeployTask.Task;
         }

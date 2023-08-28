@@ -116,13 +116,25 @@
 - (void) authCoreConnect:(NSString* _Nonnull)json;
 - (void) authCoreDisconnect;
 - (void) authCoreIsConnected;
-- (void) authCoreGetUserInfo;
+- (NSString* _Nonnull) authCoreGetUserInfo;
 - (void) authCoreSwitchChain:(NSString* _Nonnull)json;
 - (void) authCoreChangeMasterPassword;
 - (BOOL) authCoreHasMasterPassword;
 - (BOOL) authCoreHasPaymentPassword;
 - (void) authCoreOpenAccountAndSecurity;
 - (void) authCoreOpenWebWallet:(NSString* _Nonnull)json;
+
+- (NSString* _Nonnull) authCoreEvmGetAddress;
+- (void) authCoreEvmPersonalSign:(NSString* _Nonnull)json;
+- (void) authCoreEvmPersonalSignUnique:(NSString* _Nonnull)json;
+- (void) authCoreEvmSignTypedData:(NSString* _Nonnull)json;
+- (void) authCoreEvmSignTypedDataUnique:(NSString* _Nonnull)json;
+- (void) authCoreEvmSendTransaction:(NSString* _Nonnull)json;
+- (NSString* _Nonnull) authCoreSolanaGetAddress;
+- (void) authCoreSolanaSignMessage:(NSString* _Nonnull)json;
+- (void) authCoreSolanaSignTransaction:(NSString* _Nonnull)json;
+- (void) authCoreSolanaSignAllTransactions:(NSString* _Nonnull)json;
+- (void) authCoreSolanaSignAndSendTransaction:(NSString* _Nonnull)json;
 
 @end
 

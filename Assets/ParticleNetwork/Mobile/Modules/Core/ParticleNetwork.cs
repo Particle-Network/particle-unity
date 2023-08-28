@@ -22,9 +22,9 @@ namespace Network.Particle.Scripts.Core
             currChainInfo = chainInfo;
             var json = JsonConvert.SerializeObject(new JObject
             {
-                { "chain_name", chainInfo.getChainName() },
-                { "chain_id", chainInfo.getChainId() },
-                { "chain_id_name", chainInfo.getChainIdName() },
+                { "chain_name", chainInfo.Name },
+                { "chain_id", chainInfo.Id },
+                { "chain_id_name", chainInfo.Network },
                 { "env", env.ToString() },
             });
 
@@ -41,9 +41,9 @@ namespace Network.Particle.Scripts.Core
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
-                { "chain_name", chainInfo.getChainName() },
-                { "chain_id", chainInfo.getChainId() },
-                { "chain_id_name", chainInfo.getChainIdName() },
+                { "chain_name", chainInfo.Name },
+                { "chain_id", chainInfo.Id },
+                { "chain_id_name", chainInfo.Network },
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -57,29 +57,26 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
 #endif
         }
 
-        /**
-             {
-             "chain_name": "Solana",
-             "chain_id": 1,
-             "chain_id_name":"Mainnet"
-             }
-         */
+        /// <summary>
+        /// Get chain info
+        /// </summary>
+        /// <returns>ChainInfo</returns>
         public static ChainInfo GetChainInfo()
         {
             Assert.IsNotNull(currChainInfo, "currChainInfo is null,you must call ParticleNetwork.Init() first");
+            var resultJson = "";
 #if UNITY_ANDROID && !UNITY_EDITOR
-            var resultJson = ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getChainInfo");
-            var nativeChainInfo = JsonConvert.DeserializeObject<NativeChainInfo>(resultJson);
-             var chainInfo = ChainUtils.FindChain(nativeChainInfo.chainName, nativeChainInfo.chainId);
-            return chainInfo;
+            resultJson = ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getChainInfo");
 #elif UNITY_IOS && !UNITY_EDITOR
-            var resultJson = ParticleNetworkIOSBridge.getChainInfo();
-            var nativeChainInfo = JsonConvert.DeserializeObject<NativeChainInfo>(resultJson);
-            var chainInfo = ChainUtils.FindChain(nativeChainInfo.chainName, nativeChainInfo.chainId);
-            return chainInfo;
-#elif UNITY_EDITOR
+            resultJson = ParticleNetworkIOSBridge.getChainInfo();
+#else
             return currChainInfo;
 #endif
+
+            Debug.Log($"GetChainInfo json: {resultJson}");
+            var data = JObject.Parse(resultJson);
+            var chainInfo = ChainUtils.FindChain(data["chain_name"].ToString(), (int)data["chain_id"]);
+            return chainInfo;
         }
 
         public static int GetEnv()
@@ -230,7 +227,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             var userInfo = PersistTools.GetUserInfo();
             var wallets = userInfo.Wallets;
 
-            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            if (ParticleNetwork.GetChainInfo().isEvmChain())
             {
                 var evmPrivateKey = wallets.FirstOrDefault(x => x.ChainName == "evm_chain")?.PrivateKey;
                 return evmPrivateKey;
@@ -246,4 +243,3 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
         }
     }
 }
-

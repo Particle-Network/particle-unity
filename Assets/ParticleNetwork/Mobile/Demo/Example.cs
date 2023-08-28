@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
@@ -19,7 +17,7 @@ namespace Network.Particle.Scripts.Test
                 "https://connect.particle.network/icons/512.png",
                 "https://connect.particle.network", "");
 
-            ChainInfo chainInfo = new AvalancheChain(AvalancheChainId.Mainnet);
+            ChainInfo chainInfo = ChainInfo.Avalanche;
             // Init and set default chain info.
             ParticleNetwork.Init(chainInfo);
             ParticleConnectInteraction.Init(chainInfo, metadata);

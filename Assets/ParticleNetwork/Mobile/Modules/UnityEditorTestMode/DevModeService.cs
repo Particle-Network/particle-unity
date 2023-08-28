@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Utils;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Network.Particle.Scripts.Core.UnityEditorTestMode
 {
@@ -18,7 +19,12 @@ namespace Network.Particle.Scripts.Core.UnityEditorTestMode
         {
 #if UNITY_EDITOR
             string path = "testmode/login";
-            var result = await Request(path, "", new object[] { });
+            var userInfo = await Request(path, "", new object[] { });
+            var result = JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", JObject.Parse(userInfo) },
+            });
             ParticleAuthService.Instance.LoginCallBack(result);
 #endif
         }

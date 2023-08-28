@@ -38,11 +38,17 @@ import ConnectPhantomAdapter
 import ConnectWalletConnectAdapter
 #endif
 
+#if canImport(ParticleAuthCore)
+import AuthCoreAdapter
+import ParticleAuthCore
+import ParticleMPCCore
+import Thresh
+#endif
+
 import UIKit
 
 @objcMembers
 class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
-    
     let bag = DisposeBag()
     
     static var shared = UnityManager()
@@ -52,13 +58,18 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     static let authSystemName = "ParticleAuthService"
     static let connectSystemName = "ParticleConnect"
     static let guiSystemName = "ParticleWalletGUI"
-    static let biconomySystemName = "ParticleBiconomy"
+    static let aaSystemName = "ParticleAA"
     
     // work with connect sdk
     var latestPublicAddress: String?
     var latestWalletType: WalletType?
     var isLatestBatchAuth: Bool = false
     let biconomy = BiconomyService()
+    
+#if canImport(ParticleAuthCore)
+    let auth = Auth()
+    static let authCoreSystemName = "ParticleAuthCore"
+#endif
     
     override init() {
         super.init()
@@ -248,73 +259,32 @@ extension UnityManager {
         } else if socialLoginPromptString == "selectaccount" {
             socialLoginPrompt = SocialLoginPrompt.selectAccount
         }
-        let message: String? = data["authorization"]["message"].string
-        let isUnique: Bool = data["authorization"]["uniq"].bool ?? false
         
+        let authorizationJson = data["authorization"]
         var loginAuthorization: LoginAuthorization?
         
-        if message != nil {
-            loginAuthorization = .init(message: message!, isUnique: isUnique)
+        if authorizationJson == JSON.null {
+            loginAuthorization = nil
+        } else {
+            let message: String? = authorizationJson["message"].stringValue
+            let isUnique: Bool? = authorizationJson["uniq"].boolValue
+            
+            loginAuthorization = .init(message: message, isUnique: isUnique)
         }
         
-        ParticleAuthService.login(type: loginType, account: account, supportAuthType: supportAuthTypeArray, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let userInfo):
-                guard let userInfo = userInfo else { return }
-                let userInfoJsonString = userInfo.jsonStringFullSnake()
-                let newUserInfo = JSON(parseJSON: userInfoJsonString)
-                
-                let statusModel = UnityStatusModel(status: true, data: newUserInfo)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.login(type: loginType, account: account, supportAuthType: supportAuthTypeArray, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization).map { userInfo in
+            let userInfoJsonString = userInfo?.jsonStringFullSnake()
+            let newUserInfo = JSON(parseJSON: userInfoJsonString ?? "")
+            return newUserInfo
+        }, unityName: UnityManager.authSystemName)
     }
     
     func logout() {
-        ParticleAuthService.logout().subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let success):
-                let statusModel = UnityStatusModel(status: true, data: success)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.logout(), unityName: UnityManager.authSystemName)
     }
     
     func fastLogout() {
-        ParticleAuthService.fastLogout().subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let success):
-                let statusModel = UnityStatusModel(status: true, data: success)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.fastLogout(), unityName: UnityManager.authSystemName)
     }
     
     func isLogin() -> Bool {
@@ -322,22 +292,7 @@ extension UnityManager {
     }
     
     func isLoginAsync() {
-        ParticleAuthService.isLoginAsync().subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let userInfo):
-                let statusModel = UnityStatusModel(status: true, data: userInfo)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.isLoginAsync(), unityName: UnityManager.authSystemName)
     }
     
     func signMessage(_ message: String) {
@@ -349,113 +304,52 @@ extension UnityManager {
             serializedMessage = message
         }
         
-        ParticleAuthService.signMessage(serializedMessage).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let signedMessage):
-                let statusModel = UnityStatusModel(status: true, data: signedMessage)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.signMessage(serializedMessage), unityName: UnityManager.authSystemName)
     }
     
     func signMessageUnique(_ message: String) {
-        ParticleAuthService.signMessageUnique(message).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let signedMessage):
-                let statusModel = UnityStatusModel(status: true, data: signedMessage)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.signMessageUnique(message), unityName: UnityManager.authSystemName)
     }
     
     func signTransaction(_ transaction: String) {
-        ParticleAuthService.signTransaction(transaction).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let signed):
-                let statusModel = UnityStatusModel(status: true, data: signed)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.signTransaction(transaction), unityName: UnityManager.authSystemName)
     }
     
     func signAllTransactions(_ transactions: String) {
         let transactions = JSON(parseJSON: transactions).arrayValue.map { $0.stringValue }
-        ParticleAuthService.signAllTransactions(transactions).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let signedMessage):
-                let statusModel = UnityStatusModel(status: true, data: signedMessage)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        
+        subscribeAndCallback(observable: ParticleAuthService.signAllTransactions(transactions), unityName: UnityManager.authSystemName)
     }
     
     func signAndSendTransaction(_ json: String) {
         let data = JSON(parseJSON: json)
         let transaction = data["transaction"].stringValue
         let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .auto
-        if mode == "auto" {
-            feeMode = .auto
+        var feeMode: Biconomy.FeeMode = .native
+        if mode == "native" {
+            feeMode = .native
         } else if mode == "gasless" {
             feeMode = .gasless
-        } else if mode == "custom" {
+        } else if mode == "token" {
             let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson)
-            feeMode = .custom(feeQuote)
+            let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+
+            feeMode = .token(feeQuote)
+        }
+                
+        let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
+        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+                
+        let biconomy = ParticleNetwork.getBiconomyService()
+        var sendObservable: Single<String>
+        if ParticleNetwork.getChainInfo().chain != .solana, biconomy != nil, biconomy!.isBiconomyModeEnable() {
+            sendObservable = biconomy!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        } else {
+            sendObservable = ParticleAuthService.signAndSendTransaction(transaction, feeMode: feeMode)
         }
         
-        ParticleAuthService.signAndSendTransaction(transaction, feeMode: feeMode).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let signature):
-                let statusModel = UnityStatusModel(status: true, data: signature)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authSystemName)
     }
     
     func batchSendTransactions(_ json: String) {
@@ -464,45 +358,37 @@ extension UnityManager {
             $0.stringValue
         }
         let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .auto
-        if mode == "auto" {
-            feeMode = .auto
+        var feeMode: Biconomy.FeeMode = .native
+        if mode == "native" {
+            feeMode = .native
         } else if mode == "gasless" {
             feeMode = .gasless
-        } else if mode == "custom" {
+        } else if mode == "token" {
             let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson)
-            feeMode = .custom(feeQuote)
+            let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+
+            feeMode = .token(feeQuote)
         }
-        
+                
+        let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
+        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+                
         guard let biconomy = ParticleNetwork.getBiconomyService() else {
             print("biconomy is not init")
             return
         }
-        
+                
         guard biconomy.isBiconomyModeEnable() else {
             print("biconomy is not enable")
             return
         }
         
         isLatestBatchAuth = true
-        biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self).subscribe {
-            [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .failure(let error):
-                    let response = self.ResponseFromError(error)
-                    let statusModel = UnityStatusModel(status: false, data: response)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.authSystemName)
-                case .success(let signature):
-                    let statusModel = UnityStatusModel(status: true, data: signature)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.authSystemName)
-                }
-        }.disposed(by: bag)
+        
+        let sendObservable: Single<String> = biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+                
+        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authSystemName)
     }
     
     func signTypedData(_ json: String) {
@@ -520,22 +406,7 @@ extension UnityManager {
             signTypedDataVersion = .v4Unique
         }
         
-        ParticleAuthService.signTypedData(message, version: signTypedDataVersion ?? .v4).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let signedMessage):
-                let statusModel = UnityStatusModel(status: true, data: signedMessage)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.signTypedData(message, version: signTypedDataVersion ?? .v4), unityName: UnityManager.authSystemName)
     }
     
     func getAddress() -> String {
@@ -554,30 +425,15 @@ extension UnityManager {
     }
     
     func getSecurityAccount() {
-        ParticleAuthService.getSecurityAccount().subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success(let securityAccountInfo):
-                        
-                let dict = ["phone": securityAccountInfo.phone,
-                            "email": securityAccountInfo.email,
-                            "has_set_master_password": securityAccountInfo.hasSetMasterPassword,
-                            "has_set_payment_password": securityAccountInfo.hasSetPaymentPassword] as [String: Any?]
-                        
-                let json = JSON(dict)
-                        
-                let statusModel = UnityStatusModel(status: true, data: json)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.getSecurityAccount().map { securityAccountInfo in
+            
+            let dict = ["phone": securityAccountInfo.phone,
+                        "email": securityAccountInfo.email,
+                        "has_set_master_password": securityAccountInfo.hasSetMasterPassword,
+                        "has_set_payment_password": securityAccountInfo.hasSetPaymentPassword] as [String: Any?]
+            let json = JSON(dict)
+            return json
+        }, unityName: UnityManager.authSystemName)
     }
     
     func setChainInfoAsync(_ json: String) {
@@ -593,25 +449,11 @@ extension UnityManager {
             callBackMessage(json, unityName: UnityManager.authSystemName)
             
         } else {
-            ParticleAuthService.switchChain(chainInfo).subscribe { [weak self] result in
-                guard let self = self else { return }
-
-                switch result {
-                case .failure(let error):
-                    let response = self.ResponseFromError(error)
-                    let statusModel = UnityStatusModel(status: false, data: response)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    
-                    self.callBackMessage(json, unityName: UnityManager.authSystemName)
-                case .success(let userInfo):
-                    guard let userInfo = userInfo else { return }
-                    let statusModel = UnityStatusModel(status: true, data: userInfo)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.authSystemName)
-                }
-            }.disposed(by: bag)
+            subscribeAndCallback(observable: ParticleAuthService.switchChain(chainInfo).map { userInfo in
+                let userInfoJsonString = userInfo?.jsonStringFullSnake()
+                let newUserInfo = JSON(parseJSON: userInfoJsonString ?? "")
+                return newUserInfo
+            }, unityName: UnityManager.authSystemName)
         }
     }
     
@@ -636,24 +478,7 @@ extension UnityManager {
     }
     
     func openAccountAndSecurity() {
-        ParticleAuthService.openAccountAndSecurity().subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            case .success():
-                let str: String? = nil
-                let statusModel = UnityStatusModel(status: true, data: str)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.authSystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: ParticleAuthService.openAccountAndSecurity().map { "" }, unityName: UnityManager.authSystemName)
     }
 }
 
@@ -893,26 +718,10 @@ extension UnityManager {
         } else {
             observable = PNRouter.navigatorLoginList()
         }
-        
-        observable.subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "loginList")
-            case .success(let (walletType, account)):
-                guard let account = account else { return }
-                
-                let unityLoginListModel = UnityLoginListModel(walletType: walletType.stringValue, account: account)
-                let statusModel = UnityStatusModel(status: true, data: unityLoginListModel)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "loginList")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: observable.map { walletType, account in
+            let unityLoginListModel = UnityLoginListModel(walletType: walletType.stringValue, account: account)
+            return unityLoginListModel
+        }, unityName: UnityManager.guiSystemName, methodName: "loginList")
     }
     
     func switchWallet(_ json: String) {
@@ -1214,7 +1023,6 @@ extension UnityManager {
                 account = nil
             }
             
-            let loginFormMode = data["loginFormMode"].boolValue
             let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
             var socialLoginPrompt: SocialLoginPrompt?
             if socialLoginPromptString == "none" {
@@ -1224,8 +1032,20 @@ extension UnityManager {
             } else if socialLoginPromptString == "selectaccount" {
                 socialLoginPrompt = SocialLoginPrompt.selectAccount
             }
+            
+            let authorizationJson = data["authorization"]
+            var loginAuthorization: LoginAuthorization?
+            
+            if authorizationJson == JSON.null {
+                loginAuthorization = nil
+            } else {
+                let message: String? = authorizationJson["message"].stringValue
+                let isUnique: Bool? = authorizationJson["uniq"].boolValue
+                
+                loginAuthorization = .init(message: message, isUnique: isUnique)
+            }
 
-            connectConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt)
+            connectConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization)
         }
         
         guard let walletType = map2WalletType(from: walletTypeString) else {
@@ -1251,23 +1071,7 @@ extension UnityManager {
             observable = adapter.connect(ConnectConfig.none)
         }
         
-        observable.subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "connect")
-            case .success(let account):
-                guard let account = account else { return }
-                let statusModel = UnityStatusModel(status: true, data: account)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "connect")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: observable, unityName: UnityManager.connectSystemName, methodName: "connect")
     }
     
     func adapterDisconnect(_ json: String) {
@@ -1284,22 +1088,7 @@ extension UnityManager {
             return
         }
         
-        adapter.disconnect(publicAddress: publicAddress).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "disconnect")
-            case .success(let success):
-                let statusModel = UnityStatusModel(status: true, data: success)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "disconnect")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: adapter.disconnect(publicAddress: publicAddress), unityName: UnityManager.connectSystemName, methodName: "disconnect")
     }
     
     func adapterIsConnected(_ json: String) -> Bool {
@@ -1324,44 +1113,46 @@ extension UnityManager {
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         let transaction = data["transaction"].stringValue
-        
-        let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .auto
-        if mode == "auto" {
-            feeMode = .auto
-        } else if mode == "gasless" {
-            feeMode = .gasless
-        } else if mode == "custom" {
-            let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson)
-            feeMode = .custom(feeQuote)
-        }
-        
+                
         guard let walletType = map2WalletType(from: walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
+        
+        latestPublicAddress = publicAddress
+        latestWalletType = walletType
+                
+        let mode = data["fee_mode"]["option"].stringValue
+        var feeMode: Biconomy.FeeMode = .native
+        if mode == "native" {
+            feeMode = .native
+        } else if mode == "gasless" {
+            feeMode = .gasless
+        } else if mode == "token" {
+            let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
+            let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+
+            feeMode = .token(feeQuote)
+        }
+                
+        let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
+        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+        
         guard let adapter = map2ConnectAdapter(from: walletType) else {
             print("adapter for \(walletTypeString) is not init ")
             return
         }
-        
-        adapter.signAndSendTransaction(publicAddress: publicAddress, transaction: transaction, feeMode: feeMode).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signAndSendTransaction")
-            case .success(let signature):
-                let statusModel = UnityStatusModel(status: true, data: signature)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signAndSendTransaction")
-            }
-        }.disposed(by: bag)
+                
+        let biconomy = ParticleNetwork.getBiconomyService()
+        var sendObservable: Single<String>
+        if biconomy != nil, biconomy!.isBiconomyModeEnable() {
+            sendObservable = biconomy!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        } else {
+            sendObservable = adapter.signAndSendTransaction(publicAddress: publicAddress, transaction: transaction, feeMode: feeMode)
+        }
+                
+        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.connectSystemName, methodName: "signAndSendTransaction")
     }
     
     func adapterBatchSendTransactions(_ json: String) {
@@ -1371,55 +1162,44 @@ extension UnityManager {
         }
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
-        
+                
         guard let walletType = map2WalletType(from: walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
-        
+                
         latestPublicAddress = publicAddress
         latestWalletType = walletType
-        
+                
         let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .auto
-        if mode == "auto" {
-            feeMode = .auto
+        var feeMode: Biconomy.FeeMode = .native
+        if mode == "native" {
+            feeMode = .native
         } else if mode == "gasless" {
             feeMode = .gasless
-        } else if mode == "custom" {
+        } else if mode == "token" {
             let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson)
-            feeMode = .custom(feeQuote)
+            let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+
+            feeMode = .token(feeQuote)
         }
-        
+                
+        let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
+        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
         guard let biconomy = ParticleNetwork.getBiconomyService() else {
-            print("biconomy is not init")
+            print("aa is not init")
             return
         }
-        
+                
         guard biconomy.isBiconomyModeEnable() else {
-            print("biconomy is not enable")
+            print("aa is not enable")
             return
         }
-        
+              
         isLatestBatchAuth = false
-        biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self).subscribe {
-            [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .failure(let error):
-                    let response = self.ResponseFromError(error)
-                    let statusModel = UnityStatusModel(status: false, data: response)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "batchSendTransactions")
-                case .success(let signature):
-                    let statusModel = UnityStatusModel(status: true, data: signature)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "batchSendTransactions")
-                }
-        }.disposed(by: bag)
+        let sendObservable = biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.connectSystemName, methodName: "batchSendTransactions")
     }
     
     func adapterSignTransaction(_ json: String) {
@@ -1437,22 +1217,7 @@ extension UnityManager {
             return
         }
         
-        adapter.signTransaction(publicAddress: publicAddress, transaction: transaction).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signTransaction")
-            case .success(let signed):
-                let statusModel = UnityStatusModel(status: true, data: signed)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signTransaction")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: adapter.signTransaction(publicAddress: publicAddress, transaction: transaction), unityName: UnityManager.connectSystemName, methodName: "signTransaction")
     }
     
     func adapterSignAllTransactions(_ json: String) {
@@ -1474,22 +1239,7 @@ extension UnityManager {
             return
         }
         
-        adapter.signAllTransactions(publicAddress: publicAddress, transactions: transactions).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signAllTransactions")
-            case .success(let signed):
-                let statusModel = UnityStatusModel(status: true, data: signed)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signAllTransactions")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: adapter.signAllTransactions(publicAddress: publicAddress, transactions: transactions), unityName: UnityManager.connectSystemName, methodName: "signAllTransactions")
     }
     
     func adapterSignMessage(_ json: String) {
@@ -1508,22 +1258,7 @@ extension UnityManager {
             return
         }
         
-        adapter.signMessage(publicAddress: publicAddress, message: message).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signMessage")
-            case .success(let signed):
-                let statusModel = UnityStatusModel(status: true, data: signed)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signMessage")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: adapter.signMessage(publicAddress: publicAddress, message: message), unityName: UnityManager.connectSystemName, methodName: "signMessage")
     }
     
     func adapterSignTypedData(_ json: String) {
@@ -1542,22 +1277,7 @@ extension UnityManager {
             return
         }
         
-        adapter.signTypedData(publicAddress: publicAddress, data: message).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signTypedData")
-            case .success(let signed):
-                let statusModel = UnityStatusModel(status: true, data: signed)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "signTypedData")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: adapter.signTypedData(publicAddress: publicAddress, data: message), unityName: UnityManager.connectSystemName, methodName: "signTypedData")
     }
     
     func adapterImportWallet(fromPrivateKey json: String) {
@@ -1580,23 +1300,7 @@ extension UnityManager {
             return
         }
         
-        (adapter as! LocalAdapter).importWalletFromPrivateKey(privateKey).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "importWalletFromPrivateKey")
-            case .success(let account):
-                guard let account = account else { return }
-                let statusModel = UnityStatusModel(status: true, data: account)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "importWalletFromPrivateKey")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: (adapter as! LocalAdapter).importWalletFromPrivateKey(privateKey), unityName: UnityManager.connectSystemName, methodName: "importWalletFromPrivateKey")
     }
     
     func adapterImportWallet(fromMnemonic json: String) {
@@ -1619,23 +1323,7 @@ extension UnityManager {
             return
         }
         
-        (adapter as! LocalAdapter).importWalletFromMnemonic(mnemonic).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "importWalletFromMnemonic")
-            case .success(let account):
-                guard let account = account else { return }
-                let statusModel = UnityStatusModel(status: true, data: account)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "importWalletFromMnemonic")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: (adapter as! LocalAdapter).importWalletFromMnemonic(mnemonic), unityName: UnityManager.connectSystemName, methodName: "importWalletFromMnemonic")
     }
     
     func adapterExportWalletPrivateKey(_ json: String) {
@@ -1658,22 +1346,7 @@ extension UnityManager {
             return
         }
         
-        (adapter as! LocalAdapter).exportWalletPrivateKey(publicAddress: publicAddress).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "exportWalletPrivateKey")
-            case .success(let privateKey):
-                let statusModel = UnityStatusModel(status: true, data: privateKey)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "exportWalletPrivateKey")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: (adapter as! LocalAdapter).exportWalletPrivateKey(publicAddress: publicAddress), unityName: UnityManager.connectSystemName, methodName: "exportWalletPrivateKey")
     }
     
     func adapterLogin(_ json: String) {
@@ -1681,7 +1354,6 @@ extension UnityManager {
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         let domain = data["domain"].stringValue
-        let address = publicAddress
         guard let uri = URL(string: data["uri"].stringValue) else { return }
         
         guard let walletType = map2WalletType(from: walletTypeString) else {
@@ -1694,25 +1366,14 @@ extension UnityManager {
             return
         }
         
-        let siwe = try! SiweMessage(domain: domain, address: address, uri: uri)
+        guard let siwe = try? SiweMessage(domain: domain, address: publicAddress, uri: uri) else {
+            print("domain \(domain), address \(publicAddress), uri \(uri) is not valid data")
+            return
+        }
         
-        adapter.login(config: siwe, publicAddress: publicAddress).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "login")
-            case .success(let (sourceMessage, signedMessage)):
-                let result = UnityConnectLoginResult(message: sourceMessage, signature: signedMessage)
-                let statusModel = UnityStatusModel(status: true, data: result)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "login")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: adapter.login(config: siwe, publicAddress: publicAddress).map { sourceMessage, signedMessage in
+            UnityConnectLoginResult(message: sourceMessage, signature: signedMessage)
+        }, unityName: UnityManager.connectSystemName, methodName: "login")
     }
     
     func adapterVerify(_ json: String) {
@@ -1736,24 +1397,12 @@ extension UnityManager {
             return
         }
         
-        let siwe = try! SiweMessage(message)
+        guard let siwe = try? SiweMessage(message) else {
+            print("message is not valid siwe")
+            return
+        }
         
-        adapter.verify(message: siwe, against: signature).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "verify")
-            case .success(let flag):
-                let statusModel = UnityStatusModel(status: true, data: flag)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "verify")
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: adapter.verify(message: siwe, against: signature), unityName: UnityManager.connectSystemName, methodName: "verify")
     }
     
     func adapterAddEthereumChain(_ json: String) {
@@ -1784,23 +1433,7 @@ extension UnityManager {
             return
         }
         
-        adapter.addEthereumChain(publicAddress: publicAddress, chainId: chainId, chainName: chainName, nativeCurrency: nativeCurrency, rpcUrl: rpcUrl, blockExplorerUrl: blockExplorerUrl).subscribe {
-            [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .failure(let error):
-                    let response = self.ResponseFromError(error)
-                    let statusModel = UnityStatusModel(status: false, data: response)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "addEthereumChain")
-                case .success(let flag):
-                    let statusModel = UnityStatusModel(status: true, data: flag)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "addEthereumChain")
-                }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: adapter.addEthereumChain(publicAddress: publicAddress, chainId: chainId, chainName: chainName, nativeCurrency: nativeCurrency, rpcUrl: rpcUrl, blockExplorerUrl: blockExplorerUrl), unityName: UnityManager.connectSystemName, methodName: "addEthereumChain")
     }
     
     func adapterSwitchEthereumChain(_ json: String) {
@@ -1820,24 +1453,7 @@ extension UnityManager {
             return
         }
         
-        adapter.switchEthereumChain(publicAddress: publicAddress, chainId: chainId).subscribe {
-            [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .failure(let error):
-                    let response = self.ResponseFromError(error)
-                    let statusModel = UnityStatusModel(status: false, data: response)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "switchEthereumChain")
-                case .success(let flag):
-                    let statusModel = UnityStatusModel(status: true, data: flag)
-                    let data = try! JSONEncoder().encode(statusModel)
-                    guard let json = String(data: data, encoding: .utf8) else { return }
-                    self.callBackMessage(json, unityName: UnityManager.connectSystemName, methodName: "switchEthereumChain")
-                }
-            
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: adapter.switchEthereumChain(publicAddress: publicAddress, chainId: chainId), unityName: UnityManager.connectSystemName, methodName: "switchEthereumChain")
     }
     
     func adapterWalletReadyState(_ json: String) -> String {
@@ -1890,12 +1506,12 @@ extension UnityManager {
     }
 }
 
-// MARK: - Help methods
+// MARK: - Particle AA
 
 extension UnityManager {
     func particleAAInitialize(_ json: String) {
         let data = JSON(parseJSON: json)
-        let version = data["version"].stringValue.lowercased()
+        
         let dappAppKeysDict = data["dapp_api_keys"].dictionaryValue
         var dappAppKeys: [Int: String] = [:]
         
@@ -1905,7 +1521,7 @@ extension UnityManager {
             }
         }
         
-        BiconomyService.initialize(version: .init(rawValue: version) ?? .v1_0_0, dappApiKeys: dappAppKeys)
+        BiconomyService.initialize(dappApiKeys: dappAppKeys)
         ParticleNetwork.setBiconomyService(biconomy)
     }
     
@@ -1913,7 +1529,7 @@ extension UnityManager {
         biconomy.enableBiconomyMode()
     }
     
-    func disableBiconomyMode() {
+    func disableAAMode() {
         biconomy.disableBiconomyMode()
     }
     
@@ -1923,22 +1539,7 @@ extension UnityManager {
     
     func isDeploy(_ json: String) {
         let eoaAddress = json
-        biconomy.isDeploy(eoaAddress: eoaAddress).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let flag):
-                let statusModel = UnityStatusModel(status: true, data: flag)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.biconomySystemName)
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.biconomySystemName)
-            }
-        }.disposed(by: bag)
+        subscribeAndCallback(observable: biconomy.isDeploy(eoaAddress: eoaAddress), unityName: UnityManager.aaSystemName)
     }
     
     func rpcGetFeeQuotes(_ json: String) {
@@ -1947,26 +1548,8 @@ extension UnityManager {
         let transactions = data["transactions"].arrayValue.map {
             $0.stringValue
         }
-        
-        biconomy.rpcGetFeeQuotes(eoaAddress: eoaAddress, transactions: transactions).subscribe { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let quotes):
-                let feeQuotes = quotes.map {
-                    $0.jsonObject
-                }
-                let statusModel = UnityStatusModel(status: true, data: feeQuotes)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.biconomySystemName)
-            case .failure(let error):
-                let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
-                let data = try! JSONEncoder().encode(statusModel)
-                guard let json = String(data: data, encoding: .utf8) else { return }
-                self.callBackMessage(json, unityName: UnityManager.biconomySystemName)
-            }
-        }.disposed(by: bag)
+               
+        subscribeAndCallback(observable: biconomy.rpcGetFeeQuotes(eoaAddress: eoaAddress, transactions: transactions), unityName: UnityManager.aaSystemName)
     }
     
     func isSupportChainInfo(_ json: String) -> Bool {
@@ -1977,6 +1560,256 @@ extension UnityManager {
         }
         let result = biconomy.isSupportChainInfo(chainInfo)
         return result
+    }
+}
+
+// MARK: - Particle Auth Core
+
+extension UnityManager {
+    func authCoreInitialize() {
+#if canImport(ParticleAuthCore)
+        ConnectManager.setMoreAdapters([AuthCoreAdapter()])
+#endif
+    }
+    
+    func authCoreConnect(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let jwt = json
+        let observable = Single<Void>.fromAsync { try await self.auth.connect(jwt: jwt) }.map { userInfo in
+            
+            let userInfoJsonString = userInfo.jsonStringFullSnake()
+            let newUserInfo = JSON(parseJSON: userInfoJsonString)
+            return newUserInfo
+        }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connect")
+        
+#endif
+    }
+    
+    func authCoreDisconnect() {
+#if canImport(ParticleAuthCore)
+        let observable = Single<Void>.fromAsync { try await self.auth.disconnect() }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "disconnect")
+        
+#endif
+    }
+    
+    func authCoreIsConnected() {
+#if canImport(ParticleAuthCore)
+        let observable = Single<Void>.fromAsync { try await self.auth.isConnected() }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "isConnected")
+        
+#endif
+    }
+    
+    func authCoreGetUserInfo() -> String {
+#if canImport(ParticleAuthCore)
+        guard let userInfo = auth.getUserInfo() else {
+            return ""
+        }
+        
+        let userInfoJsonString = userInfo.jsonStringFullSnake()
+        let newUserInfo = JSON(parseJSON: userInfoJsonString)
+
+        let data = try! JSONEncoder().encode(newUserInfo)
+        let json = String(data: data, encoding: .utf8)
+        return json ?? ""
+#endif
+    }
+    
+    func authCoreSwitchChain(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let data = JSON(parseJSON: json)
+
+        let chainId = data["chain_id"].intValue
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else {
+            return
+        }
+                
+        let observable = Single<Bool>.fromAsync { try await self.auth.switchChain(chainInfo: chainInfo) }.catch { _ in
+            .just(false)
+        }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "switchChain")
+        
+#endif
+    }
+    
+    func authCoreChangeMasterPassword() {
+#if canImport(ParticleAuthCore)
+        let observable = Single<Bool>.fromAsync { try await self.auth.changeMasterPassword() }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "changeMasterPassword")
+#endif
+    }
+    
+    func authCoreHasMasterPassword() -> Bool {
+#if canImport(ParticleAuthCore)
+        do {
+            let result = try auth.hasMasterPassword()
+            return result
+        } catch {
+            print(error)
+            return false
+        }
+#else
+        return false
+#endif
+    }
+    
+    func authCoreHasPaymentPassword() -> Bool {
+#if canImport(ParticleAuthCore)
+        
+        do {
+            let result = try auth.hasPaymentPassword()
+            return result
+        } catch {
+            print(error)
+            return false
+        }
+#else
+        return false
+#endif
+    }
+    
+    func authCoreOpenAccountAndSecurity() {
+#if canImport(ParticleAuthCore)
+        let observable = Single<Void>.fromAsync { try self.auth.openAccountAndSecurity() }.map {
+            ""
+        }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "openAccountAndSecurity")
+#endif
+    }
+    
+    func authCoreOpenWebWallet(_ json: String) {
+#if canImport(ParticleAuthCore)
+        auth.openWebWallet(styleJsonString: json)
+#endif
+    }
+    
+    func authCoreEvmGetAddress() -> String {
+#if canImport(ParticleAuthCore)
+        return auth.evm.getAddress() ?? ""
+#else
+        return ""
+#endif
+    }
+    
+    func authCoreEvmPersonalSign(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let observable = Single<Void>.fromAsync { try await self.auth.evm.personalSign(json) }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
+#endif
+    }
+    
+    func authCoreEvmPersonalSignUnique(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let observable = Single<Void>.fromAsync { try await self.auth.evm.personalSignUnique(json) }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
+#endif
+    }
+    
+    func authCoreEvmSignTypedData(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let observable = Single<Void>.fromAsync { try await self.auth.evm.signTypedData(json) }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmSignTypedData")
+#endif
+    }
+    
+    func authCoreEvmSignTypedDataUnique(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let observable = Single<Void>.fromAsync { try await self.auth.evm.signTypedDataUnique(json) }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmSignTypedDataUnique")
+#endif
+    }
+    
+    func authCoreEvmSendTransaction(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let data = JSON(parseJSON: json)
+        let transaction = data["transaction"].stringValue
+        let mode = data["fee_mode"]["option"].stringValue
+        var feeMode: Biconomy.FeeMode = .native
+        if mode == "native" {
+            feeMode = .native
+        } else if mode == "gasless" {
+            feeMode = .gasless
+        } else if mode == "token" {
+            let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
+            let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+
+            feeMode = .token(feeQuote)
+        }
+                
+        let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
+        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+                
+        let biconomy = ParticleNetwork.getBiconomyService()
+        var sendObservable: Single<String>
+        if biconomy != nil, biconomy!.isBiconomyModeEnable() {
+            sendObservable = biconomy!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        } else {
+            sendObservable = Single<Void>.fromAsync { try await self.auth.evm.sendTransaction(transaction, feeMode: feeMode) }
+        }
+        
+        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
+      
+#endif
+    }
+    
+    func authCoreSolanaGetAddress() -> String {
+#if canImport(ParticleAuthCore)
+        return auth.solana.getAddress() ?? ""
+#else
+        return ""
+#endif
+    }
+    
+    func authCoreSolanaSignMessage(_ message: String) {
+#if canImport(ParticleAuthCore)
+        let serializedMessage = Base58.encode(message.data(using: .utf8)!)
+        
+        let observable = Single<Void>.fromAsync { try await self.auth.solana.signMessage(serializedMessage) }
+    
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignMessage")
+#endif
+    }
+    
+    func authCoreSolanaSignTransaction(_ json: String) {
+#if canImport(ParticleAuthCore)
+        
+        let observable = Single<Void>.fromAsync { try await self.auth.solana.signTransaction(json) }
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignTransaction")
+#endif
+    }
+    
+    func authCoreSolanaSignAllTransactions(_ json: String) {
+#if canImport(ParticleAuthCore)
+        
+        let transactions = JSON(parseJSON: json).arrayValue.map { $0.stringValue }
+        let observable = Single<Void>.fromAsync { try await self.auth.solana.signAllTransactions(transactions) }
+        
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignAllTransactions")
+        
+#endif
+    }
+    
+    func authCoreSolanaSignAndSendTransaction(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let data = JSON(parseJSON: json)
+        let transaction = data["transaction"].stringValue
+        
+        let observable = Single<Void>.fromAsync { try await self.auth.solana.signAndSendTransaction(transaction) }
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignAndSendTransaction")
+#endif
     }
 }
 
@@ -2015,6 +1848,7 @@ extension UnityManager {
     private func map2WalletType(from string: String) -> WalletType? {
         /* Define in unity
          Particle,
+         AuthCore,
          EvmPrivateKey,
          SolanaPrivateKey,
          MetaMask,
@@ -2029,6 +1863,8 @@ extension UnityManager {
         var walletType: WalletType?
         if str == "particle" {
             walletType = .particle
+        } else if str == "authcore" {
+            walletType = .authCore
         } else if str == "evmprivatekey" {
             walletType = .evmPrivateKey
         } else if str == "solanaprivatekey" {
@@ -2078,23 +1914,6 @@ extension UnityManager {
 }
 
 extension UnityManager: MessageSigner {
-    public func signTypedData(_ message: String) -> RxSwift.Single<String> {
-        if isLatestBatchAuth {
-            return ParticleAuthService.signTypedData(message, version: .v4)
-        } else {
-            guard let walletType = latestWalletType else {
-                print("walletType is nil")
-                return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
-            }
-            
-            guard let adapter = map2ConnectAdapter(from: walletType) else {
-                print("adapter for \(walletType) is not init")
-                return .error(ParticleNetwork.ResponseError(code: nil, message: "adapter for \(walletType) is not init"))
-            }
-            return adapter.signTypedData(publicAddress: getEoaAddress(), data: message)
-        }
-    }
-    
     public func signMessage(_ message: String) -> RxSwift.Single<String> {
         if isLatestBatchAuth {
             return ParticleAuthService.signMessage(message)
@@ -2129,15 +1948,48 @@ struct UnityResponseError: Codable {
 
 struct UnityStatusModel<T: Codable>: Codable {
     let status: Bool
-    let data: T
+    let data: T?
 }
 
 struct UnityLoginListModel: Codable {
     let walletType: String
-    let account: Account
+    let account: Account?
 }
 
 struct UnityConnectLoginResult: Codable {
     let message: String
     let signature: String
+}
+
+extension UnityManager {
+    private func subscribeAndCallback<T: Codable>(observable: Single<T>, unityName: String, methodName: String = #function) {
+        observable.subscribe { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .failure(let error):
+                let response = self.ResponseFromError(error)
+                let statusModel = UnityStatusModel(status: false, data: response)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: unityName, methodName: methodName)
+            case .success(let signedMessage):
+                let statusModel = UnityStatusModel(status: true, data: signedMessage)
+                let data = try! JSONEncoder().encode(statusModel)
+                guard let json = String(data: data, encoding: .utf8) else { return }
+                self.callBackMessage(json, unityName: unityName, methodName: methodName)
+            }
+        }.disposed(by: bag)
+    }
+}
+
+extension Single {
+    static func fromAsync<T>(_ fn: @escaping () async throws -> T) -> Single<T> {
+        .create { observer in
+            let task = Task {
+                do { try await observer(.success(fn())) }
+                catch { observer(.failure(error)) }
+            }
+            return Disposables.create { task.cancel() }
+        }.observe(on: MainScheduler.instance)
+    }
 }

@@ -29,9 +29,9 @@ namespace Network.Particle.Scripts.Core
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
-                { "chain_name", chainInfo.getChainName() },
-                { "chain_id", chainInfo.getChainId() },
-                { "chain_id_name", chainInfo.getChainIdName() },
+                { "chain_name", chainInfo.Name },
+                { "chain_id", chainInfo.Id },
+                { "chain_id_name", chainInfo.Network },
                 { "env", env.ToString() },
                 { "metadata", JToken.FromObject(dAppMetadata) },
                 { "rpc_url", rpcUrl == null ? null : JToken.FromObject(rpcUrl) }
@@ -53,9 +53,9 @@ namespace Network.Particle.Scripts.Core
             {
                 var info = new JObject
                 {
-                    { "chain_name", chainInfo.getChainName() },
-                    { "chain_id", chainInfo.getChainId() },
-                    { "chain_id_name", chainInfo.getChainIdName() },
+                    { "chain_name", chainInfo.Name },
+                    { "chain_id", chainInfo.Id },
+                    { "chain_id_name", chainInfo.Network },
                 };
                 allInfos.Add(info);
             }
@@ -65,7 +65,6 @@ namespace Network.Particle.Scripts.Core
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("setWalletConnectV2SupportChainInfos",json);
 #elif UNITY_IOS && !UNITY_EDITOR
-            json = JsonConvert.SerializeObject(chainInfos.Select(x => x.getChainName()));
             ParticleNetworkIOSBridge.setWalletConnectV2SupportChainInfos(json);
 #else
 
@@ -151,7 +150,7 @@ namespace Network.Particle.Scripts.Core
         public static void SignMessage(WalletType walletType, string publicAddress, string message)
         {
             string serializedMessage;
-            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            if (ParticleNetwork.GetChainInfo().isEvmChain())
             {
                 if (HexUtils.IsHexadecimal(message))
                 {
@@ -370,7 +369,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void SwitchEthereumChain(WalletType walletType, string publicAddress, int chainId)
+        public static void SwitchEthereumChain(WalletType walletType, string publicAddress, long chainId)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -388,7 +387,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void AddEthereumChain(WalletType walletType, string publicAddress, int chainId,
+        public static void AddEthereumChain(WalletType walletType, string publicAddress, long chainId,
             [CanBeNull] string chainName,
             [CanBeNull] NativeCurrency nativeCurrency, [CanBeNull] string rpcUrl, [CanBeNull] string blockExplorerUrl)
         {

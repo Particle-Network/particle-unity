@@ -29,21 +29,9 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> importMnemonicTask;
         private TaskCompletionSource<NativeResultData> exportPrivateKeyTask;
         private TaskCompletionSource<NativeResultData> loginListTask;
-        
+
         private TaskCompletionSource<NativeResultData> switchEthereumChainTask;
         private TaskCompletionSource<NativeResultData> addEthereumChainTask;
-
-        /// <summary>
-        /// Set Chain Info Async call back
-        /// </summary>
-        /// <param name="json"></param>
-        public void SetChainInfoAsyncCallBack(string json)
-        {
-            Debug.Log($"SetChainCallBack:{json}");
-            var resultData = JObject.Parse(json);
-            var status = (int)resultData["status"];
-            setChainTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-        }
 
         /// <summary>
         /// Connect wallet
@@ -54,10 +42,13 @@ namespace Network.Particle.Scripts.Core
         {
             connectTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-
-#else
-            ParticleConnectInteraction.Connect(walletType,config);
+            ConnectCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", "" },
+            }));
 #endif
+            ParticleConnectInteraction.Connect(walletType, config);
             return connectTask.Task;
         }
 
@@ -68,13 +59,9 @@ namespace Network.Particle.Scripts.Core
         public void ConnectCallBack(string json)
         {
             Debug.Log($"ConnectCallBack:{json}");
-#if UNITY_EDITOR
-            connectTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             connectTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
 
         /// <summary>
@@ -87,10 +74,14 @@ namespace Network.Particle.Scripts.Core
         {
             disconnectTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-
-#else
-            ParticleConnectInteraction.Disconnect(walletType,publicAddress);
+            DisconnectCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", "" },
+            }));
 #endif
+            ParticleConnectInteraction.Disconnect(walletType, publicAddress);
+
             return disconnectTask.Task;
         }
 
@@ -101,13 +92,9 @@ namespace Network.Particle.Scripts.Core
         public void DisconnectCallBack(string json)
         {
             Debug.Log($"DisconnectCallBack:{json}");
-#if UNITY_EDITOR
-            disconnectTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             disconnectTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
 
         /// <summary>
@@ -121,17 +108,14 @@ namespace Network.Particle.Scripts.Core
         {
             signMessageTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            SignMessageCallBack(JsonConvert.SerializeObject(new JObject
             {
-                DevModeService.EvmSignMessages(new[] { message });
-            }
-            else
-            {
-                DevModeService.SolanaSignMessages(new[] { message });
-            }
-#else
-            ParticleConnectInteraction.SignMessage(walletType,publicAddress,message);
+                { "status", 1 },
+                { "data", "" },
+            }));
 #endif
+            ParticleConnectInteraction.SignMessage(walletType, publicAddress, message);
+
 
             return signMessageTask.Task;
         }
@@ -143,13 +127,9 @@ namespace Network.Particle.Scripts.Core
         public void SignMessageCallBack(string json)
         {
             Debug.Log($"SignMessageCallBack:{json}");
-#if UNITY_EDITOR
-            signMessageTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             signMessageTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
 
 
@@ -165,17 +145,14 @@ namespace Network.Particle.Scripts.Core
             signTransactionTask = new TaskCompletionSource<NativeResultData>();
 
 #if UNITY_EDITOR
-            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            SignTransactionCallBack(JsonConvert.SerializeObject(new JObject
             {
-                DevModeService.EvmSignTransactions(new[] { transaction });
-            }
-            else
-            {
-                DevModeService.SolanaSignTransactions(new[] { transaction });
-            }
-#else
-             ParticleConnectInteraction.SignTransaction(walletType,publicAddress,transaction);
+                { "status", 1 },
+                { "data", "" },
+            }));
 #endif
+            ParticleConnectInteraction.SignTransaction(walletType, publicAddress, transaction);
+
 
             return signTransactionTask.Task;
         }
@@ -187,13 +164,9 @@ namespace Network.Particle.Scripts.Core
         public void SignTransactionCallBack(string json)
         {
             Debug.Log($"SignTransactionCallBack:{json}");
-#if UNITY_EDITOR
-            signTransactionTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             signTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
 
         /// <summary>
@@ -208,9 +181,14 @@ namespace Network.Particle.Scripts.Core
         {
             signAllTransactionsTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-#else
-            ParticleConnectInteraction.SignAllTransactions(walletType,publicAddress,transactions);
+            SignAllTransactionsCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", "" },
+            }));
 #endif
+            ParticleConnectInteraction.SignAllTransactions(walletType, publicAddress, transactions);
+
             return signAllTransactionsTask.Task;
         }
 
@@ -238,16 +216,15 @@ namespace Network.Particle.Scripts.Core
             List<string> transactions, [CanBeNull] AAFeeMode feeMode = null)
         {
             batchSendTransactionsTask = new TaskCompletionSource<NativeResultData>();
-
 #if UNITY_EDITOR
-            SignAndSendTransactionCallBack(JsonConvert.SerializeObject(new JObject
+            BatchSendTransactionsCallBack(JsonConvert.SerializeObject(new JObject
             {
-                {"status", 0},
-                {"data", ""},
+                { "status", 0 },
+                { "data", "" },
             }));
-#else
-            ParticleConnectInteraction.BatchSendTransactions(walletType,publicAddress, transactions, feeMode);
 #endif
+            ParticleConnectInteraction.BatchSendTransactions(walletType, publicAddress, transactions, feeMode);
+
             return batchSendTransactionsTask.Task;
         }
 
@@ -262,7 +239,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             batchSendTransactionsTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Sign and send transaction
         /// </summary>
@@ -275,16 +252,15 @@ namespace Network.Particle.Scripts.Core
             string transaction, [CanBeNull] AAFeeMode feeMode = null)
         {
             signAndSendTransactionTask = new TaskCompletionSource<NativeResultData>();
-
 #if UNITY_EDITOR
             SignAndSendTransactionCallBack(JsonConvert.SerializeObject(new JObject
             {
-                {"status", 0},
-                {"data", ""},
+                { "status", 0 },
+                { "data", "" },
             }));
-#else
-            ParticleConnectInteraction.SignAndSendTransaction(walletType,publicAddress, transaction, feeMode);
 #endif
+            ParticleConnectInteraction.SignAndSendTransaction(walletType, publicAddress, transaction, feeMode);
+
             return signAndSendTransactionTask.Task;
         }
 
@@ -312,9 +288,14 @@ namespace Network.Particle.Scripts.Core
             signTypedDataTask = new TaskCompletionSource<NativeResultData>();
 
 #if UNITY_EDITOR
-#else
-            ParticleConnectInteraction.SignTypedData(walletType,publicAddress,typedData);
+            SignTypedDataCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
 #endif
+            ParticleConnectInteraction.SignTypedData(walletType, publicAddress, typedData);
+
             return signTypedDataTask.Task;
         }
 
@@ -335,17 +316,20 @@ namespace Network.Particle.Scripts.Core
         /// </summary>
         /// <param name="walletType">Wallet type</param>
         /// <param name="publicAddress">Public address</param>
-        /// <param name="message">Message</param>
+        /// <param name="domain">Domain</param>
+        /// <param name="uri">Uri</param>
         /// <returns></returns>
         public Task<NativeResultData> Login(WalletType walletType, string publicAddress, string domain, string uri)
         {
             loginTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-
-#else
-            ParticleConnectInteraction.Login(walletType, publicAddress, domain, uri);
+            LoginCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
 #endif
-
+            ParticleConnectInteraction.Login(walletType, publicAddress, domain, uri);
             return loginTask.Task;
         }
 
@@ -356,13 +340,9 @@ namespace Network.Particle.Scripts.Core
         public void LoginCallBack(string json)
         {
             Debug.Log($"LoginCallBack:{json}");
-#if UNITY_EDITOR
-            loginTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             loginTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
 
         /// <summary>
@@ -378,18 +358,13 @@ namespace Network.Particle.Scripts.Core
         {
             verifyTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            VerifyCallBack(JsonConvert.SerializeObject(new JObject
             {
-                DevModeService.EvmSignMessages(new[] { message });
-            }
-            else
-            {
-                DevModeService.SolanaSignMessages(new[] { message });
-            }
-#else
-            ParticleConnectInteraction.Verify(walletType,publicAddress,message, signature);
+                { "status", 0 },
+                { "data", "" },
+            }));
 #endif
-
+            ParticleConnectInteraction.Verify(walletType, publicAddress, message, signature);
             return verifyTask.Task;
         }
 
@@ -400,13 +375,9 @@ namespace Network.Particle.Scripts.Core
         public void VerifyCallBack(string json)
         {
             Debug.Log($"VerifyCallBack:{json}");
-#if UNITY_EDITOR
-            verifyTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             verifyTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
 
         /// <summary>
@@ -418,11 +389,15 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> ImportWalletFromPrivateKey(WalletType walletType, string privateKey)
         {
             importPrivateKeyTask = new TaskCompletionSource<NativeResultData>();
-
 #if UNITY_EDITOR
-#else
-            ParticleConnectInteraction.ImportPrivateKey(walletType,privateKey);
+            ImportWalletFromPrivateKeyCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
 #endif
+            ParticleConnectInteraction.ImportPrivateKey(walletType, privateKey);
+
             return importPrivateKeyTask.Task;
         }
 
@@ -449,9 +424,14 @@ namespace Network.Particle.Scripts.Core
             importMnemonicTask = new TaskCompletionSource<NativeResultData>();
 
 #if UNITY_EDITOR
-#else
-            ParticleConnectInteraction.ImportMnemonic(walletType,mnemonic);
+            ImportWalletFromMnemonicCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
 #endif
+            ParticleConnectInteraction.ImportMnemonic(walletType, mnemonic);
+
             return importMnemonicTask.Task;
         }
 
@@ -477,9 +457,13 @@ namespace Network.Particle.Scripts.Core
         {
             exportPrivateKeyTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-#else
-            ParticleConnectInteraction.ExportPrivateKey(walletType,publicAddress);
+            ExportWalletPrivateKeyCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
 #endif
+            ParticleConnectInteraction.ExportPrivateKey(walletType, publicAddress);
             return exportPrivateKeyTask.Task;
         }
 
@@ -495,7 +479,7 @@ namespace Network.Particle.Scripts.Core
             exportPrivateKeyTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
-        
+
         /// <summary>
         /// Call wallet_switchEthereumChain, only support wallet type MetaMask.
         /// </summary>
@@ -503,7 +487,7 @@ namespace Network.Particle.Scripts.Core
         /// <param name="publicAddress">Public address</param>
         /// <param name="chainId">Chain id</param>
         /// <returns></returns>
-        public Task<NativeResultData> SwitchEthereumChain(WalletType walletType, string publicAddress, int chainId)
+        public Task<NativeResultData> SwitchEthereumChain(WalletType walletType, string publicAddress, long chainId)
         {
             switchEthereumChainTask = new TaskCompletionSource<NativeResultData>();
 
@@ -518,14 +502,19 @@ namespace Network.Particle.Scripts.Core
             else
             {
 #if UNITY_EDITOR
-#else
-            ParticleConnectInteraction.SwitchEthereumChain(walletType,publicAddress,chainId);
+                SwitchEthereumChainCallBack(JsonConvert.SerializeObject(new JObject
+                {
+                    { "status", 0 },
+                    { "data", "" },
+                }));
 #endif
-                return switchEthereumChainTask.Task;  
+                ParticleConnectInteraction.SwitchEthereumChain(walletType, publicAddress, chainId);
+
+                return switchEthereumChainTask.Task;
             }
         }
 
-        
+
         public void SwitchEthereumChainCallBack(string json)
         {
             Debug.Log($"switchEthereumChainCallBack:{json}");
@@ -533,7 +522,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             switchEthereumChainTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Call wallet_addEthereumChain, only support wallet type MetaMask.
         /// </summary>
@@ -545,10 +534,11 @@ namespace Network.Particle.Scripts.Core
         /// <param name="rpcUrl">Rpc url</param>
         /// <param name="blockExplorerUrl">Block explorer url</param>
         /// <returns></returns>
-        public Task<NativeResultData> AddEthereumChain(WalletType walletType, string publicAddress, int chainId, [CanBeNull] string chainName = null, 
-            [CanBeNull] NativeCurrency nativeCurrency = null, [CanBeNull] string rpcUrl = null, [CanBeNull] string blockExplorerUrl = null)
+        public Task<NativeResultData> AddEthereumChain(WalletType walletType, string publicAddress, long chainId,
+            [CanBeNull] string chainName = null,
+            [CanBeNull] NativeCurrency nativeCurrency = null, [CanBeNull] string rpcUrl = null,
+            [CanBeNull] string blockExplorerUrl = null)
         {
-            
             addEthereumChainTask = new TaskCompletionSource<NativeResultData>();
 
             // Wallet type WalletConnect contains metamask when connect with show qrcode.
@@ -562,9 +552,15 @@ namespace Network.Particle.Scripts.Core
             else
             {
 #if UNITY_EDITOR
-#else
-            ParticleConnectInteraction.AddEthereumChain(walletType,publicAddress,chainId, chainName, nativeCurrency, rpcUrl, blockExplorerUrl);
+                AddEthereumChainCallBack(JsonConvert.SerializeObject(new JObject
+                {
+                    { "status", 0 },
+                    { "data", "" },
+                }));
 #endif
+                ParticleConnectInteraction.AddEthereumChain(walletType, publicAddress, chainId, chainName,
+                    nativeCurrency, rpcUrl, blockExplorerUrl);
+
                 return addEthereumChainTask.Task;
             }
         }
@@ -576,7 +572,5 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             addEthereumChainTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
-        
     }
 }

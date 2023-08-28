@@ -322,7 +322,7 @@ namespace Network.Particle.Scripts.Core
 
             var maxPriorityFeePerGas = (double)JObject.Parse(gasFeesResult)["result"][level]["maxPriorityFeePerGas"];
             var maxPriorityFeePerGasHex = "0x" + ((BigInteger)(maxPriorityFeePerGas * Mathf.Pow(10, 9))).ToString("x");
-            var chainId = ParticleNetwork.GetChainInfo().getChainId();
+            var chainId = ParticleNetwork.GetChainInfo().Id;
 
             EthereumTransaction transaction;
 

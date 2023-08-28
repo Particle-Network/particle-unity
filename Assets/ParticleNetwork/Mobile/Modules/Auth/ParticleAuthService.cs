@@ -10,12 +10,10 @@ using Network.Particle.Scripts.Utils;
 using UnityEngine;
 
 
-
 namespace Network.Particle.Scripts.Core
 {
     public class ParticleAuthService : SingletonMonoBehaviour<ParticleAuthService>
     {
-        
         private TaskCompletionSource<NativeResultData> loginTask;
         private TaskCompletionSource<NativeResultData> isLoginAsyncTask;
         private TaskCompletionSource<NativeResultData> logoutTask;
@@ -31,6 +29,7 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> signTypedDataTask;
         private TaskCompletionSource<NativeResultData> openAccountAndSecurityTask;
         private TaskCompletionSource<NativeResultData> getSecurityAccountTask;
+
         /// <summary>
         /// Login
         /// </summary>
@@ -41,14 +40,15 @@ namespace Network.Particle.Scripts.Core
         /// <param name="authorization">LoginAuthorization, optional, login and sign message, its message request hex in evm, base58 in solana </param>
         /// <returns></returns>
         public Task<NativeResultData> Login(LoginType loginType, string account = "",
-            SupportAuthType supportAuthTypes = SupportAuthType.ALL, SocialLoginPrompt? socialLoginPrompt = null, [CanBeNull] LoginAuthorization authorization = null)
+            SupportAuthType supportAuthTypes = SupportAuthType.ALL, SocialLoginPrompt? socialLoginPrompt = null,
+            [CanBeNull] LoginAuthorization authorization = null)
         {
             loginTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
             DevModeService.Login();
-#else
-            ParticleAuthServiceInteraction.Login(loginType: loginType, account: account, supportAuthTypes: supportAuthTypes, socialLoginPrompt: socialLoginPrompt, authorization: authorization);
 #endif
+            ParticleAuthServiceInteraction.Login(loginType: loginType, account: account, supportAuthTypes: supportAuthTypes, socialLoginPrompt: socialLoginPrompt, authorization: authorization);
+
             return loginTask.Task;
         }
 
@@ -59,17 +59,11 @@ namespace Network.Particle.Scripts.Core
         public void LoginCallBack(string json)
         {
             Debug.Log($"LoginCallBack:{json}");
-#if UNITY_EDITOR
-            var data = new NativeResultData(true, json);
-            loginTask?.TrySetResult(data);
-            PersistTools.SaveUserInfo(json);
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             loginTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
-        
+
         /// <summary>
         /// Check is user login from server
         /// </summary>
@@ -78,12 +72,17 @@ namespace Network.Particle.Scripts.Core
         {
             isLoginAsyncTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-#else
-            ParticleAuthServiceInteraction.IsLoginAsync();
+            IsLoginAsyncCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", "" },
+            }));
 #endif
+            ParticleAuthServiceInteraction.IsLoginAsync();
+
             return isLoginAsyncTask.Task;
         }
-        
+
         /// <summary>
         /// IsLoginAsync call back
         /// </summary>
@@ -91,15 +90,10 @@ namespace Network.Particle.Scripts.Core
         public void IsLoginAsyncCallBack(string json)
         {
             Debug.Log($"IsLoginAsyncCallBack:{json}");
-#if UNITY_EDITOR
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             isLoginAsyncTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
-        
-        
 
 
         /// <summary>
@@ -109,11 +103,15 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> Logout()
         {
             logoutTask = new TaskCompletionSource<NativeResultData>();
-            ParticleAuthServiceInteraction.Logout();
 #if UNITY_EDITOR
             DevModeService.Logout();
-            logoutTask?.TrySetResult(new NativeResultData(true, ""));
+            IsLoginAsyncCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", "" },
+            }));
 #endif
+            ParticleAuthServiceInteraction.Logout();
             return logoutTask.Task;
         }
 
@@ -125,10 +123,10 @@ namespace Network.Particle.Scripts.Core
         {
             Debug.Log($"LogoutCallBack:{json}");
             var resultData = JObject.Parse(json);
-            var status = (int) resultData["status"];
+            var status = (int)resultData["status"];
             logoutTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Fast logout, silently
         /// </summary>
@@ -136,11 +134,11 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> FastLogout()
         {
             fastLogoutTask = new TaskCompletionSource<NativeResultData>();
-            ParticleAuthServiceInteraction.FastLogout();
 #if UNITY_EDITOR
             DevModeService.Logout();
             fastLogoutTask?.TrySetResult(new NativeResultData(true, ""));
 #endif
+            ParticleAuthServiceInteraction.FastLogout();
             return fastLogoutTask.Task;
         }
 
@@ -152,18 +150,8 @@ namespace Network.Particle.Scripts.Core
         {
             Debug.Log($"FastLogoutCallBack:{json}");
             var resultData = JObject.Parse(json);
-            var status = (int) resultData["status"];
+            var status = (int)resultData["status"];
             fastLogoutTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-        }
-
-        /// <summary>
-        /// Set Chain Info Sync
-        /// </summary>
-        /// <param name="chainInfo">Chain info</param>
-        /// <returns></returns>
-        public bool SetChainInfoSync(ChainInfo chainInfo)
-        {
-            return ParticleNetwork.SetChainInfo(chainInfo);
         }
 
         /// <summary>
@@ -175,17 +163,17 @@ namespace Network.Particle.Scripts.Core
         {
             signMessageTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            if (ParticleNetwork.GetChainInfo().isEvmChain())
             {
-                DevModeService.EvmSignMessages(new[] {message});
+                DevModeService.EvmSignMessages(new[] { message });
             }
             else
             {
-                DevModeService.SolanaSignMessages(new[] {message});
+                DevModeService.SolanaSignMessages(new[] { message });
             }
-#else
-            ParticleAuthServiceInteraction.SignMessage(message);
 #endif
+            ParticleAuthServiceInteraction.SignMessage(message);
+
             return signMessageTask.Task;
         }
 
@@ -196,15 +184,11 @@ namespace Network.Particle.Scripts.Core
         public void SignMessageCallBack(string json)
         {
             Debug.Log($"SignMessageCallBack:{json}");
-#if UNITY_EDITOR
-            signMessageTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             signMessageTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
-        
+
         /// <summary>
         /// Sign Message
         /// </summary>
@@ -214,17 +198,14 @@ namespace Network.Particle.Scripts.Core
         {
             signMessageUniqueTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            SignMessageUniqueCallBack(JsonConvert.SerializeObject(new JObject
             {
-                DevModeService.EvmSignMessages(new[] {message});
-            }
-            else
-            {
-                DevModeService.SolanaSignMessages(new[] {message});
-            }
-#else
-            ParticleAuthServiceInteraction.SignMessageUnique(message);
+                { "status", 1 },
+                { "data", "" },
+            }));
 #endif
+            ParticleAuthServiceInteraction.SignMessageUnique(message);
+
             return signMessageUniqueTask.Task;
         }
 
@@ -235,13 +216,9 @@ namespace Network.Particle.Scripts.Core
         public void SignMessageUniqueCallBack(string json)
         {
             Debug.Log($"SignMessageCallBack:{json}");
-#if UNITY_EDITOR
-            signMessageUniqueTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             signMessageUniqueTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
 
         /// <summary>
@@ -254,14 +231,15 @@ namespace Network.Particle.Scripts.Core
         {
             Debug.Log(chainInfo);
             setChainTask = new TaskCompletionSource<NativeResultData>();
-            ParticleAuthServiceInteraction.SetChainInfoAsync(chainInfo);
+
 #if UNITY_EDITOR
-            LoginCallBack(JsonConvert.SerializeObject(new JObject
+            SetChainInfoAsyncCallBack(JsonConvert.SerializeObject(new JObject
             {
-                {"status", 1},
-                {"data", ""},
+                { "status", 1 },
+                { "data", "" },
             }));
 #endif
+            ParticleAuthServiceInteraction.SetChainInfoAsync(chainInfo);
             return setChainTask.Task;
         }
 
@@ -273,7 +251,7 @@ namespace Network.Particle.Scripts.Core
         {
             Debug.Log($"SetChainCallBack:{json}");
             var resultData = JObject.Parse(json);
-            var status = (int) resultData["status"];
+            var status = (int)resultData["status"];
             setChainTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
@@ -288,17 +266,17 @@ namespace Network.Particle.Scripts.Core
             signTransactionTask = new TaskCompletionSource<NativeResultData>();
 
 #if UNITY_EDITOR
-            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            if (ParticleNetwork.GetChainInfo().isEvmChain())
             {
-                DevModeService.EvmSignTransactions(new[] {transaction});
+                DevModeService.EvmSignTransactions(new[] { transaction });
             }
             else
             {
-                DevModeService.SolanaSignTransactions(new[] {transaction});
+                DevModeService.SolanaSignTransactions(new[] { transaction });
             }
-#else
-             ParticleAuthServiceInteraction.SignTransaction(transaction);
 #endif
+            ParticleAuthServiceInteraction.SignTransaction(transaction);
+
             return signTransactionTask.Task;
         }
 
@@ -309,13 +287,9 @@ namespace Network.Particle.Scripts.Core
         public void SignTransactionCallBack(string json)
         {
             Debug.Log($"SignTransactionCallBack:{json}");
-#if UNITY_EDITOR
-            signTransactionTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             signTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
 
         /// <summary>
@@ -326,14 +300,15 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> SignAllTransactions(string[] transactions)
         {
             signAllTransactionsTask = new TaskCompletionSource<NativeResultData>();
-            ParticleAuthServiceInteraction.SignAllTransactions(transactions);
+
 #if UNITY_EDITOR
-            LoginCallBack(JsonConvert.SerializeObject(new JObject
+            SignAllTransactionsCallBack(JsonConvert.SerializeObject(new JObject
             {
-                {"status", 0},
-                {"data", ""},
+                { "status", 0 },
+                { "data", "" },
             }));
 #endif
+            ParticleAuthServiceInteraction.SignAllTransactions(transactions);
             return signAllTransactionsTask.Task;
         }
 
@@ -345,7 +320,7 @@ namespace Network.Particle.Scripts.Core
         {
             Debug.Log($"SignAllTransactionsCallBack:{json}");
             var resultData = JObject.Parse(json);
-            var status = (int) resultData["status"];
+            var status = (int)resultData["status"];
             signAllTransactionsTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
@@ -358,14 +333,15 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> SignAndSendTransaction(string transaction, [CanBeNull] AAFeeMode feeMode = null)
         {
             signAndSendTransactionTask = new TaskCompletionSource<NativeResultData>();
-            ParticleAuthServiceInteraction.SignAndSendTransaction(transaction, feeMode);
+
 #if UNITY_EDITOR
-            LoginCallBack(JsonConvert.SerializeObject(new JObject
+            SignAndSendTransactionCallBack(JsonConvert.SerializeObject(new JObject
             {
-                {"status", 0},
-                {"data", ""},
+                { "status", 0 },
+                { "data", "" },
             }));
 #endif
+            ParticleAuthServiceInteraction.SignAndSendTransaction(transaction, feeMode);
             return signAndSendTransactionTask.Task;
         }
 
@@ -377,27 +353,30 @@ namespace Network.Particle.Scripts.Core
         {
             Debug.Log($"signAndSendTransactionCallBack:{json}");
             var resultData = JObject.Parse(json);
-            var status = (int) resultData["status"];
+            var status = (int)resultData["status"];
             signAndSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Batch Send Transaction, should init and enable particle aa.
         /// </summary>
         /// <param name="transactions">Transactions</param>
         /// /// <param name="feeMode">AAFeeMode, default is auto</param>
         /// <returns></returns>
-        public Task<NativeResultData> BatchSendTransactions(List<string> transactions, [CanBeNull] AAFeeMode feeMode = null)
+        public Task<NativeResultData> BatchSendTransactions(List<string> transactions,
+            [CanBeNull] AAFeeMode feeMode = null)
         {
             batchSendTransactionTask = new TaskCompletionSource<NativeResultData>();
-            ParticleAuthServiceInteraction.BatchSendTransactions(transactions, feeMode);
+
 #if UNITY_EDITOR
-            LoginCallBack(JsonConvert.SerializeObject(new JObject
+            BatchSendTransactionsCallBack(JsonConvert.SerializeObject(new JObject
             {
-                {"status", 0},
-                {"data", ""},
+                { "status", 0 },
+                { "data", "" },
             }));
 #endif
+            ParticleAuthServiceInteraction.BatchSendTransactions(transactions, feeMode);
+
             return batchSendTransactionTask.Task;
         }
 
@@ -409,7 +388,7 @@ namespace Network.Particle.Scripts.Core
         {
             Debug.Log($"BatchSendTransactionsCallBack:{json}");
             var resultData = JObject.Parse(json);
-            var status = (int) resultData["status"];
+            var status = (int)resultData["status"];
             batchSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
@@ -422,14 +401,15 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> SignTypedData(string typedData, SignTypedDataVersion signTypedDataVersion)
         {
             signTypedDataTask = new TaskCompletionSource<NativeResultData>();
-            ParticleAuthServiceInteraction.SignTypedData(typedData, signTypedDataVersion);
+
 #if UNITY_EDITOR
-            LoginCallBack(JsonConvert.SerializeObject(new JObject
+            SignTypedDataCallBack(JsonConvert.SerializeObject(new JObject
             {
-                {"status", 0},
-                {"data", ""},
+                { "status", 0 },
+                { "data", "" },
             }));
 #endif
+            ParticleAuthServiceInteraction.SignTypedData(typedData, signTypedDataVersion);
             return signTypedDataTask.Task;
         }
 
@@ -441,12 +421,11 @@ namespace Network.Particle.Scripts.Core
         {
             Debug.Log($"signTypedDataCallBack:{json}");
             var resultData = JObject.Parse(json);
-            var status = (int) resultData["status"];
+            var status = (int)resultData["status"];
             signTypedDataTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
-        
-        
+
+
         /// <summary>
         /// Open account and security page.
         /// </summary>
@@ -455,8 +434,14 @@ namespace Network.Particle.Scripts.Core
         {
             openAccountAndSecurityTask = new TaskCompletionSource<NativeResultData>();
 
+#if UNITY_EDITOR
+            OpenAccountAndSecurityCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", "" },
+            }));
+#endif
             ParticleAuthServiceInteraction.OpenAccountAndSecurity();
-
             return openAccountAndSecurityTask.Task;
         }
 
@@ -467,34 +452,32 @@ namespace Network.Particle.Scripts.Core
         public void OpenAccountAndSecurityCallBack(string json)
         {
             Debug.Log($"OpenAccountAndSecurityCallBack:{json}");
-#if UNITY_EDITOR
-            openAccountAndSecurityTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             openAccountAndSecurityTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
 
 
         public Task<NativeResultData> GetSecurityAccount()
         {
             getSecurityAccountTask = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+            GetSecurityAccountCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", "" },
+            }));
+#endif
             ParticleAuthServiceInteraction.GetSecurityAccount();
             return getSecurityAccountTask.Task;
         }
-        
+
         public void GetSecurityAccountCallBack(string json)
         {
             Debug.Log($"GetSecurityAccountCallBack:{json}");
-#if UNITY_EDITOR
-            var data = new NativeResultData(true, json);
-            getSecurityAccountTask?.TrySetResult(data);
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             getSecurityAccountTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-#endif
         }
     }
 }

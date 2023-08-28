@@ -24,7 +24,7 @@ namespace Network.Particle.Scripts.Model
             id = Guid.NewGuid().ToString();
             this.method = method;
             @params = parameters;
-            chainId = ParticleNetwork.GetChainInfo().getChainId();
+            chainId = ParticleNetwork.GetChainInfo().Id;
         }
         
         public ParticleRpcRequest(string method, List<T> parameters)
@@ -32,7 +32,7 @@ namespace Network.Particle.Scripts.Model
             id = Guid.NewGuid().ToString();
             this.method = method;
             @params = parameters.ToArray();
-            chainId = ParticleNetwork.GetChainInfo().getChainId();
+            chainId = ParticleNetwork.GetChainInfo().Id;
         }
     }
 }
