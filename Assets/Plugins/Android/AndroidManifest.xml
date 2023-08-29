@@ -3,8 +3,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.unity3d.player"
         xmlns:tools="http://schemas.android.com/tools">
-    <application>
+    <application tools:replace="android:fullBackupContent"
+                 android:fullBackupContent="@xml/pn_backup_rules">
         <activity android:name="com.unity3d.player.UnityPlayerActivity"
+                  android:exported="true"
                   android:theme="@style/UnityThemeSelector">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -37,12 +39,12 @@
                 android:launchMode="singleTask"
                 android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="connect${PN_APP_ID}" />
+                <data android:scheme="connect${PN_APP_ID}"/>
             </intent-filter>
         </activity>
         <meta-data

@@ -48,8 +48,7 @@ namespace Network.Particle.Scripts.Core
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", json) ==1?true:false;
-            //return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("setChainInfo", json);
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", json) ==1?true:false;
 #elif UNITY_IOS &&!UNITY_EDITOR
             return ParticleNetworkIOSBridge.setChainInfo(json);
 #else
@@ -100,8 +99,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
         {
             Debug.Log(style);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("setInterfaceStyle",style.ToString());
+            ParticleNetwork.CallNative("setAppearance",style.ToString());
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setAppearance(style.ToString());
 #else
@@ -132,8 +130,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
         public static void SetFiatCoin(FiatCoin fiatCoin)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("setFiatCoin",fiatCoin);
+            ParticleNetwork.CallNative("setFiatCoin",fiatCoin.ToString());
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setFiatCoin(fiatCoin.ToString());
 #else
@@ -161,8 +158,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("setSecurityAccountConfig",json);
+            ParticleNetwork.CallNative("setWebAuthConfig",json);
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.setWebAuthConfig(json);
 #else

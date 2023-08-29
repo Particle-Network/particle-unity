@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -137,8 +138,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetPayDisabled(bool disabled)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("enablePay",enable);
+            ParticleNetwork.CallNative("setPayDisabled",disabled);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setPayDisabled(disabled);
 #else
@@ -152,8 +152,7 @@ namespace Network.Particle.Scripts.Core
         public static bool GetPayDisabled()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getEnablePay");
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getPayDisabled");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.getPayDisabled();
 #else
@@ -168,8 +167,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetSwapDisabled(bool disabled)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("enableSwap",enable);
+            ParticleNetwork.CallNative("setSwapDisabled",disabled);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setSwapDisabled(disabled);
 #else
@@ -183,8 +181,7 @@ namespace Network.Particle.Scripts.Core
         public static bool GetSwapDisabled()
         {
 #if UNITY_ANDROID && !UNITY_EDITO
-// todo
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getEnableSwap");
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getSwapDisabled");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.getSwapDisabled();
 #else
@@ -301,8 +298,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetShowTestNetwork(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showTestNetwork",show);
+            ParticleNetwork.CallNative("setShowTestNetwork",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setShowTestNetwork(show);
 #else
@@ -317,8 +313,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetShowManageWallet(bool show = true)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showManageWallet",show);
+            ParticleNetwork.CallNative("setShowManageWallet",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setShowManageWallet(show);
 #else
@@ -350,8 +345,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetShowLanguageSetting(bool show = false)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.GetUnityBridgeClass().CallStatic("showSettingLanguage",show);
+            ParticleNetwork.CallNative("setShowLanguageSetting",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setShowLanguageSetting(show);
 #else
@@ -434,8 +428,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetSupportWalletConnect(bool enable)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-           ParticleNetwork.GetUnityBridgeClass().CallStatic("supportWalletConnect",enable);
+            ParticleNetwork.CallNative("setSupportWalletConnect",enable);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setSupportWalletConnect(enable);
 #else
@@ -473,8 +466,7 @@ namespace Network.Particle.Scripts.Core
                 { "walletConnectProjectId", metaData.walletConnectProjectId }
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+            ParticleNetwork.CallNative("particleWalletConnectInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.particleWalletConnectInitialize(json);
 #else
