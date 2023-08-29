@@ -15,6 +15,7 @@ namespace Network.Particle.Scripts.Core
 
         private static AndroidJavaClass unityBridge;
         private static AndroidJavaClass unityConnectBridge;
+        private static AndroidJavaClass unityAuthCoreBridge;
         private static ChainInfo currChainInfo;
 
         public static void Init(ChainInfo chainInfo, Env env = Env.PRODUCTION)
@@ -183,6 +184,25 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             GetAndroidJavaObject().Call("runOnUiThread",
                 new AndroidJavaRunnable(() => { GetUnityConnectBridgeClass().CallStatic(methodName, args); }));
         }
+        
+        public static void CallAuthCoreNative<T>(string methodName, params object[] args)
+        {
+            Debug.Log("CallAuthCoreNative_methodName " + methodName);
+
+            GetAndroidJavaObject().Call("runOnUiThread",
+                new AndroidJavaRunnable(() =>
+                {
+                    GetAuthCoreBridgeClass().CallStatic<T>(methodName, args);
+                }));
+        }
+        public static void CallAuthCoreNative(string methodName, params object[] args)
+        {
+            Debug.Log("CallAuthCoreNative_methodName " + methodName);
+
+            GetAndroidJavaObject().Call("runOnUiThread",
+                new AndroidJavaRunnable(() => { GetAuthCoreBridgeClass().CallStatic(methodName, args); }));
+        }
+        
 
         private static AndroidJavaObject GetAndroidJavaObject()
         {
@@ -197,6 +217,7 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             return activityObject;
         }
 
+        
         public static AndroidJavaClass GetUnityBridgeClass()
         {
             if (unityBridge != null)
@@ -219,6 +240,16 @@ return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", jso
             return unityConnectBridge;
         }
 
+        public static AndroidJavaClass GetAuthCoreBridgeClass()
+        {
+            if (unityAuthCoreBridge != null)
+            {
+                return unityAuthCoreBridge;
+            }
+
+            unityAuthCoreBridge = new AndroidJavaClass("network.particle.unity.UnityBridgeAuthCore");
+            return unityAuthCoreBridge;
+        }
 
         public static string GetPrivateKey()
         {

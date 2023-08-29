@@ -16,8 +16,7 @@ namespace Network.Particle.Scripts.Core
         public static void Init()
         {
 #if UNITY_ANDROID&& !UNITY_EDITOR
-// todo
-                ParticleNetwork.CallNative("init",json);
+
 #elif UNITY_IOS&& !UNITY_EDITOR
                 ParticleNetworkIOSBridge.authCoreInitialize();
 #else
@@ -28,8 +27,7 @@ namespace Network.Particle.Scripts.Core
         internal static void Connect(string jwt)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("IsLoginAsync");
+            ParticleNetwork.CallAuthCoreNative("connect",jwt);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreConnect(jwt);
 #else
@@ -40,8 +38,7 @@ namespace Network.Particle.Scripts.Core
         internal static void Disconnect()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("logout");
+            ParticleNetwork.CallAuthCoreNative("disconnect");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreDisconnect();
 #else
@@ -52,8 +49,7 @@ namespace Network.Particle.Scripts.Core
         internal static void IsConnected()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("fastLogout");
+            ParticleNetwork.CallAuthCoreNative("isConnected");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreIsConnected();
 #else
@@ -65,8 +61,7 @@ namespace Network.Particle.Scripts.Core
         public static void ChangeMasterPassword()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-             ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getAddress");
+             ParticleNetwork.CallAuthCoreNative("changeMasterPassword");
 #elif UNITY_IOS && !UNITY_EDITOR
              ParticleNetworkIOSBridge.authCoreChangeMasterPassword();
 #else
@@ -79,10 +74,10 @@ namespace Network.Particle.Scripts.Core
         /// </summary>
         /// <returns></returns>
         public static string GetUserInfo()
-        {
+        { 
+           
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getUserInfo");
+            return ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<string>("getUserInfo");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.authCoreGetUserInfo();
 #else
@@ -96,9 +91,9 @@ namespace Network.Particle.Scripts.Core
         /// <returns></returns>
         internal static bool HasMasterPassword()
         {
+            
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getUserInfo");
+            return  ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("hasMasterPassword");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.authCoreHasMasterPassword();
 #else
@@ -113,8 +108,7 @@ namespace Network.Particle.Scripts.Core
         public static bool HasPaymentPassword()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getUserInfo");
+            return  ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("hasPaymentPassword");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.authCoreHasPaymentPassword();
 #else
@@ -128,11 +122,9 @@ namespace Network.Particle.Scripts.Core
             {
                 { "chain_name", chainInfo.Name },
                 { "chain_id", chainInfo.Id },
-                { "chain_id_name", chainInfo.Network },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("setChainInfoAsync",json);
+            ParticleNetwork.CallAuthCoreNative("switchChain",json);
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreSwitchChain(json);
 #else
@@ -144,8 +136,8 @@ namespace Network.Particle.Scripts.Core
         internal static void OpenWebWallet(string jsonString)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("openWebWallet");
+// todo:unsupported
+            
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreOpenWebWallet(jsonString);
 #else
@@ -156,8 +148,7 @@ namespace Network.Particle.Scripts.Core
         internal static void OpenAccountAndSecurity()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-        ParticleNetwork.CallNative("openAccountAndSecurity");
+        ParticleNetwork.CallAuthCoreNative("openAccountAndSecurity");
 #elif UNITY_IOS &&!UNITY_EDITOR
         ParticleNetworkIOSBridge.authCoreOpenAccountAndSecurity();
 #else
@@ -167,9 +158,9 @@ namespace Network.Particle.Scripts.Core
 
         public static string EvmGetAddress()
         {
+            
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-        return ParticleNetwork.CallNative("openAccountAndSecurity");
+        return ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<string>("evmGetAddress");
 #elif UNITY_IOS &&!UNITY_EDITOR
         return ParticleNetworkIOSBridge.authCoreEvmGetAddress();
 #else
@@ -188,12 +179,11 @@ namespace Network.Particle.Scripts.Core
             {
                 serializedMessage = HexUtils.ConvertHex(message);
             }
-
+           
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-         ParticleNetwork.CallNative("openAccountAndSecurity");
+            ParticleNetwork.CallAuthCoreNative("evmPersonalSign",serializedMessage);
 #elif UNITY_IOS &&!UNITY_EDITOR
-         ParticleNetworkIOSBridge.authCoreEvmPersonalSign(serializedMessage);
+            ParticleNetworkIOSBridge.authCoreEvmPersonalSign(serializedMessage);
 #else
             return;
 #endif
@@ -212,10 +202,9 @@ namespace Network.Particle.Scripts.Core
             }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-         ParticleNetwork.CallNative("openAccountAndSecurity");
+            ParticleNetwork.CallAuthCoreNative("evmPersonalSignUnique",serializedMessage);
 #elif UNITY_IOS &&!UNITY_EDITOR
-         ParticleNetworkIOSBridge.authCoreEvmPersonalSignUnique(serializedMessage);
+            ParticleNetworkIOSBridge.authCoreEvmPersonalSignUnique(serializedMessage);
 #else
             return;
 #endif
@@ -234,10 +223,9 @@ namespace Network.Particle.Scripts.Core
             }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-         ParticleNetwork.CallNative("openAccountAndSecurity");
+            ParticleNetwork.CallAuthCoreNative("evmSignTypedData",serializedMessage);
 #elif UNITY_IOS &&!UNITY_EDITOR
-         ParticleNetworkIOSBridge.authCoreEvmSignTypedData(serializedMessage);
+            ParticleNetworkIOSBridge.authCoreEvmSignTypedData(serializedMessage);
 #else
             return;
 #endif
@@ -256,10 +244,9 @@ namespace Network.Particle.Scripts.Core
             }
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-         ParticleNetwork.CallNative("openAccountAndSecurity");
+            ParticleNetwork.CallAuthCoreNative("evmSignTypedDataUnique",serializedMessage);
 #elif UNITY_IOS &&!UNITY_EDITOR
-         ParticleNetworkIOSBridge.authCoreEvmSignTypedDataUnique(serializedMessage);
+            ParticleNetworkIOSBridge.authCoreEvmSignTypedDataUnique(serializedMessage);
 #else
             return;
 #endif
@@ -274,15 +261,14 @@ namespace Network.Particle.Scripts.Core
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-         ParticleNetwork.CallNative("openAccountAndSecurity");
+ParticleNetwork.CallAuthCoreNative("evmSendTransaction",json);
 #elif UNITY_IOS &&!UNITY_EDITOR
          ParticleNetworkIOSBridge.authCoreEvmSendTransaction(json);
 #else
             return;
 #endif
         }
-        
+
         internal static void BatchSendTransactions(List<string> transactions,
             [CanBeNull] AAFeeMode feeMode = null)
 
@@ -306,10 +292,9 @@ namespace Network.Particle.Scripts.Core
         public static string SolanaGetAddress()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-        return ParticleNetwork.CallNative("openAccountAndSecurity");
+            return ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<string>("solanaGetAddress");
 #elif UNITY_IOS &&!UNITY_EDITOR
-        return ParticleNetworkIOSBridge.authCoreSolanaGetAddress();
+            return ParticleNetworkIOSBridge.authCoreSolanaGetAddress();
 #else
             return "";
 #endif
@@ -317,11 +302,11 @@ namespace Network.Particle.Scripts.Core
 
         public static void SolanaSignMessage(string message)
         {
+           
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-         ParticleNetwork.CallNative("openAccountAndSecurity");
+            ParticleNetwork.CallAuthCoreNative("solanaSignMessage",message);
 #elif UNITY_IOS &&!UNITY_EDITOR
-         ParticleNetworkIOSBridge.authCoreSolanaSignMessage(message);
+            ParticleNetworkIOSBridge.authCoreSolanaSignMessage(message);
 #else
             return;
 #endif
@@ -330,10 +315,9 @@ namespace Network.Particle.Scripts.Core
         public static void SolanaSignTransaction(string transaction)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-         ParticleNetwork.CallNative("openAccountAndSecurity");
+            ParticleNetwork.CallAuthCoreNative("solanaSignTransaction",transaction);
 #elif UNITY_IOS &&!UNITY_EDITOR
-ParticleNetworkIOSBridge.authCoreSolanaSignTransaction(transaction);
+            ParticleNetworkIOSBridge.authCoreSolanaSignTransaction(transaction);
 #else
             return;
 #endif
@@ -344,8 +328,7 @@ ParticleNetworkIOSBridge.authCoreSolanaSignTransaction(transaction);
             var json = JsonConvert.SerializeObject(transactions);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-             ParticleNetwork.CallNative("openAccountAndSecurity");
+            ParticleNetwork.CallAuthCoreNative("solanaSignAllTransactions",json);
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreSolanaSignAllTransactions(json);
 #else
@@ -356,11 +339,9 @@ ParticleNetworkIOSBridge.authCoreSolanaSignTransaction(transaction);
         public static void SolanaSendAndSendTransaction(string transaction)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-
-        ParticleNetwork.CallNative("openAccountAndSecurity");
+            ParticleNetwork.CallAuthCoreNative("solanaSignAndSendTransaction",transaction);
 #elif UNITY_IOS &&!UNITY_EDITOR
-    ParticleNetworkIOSBridge.authCoreSolanaSignAndSendTransaction(transaction);
+            ParticleNetworkIOSBridge.authCoreSolanaSignAndSendTransaction(transaction);
 #else
             return;
 #endif
