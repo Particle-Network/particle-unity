@@ -263,6 +263,7 @@ build
 /Assets/MiniJoyGame/Editor/py/git_config.json
 /Assets/MiniJoyGame/Editor/py/git_config.json.meta
 /build-particle/
-/ios-build/
+/ios-build/*
+!/ios-build/Podfile
 /Assets/Vuplex
 /Assets/Vuplex.meta

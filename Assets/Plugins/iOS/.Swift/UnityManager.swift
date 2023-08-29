@@ -1645,6 +1645,8 @@ extension UnityManager {
         let data = try! JSONEncoder().encode(newUserInfo)
         let json = String(data: data, encoding: .utf8)
         return json ?? ""
+#else
+        return ""
 #endif
     }
     
