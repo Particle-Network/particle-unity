@@ -4165,7 +4165,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7311011376809238852, guid: aeaad6a419b8742b4a78ac397a88f918, type: 3}
       propertyPath: m_Name
-      value: BiconomyDemo
+      value: AADemo
       objectReference: {fileID: 0}
     - target: {fileID: 7311011376809238857, guid: aeaad6a419b8742b4a78ac397a88f918, type: 3}
       propertyPath: m_Pivot.x

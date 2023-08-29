@@ -249,10 +249,18 @@ extern "C" {
         [api setPriorityNFTContractAddresses:[NSString stringWithUTF8String: json]];
     }
 
-
     void loadCustomUIJsonString(const char* json) {
         [api loadCustomUIJsonString:[NSString stringWithUTF8String: json]];
     }
+
+    void setCustomWalletName(const char* json) {
+        [api setCustomWalletName:[NSString stringWithUTF8String: json]];
+    }
+
+    void setCustomLocalizable(const char* json) {
+        [api setCustomLocalizable:[NSString stringWithUTF8String: json]];
+    }
+
 }
 
 // Particle Connect
@@ -439,6 +447,10 @@ extern "C" {
 
     void authCoreEvmSendTransaction(const char* json) {
         [api authCoreEvmSendTransaction: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreEvmBatchSendTransactions(const char* json) {
+        [api authCoreEvmBatchSendTransactions: [NSString stringWithUTF8String: json]];
     }
 
     char* authCoreSolanaGetAddress() {

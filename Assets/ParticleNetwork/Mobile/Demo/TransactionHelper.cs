@@ -24,11 +24,8 @@ namespace Network.Particle.Scripts.Test
         {
             string from = sender;
             string receiver = TestAccount.EVM.ReceiverAddress;
-            string contractAddress = TestAccount.EVM.TokenContractAddress;
             BigInteger amount = TestAccount.EVM.Amount;
-            var dataResult = await EvmService.Erc20Transfer(contractAddress, receiver, amount);
-            var data = (string)JObject.Parse(dataResult)["result"];
-            return await EvmService.CreateTransaction(from, data, amount, receiver, true);
+            return await EvmService.CreateTransaction(from, "0x", amount, receiver);
         }
         
         public static async Task<string> GetEVMTransactionWithConnect(string sender)
@@ -39,7 +36,7 @@ namespace Network.Particle.Scripts.Test
             BigInteger amount = TestAccount.EVM.Amount;
             var dataResult = await EvmService.Erc20Transfer(contractAddress, receiver, amount);
             var data = (string)JObject.Parse(dataResult)["result"];
-            return await EvmService.CreateTransaction(from, data, amount, receiver, true);
+            return await EvmService.CreateTransaction(from, data, amount, receiver);
         }
     }
 }

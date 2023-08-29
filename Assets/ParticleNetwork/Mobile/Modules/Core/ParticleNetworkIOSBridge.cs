@@ -186,7 +186,15 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void loadCustomUIJsonString(string json);
+        
+        
+        [DllImport("__Internal")]
+        public static extern void setCustomLocalizable(string json);
 
+        [DllImport("__Internal")]
+        public static extern void setCustomWalletName(string json);
+        
+        
 #endif
 
         // Particle Connect
@@ -329,6 +337,9 @@ namespace Network.Particle.Scripts.Core
             
             [DllImport("__Internal")]
             public static extern void authCoreEvmSendTransaction(string json);
+            
+            [DllImport("__Internal")]
+            public static extern void authCoreEvmBatchSendTransactions(string json);
             
             [DllImport("__Internal")]
             public static extern string authCoreSolanaGetAddress();

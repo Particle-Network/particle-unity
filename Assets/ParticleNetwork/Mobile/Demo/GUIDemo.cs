@@ -243,14 +243,36 @@ namespace Network.Particle.Scripts.Test
 
             ParticleNetwork.SetFiatCoin(FiatCoin.JPY);
 
+            // Only works for iOS
             // your custom ui json
             // format is here.
             // https://github.com/Particle-Network/particle-ios/blob/main/Demo/Demo/customUIConfig.json
-            var txtAsset = Resources.Load<TextAsset>("customUIConfig");
-            string json = txtAsset.text;
-            ParticleWalletGUI.LoadCustomUIJsonString(json);
-        }
+            // var txtAsset = Resources.Load<TextAsset>("customUIConfig");
+            // string json = txtAsset.text;
+            // ParticleWalletGUI.LoadCustomUIJsonString(json);
+            
+            // Only works for iOS
+            // set your wallet name and icon, only support particle auth wallet and particle auth core wallet,
+            // WalletType is particle or authCore.
+            ParticleWalletGUI.SetCustomWalletName("Hello", "https://static.particle.network/wallet-icons/Rainbow.png");
+            
+            // Only works for iOS
+            // set customize localizables for iOS, you can get all ios localizable strings
+            // from path yourIOSBuild/Pods/ParticleWalletGUI/XCFrameworks/ParticleWalletGUI/ParticleWalletGUI.bundle/en.lproj/Locallizable.strings.
+            // 
+            var enLocalizables = new Dictionary<string, string>
+            {
+                { "network fee", "Service Fee" },
+                {  "particle auth wallet", "Hello"},
+            };
 
+            var localizables = new Dictionary<Language, Dictionary<string, string>>
+            {
+                { Language.EN, enLocalizables }
+            };
+            ParticleWalletGUI.SetCustomLocalizable(localizables);
+            
+        }
 
         public void ShowToast(string message)
         {

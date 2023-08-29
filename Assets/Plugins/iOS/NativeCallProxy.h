@@ -74,9 +74,9 @@
 - (void) setDisplayNFTContractAddresses:(NSString*_Nonnull)json;
 - (void) setPriorityTokenAddresses:(NSString*_Nonnull)json;
 - (void) setPriorityNFTContractAddresses:(NSString*_Nonnull)json;
-
 - (void) loadCustomUIJsonString:(NSString*_Nonnull)json;
-
+- (void) setCustomWalletName:(NSString*_Nonnull)json;
+- (void) setCustomLocalizable:(NSString*_Nonnull)json;
 
 // Particle Connect Service
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;
@@ -130,6 +130,7 @@
 - (void) authCoreEvmSignTypedData:(NSString* _Nonnull)json;
 - (void) authCoreEvmSignTypedDataUnique:(NSString* _Nonnull)json;
 - (void) authCoreEvmSendTransaction:(NSString* _Nonnull)json;
+- (void) authCoreEvmBatchSendTransactions:(NSString* _Nonnull)json;
 - (NSString* _Nonnull) authCoreSolanaGetAddress;
 - (void) authCoreSolanaSignMessage:(NSString* _Nonnull)json;
 - (void) authCoreSolanaSignTransaction:(NSString* _Nonnull)json;

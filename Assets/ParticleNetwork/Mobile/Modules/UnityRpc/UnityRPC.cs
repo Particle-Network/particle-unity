@@ -274,15 +274,14 @@ namespace Network.Particle.Scripts.Core
         /// <param name="methodName">Method name, you should add "custom_" before your method name, like "custom_balanceOf", "custom_mint"</param>
         /// <param name="parameters">Method parameters</param>
         /// <param name="abiJsonString">Abi json string</param>
-        /// <param name="isSupportEIP1559">If your chain support EIP1559</param>
         /// <param name="gasFeeLevel">Gas fee level, default is high</param>
         /// <returns></returns>
         public static async Task<string> WriteContract(string from, string contractAddress, string methodName,
-            List<object> parameters, [CanBeNull] string abiJsonString, bool isSupportEIP1559, GasFeeLevel gasFeeLevel = GasFeeLevel.High)
+            List<object> parameters, [CanBeNull] string abiJsonString, GasFeeLevel gasFeeLevel = GasFeeLevel.High)
         {
             var dataResult = await AbiEncodeFunctionCall(contractAddress, methodName, parameters, abiJsonString);
             var data = (string)JObject.Parse(dataResult)["result"];
-            return await CreateTransaction(from, data, 0, contractAddress, isSupportEIP1559, gasFeeLevel);
+            return await CreateTransaction(from, data, 0, contractAddress, gasFeeLevel);
         }
 
         /// <summary>
@@ -293,11 +292,9 @@ namespace Network.Particle.Scripts.Core
         /// "AbiEncodeFunctionCall", "Erc20Transfer" and so on</param>
         /// <param name="value">Native value </param>
         /// <param name="to">If your are sending native, it is receiver address, if you are sending token, it is the token contract address</param>
-        /// <param name="isSupportEIP1559">If your chain support EIP1559</param>
         /// <param name="gasFeeLevel">Gas fee level, default is high</param>
         /// <returns></returns>
-        public static async Task<string> CreateTransaction(string from, string data, BigInteger value, string to,
-            bool isSupportEIP1559, GasFeeLevel gasFeeLevel = GasFeeLevel.High)
+        public static async Task<string> CreateTransaction(string from, string data, BigInteger value, string to, GasFeeLevel gasFeeLevel = GasFeeLevel.High)
         {
             var valueHex = "0x" + value.ToString("x");
             var gasLimitResult = await EstimateGas(from, to, "0x0", data);
@@ -322,11 +319,12 @@ namespace Network.Particle.Scripts.Core
 
             var maxPriorityFeePerGas = (double)JObject.Parse(gasFeesResult)["result"][level]["maxPriorityFeePerGas"];
             var maxPriorityFeePerGasHex = "0x" + ((BigInteger)(maxPriorityFeePerGas * Mathf.Pow(10, 9))).ToString("x");
-            var chainId = ParticleNetwork.GetChainInfo().Id;
+            var chainInfo = ParticleNetwork.GetChainInfo();
+            var chainId = chainInfo.Id;
 
             EthereumTransaction transaction;
 
-            if (isSupportEIP1559)
+            if (chainInfo.isEIP1559Supported())
             {
                 transaction = new EthereumTransaction(from, to, data, gasLimit, gasPrice: null,
                     value: valueHex,

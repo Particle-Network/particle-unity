@@ -1417,6 +1417,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4174143713196624298, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_Text
+      value: Navigator Buy BNB
+      objectReference: {fileID: 0}
     - target: {fileID: 4259384133425352744, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2462,8 +2466,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5847348862206983644, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.000030517578
+      objectReference: {fileID: 0}
+    - target: {fileID: 5847348862206983644, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -0.000787735
+      value: -0.00048828125
       objectReference: {fileID: 0}
     - target: {fileID: 5926190558100442657, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchorMax.y

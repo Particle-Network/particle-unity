@@ -98,6 +98,7 @@ namespace Network.Particle.Scripts.Core
                 { "data", "" },
             }));
 #endif
+            ParticleAuthCoreInteraction.IsConnected();
             return isConnectedTask.Task;
         }
 
@@ -171,7 +172,7 @@ namespace Network.Particle.Scripts.Core
         /// <param name="json">Result</param>
         public void ChangeMasterPasswordCallBack(string json)
         {
-            Debug.Log($"SignMessageCallBack:{json}");
+            Debug.Log($"ChangeMasterPasswordCallBack:{json}");
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             changeMasterPasswordTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
@@ -377,6 +378,41 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             evmSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
+        
+        /// <summary>
+        /// Batch Send Transaction, should init and enable particle aa.
+        /// </summary>
+        /// <param name="transactions">Transactions</param>
+        /// /// <param name="feeMode">AAFeeMode, default is auto</param>
+        /// <returns></returns>
+        public Task<NativeResultData> BatchSendTransactions(List<string> transactions,
+            [CanBeNull] AAFeeMode feeMode = null)
+        {
+            batchSendTransactionTask = new TaskCompletionSource<NativeResultData>();
+
+#if UNITY_EDITOR
+            BatchSendTransactionsCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
+#endif
+            ParticleAuthCoreInteraction.BatchSendTransactions(transactions, feeMode);
+
+            return batchSendTransactionTask.Task;
+        }
+
+        /// <summary>
+        /// Batch Send Transaction call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void BatchSendTransactionsCallBack(string json)
+        {
+            Debug.Log($"BatchSendTransactionsCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            batchSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
     }
     
     public partial class ParticleAuthCore
@@ -385,6 +421,7 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> solanaSignTransactionTask;
         private TaskCompletionSource<NativeResultData> solanaSignAllTransactionsTask;
         private TaskCompletionSource<NativeResultData> solanaSignAndSendTransactionTask;
+        private TaskCompletionSource<NativeResultData> batchSendTransactionTask;
 
         /// <summary>
         /// Solana Sign message
@@ -401,7 +438,7 @@ namespace Network.Particle.Scripts.Core
                 { "data", "" },
             }));
 #endif
-            ParticleAuthCoreInteraction.EvmPersonalSign(message);
+            ParticleAuthCoreInteraction.SolanaSignMessage(message);
             return solanaSignMessageTask.Task;
         }
 
@@ -432,7 +469,7 @@ namespace Network.Particle.Scripts.Core
                 { "data", "" },
             }));
 #endif
-            ParticleAuthCoreInteraction.EvmPersonalSign(message);
+            ParticleAuthCoreInteraction.SolanaSignTransaction(message);
             return solanaSignTransactionTask.Task;
         }
 
@@ -473,7 +510,7 @@ namespace Network.Particle.Scripts.Core
         /// <param name="json">Result</param>
         public void SolanaSignAllTransactionsCallBack(string json)
         {
-            Debug.Log($"EvmSignTypedDataCallBack:{json}");
+            Debug.Log($"SolanaSignAllTransactionsCallBack:{json}");
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             solanaSignAllTransactionsTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));

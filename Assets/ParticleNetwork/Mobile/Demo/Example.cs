@@ -159,11 +159,8 @@ namespace Network.Particle.Scripts.Test
             // This is your contact abjJsonString, you can get it from your contract developer.
             string abiJsonString = "";
 
-            // If your chain support EUP1559
-            var isSupportEIP1559 = true;
             var transaction = await EvmService.WriteContract(from, contractAddress, methodName, parameters,
-                abiJsonString,
-                isSupportEIP1559);
+                abiJsonString);
             
             Debug.Log($"transaction = {transaction}");
         }
@@ -180,10 +177,7 @@ namespace Network.Particle.Scripts.Test
             // native value 
             BigInteger value = 1000000000;
 
-            // If your chain support EUP1559
-            var isSupportEIP1559 = true;
-
-            var rpcResult = await EvmService.CreateTransaction(from, data, value, reciver, isSupportEIP1559);
+            var rpcResult = await EvmService.CreateTransaction(from, data, value, reciver);
 
             var result = (string)JObject.Parse(rpcResult)["result"];
 

@@ -567,18 +567,58 @@ namespace Network.Particle.Scripts.Core
 
         /// <summary>
         /// Load custom ui json string
+        /// Only works for iOS
         /// </summary>
         /// <param name="json">Json string</param>
         public static void LoadCustomUIJsonString(string json)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// not support
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.loadCustomUIJsonString(json);
 #else
 
 #endif
         }
+        
+       /// <summary>
+       /// Set custom localizable strings, should call before open any wallet page.
+       /// Only works for iOS
+       /// </summary>
+       /// <param name="localizables">Localizables</param>
+        public static void SetCustomLocalizable(Dictionary<Language, Dictionary<string, string>> localizables)
+        {
+            
+            var json = JsonConvert.SerializeObject(localizables);
+#if UNITY_ANDROID && !UNITY_EDITOR
+
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setCustomLocalizable(json);
+#else
+
+#endif
+        }
+       
+       /// <summary>
+       /// Set custom wallet name and icon, should call before login/connect, only support particle wallet.
+       /// </summary>
+       /// <param name="name">Wallet name</param>
+       /// <param name="icon">Wallet Icon</param>
+       public static void SetCustomWalletName(string name, string icon)
+       {
+           var json = JsonConvert.SerializeObject(new JObject
+           {
+               { "name", name },
+               { "icon", icon },
+           });
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setCustomWalletName(json);
+#else
+
+#endif
+       }
     }
 }

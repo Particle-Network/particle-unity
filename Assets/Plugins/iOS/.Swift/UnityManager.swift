@@ -149,16 +149,9 @@ extension UnityManager {
          JA,
          KO,
          */
-        if json.lowercased() == "en" {
-            ParticleNetwork.setLanguage(Language.en)
-        } else if json.lowercased() == "zh_cn" {
-            ParticleNetwork.setLanguage(Language.zh_Hans)
-        } else if json.lowercased() == "zh_tw" {
-            ParticleNetwork.setLanguage(Language.zh_Hant)
-        } else if json.lowercased() == "ko" {
-            ParticleNetwork.setLanguage(Language.ko)
-        } else if json.lowercased() == "ja" {
-            ParticleNetwork.setLanguage(Language.ja)
+        
+        if let language = getLanguage(from: json) {
+            ParticleNetwork.setLanguage(language)
         }
     }
     
@@ -612,7 +605,7 @@ extension UnityManager {
         buyConfig.fixFiatCoin = fixFiatCoin
         buyConfig.fixFiatAmt = fixFiatAmt
         buyConfig.theme = theme
-        buyConfig.language = language.rawValue
+        buyConfig.language = language?.rawValue ?? Language.en.rawValue
         
         PNRouter.navigatorBuy(buyCryptoConfig: buyConfig)
     }
@@ -752,8 +745,8 @@ extension UnityManager {
         }
     }
     
-    private func getLanguage(from json: String) -> Language {
-        var language: Language = .en
+    private func getLanguage(from json: String) -> Language? {
+        var language: Language?
         if json.lowercased() == "en" {
             language = Language.en
         } else if json.lowercased() == "zh_cn" {
@@ -866,6 +859,36 @@ extension UnityManager {
         } catch {
             print("loadCustomUIJsonString error = \(error)")
         }
+    }
+    
+    func setCustomWalletName(_ json: String) {
+        let data = JSON(parseJSON: json)
+
+        let name = data["name"].stringValue
+        let icon = data["icon"].stringValue
+
+        ConnectManager.setCustomWalletName(walletType: .particle, name: .init(name: name, icon: icon))
+        ConnectManager.setCustomWalletName(walletType: .authCore, name: .init(name: name, icon: icon))
+    }
+    
+    func setCustomLocalizable(_ json: String) {
+        let data = JSON(parseJSON: json).dictionaryValue
+        
+        var localizables: [Language: [String: String]] = [:]
+        
+        for (key, value) in data {
+            let language = getLanguage(from: key.lowercased())
+            if language == nil {
+                continue
+            }
+            
+            let itemLocalizables = value.dictionaryValue.mapValues { json in
+                json.stringValue
+            }
+            localizables[language!] = itemLocalizables
+        }
+         
+        ParticleWalletGUI.setCustomLocalizable(localizables)
     }
 }
 
@@ -1773,6 +1796,48 @@ extension UnityManager {
 #endif
     }
     
+    func authCoreEvmBatchSendTransactions(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let data = JSON(parseJSON: json)
+        let transactions = data["transactions"].arrayValue.map {
+            $0.stringValue
+        }
+        let mode = data["fee_mode"]["option"].stringValue
+        var feeMode: Biconomy.FeeMode = .native
+        if mode == "native" {
+            feeMode = .native
+        } else if mode == "gasless" {
+            feeMode = .gasless
+        } else if mode == "token" {
+            let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
+            let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
+            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+
+            feeMode = .token(feeQuote)
+        }
+                
+        let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
+        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+                
+        guard let biconomy = ParticleNetwork.getBiconomyService() else {
+            print("biconomy is not init")
+            return
+        }
+                
+        guard biconomy.isBiconomyModeEnable() else {
+            print("biconomy is not enable")
+            return
+        }
+        
+        latestPublicAddress = auth.evm.getAddress()
+        latestWalletType = .authCore
+        
+        let sendObservable: Single<String> = biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+                
+        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authCoreSystemName, methodName: "batchSendTransactions")
+#endif
+    }
+    
     func authCoreSolanaGetAddress() -> String {
 #if canImport(ParticleAuthCore)
         return auth.solana.getAddress() ?? ""
@@ -1812,8 +1877,7 @@ extension UnityManager {
     
     func authCoreSolanaSignAndSendTransaction(_ json: String) {
 #if canImport(ParticleAuthCore)
-        let data = JSON(parseJSON: json)
-        let transaction = data["transaction"].stringValue
+        let transaction = json
         
         let observable = Single<Void>.fromAsync { try await self.auth.solana.signAndSendTransaction(transaction) }
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignAndSendTransaction")

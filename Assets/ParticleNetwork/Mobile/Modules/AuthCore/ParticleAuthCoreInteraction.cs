@@ -282,6 +282,26 @@ namespace Network.Particle.Scripts.Core
             return;
 #endif
         }
+        
+        internal static void BatchSendTransactions(List<string> transactions,
+            [CanBeNull] AAFeeMode feeMode = null)
+
+        {
+            var json = JsonConvert.SerializeObject(new JObject
+            {
+                { "transactions", JToken.FromObject(transactions) },
+                { "fee_mode", feeMode == null ? null : JToken.FromObject(feeMode) },
+            });
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("batchSendTransactions",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreEvmBatchSendTransactions(json);
+#else
+
+#endif
+        }
 
         public static string SolanaGetAddress()
         {

@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Numerics;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
@@ -36,7 +32,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var jwt =
-                    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IndVUE05RHNycml0Sy1jVHE2OWNKcCJ9.eyJlbWFpbCI6InBhbnRhb3ZheUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHBzOi8vZGV2LXFyNi01OWVlLnVzLmF1dGgwLmNvbS8iLCJhdWQiOiJFVmpLMVpaUFN0UWNkV3VoandQZGRBdGdSaXdwNTRWUSIsImlhdCI6MTY5MzIxMjQzMywiZXhwIjoxNjkzMjQ4NDMzLCJzdWIiOiJhdXRoMHw2MzAzMjE0YjZmNjE1NjM2YWM5MTdmMWIiLCJzaWQiOiJCcjlQUG1rSEdTT3NraF9aNnlWVlpYcldsRjVZOVRQQSJ9.B03ZkQ0dz3AsxP7sOaZOAniUsn0WZ_cKZYCqVZOJZlojQIYbJFH5SX9BJI6-VLMX4GkjT6WKmTGyInwx4T1KspAOzVwn42Rl4X-geXRaj5f1e4av2KWkeLbJfY4pWlaW3G23MkqpUO_70DQGFME0Z3zHe-Q9VkL4vbTir1m0JtestPIOVt4Rzu6YDQRb-kCdwk3WW9sXgCCN-uRUI4G3bwCZiFaAOlGsDzPwGblt42mK9msBR9XdFtJ6EpczlQRcnvfW7Kl4OvOgZ8tLO1-78rHbvioQcBGfi0AlSd8UbO0nX1cemEs5TSeA8QudsfDOZWCvub2o0aktjAON28DvRg";
+                    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IndVUE05RHNycml0Sy1jVHE2OWNKcCJ9.eyJlbWFpbCI6InBhbnRhb3ZheUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHBzOi8vZGV2LXFyNi01OWVlLnVzLmF1dGgwLmNvbS8iLCJhdWQiOiJFVmpLMVpaUFN0UWNkV3VoandQZGRBdGdSaXdwNTRWUSIsImlhdCI6MTY5MzI3NjE1OSwiZXhwIjoxNjkzMzEyMTU5LCJzdWIiOiJhdXRoMHw2MzAzMjE0YjZmNjE1NjM2YWM5MTdmMWIiLCJzaWQiOiJCcjlQUG1rSEdTT3NraF9aNnlWVlpYcldsRjVZOVRQQSJ9.CT7hekpLVAP_3lqTCWKfPeFFB75UhGO7nMws23OO3ZlTUheU3Q2OqCSG-YIFIz348ii98VmEMYPPjml_OXBLcFiRoZbwUCV5j5sWaQVE1SWmTl1aBJfJn9nbSdee0nle3r83wdZBEERDPaWbLHJFC6Md0Zs_V4fpHHjbh94oXnihjsSiuPoMDb7FPH38_1d5RfvuDl-b8Ibwz-yXhkrsQqrJVE029SX3007_5ssfBl11wjzvuf0ME1G7I5ds6u_t1ZycqJozm68ppCRMcKw6KW1-Sqclk8Wor-G5lInNGWf-mSucqBg8dZuK_VAxjao3Ly5Pif6t4ZmFABrsDifN1A";
                 var nativeResultData = await ParticleAuthCore.Instance.Connect(jwt);
 
                 Debug.Log(nativeResultData.data);
