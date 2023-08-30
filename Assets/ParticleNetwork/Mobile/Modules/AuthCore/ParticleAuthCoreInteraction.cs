@@ -16,9 +16,9 @@ namespace Network.Particle.Scripts.Core
         public static void Init()
         {
 #if UNITY_ANDROID&& !UNITY_EDITOR
-
+            ParticleNetwork.CallAuthCoreNative("init");
 #elif UNITY_IOS&& !UNITY_EDITOR
-                ParticleNetworkIOSBridge.authCoreInitialize();
+            ParticleNetworkIOSBridge.authCoreInitialize();
 #else
 
 #endif
@@ -74,8 +74,7 @@ namespace Network.Particle.Scripts.Core
         /// </summary>
         /// <returns></returns>
         public static string GetUserInfo()
-        { 
-           
+        {
 #if UNITY_ANDROID && !UNITY_EDITOR
             return ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<string>("getUserInfo");
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -91,7 +90,6 @@ namespace Network.Particle.Scripts.Core
         /// <returns></returns>
         internal static bool HasMasterPassword()
         {
-            
 #if UNITY_ANDROID && !UNITY_EDITOR
             return  ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("hasMasterPassword");
 #elif UNITY_IOS && !UNITY_EDITOR
@@ -137,7 +135,7 @@ namespace Network.Particle.Scripts.Core
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
 // todo:unsupported
-            
+
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreOpenWebWallet(jsonString);
 #else
@@ -158,7 +156,6 @@ namespace Network.Particle.Scripts.Core
 
         public static string EvmGetAddress()
         {
-            
 #if UNITY_ANDROID && !UNITY_EDITOR
         return ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<string>("evmGetAddress");
 #elif UNITY_IOS &&!UNITY_EDITOR
@@ -179,7 +176,7 @@ namespace Network.Particle.Scripts.Core
             {
                 serializedMessage = HexUtils.ConvertHex(message);
             }
-           
+
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallAuthCoreNative("evmPersonalSign",serializedMessage);
 #elif UNITY_IOS &&!UNITY_EDITOR
@@ -302,7 +299,6 @@ ParticleNetwork.CallAuthCoreNative("evmSendTransaction",json);
 
         public static void SolanaSignMessage(string message)
         {
-           
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallAuthCoreNative("solanaSignMessage",message);
 #elif UNITY_IOS &&!UNITY_EDITOR

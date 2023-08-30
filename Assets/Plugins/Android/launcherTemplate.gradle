@@ -8,7 +8,7 @@ dependencies {
             }
         }
         implementation project(':unityLibrary')
-        def sdkVersion = "0.14.5" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+        def sdkVersion = "1.1.0" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
      
         //tips
         //auth-service and auth-service-tiramisu are the same library,
@@ -17,7 +17,7 @@ dependencies {
         //particle auth service(Required)  
         //implementation "network.particle:auth-service:$sdkVersion"
         //particle auth service tiramisu(Required), it supports set auth browser height percent,require targetSdkVersion 33
-        implementation "network.particle:auth-service-tiramisu:$sdkVersion"
+        implementation "network.particle:auth-service:$sdkVersion"
         
         //particle api service (Optional.) If you don't want to use the API service, you can remove this dependency.
         implementation "network.particle:api-service:${sdkVersion}"
@@ -25,9 +25,13 @@ dependencies {
         implementation "network.particle:wallet-service:${sdkVersion}"
         //particle unity bridge (Required) 
         implementation "network.particle:unity-bridge:${sdkVersion}"
-        //particle biconomy (Optional.) If you don't want to use the biconomy service, you can remove this dependency.
+        //particle biconomy (Optional.) If you don't want to use the service, you can remove this dependency.
         implementation("network.particle:biconomy-service:$sdkVersion")
         
+         //particle mpc-core、auth-core (Optional.) If you don't want to use the service, you can remove this dependency.
+         //If the following services are not required, you need remove android:fullBackupContent="@xml/pn_backup_rules" from AndroidManifest.xml
+        implementation("network.particle:mpc-core:$sdkVersion")
+        implementation("network.particle:auth-core:$sdkVersion")
         //if only use connect sdk, you must add the following dependencies 
 //         def sdkVersion = "0.9.31" find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
 //         implementation "network.particle:connect-common:${connectVersion}"

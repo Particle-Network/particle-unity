@@ -32,7 +32,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var jwt =
-                    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IndVUE05RHNycml0Sy1jVHE2OWNKcCJ9.eyJlbWFpbCI6InBhbnRhb3ZheUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHBzOi8vZGV2LXFyNi01OWVlLnVzLmF1dGgwLmNvbS8iLCJhdWQiOiJFVmpLMVpaUFN0UWNkV3VoandQZGRBdGdSaXdwNTRWUSIsImlhdCI6MTY5MzI3NjE1OSwiZXhwIjoxNjkzMzEyMTU5LCJzdWIiOiJhdXRoMHw2MzAzMjE0YjZmNjE1NjM2YWM5MTdmMWIiLCJzaWQiOiJCcjlQUG1rSEdTT3NraF9aNnlWVlpYcldsRjVZOVRQQSJ9.CT7hekpLVAP_3lqTCWKfPeFFB75UhGO7nMws23OO3ZlTUheU3Q2OqCSG-YIFIz348ii98VmEMYPPjml_OXBLcFiRoZbwUCV5j5sWaQVE1SWmTl1aBJfJn9nbSdee0nle3r83wdZBEERDPaWbLHJFC6Md0Zs_V4fpHHjbh94oXnihjsSiuPoMDb7FPH38_1d5RfvuDl-b8Ibwz-yXhkrsQqrJVE029SX3007_5ssfBl11wjzvuf0ME1G7I5ds6u_t1ZycqJozm68ppCRMcKw6KW1-Sqclk8Wor-G5lInNGWf-mSucqBg8dZuK_VAxjao3Ly5Pif6t4ZmFABrsDifN1A";
+                    "";
                 var nativeResultData = await ParticleAuthCore.Instance.Connect(jwt);
 
                 Debug.Log(nativeResultData.data);
@@ -239,7 +239,7 @@ namespace Network.Particle.Scripts.Test
         public void EvmGetAddress()
         {
             var address = ParticleAuthCoreInteraction.EvmGetAddress();
-            Debug.LogError($"evm address: {address}");
+            Debug.Log($"evm address: {address}");
         }
 
         public async void EvmPersonalSign()
