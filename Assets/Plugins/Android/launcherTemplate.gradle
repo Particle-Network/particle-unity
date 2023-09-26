@@ -8,7 +8,7 @@ dependencies {
             }
         }
         implementation project(':unityLibrary')
-        def sdkVersion = "1.1.0" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+        def sdkVersion = "1.2.2" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
      
         //tips
         //auth-service and auth-service-tiramisu are the same library,
@@ -26,7 +26,7 @@ dependencies {
         //particle unity bridge (Required) 
         implementation "network.particle:unity-bridge:${sdkVersion}"
         //particle biconomy (Optional.) If you don't want to use the service, you can remove this dependency.
-        implementation("network.particle:biconomy-service:$sdkVersion")
+        implementation("network.particle:aa-service:$sdkVersion")
         
          //particle mpc-core、auth-core (Optional.) If you don't want to use the service, you can remove this dependency.
          //If the following services are not required, you need remove android:fullBackupContent="@xml/pn_backup_rules" from AndroidManifest.xml
