@@ -632,7 +632,14 @@ extension UnityManager {
             let amount = data["amount"].string
             let config = SwapConfig(fromTokenAddress: fromTokenAddress, toTokenAddress: toTokenAddress, fromTokenAmountString: amount)
             
-            PNRouter.navigatorSwap(swapConfig: config)
+            let modalStyleString = data["modal_style"].stringValue.lowercased()
+            var modalStyle: ParticleGUIModalStyle
+            if modalStyleString == "fullscreen" {
+                modalStyle = .fullScreen
+            } else {
+                modalStyle = .pageSheet
+            }
+            PNRouter.navigatorSwap(swapConfig: config, modalStyle: modalStyle)
         } else {
             PNRouter.navigatorSwap()
         }
