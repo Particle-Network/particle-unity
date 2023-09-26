@@ -11,9 +11,9 @@ import RxSwift
 import SwiftyJSON
 import UnityFramework
 
+import ParticleAA
 import ParticleAuthAdapter
 import ParticleAuthService
-import ParticleBiconomy
 import ParticleNetworkBase
 import ParticleWalletAPI
 import ParticleWalletConnect
@@ -63,7 +63,7 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     // work with connect sdk
     var latestPublicAddress: String?
     var latestWalletType: WalletType?
-    let biconomy = BiconomyService()
+    let aaService = AAService()
     
 #if canImport(ParticleAuthCore)
     let auth = Auth()
@@ -317,7 +317,7 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let transaction = data["transaction"].stringValue
         let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .native
+        var feeMode: AA.FeeMode = .native
         if mode == "native" {
             feeMode = .native
         } else if mode == "gasless" {
@@ -325,18 +325,18 @@ extension UnityManager {
         } else if mode == "token" {
             let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
             let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+            let feeQuote = AA.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
 
             feeMode = .token(feeQuote)
         }
                 
         let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
-        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+        let wholeFeeQuote = try? JSONDecoder().decode(AA.WholeFeeQuote.self, from: wholeFeeQuoteData)
                 
-        let biconomy = ParticleNetwork.getBiconomyService()
+        let aaService = ParticleNetwork.getAAService()
         var sendObservable: Single<String>
-        if ParticleNetwork.getChainInfo().chain != .solana, biconomy != nil, biconomy!.isBiconomyModeEnable() {
-            sendObservable = biconomy!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        if ParticleNetwork.getChainInfo().chain != .solana, aaService != nil, aaService!.isAAModeEnable() {
+            sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
         } else {
             sendObservable = ParticleAuthService.signAndSendTransaction(transaction, feeMode: feeMode)
         }
@@ -355,7 +355,7 @@ extension UnityManager {
             $0.stringValue
         }
         let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .native
+        var feeMode: AA.FeeMode = .native
         if mode == "native" {
             feeMode = .native
         } else if mode == "gasless" {
@@ -363,28 +363,28 @@ extension UnityManager {
         } else if mode == "token" {
             let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
             let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+            let feeQuote = AA.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
 
             feeMode = .token(feeQuote)
         }
                 
         let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
-        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+        let wholeFeeQuote = try? JSONDecoder().decode(AA.WholeFeeQuote.self, from: wholeFeeQuoteData)
                 
-        guard let biconomy = ParticleNetwork.getBiconomyService() else {
-            print("biconomy is not init")
+        guard let aaService = ParticleNetwork.getAAService() else {
+            print("aa service is not init")
             return
         }
                 
-        guard biconomy.isBiconomyModeEnable() else {
-            print("biconomy is not enable")
+        guard aaService.isAAModeEnable() else {
+            print("aa service is not enable")
             return
         }
         
         latestPublicAddress = ParticleAuthService.getAddress()
         latestWalletType = .particle
         
-        let sendObservable: Single<String> = biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        let sendObservable: Single<String> = aaService.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
                 
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authSystemName)
     }
@@ -459,7 +459,7 @@ extension UnityManager {
         if style.lowercased() == "fullscreen" {
             ParticleAuthService.setModalPresentStyle(.fullScreen)
         } else {
-            ParticleAuthService.setModalPresentStyle(.formSheet)
+            ParticleAuthService.setModalPresentStyle(.pageSheet)
         }
     }
     
@@ -502,8 +502,14 @@ extension UnityManager {
             let toAddress = data["to_address"].string
             let amount = data["amount"].string
             let config = TokenSendConfig(tokenAddress: tokenAddress, toAddress: toAddress, amountString: amount)
-            
-            PNRouter.navigatorTokenSend(tokenSendConfig: config)
+            let modalStyleString = data["modal_style"].stringValue.lowercased()
+            var modalStyle: ParticleGUIModalStyle
+            if modalStyleString == "fullscreen" {
+                modalStyle = .fullScreen
+            } else {
+                modalStyle = .pageSheet
+            }
+            PNRouter.navigatorTokenSend(tokenSendConfig: config, modalStyle: modalStyle)
         } else {
             PNRouter.navigatorTokenSend()
         }
@@ -607,7 +613,15 @@ extension UnityManager {
         buyConfig.theme = theme
         buyConfig.language = language?.webString ?? Language.en.webString
         
-        PNRouter.navigatorBuy(buyCryptoConfig: buyConfig)
+        let modalStyleString = data["modal_style"].stringValue.lowercased()
+        var modalStyle: ParticleGUIModalStyle
+        if modalStyleString == "fullscreen" {
+            modalStyle = .fullScreen
+        } else {
+            modalStyle = .pageSheet
+        }
+        
+        PNRouter.navigatorBuy(buyCryptoConfig: buyConfig, modalStyle: modalStyle)
     }
     
     func navigatorSwap(_ json: String?) {
@@ -965,7 +979,7 @@ extension UnityManager {
              Inch1ConnectAdapter.self,
              ZengoConnectAdapter.self,
              AlphaConnectAdapter.self,
-             BitpieConnectAdapter.self]
+             OKXConnectAdapter.self]
 
         adapters.append(contentsOf: moreAdapterClasses.map {
             $0.init()
@@ -1148,7 +1162,7 @@ extension UnityManager {
         }
                 
         let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .native
+        var feeMode: AA.FeeMode = .native
         if mode == "native" {
             feeMode = .native
         } else if mode == "gasless" {
@@ -1156,13 +1170,13 @@ extension UnityManager {
         } else if mode == "token" {
             let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
             let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+            let feeQuote = AA.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
 
             feeMode = .token(feeQuote)
         }
                 
         let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
-        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+        let wholeFeeQuote = try? JSONDecoder().decode(AA.WholeFeeQuote.self, from: wholeFeeQuoteData)
         
         guard let adapter = map2ConnectAdapter(from: walletType) else {
             print("adapter for \(walletTypeString) is not init ")
@@ -1173,10 +1187,10 @@ extension UnityManager {
             latestWalletType = walletType
         }
         
-        let biconomy = ParticleNetwork.getBiconomyService()
+        let aaService = ParticleNetwork.getAAService()
         var sendObservable: Single<String>
-        if biconomy != nil, biconomy!.isBiconomyModeEnable() {
-            sendObservable = biconomy!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        if aaService != nil, aaService!.isAAModeEnable() {
+            sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
         } else {
             sendObservable = adapter.signAndSendTransaction(publicAddress: publicAddress, transaction: transaction, feeMode: feeMode)
         }
@@ -1198,7 +1212,7 @@ extension UnityManager {
         }
                 
         let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .native
+        var feeMode: AA.FeeMode = .native
         if mode == "native" {
             feeMode = .native
         } else if mode == "gasless" {
@@ -1206,19 +1220,19 @@ extension UnityManager {
         } else if mode == "token" {
             let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
             let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+            let feeQuote = AA.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
 
             feeMode = .token(feeQuote)
         }
                 
         let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
-        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
-        guard let biconomy = ParticleNetwork.getBiconomyService() else {
+        let wholeFeeQuote = try? JSONDecoder().decode(AA.WholeFeeQuote.self, from: wholeFeeQuoteData)
+        guard let aaService = ParticleNetwork.getAAService() else {
             print("aa is not init")
             return
         }
                 
-        guard biconomy.isBiconomyModeEnable() else {
+        guard aaService.isAAModeEnable() else {
             print("aa is not enable")
             return
         }
@@ -1226,7 +1240,7 @@ extension UnityManager {
         latestPublicAddress = publicAddress
         latestWalletType = walletType
                 
-        let sendObservable = biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        let sendObservable = aaService.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.connectSystemName, methodName: "batchSendTransactions")
     }
     
@@ -1549,25 +1563,25 @@ extension UnityManager {
             }
         }
         
-        BiconomyService.initialize(dappApiKeys: dappAppKeys)
-        ParticleNetwork.setBiconomyService(biconomy)
+        AAService.initialize(dappApiKeys: dappAppKeys)
+        ParticleNetwork.setAAService(aaService)
     }
     
     func enableAAMode() {
-        biconomy.enableBiconomyMode()
+        aaService.enableAAMode()
     }
     
     func disableAAMode() {
-        biconomy.disableBiconomyMode()
+        aaService.disableAAMode()
     }
     
     func isAAModeEnable() -> Bool {
-        return biconomy.isBiconomyModeEnable()
+        return aaService.isAAModeEnable()
     }
     
     func isDeploy(_ json: String) {
         let eoaAddress = json
-        subscribeAndCallback(observable: biconomy.isDeploy(eoaAddress: eoaAddress), unityName: UnityManager.aaSystemName)
+        subscribeAndCallback(observable: aaService.isDeploy(eoaAddress: eoaAddress), unityName: UnityManager.aaSystemName)
     }
     
     func rpcGetFeeQuotes(_ json: String) {
@@ -1577,7 +1591,7 @@ extension UnityManager {
             $0.stringValue
         }
                
-        subscribeAndCallback(observable: biconomy.rpcGetFeeQuotes(eoaAddress: eoaAddress, transactions: transactions), unityName: UnityManager.aaSystemName)
+        subscribeAndCallback(observable: aaService.rpcGetFeeQuotes(eoaAddress: eoaAddress, transactions: transactions), unityName: UnityManager.aaSystemName)
     }
     
     func isSupportChainInfo(_ json: String) -> Bool {
@@ -1586,7 +1600,7 @@ extension UnityManager {
         guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else {
             return false
         }
-        let result = biconomy.isSupportChainInfo(chainInfo)
+        let result = aaService.isSupportChainInfo(chainInfo)
         return result
     }
 }
@@ -1715,12 +1729,6 @@ extension UnityManager {
 #endif
     }
     
-    func authCoreOpenWebWallet(_ json: String) {
-#if canImport(ParticleAuthCore)
-        auth.openWebWallet(styleJsonString: json)
-#endif
-    }
-    
     func authCoreEvmGetAddress() -> String {
 #if canImport(ParticleAuthCore)
         return auth.evm.getAddress() ?? ""
@@ -1766,7 +1774,7 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let transaction = data["transaction"].stringValue
         let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .native
+        var feeMode: AA.FeeMode = .native
         if mode == "native" {
             feeMode = .native
         } else if mode == "gasless" {
@@ -1774,18 +1782,18 @@ extension UnityManager {
         } else if mode == "token" {
             let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
             let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+            let feeQuote = AA.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
 
             feeMode = .token(feeQuote)
         }
                 
         let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
-        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+        let wholeFeeQuote = try? JSONDecoder().decode(AA.WholeFeeQuote.self, from: wholeFeeQuoteData)
                 
-        let biconomy = ParticleNetwork.getBiconomyService()
+        let aaService = ParticleNetwork.getAAService()
         var sendObservable: Single<String>
-        if biconomy != nil, biconomy!.isBiconomyModeEnable() {
-            sendObservable = biconomy!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        if aaService != nil, aaService!.isAAModeEnable() {
+            sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
         } else {
             sendObservable = Single<Void>.fromAsync { try await self.auth.evm.sendTransaction(transaction, feeMode: feeMode) }
         }
@@ -1805,7 +1813,7 @@ extension UnityManager {
             $0.stringValue
         }
         let mode = data["fee_mode"]["option"].stringValue
-        var feeMode: Biconomy.FeeMode = .native
+        var feeMode: AA.FeeMode = .native
         if mode == "native" {
             feeMode = .native
         } else if mode == "gasless" {
@@ -1813,28 +1821,28 @@ extension UnityManager {
         } else if mode == "token" {
             let feeQuoteJson = JSON(data["fee_mode"]["fee_quote"].dictionaryValue)
             let tokenPaymasterAddress = data["fee_mode"]["token_paymaster_address"].stringValue
-            let feeQuote = Biconomy.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
+            let feeQuote = AA.FeeQuote(json: feeQuoteJson, tokenPaymasterAddress: tokenPaymasterAddress)
 
             feeMode = .token(feeQuote)
         }
                 
         let wholeFeeQuoteData = (try? data["fee_mode"]["whole_fee_quote"].rawData()) ?? Data()
-        let wholeFeeQuote = try? JSONDecoder().decode(Biconomy.WholeFeeQuote.self, from: wholeFeeQuoteData)
+        let wholeFeeQuote = try? JSONDecoder().decode(AA.WholeFeeQuote.self, from: wholeFeeQuoteData)
                 
-        guard let biconomy = ParticleNetwork.getBiconomyService() else {
-            print("biconomy is not init")
+        guard let aaService = ParticleNetwork.getAAService() else {
+            print("aa service is not init")
             return
         }
                 
-        guard biconomy.isBiconomyModeEnable() else {
-            print("biconomy is not enable")
+        guard aaService.isAAModeEnable() else {
+            print("aa service is not enable")
             return
         }
         
         latestPublicAddress = auth.evm.getAddress()
         latestWalletType = .authCore
         
-        let sendObservable: Single<String> = biconomy.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        let sendObservable: Single<String> = aaService.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
                 
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authCoreSystemName, methodName: "batchSendTransactions")
 #endif
@@ -1883,6 +1891,17 @@ extension UnityManager {
         
         let observable = Single<Void>.fromAsync { try await self.auth.solana.signAndSendTransaction(transaction) }
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignAndSendTransaction")
+#endif
+    }
+    
+    func authCoreSetCustomUI(_ json: String) {
+#if canImport(ParticleAuthCore)
+        do {
+            try Auth.loadCustomUIJsonString(json)
+        } catch {
+            print("auth core set custom ui error \(error)")
+        }
+        
 #endif
     }
 }
@@ -1967,8 +1986,6 @@ extension UnityManager {
             walletType = .zengo
         } else if str == "alpha" {
             walletType = .alpha
-        } else if str == "bitpie" {
-            walletType = .bitpie
         } else if str == "inch1" {
             walletType = .inch1
         } else {

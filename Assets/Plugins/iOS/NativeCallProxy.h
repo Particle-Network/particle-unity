@@ -122,7 +122,6 @@
 - (BOOL) authCoreHasMasterPassword;
 - (BOOL) authCoreHasPaymentPassword;
 - (void) authCoreOpenAccountAndSecurity;
-- (void) authCoreOpenWebWallet:(NSString* _Nonnull)json;
 
 - (NSString* _Nonnull) authCoreEvmGetAddress;
 - (void) authCoreEvmPersonalSign:(NSString* _Nonnull)json;
@@ -136,7 +135,7 @@
 - (void) authCoreSolanaSignTransaction:(NSString* _Nonnull)json;
 - (void) authCoreSolanaSignAllTransactions:(NSString* _Nonnull)json;
 - (void) authCoreSolanaSignAndSendTransaction:(NSString* _Nonnull)json;
-
+- (void) authCoreSetCustomUI:(NSString* _Nonnull)json;
 @end
 
 __attribute__ ((visibility("default")))

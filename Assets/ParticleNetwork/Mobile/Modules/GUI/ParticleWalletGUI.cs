@@ -53,13 +53,15 @@ namespace Network.Particle.Scripts.Core
         /// <param name="tokenAddress">Token Address</param>
         /// <param name="toAddress">To address</param>
         /// <param name="amount">Token Amount</param>
-        public static void NavigatorTokenSend(string tokenAddress = "", string toAddress = "", string amount = "")
+        /// <param name="modalStyle">Modal present style, default value is page sheet</param>
+        public static void NavigatorTokenSend(string tokenAddress = "", string toAddress = "", string amount = "", iOSModalPresentStyle modalStyle = iOSModalPresentStyle.PageSheet)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
                 { "token_address", tokenAddress },
                 { "to_address", toAddress },
                 { "amount", amount },
+                { "modal_style", modalStyle.ToString() }
             });
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -189,11 +191,13 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
+       
         /// <summary>
         /// Open buy crypto page
         /// </summary>
         /// <param name="config">Buy crypto config</param>
-        public static void NavigatorBuyCrypto([CanBeNull] BuyCryptoConfig config)
+        /// <param name="modalStyle">Modal present style, default value is page sheet</param>
+        public static void NavigatorBuyCrypto([CanBeNull] BuyCryptoConfig config, iOSModalPresentStyle modalStyle = iOSModalPresentStyle.PageSheet)
         {
             string json = "";
             if (config != null)
@@ -208,6 +212,7 @@ namespace Network.Particle.Scripts.Core
                     { "fix_crypto_coin", config.FixCryptoCoin },
                     { "fix_fiat_amt", config.FixFiatAmt },
                     { "fix_fiat_coin", config.FixFiatCoin },
+                    { "modal_style", modalStyle.ToString() }
                 };
                 if (config.Theme != null)
                 {

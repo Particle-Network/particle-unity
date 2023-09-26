@@ -229,13 +229,7 @@ namespace Network.Particle.Scripts.Test
                 Debug.LogError($"An error occurred: {e.Message}");
             }
         }
-
-        public void OpenWebWallet()
-        {
-            var jsonString = "";
-            ParticleAuthCoreInteraction.OpenWebWallet(jsonString);
-        }
-
+        
         public void EvmGetAddress()
         {
             var address = ParticleAuthCoreInteraction.EvmGetAddress();
@@ -522,6 +516,17 @@ namespace Network.Particle.Scripts.Test
             {
                 Debug.LogError($"An error occurred: {e.Message}");
             }
+        }
+
+        public void SetCustomUI()
+        {
+            // Only works for iOS
+            // your custom ui json
+            // for more detail, please explore
+            https://docs.particle.network/developers/wallet-service/sdks/web#custom-particle-wallet-style
+            var txtAsset = Resources.Load<TextAsset>("customUIConfig");
+            string json = txtAsset.text;
+            ParticleAuthCoreInteraction.SetCustomUI(json);
         }
     }
 }

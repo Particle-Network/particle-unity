@@ -219,6 +219,7 @@ PlayerSettings:
   iOSDeviceRequirements: []
   iOSURLSchemes:
   - pn63bfa427-cf5f-4742-9ff1-e8f5a1b9826f
+  - pn41326c93-7584-4923-9051-19f44027b959
   macOSURLSchemes: []
   iOSBackgroundModes: 0
   iOSMetalForceHardShadows: 0

@@ -131,18 +131,6 @@ namespace Network.Particle.Scripts.Core
         }
 
 
-        internal static void OpenWebWallet(string jsonString)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-// todo:unsupported
-
-#elif UNITY_IOS &&!UNITY_EDITOR
-            ParticleNetworkIOSBridge.authCoreOpenWebWallet(jsonString);
-#else
-
-#endif
-        }
-
         internal static void OpenAccountAndSecurity()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -338,6 +326,18 @@ ParticleNetwork.CallAuthCoreNative("evmSendTransaction",json);
             ParticleNetwork.CallAuthCoreNative("solanaSignAndSendTransaction",transaction);
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreSolanaSignAndSendTransaction(transaction);
+#else
+            return;
+#endif
+        }
+
+        public static void SetCustomUI(string json)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            // ParticleNetwork.CallAuthCoreNative("solanaSignAndSendTransaction",transaction);
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreSetCustomUI(json);
 #else
             return;
 #endif

@@ -316,9 +316,7 @@ namespace Network.Particle.Scripts.Core
             
             [DllImport("__Internal")]
             public static extern void authCoreOpenAccountAndSecurity();
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreOpenWebWallet(string json);
+
             
             [DllImport("__Internal")]
             public static extern string authCoreEvmGetAddress();
@@ -355,6 +353,11 @@ namespace Network.Particle.Scripts.Core
             
             [DllImport("__Internal")]
             public static extern void authCoreSolanaSignAndSendTransaction(string json);
+            
+            [DllImport("__Internal")]
+            public static extern void authCoreSetCustomUI(string json);
+            
+            
             
 #endif
     }

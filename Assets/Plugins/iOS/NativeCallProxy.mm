@@ -420,10 +420,6 @@ extern "C" {
         [api authCoreOpenAccountAndSecurity];
     }
 
-    void authCoreOpenWebWallet(const char* json) {
-        [api authCoreOpenWebWallet: [NSString stringWithUTF8String: json]];
-    }
-
     char* authCoreEvmGetAddress() {
         char* cStringCopyPN(const char* string);
         return cStringCopyPN([[api authCoreEvmGetAddress] UTF8String]);
@@ -472,6 +468,10 @@ extern "C" {
 
     void authCoreSolanaSignAndSendTransaction(const char* json) {
         [api authCoreSolanaSignAndSendTransaction: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreSetCustomUI(const char* json) {
+        [api authCoreSetCustomUI: [NSString stringWithUTF8String: json]];
     }
 }
 
