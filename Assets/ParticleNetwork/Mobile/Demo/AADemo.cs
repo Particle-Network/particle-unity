@@ -41,6 +41,13 @@ namespace Network.Particle.Scripts.Test
             ParticleAAInteraction.Init(dappApiKeys);
         }
 
+        public void IsSupportChainInfo()
+        {
+            var chainInfo = ChainInfo.Ethereum;
+            var result = ParticleAAInteraction.IsSupportChainInfo(chainInfo);
+            Debug.Log($"is support chain info {result}");
+        }
+
         public void EnableAAMode()
         {
             ParticleAAInteraction.EnableAAMode();
@@ -223,7 +230,7 @@ namespace Network.Particle.Scripts.Test
                 // select a feeQuote
                 var feeQuotesResult =
                     await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
-                
+
                 JArray feeQuotes = (JArray)(JObject.Parse(feeQuotesResult.data)["tokenPaymaster"]["feeQuotes"]);
 
                 var overFeeQuotes = feeQuotes
@@ -242,7 +249,7 @@ namespace Network.Particle.Scripts.Test
                     Debug.Log("no valid token fro gas fee");
                     return;
                 }
-                
+
                 // select the first feeQuote
                 var feeQuote = overFeeQuotes[0];
                 var tokenPaymasterAddress =
@@ -302,7 +309,8 @@ namespace Network.Particle.Scripts.Test
                 }
 
                 // pass result from rpcGetFeeQuotes to send pay with native
-                var nativeResultData = await ParticleAuthService.Instance.BatchSendTransactions(transactions, AAFeeMode.Native(JObject.Parse(feeQuotesResult.data)));
+                var nativeResultData = await ParticleAuthService.Instance.BatchSendTransactions(transactions,
+                    AAFeeMode.Native(JObject.Parse(feeQuotesResult.data)));
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)
@@ -331,7 +339,7 @@ namespace Network.Particle.Scripts.Test
                 var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransactionWithConnect(smartAccountAddress);
-                
+
                 // check if enough native for gas fee
                 var feeQuotesResult =
                     await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
@@ -381,7 +389,7 @@ namespace Network.Particle.Scripts.Test
                 var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransactionWithConnect(smartAccountAddress);
-                
+
                 // check if gasless available
                 var feeQuotesResult =
                     await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
@@ -395,7 +403,7 @@ namespace Network.Particle.Scripts.Test
                 }
 
                 // pass result from rpcGetFeeQuotes to send gasless
-                
+
                 var nativeResultData =
                     await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
                         AAFeeMode.Gasless(JObject.Parse(feeQuotesResult.data)));
@@ -432,7 +440,7 @@ namespace Network.Particle.Scripts.Test
                 // select a feeQuote
                 var feeQuotesResult =
                     await ParticleAA.Instance.RpcGetFeeQuotes(eoaAddress, new List<string> { transaction });
-                
+
                 JArray feeQuotes = (JArray)(JObject.Parse(feeQuotesResult.data)["tokenPaymaster"]["feeQuotes"]);
 
                 var overFeeQuotes = feeQuotes
@@ -451,7 +459,7 @@ namespace Network.Particle.Scripts.Test
                     Debug.Log("no valid token fro gas fee");
                     return;
                 }
-                
+
                 // select the first feeQuote
                 var feeQuote = overFeeQuotes[0];
                 var tokenPaymasterAddress =
@@ -459,7 +467,7 @@ namespace Network.Particle.Scripts.Test
 
                 Debug.Log($"feeQuote {feeQuote}");
                 Debug.Log($"tokenPaymasterAddress {tokenPaymasterAddress}");
-                
+
                 var nativeResultData =
                     await ParticleConnect.Instance.SignAndSendTransaction(WalletType.MetaMask, eoaAddress, transaction,
                         AAFeeMode.Token(feeQuote, tokenPaymasterAddress));
@@ -533,8 +541,8 @@ namespace Network.Particle.Scripts.Test
                 Debug.LogError($"An error occurred: {e.Message}");
             }
         }
-        
-        public async void BatchSendTransactionsByAA()
+
+        public async void BatchSendTransactionsByAuthCore()
         {
             try
             {
@@ -582,8 +590,6 @@ namespace Network.Particle.Scripts.Test
                 Debug.LogError($"An error occurred: {e.Message}");
             }
         }
-        
-
 
 
         public void ShowToast(string message)

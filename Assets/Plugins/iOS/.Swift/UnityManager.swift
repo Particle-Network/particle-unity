@@ -1624,7 +1624,10 @@ extension UnityManager {
     func authCoreConnect(_ json: String) {
 #if canImport(ParticleAuthCore)
         let jwt = json
-        let observable = Single<Void>.fromAsync { try await self.auth.connect(jwt: jwt) }.map { userInfo in
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.connect(jwt: jwt)
+        }.map { userInfo in
             
             let userInfoJsonString = userInfo.jsonStringFullSnake()
             let newUserInfo = JSON(parseJSON: userInfoJsonString)
@@ -1638,7 +1641,10 @@ extension UnityManager {
     
     func authCoreDisconnect() {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { try await self.auth.disconnect() }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.disconnect()
+        }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "disconnect")
         
@@ -1647,7 +1653,10 @@ extension UnityManager {
     
     func authCoreIsConnected() {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { try await self.auth.isConnected() }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.isConnected()
+        }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "isConnected")
         
@@ -1680,7 +1689,10 @@ extension UnityManager {
             return
         }
                 
-        let observable = Single<Bool>.fromAsync { try await self.auth.switchChain(chainInfo: chainInfo) }.catch { _ in
+        let observable = Single<Bool>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.switchChain(chainInfo: chainInfo)
+        }.catch { _ in
             .just(false)
         }
         
@@ -1691,7 +1703,10 @@ extension UnityManager {
     
     func authCoreChangeMasterPassword() {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Bool>.fromAsync { try await self.auth.changeMasterPassword() }
+        let observable = Single<Bool>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.changeMasterPassword()
+        }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "changeMasterPassword")
 #endif
@@ -1728,7 +1743,10 @@ extension UnityManager {
     
     func authCoreOpenAccountAndSecurity() {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { try self.auth.openAccountAndSecurity() }.map {
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            try self.auth.openAccountAndSecurity()
+        }.map {
             ""
         }
         
@@ -1746,7 +1764,10 @@ extension UnityManager {
     
     func authCoreEvmPersonalSign(_ json: String) {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { try await self.auth.evm.personalSign(json) }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.evm.personalSign(json)
+        }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
 #endif
@@ -1754,7 +1775,10 @@ extension UnityManager {
     
     func authCoreEvmPersonalSignUnique(_ json: String) {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { try await self.auth.evm.personalSignUnique(json) }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.evm.personalSignUnique(json)
+        }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
 #endif
@@ -1762,7 +1786,10 @@ extension UnityManager {
     
     func authCoreEvmSignTypedData(_ json: String) {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { try await self.auth.evm.signTypedData(json) }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.evm.signTypedData(json)
+        }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmSignTypedData")
 #endif
@@ -1770,7 +1797,10 @@ extension UnityManager {
     
     func authCoreEvmSignTypedDataUnique(_ json: String) {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { try await self.auth.evm.signTypedDataUnique(json) }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.evm.signTypedDataUnique(json)
+        }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmSignTypedDataUnique")
 #endif
@@ -1802,7 +1832,10 @@ extension UnityManager {
         if aaService != nil, aaService!.isAAModeEnable() {
             sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
         } else {
-            sendObservable = Single<Void>.fromAsync { try await self.auth.evm.sendTransaction(transaction, feeMode: feeMode) }
+            sendObservable = Single<Void>.fromAsync { [weak self] in
+                guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+                return try await self.auth.evm.sendTransaction(transaction, feeMode: feeMode)
+            }
         }
         
         latestWalletType = .authCore
@@ -1867,7 +1900,10 @@ extension UnityManager {
 #if canImport(ParticleAuthCore)
         let serializedMessage = Base58.encode(message.data(using: .utf8)!)
         
-        let observable = Single<Void>.fromAsync { try await self.auth.solana.signMessage(serializedMessage) }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.solana.signMessage(serializedMessage)
+        }
     
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignMessage")
 #endif
@@ -1876,7 +1912,10 @@ extension UnityManager {
     func authCoreSolanaSignTransaction(_ json: String) {
 #if canImport(ParticleAuthCore)
         
-        let observable = Single<Void>.fromAsync { try await self.auth.solana.signTransaction(json) }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.solana.signTransaction(json)
+        }
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignTransaction")
 #endif
     }
@@ -1885,7 +1924,10 @@ extension UnityManager {
 #if canImport(ParticleAuthCore)
         
         let transactions = JSON(parseJSON: json).arrayValue.map { $0.stringValue }
-        let observable = Single<Void>.fromAsync { try await self.auth.solana.signAllTransactions(transactions) }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.solana.signAllTransactions(transactions)
+        }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignAllTransactions")
         
@@ -1896,7 +1938,10 @@ extension UnityManager {
 #if canImport(ParticleAuthCore)
         let transaction = json
         
-        let observable = Single<Void>.fromAsync { try await self.auth.solana.signAndSendTransaction(transaction) }
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.solana.signAndSendTransaction(transaction)
+        }
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignAndSendTransaction")
 #endif
     }
@@ -2022,8 +2067,10 @@ extension UnityManager: MessageSigner {
             return ParticleAuthService.signMessage(message)
         } else if walletType == .authCore {
 #if canImport(ParticleAuthCore)
-            return Single<String>.fromAsync {
-                try await self.auth.evm.personalSign(message)
+            return Single<String>.fromAsync { [weak self] in
+                guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+                
+                return try await self.auth.evm.personalSign(message)
             }
 #else
             print("authCore framework is not added")

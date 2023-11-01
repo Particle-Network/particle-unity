@@ -766,7 +766,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8300308002588735750}
         m_TargetAssemblyTypeName: Network.Particle.Scripts.Test.AADemo, Assembly-CSharp
-        m_MethodName: BatchSendTransactionsByAA
+        m_MethodName: BatchSendTransactionsByAuthCore
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
