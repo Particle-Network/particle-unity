@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
@@ -353,9 +354,9 @@ namespace Network.Particle.Scripts.Core
             return "0x" + serialized;
         }
 
-        public static async Task<string> GetSmartAccount(string[] eoaAddresses)
+        public static async Task<string> GetSmartAccount(SmartAccountObject[] objects)
         {
-            var result = await Rpc("particle_aa_getSmartAccount", new List<object> { eoaAddresses });
+            var result = await Rpc("particle_aa_getSmartAccount", objects.Cast<object>().ToList());
             return result;
         }
     }

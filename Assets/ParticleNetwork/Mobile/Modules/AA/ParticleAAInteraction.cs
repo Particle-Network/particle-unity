@@ -8,11 +8,11 @@ namespace Network.Particle.Scripts.Core
 {
     public static class ParticleAAInteraction
     {
-        public static void Init(Dictionary<int, string> dappApiKeys)
+        public static void Init(Dictionary<int, string> biconomyApiKeys)
         {
             var obj = new JObject
             {
-                { "dapp_api_keys", JObject.FromObject(dappApiKeys) },
+                { "biconomy_api_keys", JObject.FromObject(biconomyApiKeys) },
             };
 
             var json = JsonConvert.SerializeObject(obj);

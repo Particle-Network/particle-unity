@@ -361,6 +361,22 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
+        
+        /// <summary>
+        /// Set Show Smart Account Setting in Setting page
+        /// </summary>
+        /// <param name="show">Set true to show smart account setting in setting page, vice versa, default value is true.</param>
+        public static void SetShowSmartAccountSetting(bool show = true)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("setShowSmartAccountSetting",show);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setShowSmartAccountSetting(show);
+#else
+
+#endif
+        }
 
         /// <summary>
         /// Set Support Chain

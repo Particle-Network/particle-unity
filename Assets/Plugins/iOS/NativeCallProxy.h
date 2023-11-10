@@ -23,6 +23,10 @@
 - (void) setWebAuthConfig:(NSString* _Nonnull)json;
 - (void) setFiatCoin:(NSString*_Nonnull)json;
 - (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
+- (void) setAAAccountName:(NSString* _Nonnull)json;
+- (void) setAAVersionNumber:(NSString* _Nonnull)json;
+- (NSString* _Nonnull) getAAAccountName;
+- (NSString* _Nonnull) getAAVersionNumber;
 
 // Particle Auth Service
 - (void) login:(NSString* _Nonnull)json;
@@ -66,6 +70,7 @@
 - (void) switchWallet:(NSString*_Nonnull)json;
 - (void) setShowAppearanceSetting:(BOOL)show;
 - (void) setShowLanguageSetting:(BOOL)show;
+- (void) setShowSmartAccountSetting:(BOOL)show;
 - (void) setSupportWalletConnect:(BOOL)enable;
 - (void) setSupportDappBrowser:(BOOL)enable;
 - (void) particleWalletConnectInitialize:(NSString*_Nonnull)json;
@@ -96,8 +101,6 @@
 - (void) adapterExportWalletPrivateKey:(NSString* _Nonnull)json;
 - (void) adapterLogin:(NSString* _Nonnull)json;
 - (void) adapterVerify:(NSString* _Nonnull)json;
-- (void) adapterSwitchEthereumChain:(NSString* _Nonnull)json;
-- (void) adapterAddEthereumChain:(NSString* _Nonnull)json;
 - (NSString* _Nonnull) adapterWalletReadyState:(NSString* _Nonnull)json;
 
 
@@ -144,5 +147,6 @@ __attribute__ ((visibility("default")))
 +(void) registerAPIforNativeCalls:(id<NativeCallsProtocol>_Nonnull) aApi;
 
 @end
+
 
 

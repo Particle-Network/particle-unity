@@ -105,9 +105,10 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
 extension UnityManager {
     func initialize(_ json: String) {
         let data = JSON(parseJSON: json)
-        let name = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else {
+        let name = data["chain_name"].stringValue.lowercased()
+        let chainType: ChainType = name == "solana" ? .solana : .evm
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else {
             return print("initialize error, can't find right chain for \(name), chainId \(chainId)")
         }
         let env = data["env"].stringValue.lowercased()
@@ -131,7 +132,9 @@ extension UnityManager {
     func setChainInfo(_ json: String) -> Bool {
         let data = JSON(parseJSON: json)
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else { return false }
+        let name = data["chain_name"].stringValue.lowercased()
+        let chainType: ChainType = name == "solana" ? .solana : .evm
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else { return false }
         ParticleNetwork.setChainInfo(chainInfo)
         return true
     }
@@ -194,6 +197,26 @@ extension UnityManager {
         let promptSettingWhenSign = data["prompt_setting_when_sign"].intValue
         let promptMasterPasswordSettingWhenLogin = data["prompt_master_password_setting_when_login"].intValue
         ParticleNetwork.setSecurityAccountConfig(config: .init(promptSettingWhenSign: promptSettingWhenSign, promptMasterPasswordSettingWhenLogin: promptMasterPasswordSettingWhenLogin))
+    }
+    
+    func setAAAccountName(_ json: String) {
+        if let accountName = AA.AccountName(rawValue: json.uppercased()) {
+            ParticleNetwork.setAAAccountName(accountName)
+        }
+    }
+    
+    func setAAVersionNumber(_ json: String) {
+        if let versionNumbr = AA.VersionNumber(rawValue: json.uppercased()) {
+            ParticleNetwork.setAAVersionNumber(versionNumbr)
+        }
+    }
+    
+    func getAAAccountName() -> String {
+        ParticleNetwork.getAAAccountName().rawValue
+    }
+    
+    func getAAVersionNumber() -> String {
+        ParticleNetwork.getAAVersionNumber().rawValue
     }
 }
 
@@ -288,29 +311,34 @@ extension UnityManager {
     }
     
     func signMessage(_ message: String) {
+        let chainInfo = ParticleNetwork.getChainInfo()
         var serializedMessage = ""
-        switch ParticleNetwork.getChainInfo().chain {
+        switch chainInfo.chainType {
         case .solana:
             serializedMessage = Base58.encode(message.data(using: .utf8)!)
         default:
             serializedMessage = message
         }
         
-        subscribeAndCallback(observable: ParticleAuthService.signMessage(serializedMessage), unityName: UnityManager.authSystemName)
+        subscribeAndCallback(observable: ParticleAuthService.signMessage(serializedMessage, chainInfo: chainInfo), unityName: UnityManager.authSystemName)
     }
     
     func signMessageUnique(_ message: String) {
-        subscribeAndCallback(observable: ParticleAuthService.signMessageUnique(message), unityName: UnityManager.authSystemName)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        subscribeAndCallback(observable: ParticleAuthService.signMessageUnique(message, chainInfo: chainInfo), unityName: UnityManager.authSystemName)
     }
     
     func signTransaction(_ transaction: String) {
-        subscribeAndCallback(observable: ParticleAuthService.signTransaction(transaction), unityName: UnityManager.authSystemName)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        subscribeAndCallback(observable: ParticleAuthService.signTransaction(transaction, chainInfo: chainInfo), unityName: UnityManager.authSystemName)
     }
     
     func signAllTransactions(_ transactions: String) {
         let transactions = JSON(parseJSON: transactions).arrayValue.map { $0.stringValue }
         
-        subscribeAndCallback(observable: ParticleAuthService.signAllTransactions(transactions), unityName: UnityManager.authSystemName)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        
+        subscribeAndCallback(observable: ParticleAuthService.signAllTransactions(transactions, chainInfo: chainInfo), unityName: UnityManager.authSystemName)
     }
     
     func signAndSendTransaction(_ json: String) {
@@ -335,13 +363,14 @@ extension UnityManager {
                 
         let aaService = ParticleNetwork.getAAService()
         var sendObservable: Single<String>
-        if ParticleNetwork.getChainInfo().chain != .solana, aaService != nil, aaService!.isAAModeEnable() {
-            sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        if chainInfo.chainType != .solana, aaService != nil, aaService!.isAAModeEnable() {
+            sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote, chainInfo: chainInfo)
         } else {
-            sendObservable = ParticleAuthService.signAndSendTransaction(transaction, feeMode: feeMode)
+            sendObservable = ParticleAuthService.signAndSendTransaction(transaction, feeMode: feeMode, chainInfo: chainInfo)
         }
         
-        if ParticleNetwork.getChainInfo().chain != .solana {
+        if chainInfo.chainType != .solana {
             latestPublicAddress = ParticleAuthService.getAddress()
             latestWalletType = .particle
         }
@@ -384,7 +413,9 @@ extension UnityManager {
         latestPublicAddress = ParticleAuthService.getAddress()
         latestWalletType = .particle
         
-        let sendObservable: Single<String> = aaService.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        
+        let sendObservable: Single<String> = aaService.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote, chainInfo: chainInfo)
                 
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authSystemName)
     }
@@ -404,7 +435,9 @@ extension UnityManager {
             signTypedDataVersion = .v4Unique
         }
         
-        subscribeAndCallback(observable: ParticleAuthService.signTypedData(message, version: signTypedDataVersion ?? .v4), unityName: UnityManager.authSystemName)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        
+        subscribeAndCallback(observable: ParticleAuthService.signTypedData(message, version: signTypedDataVersion ?? .v4, chainInfo: chainInfo), unityName: UnityManager.authSystemName)
     }
     
     func getAddress() -> String {
@@ -437,7 +470,9 @@ extension UnityManager {
     func setChainInfoAsync(_ json: String) {
         let data = JSON(parseJSON: json)
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else { return }
+        let name = data["chain_name"].stringValue.lowercased()
+        let chainType: ChainType = name == "solana" ? .solana : .evm
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else { return }
         if ParticleAuthService.isLogin() == false {
             ParticleNetwork.setChainInfo(chainInfo)
             let null: String? = nil
@@ -565,8 +600,8 @@ extension UnityManager {
         } else {
             network = nil
         }
+        let chainInfo = ParticleNetwork.getChainInfo()
         if network == nil {
-            let chainInfo = ParticleNetwork.getChainInfo()
             switch chainInfo.chain {
             case .solana:
                 network = OpenBuyNetwork.solana
@@ -602,7 +637,7 @@ extension UnityManager {
         var buyConfig = BuyCryptoConfig()
         buyConfig.network = network
         buyConfig.walletAddress = walletAddress
-        buyConfig.cryptoCoin = cryptoCoin ?? TokenInfo.nativeToken.symbol
+        buyConfig.cryptoCoin = cryptoCoin ?? chainInfo.nativeToken.symbol
         buyConfig.fiatAmt = fiatAmt
         if fiatCoin != nil {
             buyConfig.fiatCoin = fiatCoin!
@@ -654,10 +689,11 @@ extension UnityManager {
     }
     
     func setSupportChain(_ json: String) {
-        let chains = JSON(parseJSON: json).arrayValue.map {
-            $0["chain_id"].intValue
-        }.compactMap {
-            ParticleNetwork.searchChainInfo(by: $0)?.chain
+        let chains = JSON(parseJSON: json).arrayValue.compactMap {
+            let chainId = $0["chain_id"].intValue
+            let chainName = $0["chain_name"].stringValue.lowercased()
+            let chainType: ChainType = chainName == "solana" ? .solana : .evm
+            return ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType)?.chain
         }
         ParticleWalletGUI.setSupportChain(chains)
     }
@@ -798,6 +834,10 @@ extension UnityManager {
         ParticleWalletGUI.setSupportDappBrowser(enable)
     }
     
+    func setShowSmartAccountSetting(_ show: Bool) {
+        ParticleWalletGUI.setShowSmartAccountSetting(show)
+    }
+    
     func particleWalletConnectInitialize(_ json: String) {
         let data = JSON(parseJSON: json)
         let name = data["name"].stringValue
@@ -918,9 +958,10 @@ extension UnityManager {
 extension UnityManager {
     func particleConnectInitialize(_ json: String) {
         let data = JSON(parseJSON: json)
-        let chainName = data["chain_name"].stringValue.lowercased()
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else {
+        let chainName = data["chain_name"].stringValue.lowercased()
+        let chainType: ChainType = chainName == "solana" ? .solana : .evm
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else {
             return print("initialize error, can't find right chain for \(chainName), chainId \(chainId)")
         }
         let env = data["env"].stringValue.lowercased()
@@ -1189,7 +1230,9 @@ extension UnityManager {
             print("adapter for \(walletTypeString) is not init ")
             return
         }
-        if ParticleNetwork.getChainInfo().chain != .solana {
+        let chainInfo = ParticleNetwork.getChainInfo()
+        
+        if chainInfo.chainType != .solana {
             latestPublicAddress = publicAddress
             latestWalletType = walletType
         }
@@ -1197,9 +1240,9 @@ extension UnityManager {
         let aaService = ParticleNetwork.getAAService()
         var sendObservable: Single<String>
         if aaService != nil, aaService!.isAAModeEnable() {
-            sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+            sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote, chainInfo: chainInfo)
         } else {
-            sendObservable = adapter.signAndSendTransaction(publicAddress: publicAddress, transaction: transaction, feeMode: feeMode)
+            sendObservable = adapter.signAndSendTransaction(publicAddress: publicAddress, transaction: transaction, feeMode: feeMode, chainInfo: chainInfo)
         }
                 
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.connectSystemName, methodName: "signAndSendTransaction")
@@ -1246,8 +1289,8 @@ extension UnityManager {
               
         latestPublicAddress = publicAddress
         latestWalletType = walletType
-                
-        let sendObservable = aaService.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        let sendObservable = aaService.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote, chainInfo: chainInfo)
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.connectSystemName, methodName: "batchSendTransactions")
     }
     
@@ -1454,57 +1497,6 @@ extension UnityManager {
         subscribeAndCallback(observable: adapter.verify(message: siwe, against: signature), unityName: UnityManager.connectSystemName, methodName: "verify")
     }
     
-    func adapterAddEthereumChain(_ json: String) {
-        let data = JSON(parseJSON: json)
-        
-        let walletTypeString = data["wallet_type"].stringValue
-        let publicAddress = data["public_address"].stringValue
-        let chainId = data["chain_id"].intValue
-        let chainName = data["chain_name"].string
-        let rpcUrl = data["rpc_url"].string
-        let blockExplorerUrl = data["block_explorer_url"].string
-        let nativeCurrencyName = data["native_currency"]["name"].string
-        let nativeCurrencySymbol = data["native_currency"]["symbol"].string
-        let nativeCurrencyDecimals = data["native_currency"]["decimals"].uInt8
-        
-        var nativeCurrency: NativeCurrency?
-        if nativeCurrencyName != nil, nativeCurrencySymbol != nil, nativeCurrencyDecimals != nil {
-            nativeCurrency = NativeCurrency(name: nativeCurrencyName!, symbol: nativeCurrencySymbol!, decimals: nativeCurrencyDecimals!)
-        }
-        
-        guard let walletType = map2WalletType(from: walletTypeString) else {
-            print("walletType \(walletTypeString) is not existed ")
-            return
-        }
-        
-        guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypeString) is not init ")
-            return
-        }
-        
-        subscribeAndCallback(observable: adapter.addEthereumChain(publicAddress: publicAddress, chainId: chainId, chainName: chainName, nativeCurrency: nativeCurrency, rpcUrl: rpcUrl, blockExplorerUrl: blockExplorerUrl), unityName: UnityManager.connectSystemName, methodName: "addEthereumChain")
-    }
-    
-    func adapterSwitchEthereumChain(_ json: String) {
-        let data = JSON(parseJSON: json)
-            
-        let walletTypeString = data["wallet_type"].stringValue
-        let publicAddress = data["public_address"].stringValue
-        let chainId = data["chain_id"].intValue
-        
-        guard let walletType = map2WalletType(from: walletTypeString) else {
-            print("walletType \(walletTypeString) is not existed ")
-            return
-        }
-        
-        guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypeString) is not init ")
-            return
-        }
-        
-        subscribeAndCallback(observable: adapter.switchEthereumChain(publicAddress: publicAddress, chainId: chainId), unityName: UnityManager.connectSystemName, methodName: "switchEthereumChain")
-    }
-    
     func adapterWalletReadyState(_ json: String) -> String {
         let data = JSON(parseJSON: json)
         let walletTypeString = data["wallet_type"].stringValue
@@ -1546,10 +1538,11 @@ extension UnityManager {
     }
 
     func setWalletConnectV2SupportChainInfos(_ json: String) {
-        let chainInfos = JSON(parseJSON: json).arrayValue.map {
-            $0["chain_id"].intValue
-        }.compactMap {
-            ParticleNetwork.searchChainInfo(by: $0)
+        let chainInfos = JSON(parseJSON: json).arrayValue.compactMap {
+            let chainId = $0["chain_id"].intValue
+            let chainName = $0["chain_name"].stringValue.lowercased()
+            let chainType: ChainType = chainName == "solana" ? .solana : .evm
+            return ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType)
         }
         ParticleConnect.setWalletConnectV2SupportChainInfos(chainInfos)
     }
@@ -1561,7 +1554,7 @@ extension UnityManager {
     func particleAAInitialize(_ json: String) {
         let data = JSON(parseJSON: json)
         
-        let dappAppKeysDict = data["dapp_api_keys"].dictionaryValue
+        let dappAppKeysDict = data["biconomy_api_keys"].dictionaryValue
         var dappAppKeys: [Int: String] = [:]
         
         for (key, value) in dappAppKeysDict {
@@ -1588,7 +1581,8 @@ extension UnityManager {
     
     func isDeploy(_ json: String) {
         let eoaAddress = json
-        subscribeAndCallback(observable: aaService.isDeploy(eoaAddress: eoaAddress), unityName: UnityManager.aaSystemName)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        subscribeAndCallback(observable: aaService.isDeploy(eoaAddress: eoaAddress, chainInfo: chainInfo), unityName: UnityManager.aaSystemName)
     }
     
     func rpcGetFeeQuotes(_ json: String) {
@@ -1597,14 +1591,16 @@ extension UnityManager {
         let transactions = data["transactions"].arrayValue.map {
             $0.stringValue
         }
-               
-        subscribeAndCallback(observable: aaService.rpcGetFeeQuotes(eoaAddress: eoaAddress, transactions: transactions), unityName: UnityManager.aaSystemName)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        subscribeAndCallback(observable: aaService.rpcGetFeeQuotes(eoaAddress: eoaAddress, transactions: transactions, chainInfo: chainInfo), unityName: UnityManager.aaSystemName)
     }
     
     func isSupportChainInfo(_ json: String) -> Bool {
         let data = JSON(parseJSON: json)
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else {
+        let chainName = data["chain_name"].stringValue.lowercased()
+        let chainType: ChainType = chainName == "solana" ? .solana : .evm
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else {
             return false
         }
         let result = aaService.isSupportChainInfo(chainInfo)
@@ -1685,7 +1681,9 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
 
         let chainId = data["chain_id"].intValue
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId) else {
+        let chainName = data["chain_name"].stringValue.lowercased()
+        let chainType: ChainType = chainName == "solana" ? .solana : .evm
+        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else {
             return
         }
                 
@@ -1764,9 +1762,10 @@ extension UnityManager {
     
     func authCoreEvmPersonalSign(_ json: String) {
 #if canImport(ParticleAuthCore)
+        let chainInfo = ParticleNetwork.getChainInfo()
         let observable = Single<Void>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.evm.personalSign(json)
+            return try await self.auth.evm.personalSign(json, chainInfo: chainInfo)
         }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
@@ -1775,9 +1774,10 @@ extension UnityManager {
     
     func authCoreEvmPersonalSignUnique(_ json: String) {
 #if canImport(ParticleAuthCore)
+        let chainInfo = ParticleNetwork.getChainInfo()
         let observable = Single<Void>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.evm.personalSignUnique(json)
+            return try await self.auth.evm.personalSignUnique(json, chainInfo: chainInfo)
         }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
@@ -1786,9 +1786,10 @@ extension UnityManager {
     
     func authCoreEvmSignTypedData(_ json: String) {
 #if canImport(ParticleAuthCore)
+        let chainInfo = ParticleNetwork.getChainInfo()
         let observable = Single<Void>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.evm.signTypedData(json)
+            return try await self.auth.evm.signTypedData(json, chainInfo: chainInfo)
         }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmSignTypedData")
@@ -1797,9 +1798,10 @@ extension UnityManager {
     
     func authCoreEvmSignTypedDataUnique(_ json: String) {
 #if canImport(ParticleAuthCore)
+        let chainInfo = ParticleNetwork.getChainInfo()
         let observable = Single<Void>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.evm.signTypedDataUnique(json)
+            return try await self.auth.evm.signTypedDataUnique(json, chainInfo: chainInfo)
         }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmSignTypedDataUnique")
@@ -1829,12 +1831,13 @@ extension UnityManager {
                 
         let aaService = ParticleNetwork.getAAService()
         var sendObservable: Single<String>
+        let chainInfo = ParticleNetwork.getChainInfo()
         if aaService != nil, aaService!.isAAModeEnable() {
-            sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+            sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote, chainInfo: chainInfo)
         } else {
             sendObservable = Single<Void>.fromAsync { [weak self] in
                 guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-                return try await self.auth.evm.sendTransaction(transaction, feeMode: feeMode)
+                return try await self.auth.evm.sendTransaction(transaction, feeMode: feeMode, chainInfo: chainInfo)
             }
         }
         
@@ -1881,8 +1884,8 @@ extension UnityManager {
         
         latestPublicAddress = auth.evm.getAddress()
         latestWalletType = .authCore
-        
-        let sendObservable: Single<String> = aaService.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote)
+        let chainInfo = ParticleNetwork.getChainInfo()
+        let sendObservable: Single<String> = aaService.quickSendTransactions(transactions, feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote, chainInfo: chainInfo)
                 
         subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authCoreSystemName, methodName: "batchSendTransactions")
 #endif
@@ -1899,10 +1902,10 @@ extension UnityManager {
     func authCoreSolanaSignMessage(_ message: String) {
 #if canImport(ParticleAuthCore)
         let serializedMessage = Base58.encode(message.data(using: .utf8)!)
-        
+        let chainInfo = ParticleNetwork.getChainInfo()
         let observable = Single<Void>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.solana.signMessage(serializedMessage)
+            return try await self.auth.solana.signMessage(serializedMessage, chainInfo: chainInfo)
         }
     
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignMessage")
@@ -1911,10 +1914,10 @@ extension UnityManager {
     
     func authCoreSolanaSignTransaction(_ json: String) {
 #if canImport(ParticleAuthCore)
-        
+        let chainInfo = ParticleNetwork.getChainInfo()
         let observable = Single<Void>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.solana.signTransaction(json)
+            return try await self.auth.solana.signTransaction(json, chainInfo: chainInfo)
         }
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignTransaction")
 #endif
@@ -1922,11 +1925,11 @@ extension UnityManager {
     
     func authCoreSolanaSignAllTransactions(_ json: String) {
 #if canImport(ParticleAuthCore)
-        
+        let chainInfo = ParticleNetwork.getChainInfo()
         let transactions = JSON(parseJSON: json).arrayValue.map { $0.stringValue }
         let observable = Single<Void>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.solana.signAllTransactions(transactions)
+            return try await self.auth.solana.signAllTransactions(transactions, chainInfo: chainInfo)
         }
         
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignAllTransactions")
@@ -1937,10 +1940,10 @@ extension UnityManager {
     func authCoreSolanaSignAndSendTransaction(_ json: String) {
 #if canImport(ParticleAuthCore)
         let transaction = json
-        
+        let chainInfo = ParticleNetwork.getChainInfo()
         let observable = Single<Void>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.solana.signAndSendTransaction(transaction)
+            return try await self.auth.solana.signAndSendTransaction(transaction, chainInfo: chainInfo)
         }
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignAndSendTransaction")
 #endif
@@ -2057,7 +2060,7 @@ extension UnityManager {
 }
 
 extension UnityManager: MessageSigner {
-    public func signMessage(_ message: String) -> RxSwift.Single<String> {
+    public func signMessage(_ message: String, chainInfo _: ParticleNetworkBase.ParticleNetwork.ChainInfo?) -> RxSwift.Single<String> {
         guard let walletType = latestWalletType else {
             print("walletType is nil")
             return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
@@ -2067,10 +2070,11 @@ extension UnityManager: MessageSigner {
             return ParticleAuthService.signMessage(message)
         } else if walletType == .authCore {
 #if canImport(ParticleAuthCore)
+            let chainInfo = ParticleNetwork.getChainInfo()
             return Single<String>.fromAsync { [weak self] in
                 guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
                 
-                return try await self.auth.evm.personalSign(message)
+                return try await self.auth.evm.personalSign(message, chainInfo: chainInfo)
             }
 #else
             print("authCore framework is not added")

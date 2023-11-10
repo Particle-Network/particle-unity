@@ -116,6 +116,10 @@
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/DAppMetaData.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Example.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/ChainChoice.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/AAAccountName.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/AAVersionNumber.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/SmartAccountObject.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Toast/Scripts/ToastTip.cs" />
      <Folder Include="Assets" />
      <Folder Include="Assets/ParticleNetwork/Mobile/Modules/Connect" />
      <None Include="Library/PackageCache/com.unity.modules.subsystems@1.0.0/package.json" />
@@ -146,6 +150,7 @@
      <None Include="Library/PackageCache/com.unity.modules.terrainphysics@1.0.0/package.json" />
      <Folder Include="Assets/ParticleNetwork/Mobile/Model" />
      <Folder Include="Library/PackageCache/com.unity.nuget.newtonsoft-json@3.0.2/Runtime/AOT" />
+     <Folder Include="Assets/ParticleNetwork/Mobile/Demo/Toast/Scripts" />
      <Folder Include="Assets/ParticleNetwork/Windows/Modules/Models" />
      <Folder Include="Assets/ParticleNetwork/Mobile/Modules/Auth" />
      <Folder Include="Library/PackageCache/com.unity.modules.screencapture@1.0.0" />
@@ -198,6 +203,7 @@
      <Folder Include="Library/PackageCache/com.unity.modules.tilemap@1.0.0" />
      <Folder Include="Library/PackageCache/com.unity.modules.ui@1.0.0" />
      <Folder Include="Library/PackageCache/com.unity.modules.androidjni@1.0.0" />
+     <Folder Include="Assets/ParticleNetwork/Mobile/Demo/Toast/Prefabs" />
      <Folder Include="Assets/ParticleNetwork/Mobile/Modules/Core/Utils" />
      <Folder Include="Library/PackageCache/com.unity.textmeshpro@3.0.6/Editor Resources/Gizmos" />
      <Folder Include="Assets/ParticleNetwork/Mobile/Modules/GUI" />
@@ -250,6 +256,7 @@
      <Folder Include="Assets/ParticleNetwork/Mobile/Modules" />
      <Folder Include="Library/PackageCache/com.unity.ext.nunit@2.0.3/net40" />
      <None Include="Library/PackageCache/com.unity.modules.ui@1.0.0/package.json" />
+     <Folder Include="Assets/ParticleNetwork/Mobile/Demo/Toast" />
      <None Include="Library/PackageCache/com.unity.ide.vscode@1.2.5/package.json" />
      <Reference Include="UnityEngine">
      <HintPath>/Applications/Unity/Hub/Editor/2021.3.2f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>

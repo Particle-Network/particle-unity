@@ -181,6 +181,11 @@ namespace Network.Particle.Scripts.Test
         {
             ParticleWalletGUI.SetShowLanguageSetting(true);
         }
+        
+        public void SetShowSmartAccountSetting()
+        {
+            ParticleWalletGUI.SetShowSmartAccountSetting(true);
+        }
 
         public void SetShowAppearanceSetting()
         {

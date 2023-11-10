@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using CommonTip.Script;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
@@ -106,7 +107,9 @@ namespace Network.Particle.Scripts.Test
 
         public void IsLogin()
         {
-            Debug.Log(ParticleAuthServiceInteraction.IsLogin());
+            var isLogin = ParticleAuthServiceInteraction.IsLogin();
+            Debug.Log($"isLogin {isLogin}");
+            ShowToast($"isLogin {isLogin}");
         }
 
         public async void IsLoginAsync()
@@ -321,6 +324,30 @@ namespace Network.Particle.Scripts.Test
             ParticleNetwork.SetWebAuthConfig(true, Appearance.DARK);
         }
 
+        public void SetAAAccountName()
+        {
+            ParticleNetwork.SetAAAccountName(AAAccountName.BICONOMY);
+        }
+
+        public void SetAAVersionNumber()
+        {
+            ParticleNetwork.SetAAVersionNumber(AAVersionNumber.V1_0_0());
+        }
+
+        public void GetAAAccountName()
+        {
+           var accountName = ParticleNetwork.GetAAAccountName();
+           Debug.Log(accountName.ToString());
+           ShowToast(accountName.ToString());
+        }
+
+        public void GetAAVersionNumber()
+        {
+            var versionNumber = ParticleNetwork.GetAAVersionNumber();
+            Debug.Log(versionNumber.version);
+            ShowToast(versionNumber.version);
+        }
+
 
         public void ShowToast(string message)
         {
@@ -335,7 +362,7 @@ namespace Network.Particle.Scripts.Test
             Toast.CallStatic<AndroidJavaObject>("makeText", currentActivity, message, Toast.GetStatic<int>("LENGTH_LONG")).Call("show");
         }));
 #elif UNITY_IOS && !UNITY_EDITOR
-
+            ToastTip.Instance.OnShow(message);
 #endif
         }
 
@@ -378,6 +405,7 @@ namespace Network.Particle.Scripts.Test
             var chainInfo = ParticleNetwork.GetChainInfo();
             Debug.Log(
                 $"chain name {chainInfo.Name}, chain id {chainInfo.Id}, chain id name {chainInfo.Network}");
+            ShowToast($"chain name {chainInfo.Name}, chain id {chainInfo.Id}, chain id name {chainInfo.Network}");
         }
 
         public void SetiOSModalStyle()

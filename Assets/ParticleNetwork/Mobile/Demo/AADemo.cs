@@ -30,7 +30,7 @@ namespace Network.Particle.Scripts.Test
 
         public void Init()
         {
-            var dappApiKeys = new Dictionary<int, string>
+            var biconomyApiKeys = new Dictionary<int, string>
             {
                 { 1, "your ethereum mainnet key" },
                 { 5, "your ethereum goerli key" },
@@ -38,7 +38,7 @@ namespace Network.Particle.Scripts.Test
                 { 80001, "hYZIwIsf2.e18c790b-cafb-4c4e-a438-0289fc25dba1" }
             };
 
-            ParticleAAInteraction.Init(dappApiKeys);
+            ParticleAAInteraction.Init(biconomyApiKeys);
         }
 
         public void IsSupportChainInfo()
@@ -96,7 +96,8 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                // get your smart account by account name and version.
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransacion(smartAccountAddress);
                 var nativeResultData =
@@ -127,7 +128,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransacion(smartAccountAddress);
 
@@ -157,7 +158,7 @@ namespace Network.Particle.Scripts.Test
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
+                    Debug.Log($"signature {nativeResultData.data}");
                 }
                 else
                 {
@@ -177,7 +178,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransacion(smartAccountAddress);
 
@@ -203,7 +204,7 @@ namespace Network.Particle.Scripts.Test
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
+                    Debug.Log($"signature {nativeResultData.data}");
                 }
                 else
                 {
@@ -223,7 +224,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransacion(smartAccountAddress);
 
@@ -267,7 +268,7 @@ namespace Network.Particle.Scripts.Test
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
+                    Debug.Log($"signature {nativeResultData.data}");
                 }
                 else
                 {
@@ -287,7 +288,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransacion(smartAccountAddress);
 
@@ -316,7 +317,7 @@ namespace Network.Particle.Scripts.Test
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
+                    Debug.Log($"signature {nativeResultData.data}");
                 }
                 else
                 {
@@ -336,7 +337,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = "0x498c9b8379E2e16953a7bEvmService1FF94ea11893d09A3Ed";
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransactionWithConnect(smartAccountAddress);
 
@@ -366,7 +367,7 @@ namespace Network.Particle.Scripts.Test
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
+                    Debug.Log($"signature {nativeResultData.data}");
                 }
                 else
                 {
@@ -386,7 +387,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransactionWithConnect(smartAccountAddress);
 
@@ -413,7 +414,7 @@ namespace Network.Particle.Scripts.Test
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
+                    Debug.Log($"signature {nativeResultData.data}");
                 }
                 else
                 {
@@ -433,7 +434,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = "";
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransactionWithConnect(smartAccountAddress);
 
@@ -477,7 +478,7 @@ namespace Network.Particle.Scripts.Test
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
+                    Debug.Log($"signature {nativeResultData.data}");
                 }
                 else
                 {
@@ -497,7 +498,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransacion(smartAccountAddress);
 
@@ -527,7 +528,7 @@ namespace Network.Particle.Scripts.Test
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
+                    Debug.Log($"signature {nativeResultData.data}");
                 }
                 else
                 {
@@ -547,7 +548,7 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 var eoaAddress = ParticleAuthCoreInteraction.EvmGetAddress();
-                var smartAccountResult = await EvmService.GetSmartAccount(new[] { eoaAddress });
+                var smartAccountResult = await EvmService.GetSmartAccount(new[] { new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version, eoaAddress) });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
                 var transaction = await TransactionHelper.GetEVMTransacion(smartAccountAddress);
 
@@ -576,7 +577,7 @@ namespace Network.Particle.Scripts.Test
                 if (nativeResultData.isSuccess)
                 {
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
+                    Debug.Log($"signature {nativeResultData.data}");
                 }
                 else
                 {

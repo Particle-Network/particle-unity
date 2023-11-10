@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Network.Particle.Scripts.Core.Utils;
 using Newtonsoft.Json;
@@ -165,6 +166,65 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
+        public static void SetAAAccountName(AAAccountName name)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("setAAAccountName",name.ToString());
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.setAAAccountName(name.ToString());
+#else
+#endif
+        }
+
+        public static AAAccountName GetAAAccountName()
+        {
+            var name = "";
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            name = articleNetwork.CallNative("getAAAccountName");
+#elif UNITY_IOS &&!UNITY_EDITOR
+            name = ParticleNetworkIOSBridge.getAAAccountName();
+#else
+            name = "BICONOMY";
+#endif
+            
+            return (AAAccountName)Enum.Parse(typeof(AAAccountName), name);
+        }
+
+        public static void SetAAVersionNumber(AAVersionNumber versionNumber)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("setAAVersionNumber",versionNumber.version);
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.setAAVersionNumber(versionNumber.version);
+#else
+#endif
+        }
+        
+        public static AAVersionNumber GetAAVersionNumber()
+        {
+            var version = "";
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            version = articleNetwork.CallNative("getAAVersionNumber");
+#elif UNITY_IOS &&!UNITY_EDITOR
+            version = ParticleNetworkIOSBridge.getAAVersionNumber();
+#else
+            version = "1.0.0";
+#endif
+            
+            if (version == "1.0.0")
+            {
+                return AAVersionNumber.V1_0_0();
+            }
+            else
+            {
+                return AAVersionNumber.V1_0_0();
+            }
+        }
+
         public static void CallNative(string methodName, params object[] args)
         {
             Debug.Log("CallNative_methodName " + methodName);
@@ -180,17 +240,15 @@ namespace Network.Particle.Scripts.Core
             GetAndroidJavaObject().Call("runOnUiThread",
                 new AndroidJavaRunnable(() => { GetUnityConnectBridgeClass().CallStatic(methodName, args); }));
         }
-        
+
         public static void CallAuthCoreNative<T>(string methodName, params object[] args)
         {
             Debug.Log("CallAuthCoreNative_methodName " + methodName);
 
             GetAndroidJavaObject().Call("runOnUiThread",
-                new AndroidJavaRunnable(() =>
-                {
-                    GetAuthCoreBridgeClass().CallStatic<T>(methodName, args);
-                }));
+                new AndroidJavaRunnable(() => { GetAuthCoreBridgeClass().CallStatic<T>(methodName, args); }));
         }
+
         public static void CallAuthCoreNative(string methodName, params object[] args)
         {
             Debug.Log("CallAuthCoreNative_methodName " + methodName);
@@ -198,7 +256,7 @@ namespace Network.Particle.Scripts.Core
             GetAndroidJavaObject().Call("runOnUiThread",
                 new AndroidJavaRunnable(() => { GetAuthCoreBridgeClass().CallStatic(methodName, args); }));
         }
-        
+
 
         private static AndroidJavaObject GetAndroidJavaObject()
         {
@@ -213,7 +271,7 @@ namespace Network.Particle.Scripts.Core
             return activityObject;
         }
 
-        
+
         public static AndroidJavaClass GetUnityBridgeClass()
         {
             if (unityBridge != null)

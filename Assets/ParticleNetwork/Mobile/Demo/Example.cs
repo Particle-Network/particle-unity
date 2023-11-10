@@ -55,6 +55,9 @@ namespace Network.Particle.Scripts.Test
 
             // Control if show appearance setting button in setting page.
             ParticleWalletGUI.SetShowAppearanceSetting(true);
+            
+            // Control if show smart account setting button in setting page.
+            ParticleWalletGUI.SetShowSmartAccountSetting(true);
         }
 
         public async void Login()

@@ -16,12 +16,12 @@ namespace Network.Particle.Scripts.Core
     {
         /**
          * {
-	        "chain_name": "BSC",
-	        "chain_id": 56,
-	        "chain_id_name": "Mainnet",
-	        "env": "PRODUCTION",
-	        "metadata": "{"name":"Particle Connect","icon":"https://static.particle.network/wallet-icons/Particle.png","url":"https://particle.network"}",
-	        "rpc_url": null
+            "chain_name": "BSC",
+            "chain_id": 56,
+            "chain_id_name": "Mainnet",
+            "env": "PRODUCTION",
+            "metadata": "{"name":"Particle Connect","icon":"https://static.particle.network/wallet-icons/Particle.png","url":"https://particle.network"}",
+            "rpc_url": null
         }
          */
         public static void Init(ChainInfo chainInfo, DAppMetaData dAppMetadata, [CanBeNull] RpcUrl rpcUrl = null,
@@ -364,54 +364,6 @@ namespace Network.Particle.Scripts.Core
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("verify",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.adapterVerify(json);
-#else
-
-#endif
-        }
-
-        public static void SwitchEthereumChain(WalletType walletType, string publicAddress, long chainId)
-        {
-            var json = JsonConvert.SerializeObject(new JObject
-            {
-                { "wallet_type", walletType.ToString() },
-                { "public_address", publicAddress },
-                { "chain_id", chainId },
-            });
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("switchEthereumChain", json);
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.adapterSwitchEthereumChain(json);
-#else
-
-#endif
-        }
-
-        public static void AddEthereumChain(WalletType walletType, string publicAddress, long chainId,
-            [CanBeNull] string chainName,
-            [CanBeNull] NativeCurrency nativeCurrency, [CanBeNull] string rpcUrl, [CanBeNull] string blockExplorerUrl)
-        {
-            JToken nativeCurrencyJson = "";
-            if (nativeCurrency != null)
-            {
-                nativeCurrencyJson = JToken.FromObject(nativeCurrency);
-            }
-
-            var json = JsonConvert.SerializeObject(new JObject
-            {
-                { "wallet_type", walletType.ToString() },
-                { "public_address", publicAddress },
-                { "chain_id", chainId },
-                { "chain_name", chainName },
-                { "native_currency", nativeCurrencyJson },
-                { "rpc_url", rpcUrl },
-                { "block_explorer_url", blockExplorerUrl }
-            });
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("addEthereumChain",json);
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.adapterAddEthereumChain(json);
 #else
 
 #endif

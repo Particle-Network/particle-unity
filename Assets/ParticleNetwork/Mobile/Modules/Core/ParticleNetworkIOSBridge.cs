@@ -35,6 +35,19 @@ namespace Network.Particle.Scripts.Core
         
         [DllImport("__Internal")]
         public static extern void setWebAuthConfig(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setAAAccountName(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setAAVersionNumber(string json);
+        
+        [DllImport("__Internal")]
+        public static extern string getAAAccountName();
+        
+        [DllImport("__Internal")]
+        public static extern string getAAVersionNumber();
+                
 #endif
 
         // Particle Auth Service
@@ -150,6 +163,9 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void setShowLanguageSetting(bool show);
+        
+        [DllImport("__Internal")]
+        public static extern void setShowSmartAccountSetting(bool show);
 
         [DllImport("__Internal")]
         public static extern void setSupportChain(string json);
@@ -249,12 +265,6 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void adapterVerify(string json);
-
-        [DllImport("__Internal")]
-        public static extern void adapterSwitchEthereumChain(string json);
-
-        [DllImport("__Internal")]
-        public static extern void adapterAddEthereumChain(string json);
 
         [DllImport("__Internal")]
         public static extern string adapterWalletReadyState(string json);

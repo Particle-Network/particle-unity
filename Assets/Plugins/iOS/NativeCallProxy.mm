@@ -57,6 +57,24 @@ extern "C" {
     void setSecurityAccountConfig(const char* json) {
         [api setSecurityAccountConfig:[NSString stringWithUTF8String: json]];
     }
+    
+    void setAAAccountName(const char* json) {
+        [api setAAAccountName:[NSString stringWithUTF8String: json]];
+    }
+    
+    void setAAVersionNumber(const char* json) {
+        [api setAAVersionNumber:[NSString stringWithUTF8String: json]];
+    }
+    
+     char* getAAAccountName() {
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api getAAAccountName] UTF8String]);
+    }
+        
+     char* getAAVersionNumber() {
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api getAAVersionNumber] UTF8String]);
+    }
 }
 
 // Particle Auth Service
@@ -195,7 +213,7 @@ extern "C" {
     
     void setShowTestNetwork(bool show) {
         [api setShowTestNetwork:show];
-    } 
+    }
     
     void setShowManageWallet(bool show) {
         [api setShowManageWallet:show];
@@ -211,6 +229,10 @@ extern "C" {
 
     void setShowLanguageSetting(bool show) {
         [api setShowLanguageSetting:show];
+    }
+
+    void setShowSmartAccountSetting(bool show) {
+        [api setShowSmartAccountSetting:show];
     }
 
     void setShowAppearanceSetting(bool show) {
@@ -330,14 +352,6 @@ extern "C" {
     }
     void adapterVerify(const char* json) {
         [api adapterVerify:[NSString stringWithUTF8String: json]];
-    }
-    
-    void adapterSwitchEthereumChain(const char* json) {
-        [api adapterSwitchEthereumChain:[NSString stringWithUTF8String: json]];
-    }
-    
-    void adapterAddEthereumChain(const char* json) {
-        [api adapterAddEthereumChain:[NSString stringWithUTF8String: json]];
     }
 
     char* adapterWalletReadyState(const char* json) {
@@ -484,4 +498,5 @@ char* cStringCopyPN(const char* string) {
      strcpy(res, string);
      return res;
 }
+
 
