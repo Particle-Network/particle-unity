@@ -2060,7 +2060,7 @@ extension UnityManager {
 }
 
 extension UnityManager: MessageSigner {
-    public func signMessage(_ message: String, chainInfo _: ParticleNetworkBase.ParticleNetwork.ChainInfo?) -> RxSwift.Single<String> {
+    public func signMessage(_ message: String, chainInfo : ParticleNetworkBase.ParticleNetwork.ChainInfo?) -> RxSwift.Single<String> {
         guard let walletType = latestWalletType else {
             print("walletType is nil")
             return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
@@ -2086,7 +2086,7 @@ extension UnityManager: MessageSigner {
                 return .error(ParticleNetwork.ResponseError(code: nil, message: "adapter for \(walletType) is not init"))
             }
         
-            return adapter.signMessage(publicAddress: getEoaAddress(), message: message)
+            return adapter.signMessage(publicAddress: getEoaAddress(), message: message, chainInfo: chainInfo)
         }
     }
     
