@@ -621,6 +621,12 @@ extension UnityManager {
                 } else {
                     network = nil
                 }
+            case .avalanche:
+                network = OpenBuyNetwork.avalanche
+            case .celo:
+                network = OpenBuyNetwork.celo
+            case .zkSync:
+                network = OpenBuyNetwork.zkSync
             default:
                 network = nil
             }
