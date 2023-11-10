@@ -186,6 +186,8 @@ namespace Network.Particle.Scripts.Test
         currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() => {
             Toast.CallStatic<AndroidJavaObject>("makeText", currentActivity, message, Toast.GetStatic<int>("LENGTH_LONG")).Call("show");
         }));
+#elif UNITY_IOS && !UNITY_EDITOR
+            ToastTip.Instance.OnShow(message);
 #endif
         }
 
