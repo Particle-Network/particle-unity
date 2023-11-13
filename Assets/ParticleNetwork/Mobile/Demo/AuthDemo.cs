@@ -331,7 +331,6 @@ namespace Network.Particle.Scripts.Test
 
         public void SetAAVersionNumber()
         {
-            ParticleNetwork.SetAAVersionNumber(AAVersionNumber.V1_0_0());
         }
 
         public void GetAAAccountName()

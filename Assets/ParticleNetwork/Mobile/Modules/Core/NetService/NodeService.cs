@@ -20,7 +20,7 @@ namespace Network.Particle.Scripts.Core
 
     public class NodeService
     {
-        private static string url = "https://rpc.particle.network/";
+        private static string url = ParticleUnityRpc.Instance.rpcUrl;
         private static string authenticate(string username, string password)
         {
             string auth = username + ":" + password;

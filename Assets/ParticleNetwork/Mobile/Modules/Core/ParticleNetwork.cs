@@ -169,8 +169,8 @@ namespace Network.Particle.Scripts.Core
         public static void SetAAAccountName(AAAccountName name)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("setAAAccountName",name.ToString());
+// todo  unsupported
+            // ParticleNetwork.CallNative("setAAAccountName",name.ToString());
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.setAAAccountName(name.ToString());
 #else
@@ -181,48 +181,22 @@ namespace Network.Particle.Scripts.Core
         {
             var name = "";
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            name = articleNetwork.CallNative("getAAAccountName");
+// todo unsupported
+            name = "BICONOMY";//ParticleNetwork.GetUnityBridgeClass().CallStatic<String>("getAAAccountName");
 #elif UNITY_IOS &&!UNITY_EDITOR
             name = ParticleNetworkIOSBridge.getAAAccountName();
 #else
             name = "BICONOMY";
 #endif
-            
+
+
             return (AAAccountName)Enum.Parse(typeof(AAAccountName), name);
         }
-
-        public static void SetAAVersionNumber(AAVersionNumber versionNumber)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("setAAVersionNumber",versionNumber.version);
-#elif UNITY_IOS &&!UNITY_EDITOR
-            ParticleNetworkIOSBridge.setAAVersionNumber(versionNumber.version);
-#else
-#endif
-        }
         
+
         public static AAVersionNumber GetAAVersionNumber()
         {
-            var version = "";
-#if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            version = articleNetwork.CallNative("getAAVersionNumber");
-#elif UNITY_IOS &&!UNITY_EDITOR
-            version = ParticleNetworkIOSBridge.getAAVersionNumber();
-#else
-            version = "1.0.0";
-#endif
-            
-            if (version == "1.0.0")
-            {
-                return AAVersionNumber.V1_0_0();
-            }
-            else
-            {
-                return AAVersionNumber.V1_0_0();
-            }
+            return AAVersionNumber.V1_0_0();
         }
 
         public static void CallNative(string methodName, params object[] args)
@@ -232,6 +206,7 @@ namespace Network.Particle.Scripts.Core
             GetAndroidJavaObject().Call("runOnUiThread",
                 new AndroidJavaRunnable(() => { GetUnityBridgeClass().CallStatic(methodName, args); }));
         }
+
 
         public static void CallConnectNative(string methodName, params object[] args)
         {

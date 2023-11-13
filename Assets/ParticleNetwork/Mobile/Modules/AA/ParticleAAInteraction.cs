@@ -97,23 +97,6 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static bool IsSupportChainInfo(ChainInfo chainInfo)
-        {
-            var json = JsonConvert.SerializeObject(new JObject
-            {
-                { "chain_name", chainInfo.Name },
-                { "chain_id", chainInfo.Id },
-                { "chain_id_name", chainInfo.Network },
-            });
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("isSupportChainInfo",json);
-#elif UNITY_IOS && !UNITY_EDITOR
-            return ParticleNetworkIOSBridge.isSupportChainInfo(json);
-#else
-            return false;
-#endif
-        }
+     
     }
 }

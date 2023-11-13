@@ -41,13 +41,7 @@ namespace Network.Particle.Scripts.Test
             ParticleAAInteraction.Init(biconomyApiKeys);
         }
 
-        public void IsSupportChainInfo()
-        {
-            var chainInfo = ChainInfo.Ethereum;
-            var result = ParticleAAInteraction.IsSupportChainInfo(chainInfo);
-            Debug.Log($"is support chain info {result}");
-        }
-
+    
         public void EnableAAMode()
         {
             ParticleAAInteraction.EnableAAMode();

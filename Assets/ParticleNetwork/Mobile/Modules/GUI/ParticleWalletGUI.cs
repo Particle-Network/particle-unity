@@ -626,8 +626,8 @@ namespace Network.Particle.Scripts.Core
                 { "icon", icon },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            // ParticleNetwork.GetUnityBridgeClass().CallStatic("particleWalletConnectInitialize",json);
+// todo 
+            // ParticleNetwork.GetUnityBridgeClass().CallStatic("setCustomWalletName",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setCustomWalletName(json);
 #else

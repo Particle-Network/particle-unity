@@ -1,5 +1,7 @@
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Singleton;
 using UnityEngine;
@@ -15,6 +17,10 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
     void Start()
     {
         List<ChainInfo> chainInfos = ChainInfo.getAllChains();
+        chainInfos = chainInfos
+            .OrderByDescending(chainInfo => chainInfo.Id == 80001)
+            .ThenBy(chainInfo => chainInfo.Id)
+            .ToList();
         
         
         foreach (var chainInfo in chainInfos)
@@ -31,6 +37,7 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
         }
     }
 
+  
     public void Show(UnityAction<ChainInfo> unityAction)
     {
         this.unityAction = unityAction;
