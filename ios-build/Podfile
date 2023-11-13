@@ -7,8 +7,8 @@ target 'Unity-iPhone' do
   use_frameworks!
   
   # Particle Auth Service
-  pod 'ParticleNetworkBase', '1.3.3'
-  pod 'ParticleAuthService', '1.3.3'
+  pod 'ParticleNetworkBase', '1.3.4'
+  pod 'ParticleAuthService', '1.3.4'
   
   # Particle Connect Service
   pod 'ConnectCommon', '0.2.13'
@@ -20,12 +20,12 @@ target 'Unity-iPhone' do
   pod 'ParticleAuthAdapter', '0.2.13'
 
   # Particle Wallet Service
-  pod 'ParticleWalletConnect', '1.3.3'
-  pod 'ParticleWalletAPI', '1.3.3'
-  pod 'ParticleWalletGUI', '1.3.3'
+  pod 'ParticleWalletConnect', '1.3.4'
+  pod 'ParticleWalletAPI', '1.3.4'
+  pod 'ParticleWalletGUI', '1.3.4'
   
   # Particle AA
-  pod 'ParticleAA', '1.3.3'
+  pod 'ParticleAA', '1.3.4'
   
   # Particle Auth Core
   pod 'AuthCoreAdapter', '1.3.0'

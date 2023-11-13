@@ -470,8 +470,8 @@ extension UnityManager {
     func setChainInfoAsync(_ json: String) {
         let data = JSON(parseJSON: json)
         let chainId = data["chain_id"].intValue
-        let name = data["chain_name"].stringValue.lowercased()
-        let chainType: ChainType = name == "solana" ? .solana : .evm
+        let chainName = data["chain_name"].stringValue.lowercased()
+        let chainType: ChainType = chainName == "solana" ? .solana : .evm
         guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else { return }
         if ParticleAuthService.isLogin() == false {
             ParticleNetwork.setChainInfo(chainInfo)
