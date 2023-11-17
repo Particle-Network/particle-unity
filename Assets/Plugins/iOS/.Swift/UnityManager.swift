@@ -198,26 +198,6 @@ extension UnityManager {
         let promptMasterPasswordSettingWhenLogin = data["prompt_master_password_setting_when_login"].intValue
         ParticleNetwork.setSecurityAccountConfig(config: .init(promptSettingWhenSign: promptSettingWhenSign, promptMasterPasswordSettingWhenLogin: promptMasterPasswordSettingWhenLogin))
     }
-    
-    func setAAAccountName(_ json: String) {
-        if let accountName = AA.AccountName(rawValue: json.uppercased()) {
-            ParticleNetwork.setAAAccountName(accountName)
-        }
-    }
-    
-    func setAAVersionNumber(_ json: String) {
-        if let versionNumbr = AA.VersionNumber(rawValue: json.uppercased()) {
-            ParticleNetwork.setAAVersionNumber(versionNumbr)
-        }
-    }
-    
-    func getAAAccountName() -> String {
-        ParticleNetwork.getAAAccountName().rawValue
-    }
-    
-    func getAAVersionNumber() -> String {
-        ParticleNetwork.getAAVersionNumber().rawValue
-    }
 }
 
 // MARK: - Particle Auth Service
@@ -1560,16 +1540,19 @@ extension UnityManager {
     func particleAAInitialize(_ json: String) {
         let data = JSON(parseJSON: json)
         
-        let dappAppKeysDict = data["biconomy_api_keys"].dictionaryValue
-        var dappAppKeys: [Int: String] = [:]
+        let biconomyAppKeysDict = data["biconomy_api_keys"].dictionaryValue
+        var biconomyAppKeys: [Int: String] = [:]
         
-        for (key, value) in dappAppKeysDict {
+        for (key, value) in biconomyAppKeysDict {
             if let chainId = Int(key) {
-                dappAppKeys[chainId] = value.stringValue
+                biconomyAppKeys[chainId] = value.stringValue
             }
         }
         
-        AAService.initialize(dappApiKeys: dappAppKeys)
+        let accountName = AA.AccountName(rawValue: data["name"].stringValue.uppercased()) ?? .biconomy
+        let versionNumbr = AA.VersionNumber(rawValue: data["version"].stringValue) ?? .v1_0_0
+       
+        AAService.initialize(name: accountName, version: versionNumbr, biconomyApiKeys: biconomyAppKeys)
         ParticleNetwork.setAAService(aaService)
     }
     
@@ -2066,7 +2049,7 @@ extension UnityManager {
 }
 
 extension UnityManager: MessageSigner {
-    public func signMessage(_ message: String, chainInfo : ParticleNetworkBase.ParticleNetwork.ChainInfo?) -> RxSwift.Single<String> {
+    public func signMessage(_ message: String, chainInfo: ParticleNetworkBase.ParticleNetwork.ChainInfo?) -> RxSwift.Single<String> {
         guard let walletType = latestWalletType else {
             print("walletType is nil")
             return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))

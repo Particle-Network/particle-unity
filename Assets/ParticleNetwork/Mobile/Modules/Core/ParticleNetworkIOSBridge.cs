@@ -32,22 +32,10 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void setSecurityAccountConfig(string json);
-        
+
         [DllImport("__Internal")]
         public static extern void setWebAuthConfig(string json);
-        
-        [DllImport("__Internal")]
-        public static extern void setAAAccountName(string json);
-        
-        [DllImport("__Internal")]
-        public static extern void setAAVersionNumber(string json);
-        
-        [DllImport("__Internal")]
-        public static extern string getAAAccountName();
-        
-        [DllImport("__Internal")]
-        public static extern string getAAVersionNumber();
-                
+
 #endif
 
         // Particle Auth Service
@@ -163,7 +151,7 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void setShowLanguageSetting(bool show);
-        
+
         [DllImport("__Internal")]
         public static extern void setShowSmartAccountSetting(bool show);
 
@@ -181,7 +169,7 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void setSupportDappBrowser(bool enable);
-        
+
         [DllImport("__Internal")]
         public static extern void particleWalletConnectInitialize(string json);
 
@@ -202,15 +190,15 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void loadCustomUIJsonString(string json);
-        
-        
+
+
         [DllImport("__Internal")]
         public static extern void setCustomLocalizable(string json);
 
         [DllImport("__Internal")]
         public static extern void setCustomWalletName(string json);
-        
-        
+
+
 #endif
 
         // Particle Connect
@@ -294,81 +282,80 @@ namespace Network.Particle.Scripts.Core
         public static extern bool isSupportChainInfo(string json);
 
 #endif
-            
-            // Particle Auth Core
+
+        // Particle Auth Core
 #if UNITY_IOS
-            [DllImport("__Internal")]
-            public static extern void authCoreInitialize();
+        [DllImport("__Internal")]
+        public static extern void authCoreInitialize();
 
-            [DllImport("__Internal")]
-            public static extern void authCoreConnect(string json);
+        [DllImport("__Internal")]
+        public static extern void authCoreConnect(string json);
 
-            [DllImport("__Internal")]
-            public static extern void authCoreDisconnect();
+        [DllImport("__Internal")]
+        public static extern void authCoreDisconnect();
 
-            [DllImport("__Internal")]
-            public static extern void authCoreIsConnected();
+        [DllImport("__Internal")]
+        public static extern void authCoreIsConnected();
 
-            [DllImport("__Internal")]
-            public static extern string authCoreGetUserInfo();
+        [DllImport("__Internal")]
+        public static extern string authCoreGetUserInfo();
 
-            [DllImport("__Internal")]
-            public static extern void authCoreSwitchChain(string json);
+        [DllImport("__Internal")]
+        public static extern void authCoreSwitchChain(string json);
 
-            [DllImport("__Internal")]
-            public static extern void authCoreChangeMasterPassword();
+        [DllImport("__Internal")]
+        public static extern void authCoreChangeMasterPassword();
 
-            [DllImport("__Internal")]
-            public static extern bool authCoreHasMasterPassword();
-            
-            [DllImport("__Internal")]
-            public static extern bool authCoreHasPaymentPassword();
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreOpenAccountAndSecurity();
+        [DllImport("__Internal")]
+        public static extern bool authCoreHasMasterPassword();
 
-            
-            [DllImport("__Internal")]
-            public static extern string authCoreEvmGetAddress();
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreEvmPersonalSign(string json);
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreEvmPersonalSignUnique(string json);
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreEvmSignTypedData(string json);
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreEvmSignTypedDataUnique(string json);
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreEvmSendTransaction(string json);
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreEvmBatchSendTransactions(string json);
-            
-            [DllImport("__Internal")]
-            public static extern string authCoreSolanaGetAddress();
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreSolanaSignMessage(string json);
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreSolanaSignTransaction(string json);
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreSolanaSignAllTransactions(string json);
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreSolanaSignAndSendTransaction(string json);
-            
-            [DllImport("__Internal")]
-            public static extern void authCoreSetCustomUI(string json);
-            
-            
-            
+        [DllImport("__Internal")]
+        public static extern bool authCoreHasPaymentPassword();
+
+        [DllImport("__Internal")]
+        public static extern void authCoreOpenAccountAndSecurity();
+
+
+        [DllImport("__Internal")]
+        public static extern string authCoreEvmGetAddress();
+
+        [DllImport("__Internal")]
+        public static extern void authCoreEvmPersonalSign(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreEvmPersonalSignUnique(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreEvmSignTypedData(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreEvmSignTypedDataUnique(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreEvmSendTransaction(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreEvmBatchSendTransactions(string json);
+
+        [DllImport("__Internal")]
+        public static extern string authCoreSolanaGetAddress();
+
+        [DllImport("__Internal")]
+        public static extern void authCoreSolanaSignMessage(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreSolanaSignTransaction(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreSolanaSignAllTransactions(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreSolanaSignAndSendTransaction(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreSetCustomUI(string json);
+
+
 #endif
     }
 }

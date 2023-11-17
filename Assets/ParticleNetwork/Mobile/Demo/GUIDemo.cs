@@ -4,6 +4,7 @@ using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
 using UnityEngine;
+using CommonTip.Script;
 
 namespace Network.Particle.Scripts.Test
 {

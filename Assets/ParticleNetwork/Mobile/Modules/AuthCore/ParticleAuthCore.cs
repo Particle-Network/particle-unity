@@ -351,9 +351,10 @@ namespace Network.Particle.Scripts.Core
         /// <summary>
         /// Evm send transaction
         /// </summary>
-        /// <param name="message">typed data</param>
+        /// <param name="transaction">Transaction</param>
+        /// <param name="feeMode">AAFeeMode, works with aa mode, default value is auto</param>
         /// <returns></returns>
-        public Task<NativeResultData> EvmSendTransaction(string transaction)
+        public Task<NativeResultData> EvmSendTransaction(string transaction, [CanBeNull] AAFeeMode feeMode = null)
         {
             evmSendTransactionTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR

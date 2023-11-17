@@ -166,33 +166,6 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void SetAAAccountName(AAAccountName name)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-// todo  unsupported
-            // ParticleNetwork.CallNative("setAAAccountName",name.ToString());
-#elif UNITY_IOS &&!UNITY_EDITOR
-            ParticleNetworkIOSBridge.setAAAccountName(name.ToString());
-#else
-#endif
-        }
-
-        public static AAAccountName GetAAAccountName()
-        {
-            var name = "";
-#if UNITY_ANDROID && !UNITY_EDITOR
-// todo unsupported
-            name = "BICONOMY";//ParticleNetwork.GetUnityBridgeClass().CallStatic<String>("getAAAccountName");
-#elif UNITY_IOS &&!UNITY_EDITOR
-            name = ParticleNetworkIOSBridge.getAAAccountName();
-#else
-            name = "BICONOMY";
-#endif
-
-
-            return (AAAccountName)Enum.Parse(typeof(AAAccountName), name);
-        }
-        
 
         public static AAVersionNumber GetAAVersionNumber()
         {

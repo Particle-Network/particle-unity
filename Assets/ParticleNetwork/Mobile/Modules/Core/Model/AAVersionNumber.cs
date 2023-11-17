@@ -13,7 +13,5 @@ namespace Network.Particle.Scripts.Model
         {
             return new AAVersionNumber("1.0.0");
         }
-        
-        
     }
 }

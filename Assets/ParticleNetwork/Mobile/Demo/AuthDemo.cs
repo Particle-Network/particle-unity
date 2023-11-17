@@ -324,30 +324,6 @@ namespace Network.Particle.Scripts.Test
             ParticleNetwork.SetWebAuthConfig(true, Appearance.DARK);
         }
 
-        public void SetAAAccountName()
-        {
-            ParticleNetwork.SetAAAccountName(AAAccountName.BICONOMY);
-        }
-
-        public void SetAAVersionNumber()
-        {
-        }
-
-        public void GetAAAccountName()
-        {
-           var accountName = ParticleNetwork.GetAAAccountName();
-           Debug.Log(accountName.ToString());
-           ShowToast(accountName.ToString());
-        }
-
-        public void GetAAVersionNumber()
-        {
-            var versionNumber = ParticleNetwork.GetAAVersionNumber();
-            Debug.Log(versionNumber.version);
-            ShowToast(versionNumber.version);
-        }
-
-
         public void ShowToast(string message)
         {
 

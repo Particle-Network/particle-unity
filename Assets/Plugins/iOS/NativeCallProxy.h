@@ -23,10 +23,6 @@
 - (void) setWebAuthConfig:(NSString* _Nonnull)json;
 - (void) setFiatCoin:(NSString*_Nonnull)json;
 - (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
-- (void) setAAAccountName:(NSString* _Nonnull)json;
-- (void) setAAVersionNumber:(NSString* _Nonnull)json;
-- (NSString* _Nonnull) getAAAccountName;
-- (NSString* _Nonnull) getAAVersionNumber;
 
 // Particle Auth Service
 - (void) login:(NSString* _Nonnull)json;

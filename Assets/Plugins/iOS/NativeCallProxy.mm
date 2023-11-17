@@ -57,24 +57,6 @@ extern "C" {
     void setSecurityAccountConfig(const char* json) {
         [api setSecurityAccountConfig:[NSString stringWithUTF8String: json]];
     }
-    
-    void setAAAccountName(const char* json) {
-        [api setAAAccountName:[NSString stringWithUTF8String: json]];
-    }
-    
-    void setAAVersionNumber(const char* json) {
-        [api setAAVersionNumber:[NSString stringWithUTF8String: json]];
-    }
-    
-     char* getAAAccountName() {
-        char* cStringCopyPN(const char* string);
-        return cStringCopyPN([[api getAAAccountName] UTF8String]);
-    }
-        
-     char* getAAVersionNumber() {
-        char* cStringCopyPN(const char* string);
-        return cStringCopyPN([[api getAAVersionNumber] UTF8String]);
-    }
 }
 
 // Particle Auth Service
