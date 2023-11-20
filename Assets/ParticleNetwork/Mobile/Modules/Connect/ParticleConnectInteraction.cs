@@ -83,13 +83,17 @@ namespace Network.Particle.Scripts.Core
                 else
                     accountNative = config.account;
 
-                configJson = JsonConvert.SerializeObject(new JObject
+                var obj = new JObject
                 {
                     { "loginType", config.loginType.ToString() },
                     { "account", accountNative },
                     { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
                     { "socialLoginPrompt", config.socialLoginPrompt.ToString() }
-                });
+                };
+                
+                if (config.authorization != null) obj["authorization"] = JToken.FromObject(config.authorization);
+
+                configJson = JsonConvert.SerializeObject(obj);
             }
 
             Debug.Log($"Connect-> walletType:{walletType} configJson:{configJson} ");
