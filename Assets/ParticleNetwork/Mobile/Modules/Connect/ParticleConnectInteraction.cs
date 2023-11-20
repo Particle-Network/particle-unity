@@ -88,7 +88,6 @@ namespace Network.Particle.Scripts.Core
                     { "loginType", config.loginType.ToString() },
                     { "account", accountNative },
                     { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
-                    { "loginFormMode", config.loginFormMode },
                     { "socialLoginPrompt", config.socialLoginPrompt.ToString() }
                 });
             }
