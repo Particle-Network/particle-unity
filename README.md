@@ -14,7 +14,7 @@ Install Unity 2020.3.26f1 or later. Earlier versions may also be compatible but 
 *(iOS only)* Install the following:
 
 - Xcode 14.1 or higher
-- CocoaPods 1.11.0 or higher
+- CocoaPods 1.12.0 or higher
 
 Make sure that your Unity project meets these requirements:
 
@@ -30,9 +30,13 @@ If you are familiar with web browser in windows platform, you can use other web 
 
 **Auth**: https://docs.particle.network/auth-service/sdks/unity
 
+**AuthCore**: https://docs.particle.network/developers/auth-service/core/unity
+
 **Connect**: https://docs.particle.network/connect-service/sdks/unity
 
 **GUI**: https://docs.particle.network/wallet-service/sdks/unity
+
+**AA**: https://docs.particle.network/developers/account-abstraction/sdks/unity
 
 **Windows and macOS**: https://docs.particle.network/auth-service/sdks/unity-windows-macos
 
