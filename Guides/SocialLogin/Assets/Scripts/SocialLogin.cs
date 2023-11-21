@@ -183,6 +183,11 @@ public class SocialLogin : MonoBehaviour
             Debug.LogError($"An error occurred: {e.Message}");
         }
     }
+
+    public void OpenWallet()
+    {
+        ParticleWalletGUI.NavigatorWallet();
+    }
     
     
 }
