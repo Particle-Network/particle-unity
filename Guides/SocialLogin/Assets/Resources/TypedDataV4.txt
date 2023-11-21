@@ -1,0 +1,112 @@
+{
+    "types": {
+        "Maker": [
+            {
+                "name": "quoteType",
+                "type": "uint8"
+            },
+            {
+                "name": "globalNonce",
+                "type": "uint256"
+            },
+            {
+                "name": "subsetNonce",
+                "type": "uint256"
+            },
+            {
+                "name": "orderNonce",
+                "type": "uint256"
+            },
+            {
+                "name": "strategyId",
+                "type": "uint256"
+            },
+            {
+                "name": "collectionType",
+                "type": "uint8"
+            },
+            {
+                "name": "collection",
+                "type": "address"
+            },
+            {
+                "name": "currency",
+                "type": "address"
+            },
+            {
+                "name": "signer",
+                "type": "address"
+            },
+            {
+                "name": "startTime",
+                "type": "uint256"
+            },
+            {
+                "name": "endTime",
+                "type": "uint256"
+            },
+            {
+                "name": "price",
+                "type": "uint256"
+            },
+            {
+                "name": "itemIds",
+                "type": "uint256[]"
+            },
+            {
+                "name": "amounts",
+                "type": "uint256[]"
+            },
+            {
+                "name": "additionalParameters",
+                "type": "bytes"
+            }
+        ],
+        "EIP712Domain": [
+            {
+                "name": "name",
+                "type": "string"
+            },
+            {
+                "name": "version",
+                "type": "string"
+            },
+            {
+                "name": "chainId",
+                "type": "uint256"
+            },
+            {
+                "name": "verifyingContract",
+                "type": "address"
+            }
+        ]
+    },
+    "domain": {
+        "name": "LooksRareProtocol",
+        "version": "2",
+        "chainId": 5611,
+        "verifyingContract": "0x0d675e274a4269636d13dade7ecc16df8a7775dd"
+    },
+    "primaryType": "Maker",
+    "message": {
+        "quoteType": "1",
+        "globalNonce": "0",
+        "subsetNonce": "0",
+        "orderNonce": "4",
+        "strategyId": "0",
+        "collectionType": "0",
+        "collection": "0x96b80d19a85cd434b5d14482985b76896c26cff3",
+        "currency": "0x0000000000000000000000000000000000000000",
+        "signer": "0x4f767d46bd330e921c206e72f5002f9e5c62281b",
+        "startTime": "1690892448",
+        "endTime": "2006252448",
+        "price": "1000000000000000000",
+        "itemIds": [
+            "367722542"
+        ],
+        "amounts": [
+            "1"
+        ],
+        "additionalParameters": "0x"
+    }
+}

@@ -295,8 +295,7 @@ namespace Network.Particle.Scripts.Core
         /// <param name="to">If your are sending native, it is receiver address, if you are sending token, it is the token contract address</param>
         /// <param name="gasFeeLevel">Gas fee level, default is high</param>
         /// <returns></returns>
-        public static async Task<string> CreateTransaction(string from, string data, BigInteger value, string to,
-            GasFeeLevel gasFeeLevel = GasFeeLevel.High)
+        public static async Task<string> CreateTransaction(string from, string data, BigInteger value, string to, GasFeeLevel gasFeeLevel = GasFeeLevel.High)
         {
             var valueHex = "0x" + value.ToString("x");
             var gasLimitResult = await EstimateGas(from, to, "0x0", data);
@@ -347,11 +346,11 @@ namespace Network.Particle.Scripts.Core
                     null);
             }
             
+            Debug.Log($"transaction {transaction}");
+
             var json = JsonConvert.SerializeObject(transaction);
             var serialized = BitConverter.ToString(Encoding.Default.GetBytes(json));
             serialized = serialized.Replace("-", "");
-
-            Debug.Log($"transaction {"0x" + serialized}");
             return "0x" + serialized;
         }
 

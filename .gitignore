@@ -267,3 +267,5 @@ build
 !/ios-build/Podfile
 /Assets/Vuplex
 /Assets/Vuplex.meta
+
+/Guides/SocialLogin/ios-build
