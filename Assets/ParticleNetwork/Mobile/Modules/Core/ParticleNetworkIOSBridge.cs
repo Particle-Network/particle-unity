@@ -139,6 +139,9 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void navigatorLoginList(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void navigatorDappBrowser(string json);
 
         [DllImport("__Internal")]
         public static extern void setShowTestNetwork(bool show);

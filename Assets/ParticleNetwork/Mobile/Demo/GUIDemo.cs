@@ -64,6 +64,11 @@ namespace Network.Particle.Scripts.Test
             ParticleWalletGUI.NavigatorWallet(display);
         }
 
+        public void NavigatorDappBrowser()
+        {
+            ParticleWalletGUI.NavigatorDappBrowser("https://opensea.io");
+        }
+        
         public void NavigatorTokenReceive()
         {
             // If you want to test solana, your should replace under value with solana test account.

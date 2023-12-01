@@ -700,6 +700,16 @@ extension UnityManager {
         ParticleWalletGUI.getPayDisabled()
     }
     
+    func navigatorDappBrowser(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let urlStr = data["url"].stringValue
+        if let url = URL(string: urlStr) {
+            PNRouter.navigatorDappBrowser(url: url)
+        } else {
+            PNRouter.navigatorDappBrowser(url: nil)
+        }
+    }
+    
     func navigatorLoginList(_ json: String?) {
         var observable: Single<(WalletType, Account?)>
         if let json = json {

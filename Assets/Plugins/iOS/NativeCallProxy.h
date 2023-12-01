@@ -52,6 +52,7 @@
 - (void) setSwapDisabled:(BOOL)disabled;
 - (BOOL) getSwapDisabled;
 - (void) navigatorWallet:(NSInteger)display;
+- (void) navigatorDappBrowser:(NSString* _Nonnull)json;
 - (void) navigatorTokenReceive:(NSString* _Nullable)json;
 - (void) navigatorTokenSend:(NSString* _Nullable)json;
 - (void) navigatorTokenTransactionRecords:(NSString* _Nullable)json;

@@ -165,6 +165,10 @@ extern "C" {
         [api navigatorTokenReceive:[NSString stringWithUTF8String: json]];
     }
 
+    void navigatorDappBrowser(const char* json) {
+        [api navigatorDappBrowser:[NSString stringWithUTF8String: json]];
+    }
+
     void navigatorTokenSend(const char* json) {
         [api navigatorTokenSend:[NSString stringWithUTF8String: json]];
     }
