@@ -265,10 +265,9 @@ namespace Network.Particle.Scripts.Core
         }
         
         /// <summary>
-        /// Open Swap page
+        /// Open DappBrowser page
         /// </summary>
-        /// <param name="fromTokenAddress">From token address, default value is empty</param>
-        public static void NavigatorDappBrowser(string url)
+        public static void NavigatorDappBrowser([CanBeNull] string url)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -276,8 +275,7 @@ namespace Network.Particle.Scripts.Core
             });
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("navigatorSwap",json);
+            ParticleNetwork.CallNative("navigatorDappBrowser",url);
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.navigatorDappBrowser(json);
 #else
