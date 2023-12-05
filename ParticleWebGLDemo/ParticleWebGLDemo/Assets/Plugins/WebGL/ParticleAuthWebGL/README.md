@@ -4,6 +4,11 @@
 2. Bind `ParticleAuth.cs` to GameObject, named "ParticleAuth", then add `config` property value.
 3. Custom WebGL templates, add function `SendMessage` in `index.html`, refer to the following code:
 
+Here is an example config json string, the params refer to [Particle Docs](https://docs.particle.network/developers/auth-service/sdks/web)
+```
+{"projectId":"34c6b829-5b89-44e8-90a9-6d982787b9c9","clientKey":"c6Z44Ml4TQeNhctvwYgdSv6DBzfjf6t6CB0JDscR","appId":"64f36641-b68c-4b19-aa10-5c5304d0eab3","chainName":"Ethereum","chainId":1}
+``` 
+
 ```js
 //add SendMessage function
 var _unityInstance = null;

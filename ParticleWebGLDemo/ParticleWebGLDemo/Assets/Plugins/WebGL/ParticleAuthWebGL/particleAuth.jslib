@@ -3,7 +3,7 @@ mergeInto(LibraryManager.library, {
         const config = UTF8ToString(options);
         console.log('InitParticleAuth', config);
         const script = document.createElement('script');
-        script.src = 'https://static.particle.network/sdks/web/auth/1.0.0/auth.min.js';
+        script.src = 'https://static.particle.network/sdks/web/auth/1.2.1/auth.min.js';
         script.onload = () => {
             new particleAuth.ParticleNetwork(JSON.parse(config));
         };
