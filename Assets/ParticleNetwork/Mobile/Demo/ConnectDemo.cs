@@ -51,7 +51,7 @@ namespace Network.Particle.Scripts.Test
             var metadata = new DAppMetaData(TestConfig.walletConnectProjectId, "Particle Connect",
                 "https://connect.particle.network/icons/512.png",
                 "https://connect.particle.network",
-                "");
+                "Particle Connect Unity Demo");
             ParticleNetwork.Init(_chainInfo);
             ParticleConnectInteraction.Init(_chainInfo, metadata);
             // List<ChainInfo> chainInfos = new List<ChainInfo>{new EthereumChain(EthereumChainId.Mainnet), new PolygonChain(PolygonChainId.Mainnet), new EthereumChain(EthereumChainId.Sepolia)};
