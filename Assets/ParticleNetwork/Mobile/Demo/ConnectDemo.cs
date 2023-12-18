@@ -56,6 +56,9 @@ namespace Network.Particle.Scripts.Test
             ParticleConnectInteraction.Init(_chainInfo, metadata);
             // List<ChainInfo> chainInfos = new List<ChainInfo>{new EthereumChain(EthereumChainId.Mainnet), new PolygonChain(PolygonChainId.Mainnet), new EthereumChain(EthereumChainId.Sepolia)};
             // ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
+            
+            // control how to show set master password and payment password.
+            ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
         }
 
         /// <summary>

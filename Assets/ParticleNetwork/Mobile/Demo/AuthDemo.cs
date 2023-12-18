@@ -25,6 +25,8 @@ namespace Network.Particle.Scripts.Test
         public void Init()
         {
             ParticleNetwork.Init(this._chainInfo);
+            // control how to show set master password and payment password.
+            ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
         }
 
         public async void Login()
