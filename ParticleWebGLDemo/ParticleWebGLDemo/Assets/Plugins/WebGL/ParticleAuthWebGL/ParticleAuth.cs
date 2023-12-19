@@ -16,6 +16,9 @@ public class ParticleAuth : MonoBehaviour {
 
     [DllImport("__Internal")]
     private static extern void SetParticleAuthTheme(string options);
+    
+    [DllImport("__Internal")]
+    private static extern void SetParticleERC4337(bool enable);
 
     [DllImport("__Internal")]
     private static extern void LoginWithParticle(string options);
@@ -108,6 +111,11 @@ public class ParticleAuth : MonoBehaviour {
 
     public void SetAuthTheme(string options) {
         SetParticleAuthTheme(options);
+    }
+
+    public void SetERC4337(bool enable)
+    {
+        SetParticleERC4337(enable);
     }
 
     public Task<string> Login(string options) {

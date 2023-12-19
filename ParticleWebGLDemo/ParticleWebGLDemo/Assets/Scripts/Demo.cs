@@ -14,6 +14,8 @@ namespace DefaultNamespace
             
             var address = ParticleAuth.Instance.GetWalletAddress();
             Debug.Log($"address {address}");
+
+            ParticleAuth.Instance.SetERC4337(true);
         }
         
         public async void SignMessage()
@@ -22,6 +24,13 @@ namespace DefaultNamespace
             var signature = await ParticleAuth.Instance.EVMPersonalSign(message);
 
             Debug.Log($"signature {signature}");
+        }
+        
+
+
+        public async void OpenWallet()
+        {
+            ParticleAuth.Instance.OpenWallet();
         }
         
     }

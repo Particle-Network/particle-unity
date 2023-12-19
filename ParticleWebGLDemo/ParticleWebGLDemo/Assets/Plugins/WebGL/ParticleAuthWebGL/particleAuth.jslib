@@ -24,6 +24,10 @@ mergeInto(LibraryManager.library, {
         const config = UTF8ToString(options);
         window.particle.setAuthTheme(JSON.parse(config));
     },
+    
+    SetParticleERC4337: function (enable) {
+         window.particle.setERC4337(enable);
+    },
 
     LoginWithParticle: async function (options) {
         const config = UTF8ToString(options);
