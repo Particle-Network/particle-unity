@@ -326,7 +326,7 @@ namespace Network.Particle.Scripts.Core
 
             EthereumTransaction transaction;
 
-            if (chainInfo.isEIP1559Supported())
+            if (chainInfo.IsEIP1559Supported())
             {
                 transaction = new EthereumTransaction(from, to, data, gasLimit, gasPrice: null,
                     value: valueHex,

@@ -405,7 +405,7 @@ namespace Network.Particle.Scripts.Core
             List<JObject> allInfos = new List<JObject>();
             foreach (var chainInfo in chainInfos)
             {
-                if (!chainInfo.isMainnet()) continue;
+                if (!chainInfo.IsMainnet()) continue;
                 var info = new JObject
                 {
                     { "chain_name", chainInfo.Name },

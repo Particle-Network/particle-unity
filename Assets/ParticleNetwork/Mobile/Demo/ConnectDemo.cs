@@ -95,10 +95,10 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                ConnectConfig config = null;
+                ParticleAuthConnectConfig config = null;
                 if (_walletType == WalletType.Particle)
                 {
-                    config = new ConnectConfig(LoginType.GOOGLE, null, SupportAuthType.NONE);
+                    config = new ParticleAuthConnectConfig(LoginType.GOOGLE, null, SupportAuthType.NONE);
                 }
 
                 var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, config);

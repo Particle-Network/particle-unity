@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace Network.Particle.Scripts.Model
 {
@@ -100,7 +101,7 @@ namespace Network.Particle.Scripts.Model
             new NativeCurrency("Ether", "ETH", 18),
             "https://mainnet.optimism.io",
             "https://optimistic.etherscan.io",
-            new List<Feature>() { new Feature("EIP1559") },
+            null,
             null
         );
 
@@ -210,42 +211,6 @@ namespace Network.Particle.Scripts.Model
             "https://evmtestnet.confluxscan.net",
             null,
             "https://efaucet.confluxnetwork.org"
-        );
-
-
-        public static ChainInfo Viction => _viction;
-
-        private static ChainInfo _viction = new ChainInfo(
-            88,
-            "Viction",
-            "evm",
-            "https://static.particle.network/token-list/viction/native.png",
-            "Viction Mainnet",
-            "Mainnet",
-            "https://tomochain.com",
-            new NativeCurrency("Viction", "VIC", 18),
-            "https://rpc.tomochain.com",
-            "https://tomoscan.io",
-            null,
-            null
-        );
-
-
-        public static ChainInfo VictionTestnet => _victiontestnet;
-
-        private static ChainInfo _victiontestnet = new ChainInfo(
-            89,
-            "Viction",
-            "evm",
-            "https://static.particle.network/token-list/viction/native.png",
-            "Viction Testnet",
-            "Testnet",
-            "https://tomochain.com",
-            new NativeCurrency("Viction", "VIC", 18),
-            "https://rpc.testnet.tomochain.com",
-            "https://scan.testnet.tomochain.com",
-            null,
-            null
         );
 
 
@@ -393,24 +358,6 @@ namespace Network.Particle.Scripts.Model
         );
 
 
-        public static ChainInfo Manta => _manta;
-
-        private static ChainInfo _manta = new ChainInfo(
-            169,
-            "Manta",
-            "evm",
-            "https://static.particle.network/token-list/manta/native.png",
-            "Manta Mainnet",
-            "Mainnet",
-            "https://manta.network",
-            new NativeCurrency("ETH", "ETH", 18),
-            "https://pacific-rpc.manta.network/http",
-            " https://pacific-explorer.manta.network",
-            new List<Feature>() { new Feature("EIP1559") },
-            null
-        );
-
-
         public static ChainInfo OKBCTestnet => _okbctestnet;
 
         private static ChainInfo _okbctestnet = new ChainInfo(
@@ -435,7 +382,7 @@ namespace Network.Particle.Scripts.Model
             204,
             "opBNB",
             "evm",
-            "https://static.particle.network/token-list/opbnb/native.png",
+            "https://static.particle.network/token-list/bsc/native.png",
             "opBNB Mainnet",
             "Mainnet",
             "https://opbnb.bnbchain.org",
@@ -586,7 +533,7 @@ namespace Network.Particle.Scripts.Model
             new NativeCurrency("Ether", "ETH", 18),
             "https://goerli.optimism.io",
             "https://goerli-optimism.etherscan.io",
-            new List<Feature>() { new Feature("EIP1559") },
+            null,
             "https://faucet.triangleplatform.com/optimism/goerli"
         );
 
@@ -789,42 +736,6 @@ namespace Network.Particle.Scripts.Model
         );
 
 
-        public static ChainInfo KavaTestnet => _kavatestnet;
-
-        private static ChainInfo _kavatestnet = new ChainInfo(
-            2221,
-            "Kava",
-            "evm",
-            "https://static.particle.network/token-list/kava/native.png",
-            "Kava Testnet",
-            "Testnet",
-            "https://www.kava.io",
-            new NativeCurrency("KAVA", "KAVA", 18),
-            "https://evm.testnet.kava.io",
-            "http://testnet.kavascan.com",
-            new List<Feature>() { new Feature("undefined") },
-            null
-        );
-
-
-        public static ChainInfo Kava => _kava;
-
-        private static ChainInfo _kava = new ChainInfo(
-            2222,
-            "Kava",
-            "evm",
-            "https://static.particle.network/token-list/kava/native.png",
-            "Kava Mainnet",
-            "Mainnet",
-            "https://www.kava.io",
-            new NativeCurrency("KAVA", "KAVA", 18),
-            "https://evm.kava.io",
-            "https://kavascan.com",
-            null,
-            null
-        );
-
-
         public static ChainInfo FantomTestnet => _fantomtestnet;
 
         private static ChainInfo _fantomtestnet = new ChainInfo(
@@ -897,24 +808,6 @@ namespace Network.Particle.Scripts.Model
         );
 
 
-        public static ChainInfo ZetaChainTestnet => _zetachaintestnet;
-
-        private static ChainInfo _zetachaintestnet = new ChainInfo(
-            7001,
-            "ZetaChain",
-            "evm",
-            "https://static.particle.network/token-list/zetachain/native.png",
-            "ZetaChain Testnet",
-            "Testnet",
-            "https://zetachain.com",
-            new NativeCurrency("ZETA", "ZETA", 18),
-            "https://zetachain-athens-evm.blockpi.network/v1/rpc/public",
-            "https://zetachain-athens-3.blockscout.com",
-            new List<Feature>() { new Feature("EIP1559") },
-            "https://labs.zetachain.com/get-zeta"
-        );
-
-
         public static ChainInfo Klaytn => _klaytn;
 
         private static ChainInfo _klaytn = new ChainInfo(
@@ -969,19 +862,19 @@ namespace Network.Particle.Scripts.Model
         );
 
 
-        public static ChainInfo LumozzkEVMTestnet => _lumozzkevmtestnet;
+        public static ChainInfo zkMetaTestnet => _zkmetatestnet;
 
-        private static ChainInfo _lumozzkevmtestnet = new ChainInfo(
-            12008,
-            "Lumoz",
+        private static ChainInfo _zkmetatestnet = new ChainInfo(
+            12009,
+            "zkMeta",
             "evm",
-            "https://static.particle.network/token-list/opside/native.png",
-            "Lumoz zkEVM Testnet",
+            "https://static.particle.network/token-list/zkmeta/native.png",
+            "zkMeta Testnet",
             "Testnet",
-            "https://lumoz.org",
-            new NativeCurrency("Lumoz", "MOZ", 18),
-            "https://alpha-zkrollup-rpc.lumoz.org/public",
-            "https://public.zkevm.lumoz.info",
+            "https://satoshichain.net",
+            new NativeCurrency("IDE", "IDE", 18),
+            "https://pre-alpha-zkrollup-rpc.opside.network/era7",
+            "https://era7.zkevm.opside.info",
             null,
             null
         );
@@ -1005,37 +898,19 @@ namespace Network.Particle.Scripts.Model
         );
 
 
-        public static ChainInfo EOSEVMTestnet => _eosevmtestnet;
+        public static ChainInfo GasZeroGoerli => _gaszerogoerli;
 
-        private static ChainInfo _eosevmtestnet = new ChainInfo(
-            15557,
-            "Eosevm",
+        private static ChainInfo _gaszerogoerli = new ChainInfo(
+            12021,
+            "GasZero",
             "evm",
-            "https://static.particle.network/token-list/eosevm/native.png",
-            "EOS EVM Testnet",
-            "Testnet",
-            "https://eosnetwork.com",
-            new NativeCurrency("EOS", "EOS", 18),
-            "https://api.testnet.evm.eosnetwork.com",
-            "https://explorer.testnet.evm.eosnetwork.com",
-            new List<Feature>() { new Feature("undefined") },
-            null
-        );
-
-
-        public static ChainInfo EOSEVM => _eosevm;
-
-        private static ChainInfo _eosevm = new ChainInfo(
-            17777,
-            "Eosevm",
-            "evm",
-            "https://static.particle.network/token-list/eosevm/native.png",
-            "EOS EVM",
-            "Mainnet",
-            "https://eosnetwork.com",
-            new NativeCurrency("EOS", "EOS", 18),
-            "https://api.evm.eosnetwork.com",
-            "https://explorer.evm.eosnetwork.com",
+            "https://static.particle.network/token-list/gaszero/native.png",
+            "GasZero Goerli",
+            "Goerli",
+            "https://gaszero.com",
+            new NativeCurrency("GasZero", "GAS0", 18),
+            "https://goerlitest.gaszero.com",
+            "https://scangoerlitest.gaszero.com",
             null,
             null
         );
@@ -1251,7 +1126,7 @@ namespace Network.Particle.Scripts.Model
             "https://linea.build",
             new NativeCurrency("ETH", "ETH", 18),
             "https://linea-mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-            "https://lineascan.build",
+            "https://explorer.linea.build",
             new List<Feature>() { new Feature("EIP1559") },
             null
         );
@@ -1268,7 +1143,7 @@ namespace Network.Particle.Scripts.Model
             "Mumbai",
             "https://polygon.technology",
             new NativeCurrency("MATIC", "MATIC", 18),
-            "https://polygon-mumbai.gateway.tenderly.co",
+            "https://matic-mumbai.chainstacklabs.com",
             "https://mumbai.polygonscan.com",
             new List<Feature>() { new Feature("EIP1559") },
             "https://faucet.polygon.technology"
@@ -1311,21 +1186,21 @@ namespace Network.Particle.Scripts.Model
         );
 
 
-        public static ChainInfo TaikoJolnir => _taikojolnir;
+        public static ChainInfo TaikoTestnet => _taikotestnet;
 
-        private static ChainInfo _taikojolnir = new ChainInfo(
-            167007,
+        private static ChainInfo _taikotestnet = new ChainInfo(
+            167005,
             "Taiko",
             "evm",
             "https://static.particle.network/token-list/taiko/native.png",
-            "Taiko Jolnir",
-            "Jolnir",
+            "Taiko Testnet",
+            "Testnet",
             "https://taiko.xyz",
             new NativeCurrency("ETH", "ETH", 18),
-            "https://rpc.jolnir.taiko.xyz",
-            "https://explorer.jolnir.taiko.xyz",
+            "https://rpc.test.taiko.xyz",
+            "https://explorer.test.taiko.xyz",
             new List<Feature>() { new Feature("EIP1559") },
-            "https://bridge.jolnir.taiko.xyz"
+            "https://bridge.test.taiko.xyz"
         );
 
 
@@ -1377,43 +1252,25 @@ namespace Network.Particle.Scripts.Model
             "https://scroll.io",
             new NativeCurrency("Scroll", "ETH", 18),
             "https://sepolia-rpc.scroll.io",
-            "https://sepolia.scrollscan.com",
+            "https://sepolia-blockscout.scroll.io",
             null,
             null
         );
 
 
-        public static ChainInfo Scroll => _scroll;
+        public static ChainInfo ScrollAlphaTestnet => _scrollalphatestnet;
 
-        private static ChainInfo _scroll = new ChainInfo(
-            534352,
+        private static ChainInfo _scrollalphatestnet = new ChainInfo(
+            534353,
             "Scroll",
             "evm",
             "https://static.particle.network/token-list/scroll/native.png",
-            "Scroll Mainnet",
-            "Mainnet",
+            "Scroll Alpha Testnet",
+            "Testnet",
             "https://scroll.io",
             new NativeCurrency("Scroll", "ETH", 18),
-            "https://rpc.scroll.io",
-            "https://scrollscan.com",
-            null,
-            null
-        );
-
-
-        public static ChainInfo AstarzkEVMTestnet => _astarzkevmtestnet;
-
-        private static ChainInfo _astarzkevmtestnet = new ChainInfo(
-            1261120,
-            "AstarZkEVM",
-            "evm",
-            "https://static.particle.network/token-list/astarzkevm/native.png",
-            "Astar zkEVM Testnet",
-            "Testnet",
-            "https://astar.network",
-            new NativeCurrency("Sepolia Ether", "ETH", 18),
-            "https://rpc.zkatana.gelato.digital",
-            "https://zkatana.blockscout.com",
+            "https://alpha-rpc.scroll.io/l2",
+            "https://blockscout.scroll.io",
             null,
             null
         );
@@ -1448,8 +1305,8 @@ namespace Network.Particle.Scripts.Model
             "Testnet",
             "https://manta.network",
             new NativeCurrency("ETH", "ETH", 18),
-            "https://pacific-rpc.testnet.manta.network/http",
-            "https://pacific-explorer.testnet.manta.network",
+            "https://manta-testnet.calderachain.xyz/http",
+            "https://pacific-explorer.manta.network",
             new List<Feature>() { new Feature("EIP1559") },
             "https://pacific-info.manta.network"
         );
@@ -1655,10 +1512,6 @@ namespace Network.Particle.Scripts.Model
 
             { "confluxespace-71", ConfluxeSpaceTestnet },
 
-            { "viction-88", Viction },
-
-            { "viction-89", VictionTestnet },
-
             { "bsc-97", BNBChainTestnet },
 
             { "gnosis-100", Gnosis },
@@ -1674,8 +1527,6 @@ namespace Network.Particle.Scripts.Model
             { "heco-128", Heco },
 
             { "polygon-137", Polygon },
-
-            { "manta-169", Manta },
 
             { "okbc-195", OKBCTestnet },
 
@@ -1719,10 +1570,6 @@ namespace Network.Particle.Scripts.Model
 
             { "polygonzkevm-1442", PolygonzkEVMTestnet },
 
-            { "kava-2221", KavaTestnet },
-
-            { "kava-2222", Kava },
-
             { "fantom-4002", FantomTestnet },
 
             { "mantle-5000", Mantle },
@@ -1731,21 +1578,17 @@ namespace Network.Particle.Scripts.Model
 
             { "opbnb-5611", opBNBTestnet },
 
-            { "zetachain-7001", ZetaChainTestnet },
-
             { "klaytn-8217", Klaytn },
 
             { "base-8453", Base },
 
             { "gnosis-10200", GnosisTestnet },
 
-            { "lumoz-12008", LumozzkEVMTestnet },
+            { "zkmeta-12009", zkMetaTestnet },
 
             { "readon-12015", ReadONTestnet },
 
-            { "eosevm-15557", EOSEVMTestnet },
-
-            { "eosevm-17777", EOSEVM },
+            { "gaszero-12021", GasZeroGoerli },
 
             { "mapprotocol-22776", MAPProtocol },
 
@@ -1777,7 +1620,7 @@ namespace Network.Particle.Scripts.Model
 
             { "combo-91715", ComboTestnet },
 
-            { "taiko-167007", TaikoJolnir },
+            { "taiko-167005", TaikoTestnet },
 
             { "platon-210425", PlatON },
 
@@ -1785,9 +1628,7 @@ namespace Network.Particle.Scripts.Model
 
             { "scroll-534351", ScrollSepolia },
 
-            { "scroll-534352", Scroll },
-
-            { "astarzkevm-1261120", AstarzkEVMTestnet },
+            { "scroll-534353", ScrollAlphaTestnet },
 
             { "platon-2206132", PlatONTestnet },
 
@@ -1815,7 +1656,8 @@ namespace Network.Particle.Scripts.Model
         };
 
         // template code end
-        public static ChainInfo? getChain(long chainId, string chainName)
+        [CanBeNull]
+        public static ChainInfo GetChain(long chainId, string chainName)
         {
             var key = $"{chainName.ToLower()}-{chainId}";
             if (ParticleChains.ContainsKey(key))
@@ -1826,50 +1668,52 @@ namespace Network.Particle.Scripts.Model
             return null;
         }
 
-        public static ChainInfo? getEvmChain(long chainId)
+        [CanBeNull]
+        public static ChainInfo GetEvmChain(long chainId)
         {
             var chain = ParticleChains.Values.FirstOrDefault(it => it.ChainType == "evm" && it.Id == chainId);
             return chain;
         }
 
-        public static ChainInfo? getSolanaChain(long chainId)
+        [CanBeNull]
+        public static ChainInfo GetSolanaChain(long chainId)
         {
             var chain = ParticleChains.Values.FirstOrDefault(it => it.ChainType == "solana" && it.Id == chainId);
             return chain;
         }
 
-        public static List<ChainInfo> getAllChains()
+        public static List<ChainInfo> GetAllChains()
         {
             return ParticleChains.Values.ToList();
         }
 
-        public bool isEvmChain()
+        public bool IsEvmChain()
         {
             return chainType == "evm";
         }
 
-        public bool isSolanaChain()
+        public bool IsSolanaChain()
         {
             return chainType == "solana";
         }
 
-        public bool isMainnet()
+        public bool IsMainnet()
         {
             return network == "Mainnet";
         }
 
-        public bool isEIP1559Supported()
+        public bool IsEIP1559Supported()
         {
             return features?.Any(feature => feature.Name == "EIP1559") ?? false;
         }
 
-        public string getParticleNode(string projectId, string projectKey)
+        public string GetParticleNode(string projectId, string projectKey)
         {
             return
                 $"https://rpc.particle.network/evm-chain?chainId=${id}&projectUuid=${projectId}&projectKey=${projectKey}";
         }
 
-        public bool isSupportWalletConnect()
+        public bool IsSupportWalletConnect()
         {
             return chainType == "evm" && name != "Tron";
         }
@@ -1877,38 +1721,25 @@ namespace Network.Particle.Scripts.Model
 
     public class NativeCurrency
     {
-        private string name;
-        private string symbol;
-        private int decimals;
-
-        public string Name => name;
-        public string Symbol => symbol;
-        public int Decimals => decimals;
+        public string Name;
+        public string Symbol;
+        public int Decimals;
 
         public NativeCurrency(string name, string symbol, int decimals)
         {
-            this.name = name;
-            this.symbol = symbol;
-            this.decimals = decimals;
-        }
-
-        private NativeCurrency()
-        {
+            this.Name = name;
+            this.Symbol = symbol;
+            this.Decimals = decimals;
         }
     }
 
     public class Feature
     {
-        private string name;
-        public string Name => name;
+        public string Name;
 
         public Feature(string name)
         {
-            this.name = name;
-        }
-
-        private Feature()
-        {
+            this.Name = name;
         }
     }
 }

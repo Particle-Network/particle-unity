@@ -254,7 +254,7 @@ namespace Network.Particle.Scripts.Core
             var userInfo = PersistTools.GetUserInfo();
             var wallets = userInfo.Wallets;
 
-            if (ParticleNetwork.GetChainInfo().isEvmChain())
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
             {
                 var evmPrivateKey = wallets.FirstOrDefault(x => x.ChainName == "evm_chain")?.PrivateKey;
                 return evmPrivateKey;

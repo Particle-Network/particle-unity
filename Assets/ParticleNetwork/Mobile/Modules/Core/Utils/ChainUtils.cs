@@ -6,12 +6,12 @@ namespace Network.Particle.Scripts.Core.Utils
     {
         public static ChainInfo FindChain(string chainNameString, long chainId)
         {
-            var chainInfo = ChainInfo.getEvmChain(chainId);
+            var chainInfo = ChainInfo.GetEvmChain(chainId);
             if (chainInfo != null)
             {
                 return chainInfo;
             }
-            chainInfo = ChainInfo.getSolanaChain(chainId);
+            chainInfo = ChainInfo.GetSolanaChain(chainId);
             
             if (chainInfo != null)
             {

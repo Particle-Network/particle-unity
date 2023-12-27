@@ -71,7 +71,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void Connect(WalletType walletType, [CanBeNull] ConnectConfig config)
+        public static void Connect(WalletType walletType, [CanBeNull] ParticleAuthConnectConfig config)
         {
             string configJson = "";
             if (config != null)
@@ -153,7 +153,7 @@ namespace Network.Particle.Scripts.Core
         public static void SignMessage(WalletType walletType, string publicAddress, string message)
         {
             string serializedMessage;
-            if (ParticleNetwork.GetChainInfo().isEvmChain())
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
             {
                 if (HexUtils.IsHexadecimal(message))
                 {

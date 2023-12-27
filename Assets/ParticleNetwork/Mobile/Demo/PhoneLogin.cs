@@ -97,6 +97,11 @@ public class PhoneLogin : MonoBehaviour
         }
     }
 
+    public void Close()
+    {
+        this.gameObject.SetActive(false);
+    }
+
     public void ShowToast(string message)
     {
 #if UNITY_ANDROID && !UNITY_EDITOR

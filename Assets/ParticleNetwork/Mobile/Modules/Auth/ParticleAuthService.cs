@@ -163,7 +163,7 @@ namespace Network.Particle.Scripts.Core
         {
             signMessageTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-            if (ParticleNetwork.GetChainInfo().isEvmChain())
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
             {
                 DevModeService.EvmSignMessages(new[] { message });
             }
@@ -266,7 +266,7 @@ namespace Network.Particle.Scripts.Core
             signTransactionTask = new TaskCompletionSource<NativeResultData>();
 
 #if UNITY_EDITOR
-            if (ParticleNetwork.GetChainInfo().isEvmChain())
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
             {
                 DevModeService.EvmSignTransactions(new[] { transaction });
             }

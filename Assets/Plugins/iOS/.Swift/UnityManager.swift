@@ -1672,7 +1672,7 @@ extension UnityManager {
             return newUserInfo
         }
         
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connect")
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connectJWT")
         
 #endif
     }
@@ -1684,7 +1684,7 @@ extension UnityManager {
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.sendPhoneCode(phone: phone)
         }
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connect")
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "sendPhoneCode")
         
 #endif
     }
@@ -1696,7 +1696,7 @@ extension UnityManager {
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.sendEmailCode(email: email)
         }
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connect")
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "sendEmailCode")
         
 #endif
     }
@@ -1781,7 +1781,7 @@ extension UnityManager {
             return newUserInfo
         }
         
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connect")
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "presentLoginPage")
         
 #endif
     }

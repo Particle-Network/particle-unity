@@ -15,7 +15,7 @@ public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
 
     void Start()
     {
-        List<ChainInfo> chainInfos = ChainInfo.getAllChains();
+        List<ChainInfo> chainInfos = ChainInfo.GetAllChains();
         chainInfos = chainInfos
             .OrderByDescending(chainInfo => chainInfo.Id == 80001)
             .ThenBy(chainInfo => chainInfo.Id)

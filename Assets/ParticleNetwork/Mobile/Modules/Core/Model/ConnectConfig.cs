@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 
 namespace Network.Particle.Scripts.Model
 {
-    public class ConnectConfig
+    public class ParticleAuthConnectConfig
     {
         public LoginType loginType;
         [CanBeNull] public string account;
@@ -18,7 +18,7 @@ namespace Network.Particle.Scripts.Model
         /// <param name="supportAuthTypes">Controls whether third-party login buttons are displayed.</param>
         /// <param name="socialLoginPrompt">Controls whether show light UI in web, default is false.</param>
         /// <param name="authorization">LoginAuthorization, optional, login and sign message, its message requires hex in evm, base58 in solana </param>
-        public ConnectConfig(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes, [CanBeNull] LoginAuthorization authorization = null, SocialLoginPrompt? socialLoginPrompt = null)
+        public ParticleAuthConnectConfig(LoginType loginType, [CanBeNull] string account, SupportAuthType supportAuthTypes, [CanBeNull] LoginAuthorization authorization = null, SocialLoginPrompt? socialLoginPrompt = null)
         {
             this.loginType = loginType;
             this.account = account;
