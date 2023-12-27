@@ -15,6 +15,7 @@ public class WalletChoice : SingletonMonoBehaviour<WalletChoice>
     {
         List<WalletType> walletTypes = new List<WalletType>();
         walletTypes.Add(WalletType.Particle);
+        walletTypes.Add(WalletType.AuthCore);
         walletTypes.Add(WalletType.MetaMask);
         walletTypes.Add(WalletType.Rainbow);
         walletTypes.Add(WalletType.Trust);

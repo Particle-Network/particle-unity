@@ -1061,12 +1061,32 @@ extension UnityManager {
     func adapterConnect(_ json: String, configJson: String) {
         let walletTypeString = json
         
-        var connectConfig: ParticleAuthConfig?
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
+            return
+        }
+        
+        guard let adapter = map2ConnectAdapter(from: walletType) else {
+            print("adapter for \(walletTypeString) is not init ")
+            return
+        }
+        
+        var particleAuthConfig: ParticleAuthConfig?
+        
+        var loginType: LoginType
+        var supportAuthTypeArray: [SupportAuthType] = []
+        var account: String?
+        var code: String?
+        var socialLoginPrompt: SocialLoginPrompt?
+        
+#if canImport(ParticleAuthCore)
+        var particleAuthCoreConfig: ParticleAuthCoreConfig?
+#endif
+        
         if !configJson.isEmpty {
             let data = JSON(parseJSON: configJson)
-            let loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
-            var supportAuthTypeArray: [SupportAuthType] = []
-            
+            loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
+                
             let array = data["supportAuthTypeValues"].arrayValue.map {
                 $0.stringValue.lowercased()
             }
@@ -1098,15 +1118,19 @@ extension UnityManager {
                 }
                 }
             }
-            
-            var account = data["account"].string
-            
+                
+            account = data["account"].string
+                
             if account != nil, account!.isEmpty {
                 account = nil
             }
             
+            code = data["code"].string
+            if code != nil, code!.isEmpty {
+                code = nil
+            }
+                
             let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
-            var socialLoginPrompt: SocialLoginPrompt?
             if socialLoginPromptString == "none" {
                 socialLoginPrompt = SocialLoginPrompt.none
             } else if socialLoginPromptString == "consent" {
@@ -1114,34 +1138,35 @@ extension UnityManager {
             } else if socialLoginPromptString == "selectaccount" {
                 socialLoginPrompt = SocialLoginPrompt.selectAccount
             }
-            
+                
             let authorizationJson = data["authorization"]
             var loginAuthorization: LoginAuthorization?
-            
+                
             if authorizationJson == JSON.null {
                 loginAuthorization = nil
             } else {
                 let message: String? = authorizationJson["message"].stringValue
                 let isUnique: Bool? = authorizationJson["uniq"].boolValue
-                
+                    
                 loginAuthorization = .init(message: message, isUnique: isUnique)
             }
 
-            connectConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization)
-        }
-        
-        guard let walletType = map2WalletType(from: walletTypeString) else {
-            print("walletType \(walletTypeString) is not existed ")
-            return
-        }
-        guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypeString) is not init ")
-            return
+            particleAuthConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization)
+            
+#if canImport(ParticleAuthCore)
+            particleAuthCoreConfig = ParticleAuthCoreConfig(loginType: loginType, account: account, code: code, socialLoginPrompt: socialLoginPrompt)
+#endif
         }
         
         var observable: Single<Account?>
         if walletType == .particle {
-            observable = adapter.connect(connectConfig)
+            observable = adapter.connect(particleAuthConfig)
+        } else if walletType == .authCore {
+#if canImport(ParticleAuthCore)
+            observable = adapter.connect(particleAuthCoreConfig)
+#else
+            observable = adapter.connect(ConnectConfig.none)
+#endif
         } else {
             observable = adapter.connect(ConnectConfig.none)
         }

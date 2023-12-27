@@ -36,7 +36,7 @@ namespace Network.Particle.Scripts.Core
         /// </summary>
         /// <param name="walletType">Wallet Type</param>
         /// <returns></returns>
-        public Task<NativeResultData> Connect(WalletType walletType, [CanBeNull] ParticleAuthConnectConfig config = null)
+        public Task<NativeResultData> Connect(WalletType walletType, [CanBeNull] ConnectConfig config = null)
         {
             connectTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
