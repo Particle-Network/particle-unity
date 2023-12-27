@@ -26,8 +26,6 @@ namespace DefaultNamespace
             Debug.Log($"signature {signature}");
         }
         
-
-
         public async void OpenWallet()
         {
             ParticleAuth.Instance.OpenWallet();

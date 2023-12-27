@@ -139,7 +139,7 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void navigatorLoginList(string json);
-        
+
         [DllImport("__Internal")]
         public static extern void navigatorDappBrowser(string json);
 
@@ -293,6 +293,21 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void authCoreConnect(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreConnectJWT(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCorePresentLoginPage(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreSendEmailCode(string json);
+
+        [DllImport("__Internal")]
+        public static extern void authCoreSendPhoneCode(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void authCoreSetBlindEnable(bool json);
 
         [DllImport("__Internal")]
         public static extern void authCoreDisconnect();

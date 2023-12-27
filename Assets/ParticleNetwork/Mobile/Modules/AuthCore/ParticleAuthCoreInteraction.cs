@@ -24,12 +24,123 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        internal static void Connect(string jwt)
+        /// <summary>
+        /// Set blind enable, default value is false.
+        /// This switch will work if the following conditions are met:
+        /// 1. your account is connected with JWT
+        /// 2. your account does not set payment password
+        /// 3. SecurityAccountConfig.promptSettingWhenSign is 0, you can call ParticleNetwork.SetSecurityAccountConfig to update its value.
+        /// </summary>
+        /// <param name="enable">Enable</param>
+        public static void SetBlindEnable(bool enable)
         {
+#if UNITY_ANDROID&& !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallAuthCoreNative("init");
+#elif UNITY_IOS&& !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreSetBlindEnable(enable);
+#else
+
+#endif
+        }
+
+        internal static void Connect(LoginType loginType, [CanBeNull] string account, [CanBeNull] string code,
+            SocialLoginPrompt? socialLoginPrompt)
+        {
+            var obj = new JObject
+            {
+                { "loginType", loginType.ToString() },
+                { "account", account },
+                { "code", code },
+                { "socialLoginPrompt", socialLoginPrompt.ToString() },
+            };
+
+            var json = JsonConvert.SerializeObject(obj);
+
+            Debug.Log(json);
+
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.CallAuthCoreNative("connect",jwt);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.authCoreConnect(jwt);
+            ParticleNetworkIOSBridge.authCoreConnect(json);
+#else
+
+#endif
+        }
+
+        internal static void PresentLoginPage(LoginType loginType, [CanBeNull] string account,
+            SupportAuthType supportAuthTypes,
+            SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginPageConfig loginPageConfig
+        )
+        {
+            var authTypeList = ParticleTools.GetSupportAuthTypeValues(supportAuthTypes);
+            string accountNative = "";
+            if (string.IsNullOrEmpty(account))
+                accountNative = "";
+            else
+                accountNative = account;
+
+
+            var obj = new JObject
+            {
+                { "loginType", loginType.ToString() },
+                { "account", accountNative },
+                { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
+                { "socialLoginPrompt", socialLoginPrompt.ToString() },
+            };
+
+            if (loginPageConfig != null) obj["loginPageConfig"] = JToken.FromObject(loginPageConfig);
+
+
+            var json = JsonConvert.SerializeObject(obj);
+
+            Debug.Log(json);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallNative("login",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCorePresentLoginPage(json);
+#else
+
+#endif
+        }
+
+        internal static void SendPhoneCode(string phone)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallAuthCoreNative("connect",jwt);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreSendPhoneCode(phone);
+#else
+
+#endif
+        }
+
+        /// <summary>
+        /// Send a verification code to your email 
+        /// </summary>
+        /// <param name="email">Email, for example `user@example.com`</param>
+        internal static void SendEmailCode(string email)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallAuthCoreNative("connect",jwt);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreSendEmailCode(email);
+#else
+
+#endif
+        }
+
+        internal static void ConnectJWT(string jwt)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.CallAuthCoreNative("connect",jwt);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreConnectJWT(jwt);
 #else
 
 #endif

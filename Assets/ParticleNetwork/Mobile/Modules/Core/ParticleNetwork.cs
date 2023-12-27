@@ -166,12 +166,6 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-
-        public static AAVersionNumber GetAAVersionNumber()
-        {
-            return AAVersionNumber.V1_0_0();
-        }
-
         public static void CallNative(string methodName, params object[] args)
         {
             Debug.Log("CallNative_methodName " + methodName);

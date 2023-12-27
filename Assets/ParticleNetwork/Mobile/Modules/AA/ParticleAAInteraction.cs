@@ -8,14 +8,14 @@ namespace Network.Particle.Scripts.Core
 {
     public static class ParticleAAInteraction
     {
-        public static void Init(AAAccountName accountName, AAVersionNumber versionNumber,
+        public static void Init(AAAccountName accountName,
             Dictionary<int, string> biconomyApiKeys)
         {
             var obj = new JObject
             {
                 { "biconomy_api_keys", JObject.FromObject(biconomyApiKeys) },
-                { "name", accountName.ToString() },
-                { "version", versionNumber.version },
+                { "name", accountName.name },
+                { "version", accountName.version },
             };
 
             var json = JsonConvert.SerializeObject(obj);

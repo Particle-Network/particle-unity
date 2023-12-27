@@ -114,6 +114,11 @@
 // Particle Auth Core
 - (void) authCoreInitialize;
 - (void) authCoreConnect:(NSString* _Nonnull)json;
+- (void) authCoreConnectJWT:(NSString* _Nonnull)json;
+- (void) authCoreSendEmailCode:(NSString* _Nonnull)json;
+- (void) authCoreSendPhoneCode:(NSString* _Nonnull)json;
+- (void) authCorePresentLoginPage:(NSString* _Nonnull)json;
+- (void) authCoreSetBlindEnable:(BOOL)enbale;
 - (void) authCoreDisconnect;
 - (void) authCoreIsConnected;
 - (NSString* _Nonnull) authCoreGetUserInfo;

@@ -383,8 +383,28 @@ extern "C" {
          [api authCoreInitialize];
     }
 
+    void authCoreSetBlindEnable(bool enable) {
+        [api authCoreSetBlindEnable: enable];
+    }
+
     void authCoreConnect(const char* json) {
          [api authCoreConnect: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreConnectJWT(const char* json) {
+        [api authCoreConnectJWT: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCorePresentLoginPage(const char* json) {
+        [api authCorePresentLoginPage: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreSendEmailCode(const char* json) {
+        [api authCoreSendEmailCode: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreSendPhoneCode(const char* json) {
+        [api authCoreSendPhoneCode: [NSString stringWithUTF8String: json]];
     }
 
     void authCoreDisconnect() {

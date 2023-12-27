@@ -41,7 +41,6 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/AAVersionNumber.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/Appearance.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/AuthDemo.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Singleton/SingletonException.cs" />
@@ -120,6 +119,12 @@
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/DAppMetaData.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Example.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/ChainChoice.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/LoginPageConfig.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ImageType.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/LoginTypeChoice.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/LoginTypeItem.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/EmailLogin.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/PhoneLogin.cs" />
      <Folder Include="Assets" />
      <Folder Include="Assets/ParticleNetwork/Mobile/Modules/Connect" />
      <None Include="Library/PackageCache/com.unity.modules.subsystems@1.0.0/package.json" />

@@ -39,7 +39,7 @@ namespace Network.Particle.Scripts.Test
                 { 80001, "hYZIwIsf2.e18c790b-cafb-4c4e-a438-0289fc25dba1" }
             };
 
-            ParticleAAInteraction.Init(AAAccountName.BICONOMY, AAVersionNumber.V1_0_0(), biconomyApiKeys);
+            ParticleAAInteraction.Init(AAAccountName.BICONOMY_V1(), biconomyApiKeys);
         }
 
 
@@ -93,7 +93,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress = (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
@@ -112,7 +112,7 @@ namespace Network.Particle.Scripts.Test
                 // get your smart account by account name and version.
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =
@@ -148,7 +148,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =
@@ -203,7 +203,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =
@@ -254,7 +254,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =
@@ -323,7 +323,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = ParticleAuthServiceInteraction.GetAddress();
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =
@@ -377,7 +377,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = "0x498c9b8379E2e16953a7bEvmService1FF94ea11893d09A3Ed";
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =
@@ -433,7 +433,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =
@@ -486,7 +486,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = "";
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =
@@ -556,7 +556,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = "0x498c9b8379E2e16953a7b1FF94ea11893d09A3Ed";
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =
@@ -611,7 +611,7 @@ namespace Network.Particle.Scripts.Test
                 var eoaAddress = ParticleAuthCoreInteraction.EvmGetAddress();
                 var smartAccountResult = await EvmService.GetSmartAccount(new[]
                 {
-                    new SmartAccountObject(AAAccountName.BICONOMY.ToString(), AAVersionNumber.V1_0_0().version,
+                    new SmartAccountObject(AAAccountName.BICONOMY_V1(),
                         eoaAddress)
                 });
                 var smartAccountAddress =

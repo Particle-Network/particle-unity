@@ -1,4 +1,3 @@
-
 using System.Collections.Generic;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Singleton;
@@ -25,9 +24,8 @@ public class WalletChoice : SingletonMonoBehaviour<WalletChoice>
         walletTypes.Add(WalletType.Phantom);
         walletTypes.Add(WalletType.EvmPrivateKey);
         walletTypes.Add(WalletType.SolanaPrivateKey);
-        
-        
-        
+
+
         foreach (var walletType in walletTypes)
         {
             var walletItem = Instantiate(walletItemTemplate);
@@ -41,7 +39,7 @@ public class WalletChoice : SingletonMonoBehaviour<WalletChoice>
             walletItem.transform.SetParent(scrollContent.transform);
         }
     }
-    
+
     public void Show(UnityAction<WalletType> unityAction)
     {
         this.unityAction = unityAction;
