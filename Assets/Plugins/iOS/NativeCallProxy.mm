@@ -387,6 +387,10 @@ extern "C" {
         [api authCoreSetBlindEnable: enable];
     }
 
+    bool authCoreGetBlindEnable() {
+        return [api authCoreGetBlindEnable];
+    }
+
     void authCoreConnect(const char* json) {
          [api authCoreConnect: [NSString stringWithUTF8String: json]];
     }

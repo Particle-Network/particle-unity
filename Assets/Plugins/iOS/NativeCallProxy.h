@@ -119,6 +119,7 @@
 - (void) authCoreSendPhoneCode:(NSString* _Nonnull)json;
 - (void) authCorePresentLoginPage:(NSString* _Nonnull)json;
 - (void) authCoreSetBlindEnable:(BOOL)enbale;
+- (BOOL) authCoreGetBlindEnable;
 - (void) authCoreDisconnect;
 - (void) authCoreIsConnected;
 - (NSString* _Nonnull) authCoreGetUserInfo;

@@ -46,6 +46,7 @@
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Singleton/SingletonException.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/AuthCore/ParticleAuthCoreInteraction.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Model/TestConfig.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/EmailLogin.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/AA/ParticleAAInteraction.cs" />
      <Compile Include="Assets/ParticleNetwork/Windows/Modules/Models/ParticleConfig.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Utils/ChainUtils.cs" />
@@ -60,6 +61,7 @@
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/WalletChoiceItem.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Toast/Scripts/ToastTip.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/AA/ParticleAA.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/LoginTypeChoice.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Utils/HexTool.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Model/TestAccount.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ChainInfo.cs" />
@@ -93,7 +95,10 @@
      <Compile Include="Assets/ParticleNetwork/Windows/Modules/Models/SignTypedDataVersion.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ParticleRpcResponse.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Auth/ParticleAuthService.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/LoginTypeItem.cs" />
      <Compile Include="Assets/ParticleNetwork/Windows/Modules/Models/OnSignResult.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/LoginPageConfig.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/PhoneLogin.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/GUI/ParticleWalletGUI.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/iOSModalPresentStyle.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Connect/ParticleConnect.cs" />
@@ -103,6 +108,7 @@
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Auth/ParticleAuthServiceInteraction.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/AuthCore/ParticleAuthCore.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/SmartAccountObject.cs" />
+     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ImageType.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Model/EthereumTransaction.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/UserInfo.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/ParticleNetworkIOSBridge.cs" />
@@ -119,12 +125,6 @@
      <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/DAppMetaData.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Example.cs" />
      <Compile Include="Assets/ParticleNetwork/Mobile/Demo/ChainChoice.cs" />
-     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/LoginPageConfig.cs" />
-     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ImageType.cs" />
-     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/LoginTypeChoice.cs" />
-     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/LoginTypeItem.cs" />
-     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/EmailLogin.cs" />
-     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/PhoneLogin.cs" />
      <Folder Include="Assets" />
      <Folder Include="Assets/ParticleNetwork/Mobile/Modules/Connect" />
      <None Include="Library/PackageCache/com.unity.modules.subsystems@1.0.0/package.json" />

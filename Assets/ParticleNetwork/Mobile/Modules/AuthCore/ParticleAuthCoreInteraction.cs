@@ -44,6 +44,23 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
+        
+        /// <summary>
+        /// Get blind enable
+        /// </summary>
+        /// <returns></returns>
+        public static bool GetBlindEnable()
+        {
+            
+#if UNITY_ANDROID&& !UNITY_EDITOR
+// todo
+            return ParticleNetwork.CallAuthCoreNative("init");
+#elif UNITY_IOS&& !UNITY_EDITOR
+            return ParticleNetworkIOSBridge.authCoreGetBlindEnable();
+#else
+            return false;
+#endif
+        }
 
         internal static void Connect(LoginType loginType, [CanBeNull] string account, [CanBeNull] string code,
             SocialLoginPrompt? socialLoginPrompt)

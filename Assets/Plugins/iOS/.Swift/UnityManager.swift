@@ -1645,6 +1645,13 @@ extension UnityManager {
 #endif
     }
     
+    func authCoreGetBlindEnable() -> Bool {
+#if canImport(ParticleAuthCore)
+        return Auth.getBlindEnable()
+#endif
+        return false
+    }
+    
     func authCoreConnect(_ json: String) {
 #if canImport(ParticleAuthCore)
         let data = JSON(parseJSON: json)

@@ -308,7 +308,10 @@ namespace Network.Particle.Scripts.Core
         
         [DllImport("__Internal")]
         public static extern void authCoreSetBlindEnable(bool json);
-
+        
+        [DllImport("__Internal")]
+        public static extern bool authCoreGetBlindEnable();
+        
         [DllImport("__Internal")]
         public static extern void authCoreDisconnect();
 
