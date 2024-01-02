@@ -2189,6 +2189,13 @@ extension UnityManager {
          BitKeep,
          WalletConnect,
          Phantom,
+         Zerion,
+         Math,
+         Omin,
+         Inch1,
+         Zengo,
+         Alpha,
+         OKX,
          */
         let str = string.lowercased()
         var walletType: WalletType?
@@ -2226,6 +2233,8 @@ extension UnityManager {
             walletType = .alpha
         } else if str == "inch1" {
             walletType = .inch1
+        } else if str == "okx" {
+            walletType = .okx
         } else {
             walletType = nil
         }
