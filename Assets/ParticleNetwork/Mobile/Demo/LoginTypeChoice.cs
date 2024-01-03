@@ -14,6 +14,8 @@ public class LoginTypeChoice : SingletonMonoBehaviour<LoginTypeChoice>
     void Start()
     {
         List<LoginType> loginTypes = new List<LoginType>();
+        loginTypes.Add(LoginType.PHONE);
+        loginTypes.Add(LoginType.EMAIL);
         loginTypes.Add(LoginType.APPLE);
         loginTypes.Add(LoginType.GOOGLE);
         loginTypes.Add(LoginType.FACEBOOK);

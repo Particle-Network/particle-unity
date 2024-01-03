@@ -387,7 +387,7 @@ namespace Network.Particle.Scripts.Core
         public static void SetShowSmartAccountSetting(bool show = true)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
+// todo 1
             ParticleNetwork.CallNative("setShowSmartAccountSetting",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setShowSmartAccountSetting(show);

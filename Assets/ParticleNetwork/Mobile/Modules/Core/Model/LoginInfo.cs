@@ -1,4 +1,3 @@
-
 namespace Network.Particle.Scripts.Model
 {
     public enum LoginType
@@ -32,6 +31,21 @@ namespace Network.Particle.Scripts.Model
         EMAIL = 1 << 10, // 1024
         TWITTER = 1 << 11,
         ALL = (1 << 12) - 1, // 4096 - 1 
+    }
+
+    public enum SupportLoginType
+    {
+        APPLE,
+        GOOGLE,
+        FACEBOOK,
+        DISCORD,
+        GITHUB,
+        TWITCH,
+        MICROSOFT,
+        LINKEDIN,
+        PHONE,
+        EMAIL,
+        TWITTER,
     }
 
     public enum SocialLoginPrompt

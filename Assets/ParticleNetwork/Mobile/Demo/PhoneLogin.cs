@@ -74,7 +74,7 @@ public class PhoneLogin : MonoBehaviour
         Debug.Log($"Connect click, phone {phone}, code {code}");
         try
         {
-            var nativeResultData = await ParticleAuthCore.Instance.Connect(LoginType.PHONE, phone, code, null);
+            var nativeResultData = await ParticleAuthCore.Instance.ConnectWithCode(phone, null, code);
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)

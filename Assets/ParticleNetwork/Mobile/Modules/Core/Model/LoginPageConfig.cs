@@ -13,17 +13,16 @@ namespace Network.Particle.Scripts.Model
         [JsonProperty(PropertyName = "imageType")]
         public ImageType ImageType;
         
-        [JsonProperty(PropertyName = "data")]
-        public string Data;
+        [JsonProperty(PropertyName = "imagePath")]
+        public string ImagePath;
         
 
         public LoginPageConfig(string projectName,
-            string description, ImageType imageType, string data )
+            string description,string imagePath )
         {
             this.ProjectName = projectName;
             this.Description = description;
-            this.ImageType = imageType;
-            this.Data = data;
+            this.ImagePath = imagePath;
         }
     }
 }

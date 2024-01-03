@@ -36,25 +36,23 @@ namespace Network.Particle.Scripts.Core
         public static void SetBlindEnable(bool enable)
         {
 #if UNITY_ANDROID&& !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallAuthCoreNative("init");
+            ParticleNetwork.CallAuthCoreNative("setBlindEnable",enable);
 #elif UNITY_IOS&& !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreSetBlindEnable(enable);
 #else
 
 #endif
         }
-        
+
         /// <summary>
         /// Get blind enable
         /// </summary>
         /// <returns></returns>
         public static bool GetBlindEnable()
         {
-            
+           
 #if UNITY_ANDROID&& !UNITY_EDITOR
-// todo
-            return ParticleNetwork.CallAuthCoreNative("init");
+            return ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("getBlindEnable");
 #elif UNITY_IOS&& !UNITY_EDITOR
             return ParticleNetworkIOSBridge.authCoreGetBlindEnable();
 #else
@@ -62,15 +60,15 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        internal static void Connect(LoginType loginType, [CanBeNull] string account, [CanBeNull] string code,
-            SocialLoginPrompt? socialLoginPrompt)
+
+        internal static void ConnectWithCode([CanBeNull] string phone, [CanBeNull] string email,
+            string code)
         {
             var obj = new JObject
             {
-                { "loginType", loginType.ToString() },
-                { "account", account },
+                { "phone", phone },
+                { "email", email },
                 { "code", code },
-                { "socialLoginPrompt", socialLoginPrompt.ToString() },
             };
 
             var json = JsonConvert.SerializeObject(obj);
@@ -78,33 +76,37 @@ namespace Network.Particle.Scripts.Core
             Debug.Log(json);
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallAuthCoreNative("connect",jwt);
+            ParticleNetwork.CallAuthCoreNative("connectWithCode",json);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.authCoreConnect(json);
+// todo iOS
+            ParticleNetworkIOSBridge.ConnectWithCode(json);
 #else
 
 #endif
         }
 
-        internal static void PresentLoginPage(LoginType loginType, [CanBeNull] string account,
-            SupportAuthType supportAuthTypes,
+        internal static void Connect(LoginType loginType, [CanBeNull] string account,
+            [CanBeNull] List<SupportLoginType> supportLoginTypes,
             SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginPageConfig loginPageConfig
         )
         {
-            var authTypeList = ParticleTools.GetSupportAuthTypeValues(supportAuthTypes);
+            List<string> supportAuthTypeValues = new List<string>();
+            if (supportLoginTypes != null)
+            {
+                supportAuthTypeValues = supportLoginTypes.ConvertAll(s => s.ToString());
+            }
+
             string accountNative = "";
             if (string.IsNullOrEmpty(account))
                 accountNative = "";
             else
                 accountNative = account;
 
-
             var obj = new JObject
             {
                 { "loginType", loginType.ToString() },
                 { "account", accountNative },
-                { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
+                { "supportAuthTypeValues", JToken.FromObject(supportAuthTypeValues) },
                 { "socialLoginPrompt", socialLoginPrompt.ToString() },
             };
 
@@ -112,16 +114,16 @@ namespace Network.Particle.Scripts.Core
             {
                 Converters = new List<JsonConverter> { new StringEnumConverter() }
             };
-            
-            if (loginPageConfig != null) obj["loginPageConfig"] = JToken.FromObject(loginPageConfig, JsonSerializer.Create(settings));
+
+            if (loginPageConfig != null)
+                obj["loginPageConfig"] = JToken.FromObject(loginPageConfig, JsonSerializer.Create(settings));
 
 
             var json = JsonConvert.SerializeObject(obj);
 
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallNative("login",json);
+            ParticleNetwork.CallAuthCoreNative("connect",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCorePresentLoginPage(json);
 #else
@@ -132,8 +134,7 @@ namespace Network.Particle.Scripts.Core
         internal static void SendPhoneCode(string phone)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallAuthCoreNative("connect",jwt);
+            ParticleNetwork.CallAuthCoreNative("sendPhoneCode",phone);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreSendPhoneCode(phone);
 #else
@@ -148,8 +149,7 @@ namespace Network.Particle.Scripts.Core
         internal static void SendEmailCode(string email)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallAuthCoreNative("connect",jwt);
+            ParticleNetwork.CallAuthCoreNative("sendEmailCode",email);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreSendEmailCode(email);
 #else
@@ -157,17 +157,6 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        internal static void ConnectJWT(string jwt)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-// todo
-            ParticleNetwork.CallAuthCoreNative("connect",jwt);
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.authCoreConnectJWT(jwt);
-#else
-
-#endif
-        }
 
         internal static void Disconnect()
         {
@@ -399,7 +388,7 @@ ParticleNetwork.CallAuthCoreNative("evmSendTransaction",json);
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
+// todo 
             ParticleNetwork.CallNative("batchSendTransactions",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreEvmBatchSendTransactions(json);
@@ -468,7 +457,7 @@ ParticleNetwork.CallAuthCoreNative("evmSendTransaction",json);
         public static void SetCustomUI(string json)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
+// todo 
             // ParticleNetwork.CallAuthCoreNative("solanaSignAndSendTransaction",transaction);
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreSetCustomUI(json);

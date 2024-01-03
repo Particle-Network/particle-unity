@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -15,6 +16,7 @@ namespace Network.Particle.Scripts.Core
     public partial class ParticleAuthCore : SingletonMonoBehaviour<ParticleAuthCore>
     {
         private TaskCompletionSource<NativeResultData> connectTask;
+        private TaskCompletionSource<NativeResultData> connectWithCodeCallBack;
         private TaskCompletionSource<NativeResultData> disconnectTask;
         private TaskCompletionSource<NativeResultData> isConnectedTask;
         private TaskCompletionSource<NativeResultData> switchChainTask;
@@ -24,15 +26,15 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> sendPhoneCodeTask;
         private TaskCompletionSource<NativeResultData> sendEmailCodeTask;
         private TaskCompletionSource<NativeResultData> connectJWTTask;
-        private TaskCompletionSource<NativeResultData> presentLoginPageTask;
 
 
         /// <summary>
         /// Connect 
         /// </summary>
         /// <returns>User info json string</returns>
-        public Task<NativeResultData> Connect(LoginType loginType, [CanBeNull] string account, [CanBeNull] string code,
-            SocialLoginPrompt? socialLoginPrompt)
+        public Task<NativeResultData> Connect(LoginType loginType, [CanBeNull] string account,
+            [CanBeNull] List<SupportLoginType> supportLoginType,
+            SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginPageConfig loginPageConfig)
         {
             connectTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
@@ -42,7 +44,8 @@ namespace Network.Particle.Scripts.Core
                 { "data", "" },
             }));
 #endif
-            ParticleAuthCoreInteraction.Connect(loginType, account, code, socialLoginPrompt);
+            ParticleAuthCoreInteraction.Connect(loginType, account, supportLoginType, socialLoginPrompt,
+                loginPageConfig);
             return connectTask.Task;
         }
 
@@ -60,21 +63,46 @@ namespace Network.Particle.Scripts.Core
         }
 
         /// <summary>
-        /// Connect JWT
+        /// call after login with phone or email success
         /// </summary>
-        /// <returns>User info json string</returns>
-        public Task<NativeResultData> ConnectJWT(string jwt)
+        /// <param name="phone"></param>
+        /// <param name="email"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public Task<NativeResultData> ConnectWithCode([CanBeNull] string phone, [CanBeNull] string email, string code)
         {
-            connectJWTTask = new TaskCompletionSource<NativeResultData>();
+            connectWithCodeCallBack = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
-            ConnectJWTCallBack(JsonConvert.SerializeObject(new JObject
+            ConnectCallBack(JsonConvert.SerializeObject(new JObject
             {
                 { "status", 0 },
                 { "data", "" },
             }));
 #endif
-            ParticleAuthCoreInteraction.ConnectJWT(jwt);
-            return connectJWTTask.Task;
+            ParticleAuthCoreInteraction.ConnectWithCode(phone, email, code);
+            return connectWithCodeCallBack.Task;
+        }
+
+        /// <summary>
+        /// ConnectWithCode call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void ConnectWithCodeCallBack(string json)
+        {
+            Debug.Log($"ConnectCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            connectWithCodeCallBack?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+
+
+        /// <summary>
+        /// Connect JWT
+        /// </summary>
+        /// <returns>User info json string</returns>
+        public Task<NativeResultData> ConnectJWT(string jwt)
+        {
+            return Connect(LoginType.JWT, jwt, null, null, null);
         }
 
 
@@ -90,38 +118,6 @@ namespace Network.Particle.Scripts.Core
             connectJWTTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
-        /// <summary>
-        /// Connect 
-        /// </summary>
-        /// <returns>User info json string</returns>
-        public Task<NativeResultData> PresentLoginPage(LoginType loginType, [CanBeNull] string account,
-            SupportAuthType supportAuthTypes,
-            SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginPageConfig loginPageConfig)
-        {
-            presentLoginPageTask = new TaskCompletionSource<NativeResultData>();
-#if UNITY_EDITOR
-            PresentLoginPageCallBack(JsonConvert.SerializeObject(new JObject
-            {
-                { "status", 0 },
-                { "data", "" },
-            }));
-#endif
-            ParticleAuthCoreInteraction.PresentLoginPage(loginType, account, supportAuthTypes, socialLoginPrompt, loginPageConfig);
-            return presentLoginPageTask.Task;
-        }
-
-
-        /// <summary>
-        /// PresentLoginPage call back
-        /// </summary>
-        /// <param name="json">Result</param>
-        public void PresentLoginPageCallBack(string json)
-        {
-            Debug.Log($"PresentLoginPageCallBack:{json}");
-            var resultData = JObject.Parse(json);
-            var status = (int)resultData["status"];
-            presentLoginPageTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-        }
 
         /// <summary>
         /// Send a verification code to your phone number
