@@ -387,7 +387,6 @@ namespace Network.Particle.Scripts.Core
         public static void SetShowSmartAccountSetting(bool show = true)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo 1
             ParticleNetwork.CallNative("setShowSmartAccountSetting",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setShowSmartAccountSetting(show);
@@ -644,7 +643,7 @@ namespace Network.Particle.Scripts.Core
                 { "icon", icon },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo 
+            // unsupported
             // ParticleNetwork.GetUnityBridgeClass().CallStatic("setCustomWalletName",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setCustomWalletName(json);

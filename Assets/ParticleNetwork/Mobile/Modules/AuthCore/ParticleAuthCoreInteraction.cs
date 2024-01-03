@@ -387,7 +387,6 @@ ParticleNetwork.CallAuthCoreNative("evmSendTransaction",json);
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo 
             ParticleNetwork.CallNative("batchSendTransactions",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreEvmBatchSendTransactions(json);

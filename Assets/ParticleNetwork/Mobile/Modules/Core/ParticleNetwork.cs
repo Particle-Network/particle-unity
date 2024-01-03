@@ -168,7 +168,7 @@ namespace Network.Particle.Scripts.Core
 
         public static void CallNative(string methodName, params object[] args)
         {
-            Debug.Log("CallNative_methodName " + methodName);
+            Debug.Log("CallNative_methodName " + methodName );
 
             GetAndroidJavaObject().Call("runOnUiThread",
                 new AndroidJavaRunnable(() => { GetUnityBridgeClass().CallStatic(methodName, args); }));
