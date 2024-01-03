@@ -395,12 +395,8 @@ extern "C" {
          [api authCoreConnect: [NSString stringWithUTF8String: json]];
     }
 
-    void authCoreConnectJWT(const char* json) {
-        [api authCoreConnectJWT: [NSString stringWithUTF8String: json]];
-    }
-
-    void authCorePresentLoginPage(const char* json) {
-        [api authCorePresentLoginPage: [NSString stringWithUTF8String: json]];
+    void authCoreConnectWithCode(const char* json) {
+        [api authCoreConnectWithCode: [NSString stringWithUTF8String: json]];
     }
 
     void authCoreSendEmailCode(const char* json) {

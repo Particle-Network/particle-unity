@@ -9,9 +9,6 @@ namespace Network.Particle.Scripts.Model
 
         [JsonProperty(PropertyName = "description")] 
         public string Description;
-
-        [JsonProperty(PropertyName = "imageType")]
-        public ImageType ImageType;
         
         [JsonProperty(PropertyName = "imagePath")]
         public string ImagePath;

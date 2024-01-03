@@ -1655,96 +1655,15 @@ extension UnityManager {
     func authCoreConnect(_ json: String) {
 #if canImport(ParticleAuthCore)
         let data = JSON(parseJSON: json)
-        
+
         let loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
         var account = data["account"].string
         if account != nil, account!.isEmpty {
             account = nil
         }
-        
-        var code = data["code"].string
-        if code != nil, code!.isEmpty {
-            code = nil
-        }
-        
-        let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
-        var socialLoginPrompt: SocialLoginPrompt?
-        if socialLoginPromptString == "none" {
-            socialLoginPrompt = SocialLoginPrompt.none
-        } else if socialLoginPromptString == "consent" {
-            socialLoginPrompt = SocialLoginPrompt.consent
-        } else if socialLoginPromptString == "selectaccount" {
-            socialLoginPrompt = SocialLoginPrompt.selectAccount
-        }
-        
-        let observable = Single<Void>.fromAsync { [weak self] in
-            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.connect(type: loginType, account: account, code: code, socialLoginPrompt: socialLoginPrompt)
-        }.map { userInfo in
-            let userInfoJsonString = userInfo.jsonStringFullSnake()
-            let newUserInfo = JSON(parseJSON: userInfoJsonString)
-            return newUserInfo
-        }
-        
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connect")
-        
-#endif
-    }
-    
-    func authCoreConnectJWT(_ json: String) {
-#if canImport(ParticleAuthCore)
-        let jwt = json
-        let observable = Single<Void>.fromAsync { [weak self] in
-            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.connect(jwt: jwt)
-        }.map { userInfo in
-            
-            let userInfoJsonString = userInfo.jsonStringFullSnake()
-            let newUserInfo = JSON(parseJSON: userInfoJsonString)
-            return newUserInfo
-        }
-        
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connectJWT")
-        
-#endif
-    }
-    
-    func authCoreSendPhoneCode(_ json: String) {
-#if canImport(ParticleAuthCore)
-        let phone = json
-        let observable = Single<Void>.fromAsync { [weak self] in
-            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.sendPhoneCode(phone: phone)
-        }
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "sendPhoneCode")
-        
-#endif
-    }
-    
-    func authCoreSendEmailCode(_ json: String) {
-#if canImport(ParticleAuthCore)
-        let email = json
-        let observable = Single<Void>.fromAsync { [weak self] in
-            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.sendEmailCode(email: email)
-        }
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "sendEmailCode")
-        
-#endif
-    }
-    
-    func authCorePresentLoginPage(_ json: String) {
-#if canImport(ParticleAuthCore)
-        let data = JSON(parseJSON: json)
-        
-        let loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
-        var account = data["account"].string
-        if account != nil, account!.isEmpty {
-            account = nil
-        }
-        
+
         var supportAuthTypeArray: [SupportAuthType] = []
-        
+
         let array = data["supportAuthTypeValues"].arrayValue.map {
             $0.stringValue.lowercased()
         }
@@ -1777,7 +1696,7 @@ extension UnityManager {
                 }
             }
         }
-        
+
         let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
         var socialLoginPrompt: SocialLoginPrompt?
         if socialLoginPromptString == "none" {
@@ -1787,24 +1706,18 @@ extension UnityManager {
         } else if socialLoginPromptString == "selectaccount" {
             socialLoginPrompt = SocialLoginPrompt.selectAccount
         }
-        
+
         let config = data["loginPageConfig"]
         var loginPageConfig: LoginPageConfig?
         if config != JSON.null {
             let projectName = config["projectName"].stringValue
             let description = config["description"].stringValue
-            let data = config["data"].stringValue
-            let imageType = config["imageType"].stringValue.lowercased()
-            var imagePath: ImagePath
-            if imageType == "base64" {
-                imagePath = ImagePath.data(data)
-            } else {
-                imagePath = ImagePath.url(data)
-            }
+            let path = config["imagePath"].stringValue.lowercased()
+            let imagePath = ImagePath.url(path)
             loginPageConfig = LoginPageConfig(imagePath: imagePath, projectName: projectName, description: description)
         }
-        
-        let observable = Single<Void>.fromAsync { [weak self] in
+
+        let observable = Single<UserInfo>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.presentLoginPage(type: loginType, account: account, supportAuthType: supportAuthTypeArray, socialLoginPrompt: socialLoginPrompt, config: loginPageConfig)
         }.map { userInfo in
@@ -1812,8 +1725,63 @@ extension UnityManager {
             let newUserInfo = JSON(parseJSON: userInfoJsonString)
             return newUserInfo
         }
+
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connect")
+#endif
+    }
+
+    func authCoreConnect(withCode json: String) {
+#if canImport(ParticleAuthCore)
+        let data = JSON(parseJSON: json)
+        let email = data["email"].stringValue
+        let phone = data["phone"].stringValue
+        let code = data["code"].stringValue
+        if !email.isEmpty {
+            let observable = Single<Void>.fromAsync { [weak self] in
+                guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+                return try await self.auth.connect(type: LoginType.email, account: email, code: code)
+            }.map { userInfo in
+                let userInfoJsonString = userInfo.jsonStringFullSnake()
+                let newUserInfo = JSON(parseJSON: userInfoJsonString)
+                return newUserInfo
+            }
+    
+            subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connectWithCode")
+        } else {
+            let observable = Single<Void>.fromAsync { [weak self] in
+                guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+                return try await self.auth.connect(type: LoginType.phone, account: phone, code: code)
+            }.map { userInfo in
+                let userInfoJsonString = userInfo.jsonStringFullSnake()
+                let newUserInfo = JSON(parseJSON: userInfoJsonString)
+                return newUserInfo
+            }
+    
+            subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connectWithCode")
+        }
+#endif
+    }
+
+    func authCoreSendPhoneCode(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let phone = json
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.sendPhoneCode(phone: phone)
+        }
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "sendPhoneCode")
         
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "presentLoginPage")
+#endif
+    }
+
+    func authCoreSendEmailCode(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let email = json
+        let observable = Single<Void>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.sendEmailCode(email: email)
+        }
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "sendEmailCode")
         
 #endif
     }

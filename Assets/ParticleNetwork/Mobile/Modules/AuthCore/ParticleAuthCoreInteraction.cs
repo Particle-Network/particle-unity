@@ -78,8 +78,7 @@ namespace Network.Particle.Scripts.Core
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallAuthCoreNative("connectWithCode",json);
 #elif UNITY_IOS && !UNITY_EDITOR
-// todo iOS
-            ParticleNetworkIOSBridge.ConnectWithCode(json);
+            ParticleNetworkIOSBridge.authCoreConnectWithCode(json);
 #else
 
 #endif
@@ -125,7 +124,7 @@ namespace Network.Particle.Scripts.Core
 #if UNITY_ANDROID && !UNITY_EDITOR
             ParticleNetwork.CallAuthCoreNative("connect",json);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.authCorePresentLoginPage(json);
+            ParticleNetworkIOSBridge.authCoreConnect(json);
 #else
 
 #endif

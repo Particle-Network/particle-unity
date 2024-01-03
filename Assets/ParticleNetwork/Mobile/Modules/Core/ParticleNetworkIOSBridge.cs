@@ -293,16 +293,13 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void authCoreConnect(string json);
-
+        
         [DllImport("__Internal")]
-        public static extern void authCoreConnectJWT(string json);
-
-        [DllImport("__Internal")]
-        public static extern void authCorePresentLoginPage(string json);
-
+        public static extern void authCoreConnectWithCode(string json);
+        
         [DllImport("__Internal")]
         public static extern void authCoreSendEmailCode(string json);
-
+        
         [DllImport("__Internal")]
         public static extern void authCoreSendPhoneCode(string json);
         

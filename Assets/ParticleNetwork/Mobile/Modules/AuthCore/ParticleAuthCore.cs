@@ -25,7 +25,6 @@ namespace Network.Particle.Scripts.Core
 
         private TaskCompletionSource<NativeResultData> sendPhoneCodeTask;
         private TaskCompletionSource<NativeResultData> sendEmailCodeTask;
-        private TaskCompletionSource<NativeResultData> connectJWTTask;
 
 
         /// <summary>
@@ -103,19 +102,6 @@ namespace Network.Particle.Scripts.Core
         public Task<NativeResultData> ConnectJWT(string jwt)
         {
             return Connect(LoginType.JWT, jwt, null, null, null);
-        }
-
-
-        /// <summary>
-        /// Connect JWT call back
-        /// </summary>
-        /// <param name="json">Result</param>
-        public void ConnectJWTCallBack(string json)
-        {
-            Debug.Log($"ConnectJWTCallBack:{json}");
-            var resultData = JObject.Parse(json);
-            var status = (int)resultData["status"];
-            connectJWTTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
 
