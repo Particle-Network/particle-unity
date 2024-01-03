@@ -65,7 +65,7 @@ namespace Network.Particle.Scripts.Model
             this.CryptoCoin = cryptoCoin;
             this.FiatCoin = fiatCoin;
             this.FiatAmt = fiatAmt;
-            this.FixFiatCoin = fixCryptoCoin;
+            this.FixFiatCoin = fixFiatCoin;
             this.FixFiatAmt = fixFiatAmt;
             this.FixCryptoCoin = fixCryptoCoin;
             this.Theme = theme;
