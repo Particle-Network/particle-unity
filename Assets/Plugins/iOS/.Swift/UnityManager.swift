@@ -1737,7 +1737,7 @@ extension UnityManager {
         let phone = data["phone"].stringValue
         let code = data["code"].stringValue
         if !email.isEmpty {
-            let observable = Single<Void>.fromAsync { [weak self] in
+            let observable = Single<UserInfo>.fromAsync { [weak self] in
                 guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
                 return try await self.auth.connect(type: LoginType.email, account: email, code: code)
             }.map { userInfo in
@@ -1748,7 +1748,7 @@ extension UnityManager {
     
             subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connectWithCode")
         } else {
-            let observable = Single<Void>.fromAsync { [weak self] in
+            let observable = Single<UserInfo>.fromAsync { [weak self] in
                 guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
                 return try await self.auth.connect(type: LoginType.phone, account: phone, code: code)
             }.map { userInfo in
@@ -1765,7 +1765,7 @@ extension UnityManager {
     func authCoreSendPhoneCode(_ json: String) {
 #if canImport(ParticleAuthCore)
         let phone = json
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<Bool>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.sendPhoneCode(phone: phone)
         }
@@ -1777,7 +1777,7 @@ extension UnityManager {
     func authCoreSendEmailCode(_ json: String) {
 #if canImport(ParticleAuthCore)
         let email = json
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<Bool>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.sendEmailCode(email: email)
         }
@@ -1788,7 +1788,7 @@ extension UnityManager {
     
     func authCoreDisconnect() {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.disconnect()
         }
@@ -1800,7 +1800,7 @@ extension UnityManager {
     
     func authCoreIsConnected() {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<Bool>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.isConnected()
         }
@@ -1914,7 +1914,7 @@ extension UnityManager {
     func authCoreEvmPersonalSign(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.evm.personalSign(json, chainInfo: chainInfo)
         }
@@ -1926,7 +1926,7 @@ extension UnityManager {
     func authCoreEvmPersonalSignUnique(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.evm.personalSignUnique(json, chainInfo: chainInfo)
         }
@@ -1938,7 +1938,7 @@ extension UnityManager {
     func authCoreEvmSignTypedData(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.evm.signTypedData(json, chainInfo: chainInfo)
         }
@@ -1950,7 +1950,7 @@ extension UnityManager {
     func authCoreEvmSignTypedDataUnique(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.evm.signTypedDataUnique(json, chainInfo: chainInfo)
         }
@@ -1986,7 +1986,7 @@ extension UnityManager {
         if aaService != nil, aaService!.isAAModeEnable() {
             sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote, chainInfo: chainInfo)
         } else {
-            sendObservable = Single<Void>.fromAsync { [weak self] in
+            sendObservable = Single<String>.fromAsync { [weak self] in
                 guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
                 return try await self.auth.evm.sendTransaction(transaction, feeMode: feeMode, chainInfo: chainInfo)
             }
@@ -2054,7 +2054,7 @@ extension UnityManager {
 #if canImport(ParticleAuthCore)
         let serializedMessage = Base58.encode(message.data(using: .utf8)!)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.solana.signMessage(serializedMessage, chainInfo: chainInfo)
         }
@@ -2066,7 +2066,7 @@ extension UnityManager {
     func authCoreSolanaSignTransaction(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.solana.signTransaction(json, chainInfo: chainInfo)
         }
@@ -2078,7 +2078,7 @@ extension UnityManager {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
         let transactions = JSON(parseJSON: json).arrayValue.map { $0.stringValue }
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<[String]>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.solana.signAllTransactions(transactions, chainInfo: chainInfo)
         }
@@ -2092,7 +2092,7 @@ extension UnityManager {
 #if canImport(ParticleAuthCore)
         let transaction = json
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.solana.signAndSendTransaction(transaction, chainInfo: chainInfo)
         }
