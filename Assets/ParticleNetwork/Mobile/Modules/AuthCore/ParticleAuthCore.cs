@@ -478,7 +478,7 @@ namespace Network.Particle.Scripts.Core
                 { "data", "" },
             }));
 #endif
-            ParticleAuthCoreInteraction.EvmSendTransaction(transaction);
+            ParticleAuthCoreInteraction.EvmSendTransaction(transaction, feeMode);
             return evmSendTransactionTask.Task;
         }
 

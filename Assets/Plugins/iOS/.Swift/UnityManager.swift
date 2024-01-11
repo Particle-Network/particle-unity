@@ -1931,7 +1931,7 @@ extension UnityManager {
             return try await self.auth.evm.personalSignUnique(json, chainInfo: chainInfo)
         }
         
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSignUnique")
 #endif
     }
     
@@ -1995,7 +1995,7 @@ extension UnityManager {
         latestWalletType = .authCore
         latestPublicAddress = auth.evm.getAddress()
         
-        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
+        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authCoreSystemName, methodName: "evmSendTransaction")
       
 #endif
     }
@@ -2107,7 +2107,6 @@ extension UnityManager {
         } catch {
             print("auth core set custom ui error \(error)")
         }
-        
 #endif
     }
 }
