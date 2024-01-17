@@ -8,31 +8,27 @@ dependencies {
             }
         }
         implementation project(':unityLibrary')
-        def sdkVersion = "1.4.1" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
-     
+        def sdkVersion = "1.3.7" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+         //particle unity bridge (Required) 
+         implementation "network.particle:unity-bridge:${sdkVersion}"
         //tips
-        //auth-service and auth-service-tiramisu are the same library,
-        //tiramisu requires android targetSdkVersion 33,it supports set auth browser height percent
-        
-        //particle auth service(Required)  
-        //implementation "network.particle:auth-service:$sdkVersion"
-        //particle auth service tiramisu(Required), it supports set auth browser height percent,require targetSdkVersion 33
+        //particle auth service (Optional.) If you don't want to use the API service, you can remove this dependency.
         implementation "network.particle:auth-service:$sdkVersion"
         
         //particle api service (Optional.) If you don't want to use the API service, you can remove this dependency.
         implementation "network.particle:api-service:${sdkVersion}"
-        //particle wallet service (Optional.) If you don't want to use the wallet service, you can remove this dependency. wallet service contains the connect sdk 
+        //particle wallet service (Optional.) If you don't want to use the wallet service, you can remove this dependency
         implementation "network.particle:wallet-service:${sdkVersion}"
-        //particle unity bridge (Required) 
-        implementation "network.particle:unity-bridge:${sdkVersion}"
-        //particle biconomy (Optional.) If you don't want to use the service, you can remove this dependency.
+
+        //particle aa (Optional.) If you don't want to use the service, you can remove this dependency.
         implementation("network.particle:aa-service:$sdkVersion")
         
          //particle mpc-core、auth-core (Optional.) If you don't want to use the service, you can remove this dependency.
          //If the following services are not required, you need remove android:fullBackupContent="@xml/pn_backup_rules" from AndroidManifest.xml
         implementation("network.particle:mpc-core:$sdkVersion")
         implementation("network.particle:auth-core:$sdkVersion")
-        //if only use connect sdk, you must add the following dependencies 
+        
+        //connect sdk,You can keep only what you need.
         implementation("network.particle:connect-evm-adapter:$sdkVersion")
         implementation("network.particle:connect-solana-adapter:$sdkVersion")
         implementation("network.particle:connect-phantom-adapter:$sdkVersion")
