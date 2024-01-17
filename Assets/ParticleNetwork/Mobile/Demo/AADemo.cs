@@ -17,7 +17,7 @@ namespace Network.Particle.Scripts.Test
     {
         private static AndroidJavaObject activityObject;
 
-        private AAAccountName accountName = AAAccountName.BICONOMY_V1();
+        private AAAccountName accountName = AAAccountName.LIGHT();
 
         private static AndroidJavaObject GetAndroidJavaObject()
         {

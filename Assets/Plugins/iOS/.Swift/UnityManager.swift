@@ -836,6 +836,7 @@ extension UnityManager {
         let iconString = data["icon"].stringValue
         let urlString = data["url"].stringValue
         let description = data["description"].string
+        let redirect = data["redirect"].string
         
         let walletConnectV2ProjectId = data["walletConnectProjectId"].stringValue
         
@@ -843,7 +844,7 @@ extension UnityManager {
         
         let url = URL(string: urlString) != nil ? URL(string: urlString)! : URL(string: "https://static.particle.network")!
         
-        let walletMetaData = WalletMetaData(name: name, icon: icon, url: url, description: description)
+        let walletMetaData = WalletMetaData(name: name, icon: icon, url: url, description: description, redirectUniversalLink: redirect)
         
         ParticleWalletConnect.initialize(walletMetaData)
         ParticleWalletConnect.setWalletConnectV2ProjectId(walletConnectV2ProjectId)
@@ -976,8 +977,9 @@ extension UnityManager {
         
         let dAppUrl = URL(string: dAppUrlString) != nil ? URL(string: dAppUrlString)! : URL(string: "https://static.particle.network")!
         let description = data["metadata"]["description"].stringValue
+        let redirect = data["metadata"]["redirect"].string
         
-        let dAppData = DAppMetaData(name: dAppName, icon: dAppIconUrl, url: dAppUrl, description: description)
+        let dAppData = DAppMetaData(name: dAppName, icon: dAppIconUrl, url: dAppUrl, description: description, redirectUniversalLink: redirect)
         
         var adapters: [ConnectAdapter] = [ParticleAuthAdapter()]
 #if canImport(ConnectEVMAdapter)
@@ -1151,7 +1153,7 @@ extension UnityManager {
                 loginAuthorization = .init(message: message, isUnique: isUnique)
             }
 
-            particleAuthConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization)
+            particleAuthConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, account: account, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization)
             
 #if canImport(ParticleAuthCore)
             particleAuthCoreConfig = ParticleAuthCoreConfig(loginType: loginType, account: account, code: code, socialLoginPrompt: socialLoginPrompt)
@@ -1578,7 +1580,7 @@ extension UnityManager {
         let accountName = AA.AccountName(version: version, name: name)
        
         var finalAccountName: AA.AccountName
-        let all: [AA.AccountName] = [.biconomyV1, .biconomyV2, .simple, .cyberConnect]
+        let all: [AA.AccountName] = AA.AccountName.allCases
         if all.contains(accountName) {
             finalAccountName = accountName
         } else {

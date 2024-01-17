@@ -7,31 +7,31 @@ target 'Unity-iPhone' do
   use_frameworks!
 
   # Particle Auth Service
-  pod 'ParticleNetworkBase', '1.3.9'
-  pod 'ParticleAuthService', '1.3.9'
+  pod 'ParticleNetworkBase', '1.3.10'
+  pod 'ParticleAuthService', '1.3.10'
   
   # Particle Connect Service
-  pod 'ConnectCommon', '0.2.15'
-  pod 'ConnectEVMAdapter', '0.2.15'
-  pod 'ConnectSolanaAdapter', '0.2.15'
-  pod 'ConnectWalletConnectAdapter', '0.2.15'
-  pod 'ConnectPhantomAdapter', '0.2.15'
-  pod 'ParticleConnect', '0.2.15'
-  pod 'ParticleAuthAdapter', '0.2.15'
+  pod 'ConnectCommon', '0.2.16'
+  pod 'ConnectEVMAdapter', '0.2.16'
+  pod 'ConnectSolanaAdapter', '0.2.16'
+  pod 'ConnectWalletConnectAdapter', '0.2.16'
+  pod 'ConnectPhantomAdapter', '0.2.16'
+  pod 'ParticleConnect', '0.2.16'
+  pod 'ParticleAuthAdapter', '0.2.16'
 
   # Particle Wallet Service
-  pod 'ParticleWalletConnect', '1.3.9'
-  pod 'ParticleWalletAPI', '1.3.9'
-  pod 'ParticleWalletGUI', '1.3.9'
+  pod 'ParticleWalletConnect', '1.3.10'
+  pod 'ParticleWalletAPI', '1.3.10'
+  pod 'ParticleWalletGUI', '1.3.10'
   
   # Particle AA
-  pod 'ParticleAA', '1.3.9'
+  pod 'ParticleAA', '1.3.10'
   
   # Particle Auth Core
-  pod 'AuthCoreAdapter', '1.3.4'
-  pod 'ParticleAuthCore', '1.3.4'
-  pod 'ParticleMPCCore', '1.3.4'
-  pod 'Thresh', '1.3.4'
+  pod 'AuthCoreAdapter', '1.3.7'
+  pod 'ParticleAuthCore', '1.3.7'
+  pod 'ParticleMPCCore', '1.3.7'
+  pod 'Thresh', '1.3.7'
     
   pod 'SkeletonView', :git => 'https://github.com/SunZhiC/SkeletonView.git', :branch => 'main'
   
