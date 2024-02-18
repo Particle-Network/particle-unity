@@ -582,12 +582,12 @@ extension UnityManager {
         }
         let chainInfo = ParticleNetwork.getChainInfo()
         if network == nil {
-            switch chainInfo.chain {
+            switch chainInfo {
             case .solana:
                 network = OpenBuyNetwork.solana
             case .ethereum:
                 network = OpenBuyNetwork.ethereum
-            case .bsc:
+            case .bnbChain:
                 network = OpenBuyNetwork.binanceSmartChain
             case .optimism:
                 network = OpenBuyNetwork.optimism
@@ -595,17 +595,13 @@ extension UnityManager {
                 network = OpenBuyNetwork.polygon
             case .tron:
                 network = OpenBuyNetwork.tron
-            case .arbitrum:
-                if chainInfo == .arbitrum(.one) {
-                    network = OpenBuyNetwork.arbitrumOne
-                } else {
-                    network = nil
-                }
+            case .arbitrumOne:
+                network = OpenBuyNetwork.arbitrumOne
             case .avalanche:
                 network = OpenBuyNetwork.avalanche
             case .celo:
                 network = OpenBuyNetwork.celo
-            case .zkSync:
+            case .zkSyncEra:
                 network = OpenBuyNetwork.zkSync
             default:
                 network = nil
@@ -679,7 +675,7 @@ extension UnityManager {
             let chainId = $0["chain_id"].intValue
             let chainName = $0["chain_name"].stringValue.lowercased()
             let chainType: ChainType = chainName == "solana" ? .solana : .evm
-            return ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType)?.chain
+            return ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType)
         }
         ParticleWalletGUI.setSupportChain(chains)
     }
@@ -698,6 +694,16 @@ extension UnityManager {
     
     func getPayDisabled() -> Bool {
         ParticleWalletGUI.getPayDisabled()
+    }
+    
+    func navigatorDappBrowser(_ json: String) {
+        let data = JSON(parseJSON: json)
+        let urlStr = data["url"].stringValue
+        if let url = URL(string: urlStr) {
+            PNRouter.navigatorDappBrowser(url: url)
+        } else {
+            PNRouter.navigatorDappBrowser(url: nil)
+        }
     }
     
     func navigatorLoginList(_ json: String?) {
@@ -830,6 +836,7 @@ extension UnityManager {
         let iconString = data["icon"].stringValue
         let urlString = data["url"].stringValue
         let description = data["description"].string
+        let redirect = data["redirect"].string
         
         let walletConnectV2ProjectId = data["walletConnectProjectId"].stringValue
         
@@ -837,7 +844,7 @@ extension UnityManager {
         
         let url = URL(string: urlString) != nil ? URL(string: urlString)! : URL(string: "https://static.particle.network")!
         
-        let walletMetaData = WalletMetaData(name: name, icon: icon, url: url, description: description)
+        let walletMetaData = WalletMetaData(name: name, icon: icon, url: url, description: description, redirectUniversalLink: redirect)
         
         ParticleWalletConnect.initialize(walletMetaData)
         ParticleWalletConnect.setWalletConnectV2ProjectId(walletConnectV2ProjectId)
@@ -969,9 +976,10 @@ extension UnityManager {
         let dAppIconUrl = URL(string: dAppIconString) != nil ? URL(string: dAppIconString)! : URL(string: "https://static.particle.network/wallet-icons/Particle.png")!
         
         let dAppUrl = URL(string: dAppUrlString) != nil ? URL(string: dAppUrlString)! : URL(string: "https://static.particle.network")!
-        let description = data["metaData"]["description"].stringValue
+        let description = data["metadata"]["description"].stringValue
+        let redirect = data["metadata"]["redirect"].string
         
-        let dAppData = DAppMetaData(name: dAppName, icon: dAppIconUrl, url: dAppUrl, description: description)
+        let dAppData = DAppMetaData(name: dAppName, icon: dAppIconUrl, url: dAppUrl, description: description, redirectUniversalLink: redirect)
         
         var adapters: [ConnectAdapter] = [ParticleAuthAdapter()]
 #if canImport(ConnectEVMAdapter)
@@ -1055,12 +1063,32 @@ extension UnityManager {
     func adapterConnect(_ json: String, configJson: String) {
         let walletTypeString = json
         
-        var connectConfig: ParticleAuthConfig?
+        guard let walletType = map2WalletType(from: walletTypeString) else {
+            print("walletType \(walletTypeString) is not existed ")
+            return
+        }
+        
+        guard let adapter = map2ConnectAdapter(from: walletType) else {
+            print("adapter for \(walletTypeString) is not init ")
+            return
+        }
+        
+        var particleAuthConfig: ParticleAuthConfig?
+        
+        var loginType: LoginType
+        var supportAuthTypeArray: [SupportAuthType] = []
+        var account: String?
+        var code: String?
+        var socialLoginPrompt: SocialLoginPrompt?
+        
+#if canImport(ParticleAuthCore)
+        var particleAuthCoreConfig: ParticleAuthCoreConfig?
+#endif
+        
         if !configJson.isEmpty {
             let data = JSON(parseJSON: configJson)
-            let loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
-            var supportAuthTypeArray: [SupportAuthType] = []
-            
+            loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
+                
             let array = data["supportAuthTypeValues"].arrayValue.map {
                 $0.stringValue.lowercased()
             }
@@ -1092,15 +1120,19 @@ extension UnityManager {
                 }
                 }
             }
-            
-            var account = data["account"].string
-            
+                
+            account = data["account"].string
+                
             if account != nil, account!.isEmpty {
                 account = nil
             }
             
+            code = data["code"].string
+            if code != nil, code!.isEmpty {
+                code = nil
+            }
+                
             let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
-            var socialLoginPrompt: SocialLoginPrompt?
             if socialLoginPromptString == "none" {
                 socialLoginPrompt = SocialLoginPrompt.none
             } else if socialLoginPromptString == "consent" {
@@ -1108,41 +1140,35 @@ extension UnityManager {
             } else if socialLoginPromptString == "selectaccount" {
                 socialLoginPrompt = SocialLoginPrompt.selectAccount
             }
-            
+                
             let authorizationJson = data["authorization"]
             var loginAuthorization: LoginAuthorization?
-            
+                
             if authorizationJson == JSON.null {
                 loginAuthorization = nil
             } else {
                 let message: String? = authorizationJson["message"].stringValue
                 let isUnique: Bool? = authorizationJson["uniq"].boolValue
-                
+                    
                 loginAuthorization = .init(message: message, isUnique: isUnique)
             }
 
-            connectConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, phoneOrEmailAccount: account, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization)
-        }
-        
-        guard let walletType = map2WalletType(from: walletTypeString) else {
-            print("walletType \(walletTypeString) is not existed ")
-            return
-        }
-        guard let adapter = map2ConnectAdapter(from: walletType) else {
-            print("adapter for \(walletTypeString) is not init ")
-            return
-        }
-        
-        guard let vc = ufw?.appController().rootViewController else {
-            print("unity root view controller is nil")
-            return
+            particleAuthConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, account: account, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization)
+            
+#if canImport(ParticleAuthCore)
+            particleAuthCoreConfig = ParticleAuthCoreConfig(loginType: loginType, account: account, code: code, socialLoginPrompt: socialLoginPrompt)
+#endif
         }
         
         var observable: Single<Account?>
-        if walletType == .walletConnect {
-            observable = (adapter as! WalletConnectAdapter).connectWithQrCode(from: vc)
-        } else if walletType == .particle {
-            observable = adapter.connect(connectConfig)
+        if walletType == .particle {
+            observable = adapter.connect(particleAuthConfig)
+        } else if walletType == .authCore {
+#if canImport(ParticleAuthCore)
+            observable = adapter.connect(particleAuthCoreConfig)
+#else
+            observable = adapter.connect(ConnectConfig.none)
+#endif
         } else {
             observable = adapter.connect(ConnectConfig.none)
         }
@@ -1461,7 +1487,7 @@ extension UnityManager {
 
         var signature = data["signature"].stringValue
                 
-        if ConnectManager.getChainType() == .solana {
+        if ParticleNetwork.getChainInfo().chainType == .solana {
             signature = Base58.encode(Data(base64Encoded: signature)!)
         }
                 
@@ -1549,10 +1575,19 @@ extension UnityManager {
             }
         }
         
-        let accountName = AA.AccountName(rawValue: data["name"].stringValue.uppercased()) ?? .biconomy
-        let versionNumbr = AA.VersionNumber(rawValue: data["version"].stringValue) ?? .v1_0_0
+        let name = data["name"].stringValue.uppercased()
+        let version = data["version"].stringValue.lowercased()
+        let accountName = AA.AccountName(version: version, name: name)
        
-        AAService.initialize(name: accountName, version: versionNumbr, biconomyApiKeys: biconomyAppKeys)
+        var finalAccountName: AA.AccountName
+        let all: [AA.AccountName] = AA.AccountName.allCases
+        if all.contains(accountName) {
+            finalAccountName = accountName
+        } else {
+            finalAccountName = .biconomyV1
+        }
+        
+        AAService.initialize(name: finalAccountName, biconomyApiKeys: biconomyAppKeys)
         ParticleNetwork.setAAService(aaService)
     }
     
@@ -1606,27 +1641,156 @@ extension UnityManager {
 #endif
     }
     
+    func authCoreSetBlindEnable(_ enable: Bool) {
+#if canImport(ParticleAuthCore)
+        Auth.setBlindEnable(enable)
+#endif
+    }
+    
+    func authCoreGetBlindEnable() -> Bool {
+#if canImport(ParticleAuthCore)
+        return Auth.getBlindEnable()
+#endif
+        return false
+    }
+    
     func authCoreConnect(_ json: String) {
 #if canImport(ParticleAuthCore)
-        let jwt = json
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let data = JSON(parseJSON: json)
+
+        let loginType = LoginType(rawValue: data["loginType"].stringValue.lowercased()) ?? .email
+        var account = data["account"].string
+        if account != nil, account!.isEmpty {
+            account = nil
+        }
+
+        var supportAuthTypeArray: [SupportAuthType] = []
+
+        let array = data["supportAuthTypeValues"].arrayValue.map {
+            $0.stringValue.lowercased()
+        }
+        if array.contains("all") {
+            supportAuthTypeArray = [.all]
+        } else {
+            array.forEach {
+                if $0 == "email" {
+                    supportAuthTypeArray.append(.email)
+                } else if $0 == "phone" {
+                    supportAuthTypeArray.append(.phone)
+                } else if $0 == "apple" {
+                    supportAuthTypeArray.append(.apple)
+                } else if $0 == "google" {
+                    supportAuthTypeArray.append(.google)
+                } else if $0 == "facebook" {
+                    supportAuthTypeArray.append(.facebook)
+                } else if $0 == "github" {
+                    supportAuthTypeArray.append(.github)
+                } else if $0 == "twitch" {
+                    supportAuthTypeArray.append(.twitch)
+                } else if $0 == "microsoft" {
+                    supportAuthTypeArray.append(.microsoft)
+                } else if $0 == "linkedin" {
+                    supportAuthTypeArray.append(.linkedin)
+                } else if $0 == "discord" {
+                    supportAuthTypeArray.append(.discord)
+                } else if $0 == "twitter" {
+                    supportAuthTypeArray.append(.twitter)
+                }
+            }
+        }
+
+        let socialLoginPromptString = data["socialLoginPrompt"].stringValue.lowercased()
+        var socialLoginPrompt: SocialLoginPrompt?
+        if socialLoginPromptString == "none" {
+            socialLoginPrompt = SocialLoginPrompt.none
+        } else if socialLoginPromptString == "consent" {
+            socialLoginPrompt = SocialLoginPrompt.consent
+        } else if socialLoginPromptString == "selectaccount" {
+            socialLoginPrompt = SocialLoginPrompt.selectAccount
+        }
+
+        let config = data["loginPageConfig"]
+        var loginPageConfig: LoginPageConfig?
+        if config != JSON.null {
+            let projectName = config["projectName"].stringValue
+            let description = config["description"].stringValue
+            let path = config["imagePath"].stringValue.lowercased()
+            let imagePath = ImagePath.url(path)
+            loginPageConfig = LoginPageConfig(imagePath: imagePath, projectName: projectName, description: description)
+        }
+
+        let observable = Single<UserInfo>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
-            return try await self.auth.connect(jwt: jwt)
+            return try await self.auth.presentLoginPage(type: loginType, account: account, supportAuthType: supportAuthTypeArray, socialLoginPrompt: socialLoginPrompt, config: loginPageConfig)
         }.map { userInfo in
-            
             let userInfoJsonString = userInfo.jsonStringFullSnake()
             let newUserInfo = JSON(parseJSON: userInfoJsonString)
             return newUserInfo
         }
-        
+
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connect")
+#endif
+    }
+
+    func authCoreConnect(withCode json: String) {
+#if canImport(ParticleAuthCore)
+        let data = JSON(parseJSON: json)
+        let email = data["email"].stringValue
+        let phone = data["phone"].stringValue
+        let code = data["code"].stringValue
+        if !email.isEmpty {
+            let observable = Single<UserInfo>.fromAsync { [weak self] in
+                guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+                return try await self.auth.connect(type: LoginType.email, account: email, code: code)
+            }.map { userInfo in
+                let userInfoJsonString = userInfo.jsonStringFullSnake()
+                let newUserInfo = JSON(parseJSON: userInfoJsonString)
+                return newUserInfo
+            }
+    
+            subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connectWithCode")
+        } else {
+            let observable = Single<UserInfo>.fromAsync { [weak self] in
+                guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+                return try await self.auth.connect(type: LoginType.phone, account: phone, code: code)
+            }.map { userInfo in
+                let userInfoJsonString = userInfo.jsonStringFullSnake()
+                let newUserInfo = JSON(parseJSON: userInfoJsonString)
+                return newUserInfo
+            }
+    
+            subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "connectWithCode")
+        }
+#endif
+    }
+
+    func authCoreSendPhoneCode(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let phone = json
+        let observable = Single<Bool>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.sendPhoneCode(phone: phone)
+        }
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "sendPhoneCode")
+        
+#endif
+    }
+
+    func authCoreSendEmailCode(_ json: String) {
+#if canImport(ParticleAuthCore)
+        let email = json
+        let observable = Single<Bool>.fromAsync { [weak self] in
+            guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
+            return try await self.auth.sendEmailCode(email: email)
+        }
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "sendEmailCode")
         
 #endif
     }
     
     func authCoreDisconnect() {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.disconnect()
         }
@@ -1638,7 +1802,7 @@ extension UnityManager {
     
     func authCoreIsConnected() {
 #if canImport(ParticleAuthCore)
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<Bool>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.isConnected()
         }
@@ -1752,7 +1916,7 @@ extension UnityManager {
     func authCoreEvmPersonalSign(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.evm.personalSign(json, chainInfo: chainInfo)
         }
@@ -1764,19 +1928,19 @@ extension UnityManager {
     func authCoreEvmPersonalSignUnique(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.evm.personalSignUnique(json, chainInfo: chainInfo)
         }
         
-        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
+        subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSignUnique")
 #endif
     }
     
     func authCoreEvmSignTypedData(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.evm.signTypedData(json, chainInfo: chainInfo)
         }
@@ -1788,7 +1952,7 @@ extension UnityManager {
     func authCoreEvmSignTypedDataUnique(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.evm.signTypedDataUnique(json, chainInfo: chainInfo)
         }
@@ -1824,7 +1988,7 @@ extension UnityManager {
         if aaService != nil, aaService!.isAAModeEnable() {
             sendObservable = aaService!.quickSendTransactions([transaction], feeMode: feeMode, messageSigner: self, wholeFeeQuote: wholeFeeQuote, chainInfo: chainInfo)
         } else {
-            sendObservable = Single<Void>.fromAsync { [weak self] in
+            sendObservable = Single<String>.fromAsync { [weak self] in
                 guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
                 return try await self.auth.evm.sendTransaction(transaction, feeMode: feeMode, chainInfo: chainInfo)
             }
@@ -1833,7 +1997,7 @@ extension UnityManager {
         latestWalletType = .authCore
         latestPublicAddress = auth.evm.getAddress()
         
-        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authCoreSystemName, methodName: "evmPersonalSign")
+        subscribeAndCallback(observable: sendObservable, unityName: UnityManager.authCoreSystemName, methodName: "evmSendTransaction")
       
 #endif
     }
@@ -1892,7 +2056,7 @@ extension UnityManager {
 #if canImport(ParticleAuthCore)
         let serializedMessage = Base58.encode(message.data(using: .utf8)!)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.solana.signMessage(serializedMessage, chainInfo: chainInfo)
         }
@@ -1904,7 +2068,7 @@ extension UnityManager {
     func authCoreSolanaSignTransaction(_ json: String) {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.solana.signTransaction(json, chainInfo: chainInfo)
         }
@@ -1916,7 +2080,7 @@ extension UnityManager {
 #if canImport(ParticleAuthCore)
         let chainInfo = ParticleNetwork.getChainInfo()
         let transactions = JSON(parseJSON: json).arrayValue.map { $0.stringValue }
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<[String]>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.solana.signAllTransactions(transactions, chainInfo: chainInfo)
         }
@@ -1930,7 +2094,7 @@ extension UnityManager {
 #if canImport(ParticleAuthCore)
         let transaction = json
         let chainInfo = ParticleNetwork.getChainInfo()
-        let observable = Single<Void>.fromAsync { [weak self] in
+        let observable = Single<String>.fromAsync { [weak self] in
             guard let self = self else { throw ParticleNetwork.ResponseError(code: nil, message: "self is nil") }
             return try await self.auth.solana.signAndSendTransaction(transaction, chainInfo: chainInfo)
         }
@@ -1945,7 +2109,6 @@ extension UnityManager {
         } catch {
             print("auth core set custom ui error \(error)")
         }
-        
 #endif
     }
 }
@@ -1995,6 +2158,13 @@ extension UnityManager {
          BitKeep,
          WalletConnect,
          Phantom,
+         Zerion,
+         Math,
+         Omin,
+         Inch1,
+         Zengo,
+         Alpha,
+         OKX,
          */
         let str = string.lowercased()
         var walletType: WalletType?
@@ -2032,6 +2202,8 @@ extension UnityManager {
             walletType = .alpha
         } else if str == "inch1" {
             walletType = .inch1
+        } else if str == "okx" {
+            walletType = .okx
         } else {
             walletType = nil
         }
