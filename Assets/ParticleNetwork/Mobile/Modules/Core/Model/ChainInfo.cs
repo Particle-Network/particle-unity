@@ -406,7 +406,7 @@ namespace Network.Particle.Scripts.Model
         "https://manta.network",
         new NativeCurrency("ETH", "ETH", 18),
         "https://pacific-rpc.manta.network/http",
-        " https://pacific-explorer.manta.network",
+        "https://pacific-explorer.manta.network",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -646,6 +646,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo ModeTestnet => _modetestnet;
+
+    private static ChainInfo _modetestnet = new ChainInfo(
+        919,
+        "Mode",
+        "evm",
+        "https://static.particle.network/token-list/mode/native.png",
+        "Mode Testnet",
+        "Testnet",
+        "https://www.mode.network",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://sepolia.mode.network",
+        "https://sepolia.explorer.mode.network",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo ZoraGoerli => _zoragoerli;
 
     private static ChainInfo _zoragoerli = new ChainInfo(
@@ -749,6 +767,42 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://haven-rpc.bsquared.network",
         "https://haven-explorer.bsquared.network",
+        null,
+        null
+    );
+            
+
+    public static ChainInfo CoreTestnet => _coretestnet;
+
+    private static ChainInfo _coretestnet = new ChainInfo(
+        1115,
+        "Core",
+        "evm",
+        "https://static.particle.network/token-list/core/native.png",
+        "Core Testnet",
+        "Testnet",
+        "https://coredao.org",
+        new NativeCurrency("CORE", "CORE", 18),
+        "https://rpc.test.btcs.network",
+        "https://scan.test.btcs.network",
+        null,
+        null
+    );
+            
+
+    public static ChainInfo Core => _core;
+
+    private static ChainInfo _core = new ChainInfo(
+        1116,
+        "Core",
+        "evm",
+        "https://static.particle.network/token-list/core/native.png",
+        "Core Mainnet",
+        "Mainnet",
+        "https://coredao.org",
+        new NativeCurrency("CORE", "CORE", 18),
+        "https://rpc.coredao.org",
+        "https://scan.coredao.org",
         null,
         null
     );
@@ -894,6 +948,24 @@ namespace Network.Particle.Scripts.Model
         "https://evm.kava.io",
         "https://kavascan.com",
         null,
+        null
+    );
+            
+
+    public static ChainInfo SatoshiVMTestnet => _satoshivmtestnet;
+
+    private static ChainInfo _satoshivmtestnet = new ChainInfo(
+        3110,
+        "SatoshiVM",
+        "evm",
+        "https://static.particle.network/token-list/satoshivm/native.png",
+        "SatoshiVM Testnet",
+        "Testnet",
+        "https://www.satoshivm.io",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://test-rpc-node-http.svmscan.io",
+        "https://testnet.svmscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
         null
     );
             
@@ -1240,6 +1312,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo Mode => _mode;
+
+    private static ChainInfo _mode = new ChainInfo(
+        34443,
+        "Mode",
+        "evm",
+        "https://static.particle.network/token-list/mode/native.png",
+        "Mode Mainnet",
+        "Mainnet",
+        "https://www.mode.network",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://mainnet.mode.network",
+        "https://explorer.mode.network",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo ArbitrumOne => _arbitrumone;
 
     private static ChainInfo _arbitrumone = new ChainInfo(
@@ -1507,6 +1597,24 @@ namespace Network.Particle.Scripts.Model
         "https://artio.beratrail.io",
         null,
         "https://artio.faucet.berachain.com"
+    );
+            
+
+    public static ChainInfo Blast => _blast;
+
+    private static ChainInfo _blast = new ChainInfo(
+        81457,
+        "Blast",
+        "evm",
+        "https://static.particle.network/token-list/blast/native.png",
+        "Blast Mainnet",
+        "Mainnet",
+        "https://blastblockchain.com",
+        new NativeCurrency("Blast Ether", "ETH", 18),
+        "https://rpc.blast.io",
+        "https://blastscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
     );
             
 
@@ -1829,7 +1937,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Blast Ether", "ETH", 18),
         "https://sepolia.blast.io",
         "https://testnet.blastscan.io",
-        null,
+        new List<Feature>() { new Feature("EIP1559")},
         null
     );
             
@@ -2047,6 +2155,8 @@ namespace Network.Particle.Scripts.Model
             
         {"metis-599" , MetisGoerli },
             
+        {"mode-919" , ModeTestnet },
+            
         {"zora-999" , ZoraGoerli },
             
         {"klaytn-1001" , KlaytnTestnet },
@@ -2058,6 +2168,10 @@ namespace Network.Particle.Scripts.Model
         {"polygonzkevm-1101" , PolygonzkEVM },
             
         {"bsquared-1102" , BSquaredTestnet },
+            
+        {"core-1115" , CoreTestnet },
+            
+        {"core-1116" , Core },
             
         {"moonbeam-1284" , Moonbeam },
             
@@ -2074,6 +2188,8 @@ namespace Network.Particle.Scripts.Model
         {"kava-2221" , KavaTestnet },
             
         {"kava-2222" , Kava },
+            
+        {"satoshivm-3110" , SatoshiVMTestnet },
             
         {"fantom-4002" , FantomTestnet },
             
@@ -2113,6 +2229,8 @@ namespace Network.Particle.Scripts.Model
             
         {"lumibit-28206" , LumiBitTestnet },
             
+        {"mode-34443" , Mode },
+            
         {"arbitrum-42161" , ArbitrumOne },
             
         {"arbitrum-42170" , ArbitrumNova },
@@ -2142,6 +2260,8 @@ namespace Network.Particle.Scripts.Model
         {"polygon-80001" , PolygonMumbai },
             
         {"berachain-80085" , BerachainArtio },
+            
+        {"blast-81457" , Blast },
             
         {"base-84531" , BaseGoerli },
             

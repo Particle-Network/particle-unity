@@ -179,7 +179,7 @@ namespace Network.Particle.Scripts.Test
 
                 if (balance < fee)
                 {
-                    Debug.Log("native balance if not enough for gas fee");
+                    Debug.Log("native balance is not enough for gas fee");
                     return;
                 }
 
@@ -337,7 +337,7 @@ namespace Network.Particle.Scripts.Test
 
                 if (balance < fee)
                 {
-                    Debug.Log("native balance if not enough for gas fee");
+                    Debug.Log("native balance is not enough for gas fee");
                     return;
                 }
 
@@ -384,7 +384,7 @@ namespace Network.Particle.Scripts.Test
 
                 if (balance < fee)
                 {
-                    Debug.Log("native balance if not enough for gas fee");
+                    Debug.Log("native balance is not enough for gas fee");
                     return;
                 }
 
@@ -546,7 +546,7 @@ namespace Network.Particle.Scripts.Test
 
                 if (balance < fee)
                 {
-                    Debug.Log("native balance if not enough for gas fee");
+                    Debug.Log("native balance is not enough for gas fee");
                     return;
                 }
 
@@ -594,7 +594,7 @@ namespace Network.Particle.Scripts.Test
 
                 if (balance < fee)
                 {
-                    Debug.Log("native balance if not enough for gas fee");
+                    Debug.Log("native balance is not enough for gas fee");
                     return;
                 }
 
@@ -752,7 +752,7 @@ namespace Network.Particle.Scripts.Test
 
                 if (balance < fee)
                 {
-                    Debug.Log("native balance if not enough for gas fee");
+                    Debug.Log("native balance is not enough for gas fee");
                     return;
                 }
 
