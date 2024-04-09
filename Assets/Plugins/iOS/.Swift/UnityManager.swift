@@ -561,52 +561,8 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let walletAddress = data["wallet_address"].string
         let networkString = data["network"].stringValue.lowercased()
-        var network: OpenBuyNetwork?
-        
-        if networkString == "solana" {
-            network = .solana
-        } else if networkString == "ethereum" {
-            network = .ethereum
-        } else if networkString == "binancesmartchain" {
-            network = .binanceSmartChain
-        } else if networkString == "optimism" {
-            network = .optimism
-        } else if networkString == "polygon" {
-            network = .polygon
-        } else if networkString == "tron" {
-            network = .tron
-        } else if networkString == "arbitrumOne" {
-            network = .arbitrumOne
-        } else {
-            network = nil
-        }
         let chainInfo = ParticleNetwork.getChainInfo()
-        if network == nil {
-            switch chainInfo {
-            case .solana:
-                network = OpenBuyNetwork.solana
-            case .ethereum:
-                network = OpenBuyNetwork.ethereum
-            case .bnbChain:
-                network = OpenBuyNetwork.binanceSmartChain
-            case .optimism:
-                network = OpenBuyNetwork.optimism
-            case .polygon:
-                network = OpenBuyNetwork.polygon
-            case .tron:
-                network = OpenBuyNetwork.tron
-            case .arbitrumOne:
-                network = OpenBuyNetwork.arbitrumOne
-            case .avalanche:
-                network = OpenBuyNetwork.avalanche
-            case .celo:
-                network = OpenBuyNetwork.celo
-            case .zkSyncEra:
-                network = OpenBuyNetwork.zkSync
-            default:
-                network = nil
-            }
-        }
+        
         let fiatCoin = data["fiat_coin"].string
         let fiatAmt = data["fiat_amt"].int
         let cryptoCoin = data["crypto_coin"].string
@@ -617,7 +573,7 @@ extension UnityManager {
         let language = getLanguage(from: data["language"].stringValue.lowercased())
         
         var buyConfig = BuyCryptoConfig()
-        buyConfig.network = network
+        buyConfig.network = chainInfo
         buyConfig.walletAddress = walletAddress
         buyConfig.cryptoCoin = cryptoCoin ?? chainInfo.nativeToken.symbol
         buyConfig.fiatAmt = fiatAmt

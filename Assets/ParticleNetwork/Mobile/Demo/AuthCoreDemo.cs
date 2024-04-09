@@ -12,7 +12,7 @@ namespace Network.Particle.Scripts.Test
 {
     public class AuthCoreDemo : MonoBehaviour
     {
-        private ChainInfo _chainInfo = ChainInfo.EthereumGoerli;
+        private ChainInfo _chainInfo = ChainInfo.EthereumSepolia;
 
         private LoginType _loginType;
 

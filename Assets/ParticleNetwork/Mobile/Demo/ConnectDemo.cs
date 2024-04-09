@@ -11,7 +11,7 @@ namespace Network.Particle.Scripts.Test
 {
     public class ConnectDemo : MonoBehaviour
     {
-        private ChainInfo _chainInfo = ChainInfo.EthereumGoerli;
+        private ChainInfo _chainInfo = ChainInfo.EthereumSepolia;
 
         private string loginSourceMessage = "";
         private string loginSignature = "";

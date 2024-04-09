@@ -70,24 +70,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo EthereumGoerli => _ethereumgoerli;
-
-    private static ChainInfo _ethereumgoerli = new ChainInfo(
-        5,
-        "Ethereum",
-        "evm",
-        "https://static.particle.network/token-list/ethereum/native.png",
-        "Ethereum Goerli",
-        "Goerli",
-        "https://goerli.net/#about",
-        new NativeCurrency("Ether", "ETH", 18),
-        "https://ethereum-goerli.publicnode.com",
-        "https://goerli.etherscan.io",
-        new List<Feature>() { new Feature("EIP1559")},
-        "https://goerlifaucet.com"
-    );
-            
-
     public static ChainInfo Optimism => _optimism;
 
     private static ChainInfo _optimism = new ChainInfo(
@@ -484,24 +466,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo zkSyncEraTestnet => _zksynceratestnet;
-
-    private static ChainInfo _zksynceratestnet = new ChainInfo(
-        280,
-        "zkSync",
-        "evm",
-        "https://static.particle.network/token-list/zksync/native.png",
-        "zkSync Era Testnet",
-        "Testnet",
-        "https://era.zksync.io/docs",
-        new NativeCurrency("zkSync", "ETH", 18),
-        "https://zksync2-testnet.zksync.dev",
-        "https://goerli.explorer.zksync.io",
-        new List<Feature>() { new Feature("EIP1559")},
-        "https://portal.zksync.io/faucet"
-    );
-            
-
     public static ChainInfo zkSyncEraSepolia => _zksyncerasepolia;
 
     private static ChainInfo _zksyncerasepolia = new ChainInfo(
@@ -592,24 +556,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo OptimismGoerli => _optimismgoerli;
-
-    private static ChainInfo _optimismgoerli = new ChainInfo(
-        420,
-        "Optimism",
-        "evm",
-        "https://static.particle.network/token-list/optimism/native.png",
-        "Optimism Goerli",
-        "Testnet",
-        "https://optimism.io",
-        new NativeCurrency("Ether", "ETH", 18),
-        "https://goerli.optimism.io",
-        "https://goerli-optimism.etherscan.io",
-        new List<Feature>() { new Feature("EIP1559")},
-        "https://faucet.triangleplatform.com/optimism/goerli"
-    );
-            
-
     public static ChainInfo PGN => _pgn;
 
     private static ChainInfo _pgn = new ChainInfo(
@@ -628,24 +574,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo MetisGoerli => _metisgoerli;
-
-    private static ChainInfo _metisgoerli = new ChainInfo(
-        599,
-        "Metis",
-        "evm",
-        "https://static.particle.network/token-list/metis/native.png",
-        "Metis Goerli",
-        "Goerli",
-        "https://www.metis.io",
-        new NativeCurrency("Metis", "METIS", 18),
-        "https://goerli.gateway.metisdevops.link",
-        "https://goerli.explorer.metisdevops.link",
-        null,
-        "https://goerli.faucet.metisdevops.link"
-    );
-            
-
     public static ChainInfo ModeTestnet => _modetestnet;
 
     private static ChainInfo _modetestnet = new ChainInfo(
@@ -659,24 +587,6 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("ETH", "ETH", 18),
         "https://sepolia.mode.network",
         "https://sepolia.explorer.mode.network",
-        new List<Feature>() { new Feature("EIP1559")},
-        null
-    );
-            
-
-    public static ChainInfo ZoraGoerli => _zoragoerli;
-
-    private static ChainInfo _zoragoerli = new ChainInfo(
-        999,
-        "Zora",
-        "evm",
-        "https://static.particle.network/token-list/zora/native.png",
-        "Zora Goerli",
-        "Goerli",
-        "https://testnet.wanscan.org",
-        new NativeCurrency("ETH", "ETH", 18),
-        "https://testnet.rpc.zora.energy",
-        "https://testnet.explorer.zora.energy",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -754,24 +664,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo BSquaredTestnet => _bsquaredtestnet;
-
-    private static ChainInfo _bsquaredtestnet = new ChainInfo(
-        1102,
-        "BSquared",
-        "evm",
-        "https://static.particle.network/token-list/bsquared/native.png",
-        "B² Network Testnet",
-        "Testnet",
-        "https://www.bsquared.network",
-        new NativeCurrency("BTC", "BTC", 18),
-        "https://haven-rpc.bsquared.network",
-        "https://haven-explorer.bsquared.network",
-        null,
-        null
-    );
-            
-
     public static ChainInfo CoreTestnet => _coretestnet;
 
     private static ChainInfo _coretestnet = new ChainInfo(
@@ -803,6 +695,24 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("CORE", "CORE", 18),
         "https://rpc.coredao.org",
         "https://scan.coredao.org",
+        null,
+        null
+    );
+            
+
+    public static ChainInfo BSquaredTestnet => _bsquaredtestnet;
+
+    private static ChainInfo _bsquaredtestnet = new ChainInfo(
+        1123,
+        "BSquared",
+        "evm",
+        "https://static.particle.network/token-list/bsquared/native.png",
+        "B² Network Testnet",
+        "Testnet",
+        "https://www.bsquared.network",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://habitat-rpc.bsquared.network",
+        "https://habitat-explorer.bsquared.network",
         null,
         null
     );
@@ -952,6 +862,42 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo PolygonzkEVMCardona => _polygonzkevmcardona;
+
+    private static ChainInfo _polygonzkevmcardona = new ChainInfo(
+        2442,
+        "PolygonZkEVM",
+        "evm",
+        "https://static.particle.network/token-list/polygonzkevm/native.png",
+        "Polygon zkEVM Cardona",
+        "Cardona",
+        "https://polygon.technology",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://rpc.cardona.zkevm-rpc.com",
+        "https://cardona-zkevm.polygonscan.com",
+        null,
+        null
+    );
+            
+
+    public static ChainInfo AINNTestnet => _ainntestnet;
+
+    private static ChainInfo _ainntestnet = new ChainInfo(
+        2648,
+        "ainn",
+        "evm",
+        "https://static.particle.network/token-list/ainn/native.png",
+        "AINN Testnet",
+        "Testnet",
+        "https://anvm.io",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://rpc.anvm.io",
+        "https://explorer.anvm.io",
+        null,
+        null
+    );
+            
+
     public static ChainInfo SatoshiVMTestnet => _satoshivmtestnet;
 
     private static ChainInfo _satoshivmtestnet = new ChainInfo(
@@ -966,6 +912,24 @@ namespace Network.Particle.Scripts.Model
         "https://test-rpc-node-http.svmscan.io",
         "https://testnet.svmscan.io",
         new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo BotanixTestnet => _botanixtestnet;
+
+    private static ChainInfo _botanixtestnet = new ChainInfo(
+        3636,
+        "Botanix",
+        "evm",
+        "https://static.particle.network/token-list/botanix/native.png",
+        "Botanix Testnet",
+        "Testnet",
+        "https://botanixlabs.xyz",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://node.botanixlabs.dev",
+        "https://blockscout.botanixlabs.dev",
+        null,
         null
     );
             
@@ -1024,21 +988,21 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo MantleTestnet => _mantletestnet;
+    public static ChainInfo MantleSepoliaTestnet => _mantlesepoliatestnet;
 
-    private static ChainInfo _mantletestnet = new ChainInfo(
-        5001,
+    private static ChainInfo _mantlesepoliatestnet = new ChainInfo(
+        5003,
         "Mantle",
         "evm",
         "https://static.particle.network/token-list/mantle/native.png",
-        "Mantle Testnet",
+        "Mantle Sepolia Testnet",
         "Testnet",
         "https://mantle.xyz",
         new NativeCurrency("MNT", "MNT", 18),
-        "https://rpc.testnet.mantle.xyz",
-        "https://explorer.testnet.mantle.xyz",
+        "https://rpc.sepolia.mantle.xyz",
+        "https://explorer.sepolia.mantle.xyz",
         null,
-        "https://faucet.testnet.mantle.xyz"
+        "https://faucet.sepolia.mantle.xyz"
     );
             
 
@@ -1181,24 +1145,6 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://testnet.bevm.io",
         "https://scan-testnet.bevm.io",
-        null,
-        null
-    );
-            
-
-    public static ChainInfo LumozzkEVMTestnet => _lumozzkevmtestnet;
-
-    private static ChainInfo _lumozzkevmtestnet = new ChainInfo(
-        12008,
-        "Lumoz",
-        "evm",
-        "https://static.particle.network/token-list/opside/native.png",
-        "Lumoz zkEVM Testnet",
-        "Testnet",
-        "https://lumoz.org",
-        new NativeCurrency("Lumoz", "MOZ", 18),
-        "https://alpha-zkrollup-rpc.lumoz.org/public",
-        "https://public.zkevm.lumoz.info",
         null,
         null
     );
@@ -1528,24 +1474,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo LineaGoerli => _lineagoerli;
-
-    private static ChainInfo _lineagoerli = new ChainInfo(
-        59140,
-        "Linea",
-        "evm",
-        "https://static.particle.network/token-list/linea/native.png",
-        "Linea Goerli",
-        "Goerli",
-        "https://linea.build",
-        new NativeCurrency("ETH", "ETH", 18),
-        "https://rpc.goerli.linea.build",
-        "https://goerli.lineascan.build",
-        new List<Feature>() { new Feature("EIP1559")},
-        "https://faucet.goerli.linea.build"
-    );
-            
-
     public static ChainInfo Linea => _linea;
 
     private static ChainInfo _linea = new ChainInfo(
@@ -1618,24 +1546,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo BaseGoerli => _basegoerli;
-
-    private static ChainInfo _basegoerli = new ChainInfo(
-        84531,
-        "Base",
-        "evm",
-        "https://static.particle.network/token-list/base/native.png",
-        "Base Goerli",
-        "Goerli",
-        "https://base.org",
-        new NativeCurrency("ETH", "ETH", 18),
-        "https://base-goerli.public.blastapi.io",
-        "https://goerli.basescan.org",
-        new List<Feature>() { new Feature("EIP1559")},
-        "https://bridge.base.org/deposit"
-    );
-            
-
     public static ChainInfo BaseSepolia => _basesepolia;
 
     private static ChainInfo _basesepolia = new ChainInfo(
@@ -1672,6 +1582,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo Xterio => _xterio;
+
+    private static ChainInfo _xterio = new ChainInfo(
+        112358,
+        "xterio",
+        "evm",
+        "https://static.particle.network/token-list/xterio/native.png",
+        "Xterio Mainnet",
+        "Mainnet",
+        "https://xter.io",
+        new NativeCurrency("BNB", "BNB", 18),
+        "https://xterio.alt.technology",
+        "https://xterscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo TaikoKatla => _taikokatla;
 
     private static ChainInfo _taikokatla = new ChainInfo(
@@ -1686,6 +1614,24 @@ namespace Network.Particle.Scripts.Model
         "https://rpc.katla.taiko.xyz",
         "https://explorer.katla.taiko.xyz",
         new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo BitlayerTestnet => _bitlayertestnet;
+
+    private static ChainInfo _bitlayertestnet = new ChainInfo(
+        200810,
+        "Bitlayer",
+        "evm",
+        "https://static.particle.network/token-list/bitlayer/native.png",
+        "Bitlayer Testnet",
+        "Testnet",
+        "https://www.bitlayer.org",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://testnet-rpc.bitlayer.org",
+        "https://testnet-scan.bitlayer.org",
+        null,
         null
     );
             
@@ -1705,24 +1651,6 @@ namespace Network.Particle.Scripts.Model
         "https://scan.platon.network",
         null,
         null
-    );
-            
-
-    public static ChainInfo ArbitrumGoerli => _arbitrumgoerli;
-
-    private static ChainInfo _arbitrumgoerli = new ChainInfo(
-        421613,
-        "Arbitrum",
-        "evm",
-        "https://static.particle.network/token-list/arbitrum/native.png",
-        "Arbitrum Goerli",
-        "Goerli",
-        "https://arbitrum.io",
-        new NativeCurrency("Arbitrum Gorli Ether", "AGOR", 18),
-        "https://goerli-rollup.arbitrum.io/rpc",
-        "https://goerli.arbiscan.io",
-        new List<Feature>() { new Feature("EIP1559")},
-        "https://faucet.triangleplatform.com/arbitrum/goerli"
     );
             
 
@@ -1792,7 +1720,25 @@ namespace Network.Particle.Scripts.Model
         "https://merlinprotocol.org",
         new NativeCurrency("BTC", "BTC", 18),
         "https://testnet-rpc.merlinchain.io",
-        "https://testnet-scan.merlinchain.io/",
+        "https://testnet-scan.merlinchain.io",
+        null,
+        null
+    );
+            
+
+    public static ChainInfo zkLinkNova => _zklinknova;
+
+    private static ChainInfo _zklinknova = new ChainInfo(
+        810180,
+        "zkLink",
+        "evm",
+        "https://static.particle.network/token-list/zklink/native.png",
+        "zkLink Nova Mainnet",
+        "Mainnet",
+        "https://zklink.io",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://rpc.zklink.io",
+        "https://explorer.zklink.io",
         null,
         null
     );
@@ -1812,6 +1758,24 @@ namespace Network.Particle.Scripts.Model
         "https://rpc.zkatana.gelato.digital",
         "https://zkatana.blockscout.com",
         null,
+        null
+    );
+            
+
+    public static ChainInfo XterioTestnet => _xteriotestnet;
+
+    private static ChainInfo _xteriotestnet = new ChainInfo(
+        1637450,
+        "xterio",
+        "evm",
+        "https://static.particle.network/token-list/xterio/native.png",
+        "Xterio Testnet",
+        "Testnet",
+        "https://xter.io",
+        new NativeCurrency("BNB", "BNB", 18),
+        "https://xterio-testnet.alt.technology",
+        "https://testnet.xterscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
         null
     );
             
@@ -1960,6 +1924,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo Ancient8 => _ancient8;
+
+    private static ChainInfo _ancient8 = new ChainInfo(
+        888888888,
+        "ancient8",
+        "evm",
+        "https://static.particle.network/token-list/ancient8/native.png",
+        "Ancient8 Mainnet",
+        "Mainnet",
+        "https://ancient8.gg",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://rpc.ancient8.gg",
+        "https://scan.ancient8.gg",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo Aurora => _aurora;
 
     private static ChainInfo _aurora = new ChainInfo(
@@ -2086,12 +2068,28 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo GMNetworkTestnet => _gmnetworktestnet;
+
+    private static ChainInfo _gmnetworktestnet = new ChainInfo(
+        202402181627,
+        "GMNetwork",
+        "evm",
+        "https://static.particle.network/token-list/gmnetwork/native.png",
+        "GMNetwork Testnet",
+        "Testnet",
+        "https://gmnetwork.ai",
+        new NativeCurrency("Ether", "ETH", 18),
+        "https://gmnetwork-testnet.alt.technology",
+        "https://gmnetwork-testnet-explorer.alt.technology",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     private static Dictionary < string, ChainInfo > ParticleChains = new Dictionary<string, ChainInfo > ()
     {
                 
         {"ethereum-1" , Ethereum },
-            
-        {"ethereum-5" , EthereumGoerli },
             
         {"optimism-10" , Optimism },
             
@@ -2137,8 +2135,6 @@ namespace Network.Particle.Scripts.Model
             
         {"fantom-250" , Fantom },
             
-        {"zksync-280" , zkSyncEraTestnet },
-            
         {"zksync-300" , zkSyncEraSepolia },
             
         {"kcc-321" , KCC },
@@ -2149,15 +2145,9 @@ namespace Network.Particle.Scripts.Model
             
         {"cronos-338" , CronosTestnet },
             
-        {"optimism-420" , OptimismGoerli },
-            
         {"pgn-424" , PGN },
             
-        {"metis-599" , MetisGoerli },
-            
         {"mode-919" , ModeTestnet },
-            
-        {"zora-999" , ZoraGoerli },
             
         {"klaytn-1001" , KlaytnTestnet },
             
@@ -2167,11 +2157,11 @@ namespace Network.Particle.Scripts.Model
             
         {"polygonzkevm-1101" , PolygonzkEVM },
             
-        {"bsquared-1102" , BSquaredTestnet },
-            
         {"core-1115" , CoreTestnet },
             
         {"core-1116" , Core },
+            
+        {"bsquared-1123" , BSquaredTestnet },
             
         {"moonbeam-1284" , Moonbeam },
             
@@ -2189,7 +2179,13 @@ namespace Network.Particle.Scripts.Model
             
         {"kava-2222" , Kava },
             
+        {"polygonzkevm-2442" , PolygonzkEVMCardona },
+            
+        {"ainn-2648" , AINNTestnet },
+            
         {"satoshivm-3110" , SatoshiVMTestnet },
+            
+        {"botanix-3636" , BotanixTestnet },
             
         {"fantom-4002" , FantomTestnet },
             
@@ -2197,7 +2193,7 @@ namespace Network.Particle.Scripts.Model
             
         {"mantle-5000" , Mantle },
             
-        {"mantle-5001" , MantleTestnet },
+        {"mantle-5003" , MantleSepoliaTestnet },
             
         {"opbnb-5611" , opBNBTestnet },
             
@@ -2214,8 +2210,6 @@ namespace Network.Particle.Scripts.Model
         {"gnosis-10200" , GnosisTestnet },
             
         {"bevm-11503" , BEVMTestnet },
-            
-        {"lumoz-12008" , LumozzkEVMTestnet },
             
         {"readon-12015" , ReadONTestnet },
             
@@ -2253,8 +2247,6 @@ namespace Network.Particle.Scripts.Model
             
         {"pgn-58008" , PGNSepolia },
             
-        {"linea-59140" , LineaGoerli },
-            
         {"linea-59144" , Linea },
             
         {"polygon-80001" , PolygonMumbai },
@@ -2263,17 +2255,17 @@ namespace Network.Particle.Scripts.Model
             
         {"blast-81457" , Blast },
             
-        {"base-84531" , BaseGoerli },
-            
         {"base-84532" , BaseSepolia },
             
         {"combo-91715" , ComboTestnet },
             
+        {"xterio-112358" , Xterio },
+            
         {"taiko-167008" , TaikoKatla },
             
-        {"platon-210425" , PlatON },
+        {"bitlayer-200810" , BitlayerTestnet },
             
-        {"arbitrum-421613" , ArbitrumGoerli },
+        {"platon-210425" , PlatON },
             
         {"arbitrum-421614" , ArbitrumSepolia },
             
@@ -2283,7 +2275,11 @@ namespace Network.Particle.Scripts.Model
             
         {"merlin-686868" , MerlinTestnet },
             
+        {"zklink-810180" , zkLinkNova },
+            
         {"astarzkevm-1261120" , AstarzkEVMTestnet },
+            
+        {"xterio-1637450" , XterioTestnet },
             
         {"platon-2206132" , PlatONTestnet },
             
@@ -2301,6 +2297,8 @@ namespace Network.Particle.Scripts.Model
             
         {"tron-728126428" , Tron },
             
+        {"ancient8-888888888" , Ancient8 },
+            
         {"aurora-1313161554" , Aurora },
             
         {"aurora-1313161555" , AuroraTestnet },
@@ -2314,6 +2312,8 @@ namespace Network.Particle.Scripts.Model
         {"tron-2494104990" , TronShasta },
             
         {"tron-3448148188" , TronNile },
+            
+        {"gmnetwork-202402181627" , GMNetworkTestnet },
     };
           // template code end        [CanBeNull]
         public static ChainInfo GetChain(long chainId, string chainName)

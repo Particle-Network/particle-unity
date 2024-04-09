@@ -11,7 +11,7 @@ namespace Network.Particle.Scripts.Test
 {
     public class AuthDemo : MonoBehaviour
     {
-        private ChainInfo _chainInfo = ChainInfo.EthereumGoerli;
+        private ChainInfo _chainInfo = ChainInfo.EthereumSepolia;
 
         public void SelectChain()
         {
