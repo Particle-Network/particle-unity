@@ -18,9 +18,9 @@ public class SocialLogin : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        ParticleNetwork.Init(ChainInfo.PolygonMumbai);
+        ParticleNetwork.Init(ChainInfo.EthereumSepolia);
         var walletConnectProjectId = "f431aaea6e4dea6a669c0496f9c009c1";
-        ParticleConnectInteraction.Init(ChainInfo.PolygonMumbai,
+        ParticleConnectInteraction.Init(ChainInfo.EthereumSepolia,
             new DAppMetaData(walletConnectProjectId, "Guide Wallet", "Guide Icon", "Guide Url", "Guide description"));
         ParticleWalletGUI.ParticleWalletConnectInitialize(new WalletMetaData("Guide Wallet", "Guide Icon", "Guide Url", "Guide description",
             walletConnectProjectId));
@@ -35,7 +35,7 @@ public class SocialLogin : MonoBehaviour
     {
         try
         {
-            var config = new ConnectConfig(LoginType.GOOGLE, "", SupportAuthType.ALL, socialLoginPrompt:SocialLoginPrompt.SelectAccount);
+            var config = new ConnectConfig(LoginType.GOOGLE, null, null, SupportAuthType.NONE, null, SocialLoginPrompt.SelectAccount);
             // var config = new ConnectConfig(LoginType.JWT, "Your JWT", SupportAuthType.ALL);
             var nativeResultData =
                 await ParticleConnect.Instance.Connect(WalletType.Particle, config);

@@ -16,11 +16,11 @@ namespace Network.Particle.Scripts.Model
         /// Security account config
         /// </summary>
         /// <param name="promptSettingWhenSign">
-        /// you can choose one of 0, 1, 2.
+        /// you can choose one of 0, 1, 2, 3
         /// 
-        /// 0 don't show prompt when sign in web.
+        /// 0 don't show prompt when sign.
         /// 
-        /// 1 show prompt when first sign only.
+        /// 1 show prompt when first sign once.
         /// 
         /// 2 show prompt when sign every time.
         ///
@@ -29,17 +29,17 @@ namespace Network.Particle.Scripts.Model
         /// default value is 1.
         /// </param>
         ///  <param name="promptMasterPasswordSettingWhenLogin">
-        /// you can choose one of 0, 1, 2.
+        /// you can choose one of 0, 1, 2, 3
         /// 
-        /// 0 don't show prompt when login in web.
+        /// 0 don't show prompt when login.
         /// 
-        /// 1 show prompt when first login only.
+        /// 1 show prompt when first login once.
         /// 
         /// 2 show prompt when login every time.
         ///
         /// 3 force user set master password
         ///
-        /// default value is 1.
+        /// default value is 0.
         /// </param>
         public SecurityAccountConfig(int promptSettingWhenSign, int promptMasterPasswordSettingWhenLogin)
         {

@@ -263,6 +263,24 @@ namespace Network.Particle.Scripts.Core
 #else
 #endif
         }
+        
+        /// <summary>
+        /// Open DappBrowser page
+        /// </summary>
+        public static void NavigatorDappBrowser([CanBeNull] string url)
+        {
+            var json = JsonConvert.SerializeObject(new JObject
+            {
+                { "url", url },
+            });
+            Debug.Log(json);
+#if UNITY_ANDROID && !UNITY_EDITOR
+            ParticleNetwork.CallNative("navigatorDappBrowser",url);
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.navigatorDappBrowser(json);
+#else
+#endif
+        }
 
 
         /// <summary>
@@ -369,7 +387,6 @@ namespace Network.Particle.Scripts.Core
         public static void SetShowSmartAccountSetting(bool show = true)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("setShowSmartAccountSetting",show);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setShowSmartAccountSetting(show);
@@ -387,7 +404,7 @@ namespace Network.Particle.Scripts.Core
             List<JObject> allInfos = new List<JObject>();
             foreach (var chainInfo in chainInfos)
             {
-                if (!chainInfo.isMainnet()) continue;
+                if (!chainInfo.IsMainnet()) continue;
                 var info = new JObject
                 {
                     { "chain_name", chainInfo.Name },
@@ -626,7 +643,7 @@ namespace Network.Particle.Scripts.Core
                 { "icon", icon },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo 
+            // unsupported
             // ParticleNetwork.GetUnityBridgeClass().CallStatic("setCustomWalletName",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setCustomWalletName(json);

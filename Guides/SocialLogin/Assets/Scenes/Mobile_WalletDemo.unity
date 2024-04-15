@@ -155,6 +155,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ParticleUnityRpc
       objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720260, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -335,6 +339,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ToastTip
       objectReference: {fileID: 0}
+    - target: {fileID: 3649036029470816219, guid: 98c59b95d45ab4fa488902b63cd9898d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3649036029470816223, guid: 98c59b95d45ab4fa488902b63cd9898d, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -431,6 +439,10 @@ PrefabInstance:
     - target: {fileID: 2656678041658405598, guid: ef2e2868504e74493afd474e89c2200f, type: 3}
       propertyPath: m_Name
       value: ParticleWalletGUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656678041658405598, guid: ef2e2868504e74493afd474e89c2200f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3777451998613184301, guid: ef2e2868504e74493afd474e89c2200f, type: 3}
       propertyPath: m_RootOrder
@@ -622,6 +634,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ParticleAuthService
       objectReference: {fileID: 0}
+    - target: {fileID: 279498585903160139, guid: a5107ead58c2a465ca4ee42f1eea4cf0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5107ead58c2a465ca4ee42f1eea4cf0, type: 3}
 --- !u!1 &1987584403
@@ -728,7 +744,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1140793918, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1061.6139
+      value: 1890.2253
       objectReference: {fileID: 0}
     - target: {fileID: 1140793918, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -736,7 +752,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1140793918, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 530.80695
+      value: 945.1127
       objectReference: {fileID: 0}
     - target: {fileID: 1140793918, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -759,6 +775,26 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1578451864, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 77941748101334763, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 77941748101334763, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 77941748101334763, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 77941748101334763, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 77941748101334763, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -1388,7 +1424,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3274556299508118086, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -190
+      value: -189.99976
       objectReference: {fileID: 0}
     - target: {fileID: 3347121769569522915, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2297,6 +2333,10 @@ PrefabInstance:
     - target: {fileID: 5047835956272565911, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_Name
       value: ParticleNetworkSDKDemo
+      objectReference: {fileID: 0}
+    - target: {fileID: 5047835956272565911, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5047835956272565915, guid: 4731c3260c59548958921b3c527cec0e, type: 3}
       propertyPath: m_Pivot.x
@@ -3885,6 +3925,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ParticleAA
       objectReference: {fileID: 0}
+    - target: {fileID: 926650126659779301, guid: 6d57083067d0a4c48839de91bf110990, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 926650126659779303, guid: 6d57083067d0a4c48839de91bf110990, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -3942,6 +3986,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ParticleAuthCore
       objectReference: {fileID: 0}
+    - target: {fileID: 4626932548484012617, guid: 5dbd4baa02cdf49e1b94847a5f493090, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6421010236583951138, guid: 5dbd4baa02cdf49e1b94847a5f493090, type: 3}
       propertyPath: m_RootOrder
       value: 9
@@ -3998,6 +4046,10 @@ PrefabInstance:
     - target: {fileID: 754321802703635939, guid: 046ea4f0e7b2a490fa4becf0634f8e45, type: 3}
       propertyPath: m_Name
       value: ParticleConnect
+      objectReference: {fileID: 0}
+    - target: {fileID: 754321802703635939, guid: 046ea4f0e7b2a490fa4becf0634f8e45, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1929156512550692880, guid: 046ea4f0e7b2a490fa4becf0634f8e45, type: 3}
       propertyPath: m_RootOrder

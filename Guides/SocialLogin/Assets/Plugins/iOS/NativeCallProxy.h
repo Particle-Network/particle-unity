@@ -52,6 +52,7 @@
 - (void) setSwapDisabled:(BOOL)disabled;
 - (BOOL) getSwapDisabled;
 - (void) navigatorWallet:(NSInteger)display;
+- (void) navigatorDappBrowser:(NSString* _Nonnull)json;
 - (void) navigatorTokenReceive:(NSString* _Nullable)json;
 - (void) navigatorTokenSend:(NSString* _Nullable)json;
 - (void) navigatorTokenTransactionRecords:(NSString* _Nullable)json;
@@ -113,6 +114,11 @@
 // Particle Auth Core
 - (void) authCoreInitialize;
 - (void) authCoreConnect:(NSString* _Nonnull)json;
+- (void) authCoreConnectWithCode:(NSString* _Nonnull)json;
+- (void) authCoreSendEmailCode:(NSString* _Nonnull)json;
+- (void) authCoreSendPhoneCode:(NSString* _Nonnull)json;
+- (void) authCoreSetBlindEnable:(BOOL)enbale;
+- (BOOL) authCoreGetBlindEnable;
 - (void) authCoreDisconnect;
 - (void) authCoreIsConnected;
 - (NSString* _Nonnull) authCoreGetUserInfo;

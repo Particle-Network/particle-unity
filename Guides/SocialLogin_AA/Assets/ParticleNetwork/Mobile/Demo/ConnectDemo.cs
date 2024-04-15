@@ -11,7 +11,7 @@ namespace Network.Particle.Scripts.Test
 {
     public class ConnectDemo : MonoBehaviour
     {
-        private ChainInfo _chainInfo = ChainInfo.EthereumGoerli;
+        private ChainInfo _chainInfo = ChainInfo.EthereumSepolia;
 
         private string loginSourceMessage = "";
         private string loginSignature = "";
@@ -51,11 +51,14 @@ namespace Network.Particle.Scripts.Test
             var metadata = new DAppMetaData(TestConfig.walletConnectProjectId, "Particle Connect",
                 "https://connect.particle.network/icons/512.png",
                 "https://connect.particle.network",
-                "");
+                "Particle Connect Unity Demo");
             ParticleNetwork.Init(_chainInfo);
             ParticleConnectInteraction.Init(_chainInfo, metadata);
             // List<ChainInfo> chainInfos = new List<ChainInfo>{new EthereumChain(EthereumChainId.Mainnet), new PolygonChain(PolygonChainId.Mainnet), new EthereumChain(EthereumChainId.Sepolia)};
             // ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
+            
+            // control how to show set master password and payment password.
+            ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
         }
 
         /// <summary>
@@ -95,7 +98,7 @@ namespace Network.Particle.Scripts.Test
                 ConnectConfig config = null;
                 if (_walletType == WalletType.Particle)
                 {
-                    config = new ConnectConfig(LoginType.GOOGLE, null, SupportAuthType.NONE);
+                    config = new ConnectConfig(LoginType.GOOGLE, null, null, SupportAuthType.NONE);
                 }
 
                 var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, config);

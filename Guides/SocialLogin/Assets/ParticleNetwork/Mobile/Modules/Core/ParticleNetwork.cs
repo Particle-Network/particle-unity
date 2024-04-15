@@ -166,15 +166,9 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-
-        public static AAVersionNumber GetAAVersionNumber()
-        {
-            return AAVersionNumber.V1_0_0();
-        }
-
         public static void CallNative(string methodName, params object[] args)
         {
-            Debug.Log("CallNative_methodName " + methodName);
+            Debug.Log("CallNative_methodName " + methodName );
 
             GetAndroidJavaObject().Call("runOnUiThread",
                 new AndroidJavaRunnable(() => { GetUnityBridgeClass().CallStatic(methodName, args); }));
@@ -260,7 +254,7 @@ namespace Network.Particle.Scripts.Core
             var userInfo = PersistTools.GetUserInfo();
             var wallets = userInfo.Wallets;
 
-            if (ParticleNetwork.GetChainInfo().isEvmChain())
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
             {
                 var evmPrivateKey = wallets.FirstOrDefault(x => x.ChainName == "evm_chain")?.PrivateKey;
                 return evmPrivateKey;

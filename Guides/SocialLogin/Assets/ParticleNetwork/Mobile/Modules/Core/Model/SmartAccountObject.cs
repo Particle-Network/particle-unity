@@ -13,10 +13,10 @@ namespace Network.Particle.Scripts.Model
         [JsonProperty(PropertyName = "ownerAddress")]
         public string ownerAddress;
 
-        public SmartAccountObject(string name, string version, string ownerAddress)
+        public SmartAccountObject(AAAccountName accountName, string ownerAddress)
         {
-            this.name = name;
-            this.version = version;
+            this.name = accountName.name;
+            this.version = accountName.version;
             this.ownerAddress = ownerAddress;
         }
     }

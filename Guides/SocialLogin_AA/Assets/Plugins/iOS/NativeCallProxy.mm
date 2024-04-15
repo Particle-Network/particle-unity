@@ -165,6 +165,10 @@ extern "C" {
         [api navigatorTokenReceive:[NSString stringWithUTF8String: json]];
     }
 
+    void navigatorDappBrowser(const char* json) {
+        [api navigatorDappBrowser:[NSString stringWithUTF8String: json]];
+    }
+
     void navigatorTokenSend(const char* json) {
         [api navigatorTokenSend:[NSString stringWithUTF8String: json]];
     }
@@ -379,8 +383,28 @@ extern "C" {
          [api authCoreInitialize];
     }
 
+    void authCoreSetBlindEnable(bool enable) {
+        [api authCoreSetBlindEnable: enable];
+    }
+
+    bool authCoreGetBlindEnable() {
+        return [api authCoreGetBlindEnable];
+    }
+
     void authCoreConnect(const char* json) {
          [api authCoreConnect: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreConnectWithCode(const char* json) {
+        [api authCoreConnectWithCode: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreSendEmailCode(const char* json) {
+        [api authCoreSendEmailCode: [NSString stringWithUTF8String: json]];
+    }
+
+    void authCoreSendPhoneCode(const char* json) {
+        [api authCoreSendPhoneCode: [NSString stringWithUTF8String: json]];
     }
 
     void authCoreDisconnect() {

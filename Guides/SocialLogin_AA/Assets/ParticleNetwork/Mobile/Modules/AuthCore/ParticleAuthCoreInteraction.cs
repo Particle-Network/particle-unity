@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Utils;
+using Newtonsoft.Json.Converters;
 using UnityEngine;
 
 
@@ -24,16 +25,137 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        internal static void Connect(string jwt)
+        /// <summary>
+        /// Set blind enable, default value is false.
+        /// This switch will work if the following conditions are met:
+        /// 1. your account is connected with JWT
+        /// 2. your account does not set payment password
+        /// 3. SecurityAccountConfig.promptSettingWhenSign is 0, you can call ParticleNetwork.SetSecurityAccountConfig to update its value.
+        /// </summary>
+        /// <param name="enable">Enable</param>
+        public static void SetBlindEnable(bool enable)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.CallAuthCoreNative("connect",jwt);
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.authCoreConnect(jwt);
+#if UNITY_ANDROID&& !UNITY_EDITOR
+            ParticleNetwork.CallAuthCoreNative("setBlindEnable",enable);
+#elif UNITY_IOS&& !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreSetBlindEnable(enable);
 #else
 
 #endif
         }
+
+        /// <summary>
+        /// Get blind enable
+        /// </summary>
+        /// <returns></returns>
+        public static bool GetBlindEnable()
+        {
+           
+#if UNITY_ANDROID&& !UNITY_EDITOR
+            return ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("getBlindEnable");
+#elif UNITY_IOS&& !UNITY_EDITOR
+            return ParticleNetworkIOSBridge.authCoreGetBlindEnable();
+#else
+            return false;
+#endif
+        }
+
+
+        internal static void ConnectWithCode([CanBeNull] string phone, [CanBeNull] string email,
+            string code)
+        {
+            var obj = new JObject
+            {
+                { "phone", phone },
+                { "email", email },
+                { "code", code },
+            };
+
+            var json = JsonConvert.SerializeObject(obj);
+
+            Debug.Log(json);
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+            ParticleNetwork.CallAuthCoreNative("connectWithCode",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreConnectWithCode(json);
+#else
+
+#endif
+        }
+
+        internal static void Connect(LoginType loginType, [CanBeNull] string account,
+            [CanBeNull] List<SupportLoginType> supportLoginTypes,
+            SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginPageConfig loginPageConfig
+        )
+        {
+            List<string> supportAuthTypeValues = new List<string>();
+            if (supportLoginTypes != null)
+            {
+                supportAuthTypeValues = supportLoginTypes.ConvertAll(s => s.ToString());
+            }
+
+            string accountNative = "";
+            if (string.IsNullOrEmpty(account))
+                accountNative = "";
+            else
+                accountNative = account;
+
+            var obj = new JObject
+            {
+                { "loginType", loginType.ToString() },
+                { "account", accountNative },
+                { "supportAuthTypeValues", JToken.FromObject(supportAuthTypeValues) },
+                { "socialLoginPrompt", socialLoginPrompt.ToString() },
+            };
+
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> { new StringEnumConverter() }
+            };
+
+            if (loginPageConfig != null)
+                obj["loginPageConfig"] = JToken.FromObject(loginPageConfig, JsonSerializer.Create(settings));
+
+
+            var json = JsonConvert.SerializeObject(obj);
+
+            Debug.Log(json);
+#if UNITY_ANDROID && !UNITY_EDITOR
+            ParticleNetwork.CallAuthCoreNative("connect",json);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreConnect(json);
+#else
+
+#endif
+        }
+
+        internal static void SendPhoneCode(string phone)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            ParticleNetwork.CallAuthCoreNative("sendPhoneCode",phone);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreSendPhoneCode(phone);
+#else
+
+#endif
+        }
+
+        /// <summary>
+        /// Send a verification code to your email 
+        /// </summary>
+        /// <param name="email">Email, for example `user@example.com`</param>
+        internal static void SendEmailCode(string email)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            ParticleNetwork.CallAuthCoreNative("sendEmailCode",email);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.authCoreSendEmailCode(email);
+#else
+
+#endif
+        }
+
 
         internal static void Disconnect()
         {
@@ -265,7 +387,6 @@ ParticleNetwork.CallAuthCoreNative("evmSendTransaction",json);
             });
 
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("batchSendTransactions",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreEvmBatchSendTransactions(json);
@@ -334,7 +455,7 @@ ParticleNetwork.CallAuthCoreNative("evmSendTransaction",json);
         public static void SetCustomUI(string json)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
+// todo 
             // ParticleNetwork.CallAuthCoreNative("solanaSignAndSendTransaction",transaction);
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.authCoreSetCustomUI(json);

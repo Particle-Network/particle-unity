@@ -11,7 +11,7 @@ namespace Network.Particle.Scripts.Test
 {
     public class AuthDemo : MonoBehaviour
     {
-        private ChainInfo _chainInfo = ChainInfo.EthereumGoerli;
+        private ChainInfo _chainInfo = ChainInfo.EthereumSepolia;
 
         public void SelectChain()
         {
@@ -25,6 +25,8 @@ namespace Network.Particle.Scripts.Test
         public void Init()
         {
             ParticleNetwork.Init(this._chainInfo);
+            // control how to show set master password and payment password.
+            ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(1, 0));
         }
 
         public async void Login()
@@ -142,10 +144,10 @@ namespace Network.Particle.Scripts.Test
             var address = ParticleAuthServiceInteraction.GetAddress();
             Debug.Log($"address {address}");
         }
-        
+
         public void GetAddressBtn()
         {
-            var address=  ParticleAuthServiceInteraction.GetAddress();
+            var address = ParticleAuthServiceInteraction.GetAddress();
             Debug.Log("address = " + address);
         }
 
@@ -326,9 +328,8 @@ namespace Network.Particle.Scripts.Test
 
         public void ShowToast(string message)
         {
-
 #if UNITY_EDITOR
-            
+
 #elif UNITY_ANDROID && !UNITY_EDITOR
         AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");

@@ -8,7 +8,7 @@ dependencies {
             }
         }
         implementation project(':unityLibrary')
-        def sdkVersion = "1.4.5" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+        def sdkVersion = "1.4.11" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
      
         //tips
         //auth-service and auth-service-tiramisu are the same library,
@@ -33,13 +33,11 @@ dependencies {
         implementation("network.particle:mpc-core:$sdkVersion")
         implementation("network.particle:auth-core:$sdkVersion")
         //if only use connect sdk, you must add the following dependencies 
-//         def sdkVersion = "0.9.31" find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
-//         implementation "network.particle:connect-common:${connectVersion}"
-//         implementation "network.particle:connect:${connectVersion}"
-//         implementation "network.particle:connect-evm-adapter:${connectVersion}"
-//         implementation "network.particle:connect-solana-adapter:${connectVersion}"
-//         implementation "network.particle:connect-phantom-adapter:${connectVersion}"
-//         implementation "network.particle:connect-wallet-connect-adapter:${connectVersion}"
+        implementation("network.particle:connect-evm-adapter:$sdkVersion")
+        implementation("network.particle:connect-solana-adapter:$sdkVersion")
+        implementation("network.particle:connect-phantom-adapter:$sdkVersion")
+        implementation("network.particle:connect-wallet-connect-adapter:$sdkVersion")
+        implementation("network.particle:connect-auth-adapter:$sdkVersion")
     }
 Properties localProps = getLocalProperties()
 android {

@@ -77,20 +77,15 @@ namespace Network.Particle.Scripts.Core
             if (config != null)
             {
                 var authTypeList = ParticleTools.GetSupportAuthTypeValues(config.supportAuthTypes);
-                string accountNative = "";
-                if (string.IsNullOrEmpty(config.account))
-                    accountNative = "";
-                else
-                    accountNative = config.account;
-
                 var obj = new JObject
                 {
                     { "loginType", config.loginType.ToString() },
-                    { "account", accountNative },
+                    { "account", string.IsNullOrEmpty(config.account) ? "" : config.account },
+                    { "account", string.IsNullOrEmpty(config.code) ? "" : config.code },
                     { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
                     { "socialLoginPrompt", config.socialLoginPrompt.ToString() }
                 };
-                
+
                 if (config.authorization != null) obj["authorization"] = JToken.FromObject(config.authorization);
 
                 configJson = JsonConvert.SerializeObject(obj);
@@ -105,6 +100,7 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
+
 
         public static void Disconnect(WalletType walletType, string publicAddress)
         {
@@ -153,7 +149,7 @@ namespace Network.Particle.Scripts.Core
         public static void SignMessage(WalletType walletType, string publicAddress, string message)
         {
             string serializedMessage;
-            if (ParticleNetwork.GetChainInfo().isEvmChain())
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
             {
                 if (HexUtils.IsHexadecimal(message))
                 {

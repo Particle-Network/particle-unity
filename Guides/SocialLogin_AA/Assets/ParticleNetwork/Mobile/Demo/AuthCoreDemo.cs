@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using CommonTip.Script;
 using Network.Particle.Scripts.Core;
@@ -11,7 +12,12 @@ namespace Network.Particle.Scripts.Test
 {
     public class AuthCoreDemo : MonoBehaviour
     {
-        private ChainInfo _chainInfo = ChainInfo.EthereumGoerli;
+        private ChainInfo _chainInfo = ChainInfo.EthereumSepolia;
+
+        private LoginType _loginType;
+
+        [SerializeField] private GameObject emailLoginObject;
+        [SerializeField] private GameObject phoneLoginObject;
 
         public void SelectChain()
         {
@@ -22,19 +28,61 @@ namespace Network.Particle.Scripts.Test
             });
         }
 
+        public void SelectLoginType()
+        {
+            LoginTypeChoice.Instance.Show(loginType =>
+            {
+                Debug.Log($"select {loginType.ToString()}");
+                this._loginType = loginType;
+            });
+        }
+
         public void Init()
         {
             ParticleNetwork.Init(this._chainInfo);
             ParticleAuthCoreInteraction.Init();
+            // control how to show set master password and payment password.
+            ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
         }
 
         public async void Connect()
         {
             try
             {
-                var jwt =
-                    "";
-                var nativeResultData = await ParticleAuthCore.Instance.Connect(jwt);
+                List<SupportLoginType> allSupportLoginTypes = new List<SupportLoginType>(Enum.GetValues(typeof(SupportLoginType)) as SupportLoginType[]);
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.Connect(_loginType, null, allSupportLoginTypes,
+                        SocialLoginPrompt.SelectAccount,
+                        new LoginPageConfig("Particle Unity Example", "Welcome to login", 
+                            "https://connect.particle.network/icons/512.png"));
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+    
+        }
+
+        public async void ConnectJWT()
+        {
+            try
+            {
+                var jwt = "";
+                var nativeResultData = await ParticleAuthCore.Instance.ConnectJWT(jwt);
 
                 Debug.Log(nativeResultData.data);
 
@@ -55,6 +103,17 @@ namespace Network.Particle.Scripts.Test
                 Debug.LogError($"An error occurred: {e.Message}");
             }
         }
+
+        public void ConnectEmail()
+        {
+            emailLoginObject.SetActive(true);
+        }
+
+        public void ConnectPhone()
+        {
+            phoneLoginObject.SetActive(true);
+        }
+
 
         public async void Disconnect()
         {
@@ -232,7 +291,7 @@ namespace Network.Particle.Scripts.Test
                 Debug.LogError($"An error occurred: {e.Message}");
             }
         }
-        
+
         public void EvmGetAddress()
         {
             var address = ParticleAuthCoreInteraction.EvmGetAddress();
@@ -521,12 +580,17 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
+        public void SetBlindEnable()
+        {
+            ParticleAuthCoreInteraction.SetBlindEnable(true);
+        }
+
         public void SetCustomUI()
         {
             // Only works for iOS
             // your custom ui json
             // for more detail, please explore
-            https://docs.particle.network/developers/wallet-service/sdks/web#custom-particle-wallet-style
+            https: //docs.particle.network/developers/wallet-service/sdks/web#custom-particle-wallet-style
             var txtAsset = Resources.Load<TextAsset>("customUIConfig");
             string json = txtAsset.text;
             ParticleAuthCoreInteraction.SetCustomUI(json);

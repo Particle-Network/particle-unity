@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -15,18 +16,24 @@ namespace Network.Particle.Scripts.Core
     public partial class ParticleAuthCore : SingletonMonoBehaviour<ParticleAuthCore>
     {
         private TaskCompletionSource<NativeResultData> connectTask;
+        private TaskCompletionSource<NativeResultData> connectWithCodeCallBack;
         private TaskCompletionSource<NativeResultData> disconnectTask;
         private TaskCompletionSource<NativeResultData> isConnectedTask;
         private TaskCompletionSource<NativeResultData> switchChainTask;
         private TaskCompletionSource<NativeResultData> changeMasterPasswordTask;
         private TaskCompletionSource<NativeResultData> openAccountAndSecurityTask;
 
+        private TaskCompletionSource<NativeResultData> sendPhoneCodeTask;
+        private TaskCompletionSource<NativeResultData> sendEmailCodeTask;
+
 
         /// <summary>
-        /// Connect jwt
+        /// Connect 
         /// </summary>
         /// <returns>User info json string</returns>
-        public Task<NativeResultData> Connect(string jwt)
+        public Task<NativeResultData> Connect(LoginType loginType, [CanBeNull] string account,
+            [CanBeNull] List<SupportLoginType> supportLoginType,
+            SocialLoginPrompt? socialLoginPrompt, [CanBeNull] LoginPageConfig loginPageConfig)
         {
             connectTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
@@ -36,9 +43,11 @@ namespace Network.Particle.Scripts.Core
                 { "data", "" },
             }));
 #endif
-            ParticleAuthCoreInteraction.Connect(jwt);
+            ParticleAuthCoreInteraction.Connect(loginType, account, supportLoginType, socialLoginPrompt,
+                loginPageConfig);
             return connectTask.Task;
         }
+
 
         /// <summary>
         /// Connect call back
@@ -50,6 +59,111 @@ namespace Network.Particle.Scripts.Core
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             connectTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+
+        /// <summary>
+        /// call after login with phone or email success
+        /// </summary>
+        /// <param name="phone"></param>
+        /// <param name="email"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public Task<NativeResultData> ConnectWithCode([CanBeNull] string phone, [CanBeNull] string email, string code)
+        {
+            connectWithCodeCallBack = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+            ConnectCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
+#endif
+            ParticleAuthCoreInteraction.ConnectWithCode(phone, email, code);
+            return connectWithCodeCallBack.Task;
+        }
+
+        /// <summary>
+        /// ConnectWithCode call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void ConnectWithCodeCallBack(string json)
+        {
+            Debug.Log($"ConnectCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            connectWithCodeCallBack?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+
+
+        /// <summary>
+        /// Connect JWT
+        /// </summary>
+        /// <returns>User info json string</returns>
+        public Task<NativeResultData> ConnectJWT(string jwt)
+        {
+            return Connect(LoginType.JWT, jwt, null, null, null);
+        }
+
+
+        /// <summary>
+        /// Send a verification code to your phone number
+        /// </summary>
+        /// <param name="phone">Phone number, format E164, for example `+447911123456`</param>
+        public Task<NativeResultData> SendPhoneCode(string phone)
+        {
+            sendPhoneCodeTask = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+            SendPhoneCodeCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
+#endif
+            ParticleAuthCoreInteraction.SendPhoneCode(phone);
+            return sendPhoneCodeTask.Task;
+        }
+
+
+        /// <summary>
+        /// SendPhoneCode call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void SendPhoneCodeCallBack(string json)
+        {
+            Debug.Log($"SendPhoneCodeCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            sendPhoneCodeTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+
+        /// <summary>
+        /// Send a verification code to your email 
+        /// </summary>
+        /// <param name="email">Email, for example `user@example.com`</param>
+        public Task<NativeResultData> SendEmailCode(string email)
+        {
+            sendEmailCodeTask = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+            SendPhoneCodeCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
+#endif
+            ParticleAuthCoreInteraction.SendEmailCode(email);
+            return sendEmailCodeTask.Task;
+        }
+
+        /// <summary>
+        /// SendEmailCode call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void SendEmailCodeCallBack(string json)
+        {
+            Debug.Log($"SendEmailCodeCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            sendEmailCodeTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
 
@@ -254,7 +368,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             evmPersonalSignTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Evm Personal Sign Unique
         /// </summary>
@@ -285,7 +399,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             evmPersonalSignUniqueTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Evm sign typed data
         /// </summary>
@@ -316,7 +430,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             evmSignTypedDataTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Evm sign typed data unique
         /// </summary>
@@ -347,7 +461,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             evmSignTypedDataTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Evm send transaction
         /// </summary>
@@ -364,7 +478,7 @@ namespace Network.Particle.Scripts.Core
                 { "data", "" },
             }));
 #endif
-            ParticleAuthCoreInteraction.EvmSendTransaction(transaction);
+            ParticleAuthCoreInteraction.EvmSendTransaction(transaction, feeMode);
             return evmSendTransactionTask.Task;
         }
 
@@ -379,7 +493,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             evmSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Batch Send Transaction, should init and enable particle aa.
         /// </summary>
@@ -415,7 +529,7 @@ namespace Network.Particle.Scripts.Core
             batchSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
     }
-    
+
     public partial class ParticleAuthCore
     {
         private TaskCompletionSource<NativeResultData> solanaSignMessageTask;
@@ -454,7 +568,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             solanaSignMessageTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Solana Sign Transaction
         /// </summary>
@@ -485,7 +599,7 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             solanaSignTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Solana sign all transactions
         /// </summary>
@@ -514,9 +628,10 @@ namespace Network.Particle.Scripts.Core
             Debug.Log($"SolanaSignAllTransactionsCallBack:{json}");
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
-            solanaSignAllTransactionsTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+            solanaSignAllTransactionsTask?.TrySetResult(
+                new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
+
         /// <summary>
         /// Solana sign and send transaction
         /// </summary>
@@ -545,7 +660,8 @@ namespace Network.Particle.Scripts.Core
             Debug.Log($"SolanaSignAndSendTransactionCallBack:{json}");
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
-            solanaSignAndSendTransactionTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+            solanaSignAndSendTransactionTask?.TrySetResult(new NativeResultData(status == 1,
+                resultData["data"].ToString()));
         }
     }
 }

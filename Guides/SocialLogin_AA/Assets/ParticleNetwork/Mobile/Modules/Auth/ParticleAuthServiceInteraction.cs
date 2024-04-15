@@ -94,7 +94,7 @@ namespace Network.Particle.Scripts.Core
         internal static void SignMessage(string message)
         {
             string serializedMessage;
-            if (ParticleNetwork.GetChainInfo().isEvmChain())
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
             {
                 if (HexUtils.IsHexadecimal(message))
                 {

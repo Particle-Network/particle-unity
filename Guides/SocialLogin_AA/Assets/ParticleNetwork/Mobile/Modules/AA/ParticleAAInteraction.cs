@@ -8,21 +8,20 @@ namespace Network.Particle.Scripts.Core
 {
     public static class ParticleAAInteraction
     {
-        public static void Init(AAAccountName accountName, AAVersionNumber versionNumber,
+        public static void Init(AAAccountName accountName,
             Dictionary<int, string> biconomyApiKeys)
         {
             var obj = new JObject
             {
                 { "biconomy_api_keys", JObject.FromObject(biconomyApiKeys) },
-                { "name", accountName.ToString() },
-                { "version", versionNumber.version },
+                { "name", accountName.name },
+                { "version", accountName.version },
             };
 
             var json = JsonConvert.SerializeObject(obj);
 
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("particleAAInitialize",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.particleAAInitialize(json);
@@ -34,7 +33,6 @@ namespace Network.Particle.Scripts.Core
         public static void EnableAAMode()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("enableAAMode");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.enableAAMode();
@@ -46,7 +44,6 @@ namespace Network.Particle.Scripts.Core
         public static void DisableAAMode()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("disableAAMode");
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.disableAAMode();
@@ -58,7 +55,6 @@ namespace Network.Particle.Scripts.Core
         public static bool IsAAModeEnable()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("isAAModeEnable");
 #elif UNITY_IOS && !UNITY_EDITOR
             return ParticleNetworkIOSBridge.isAAModeEnable();
@@ -70,7 +66,6 @@ namespace Network.Particle.Scripts.Core
         public static void IsDeploy(string eoaAddress)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("isDeploy",eoaAddress);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.isDeploy(eoaAddress);
@@ -91,7 +86,6 @@ namespace Network.Particle.Scripts.Core
 
             Debug.Log(json);
 #if UNITY_ANDROID && !UNITY_EDITOR
-// todo
             ParticleNetwork.CallNative("rpcGetFeeQuotes",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.rpcGetFeeQuotes(json);
