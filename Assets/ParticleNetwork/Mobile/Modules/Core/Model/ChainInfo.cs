@@ -340,6 +340,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo BOBTestnet => _bobtestnet;
+
+    private static ChainInfo _bobtestnet = new ChainInfo(
+        111,
+        "bob",
+        "evm",
+        "https://static.particle.network/token-list/bob/native.png",
+        "BOB Testnet",
+        "Testnet",
+        "https://www.gobob.xyz",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://testnet.rpc.gobob.xyz",
+        "https://testnet-explorer.gobob.xyz",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo Heco => _heco;
 
     private static ChainInfo _heco = new ChainInfo(
@@ -711,8 +729,8 @@ namespace Network.Particle.Scripts.Model
         "Testnet",
         "https://www.bsquared.network",
         new NativeCurrency("BTC", "BTC", 18),
-        "https://habitat-rpc.bsquared.network",
-        "https://habitat-explorer.bsquared.network",
+        "https://b2-testnet.alt.technology",
+        "https://testnet-explorer.bsquared.network",
         null,
         null
     );
@@ -769,24 +787,6 @@ namespace Network.Particle.Scripts.Model
         "https://moonbase.moonscan.io",
         new List<Feature>() { new Feature("EIP1559")},
         "https://apps.moonbeam.network/moonbase-alpha/faucet"
-    );
-            
-
-    public static ChainInfo PolygonzkEVMTestnet => _polygonzkevmtestnet;
-
-    private static ChainInfo _polygonzkevmtestnet = new ChainInfo(
-        1442,
-        "PolygonZkEVM",
-        "evm",
-        "https://static.particle.network/token-list/polygonzkevm/native.png",
-        "Polygon zkEVM Testnet",
-        "Testnet",
-        "https://polygon.technology/solutions/polygon-zkevm",
-        new NativeCurrency("ETH", "ETH", 18),
-        "https://rpc.public.zkevm-test.net",
-        "https://testnet-zkevm.polygonscan.com",
-        null,
-        "https://public.zkevm-test.net"
     );
             
 
@@ -862,6 +862,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo PeaqKrest => _peaqkrest;
+
+    private static ChainInfo _peaqkrest = new ChainInfo(
+        2241,
+        "peaq",
+        "evm",
+        "https://static.particle.network/token-list/peaq/native.png",
+        "Peaq Krest Mainnet",
+        "Mainnet",
+        "https://www.peaq.network",
+        new NativeCurrency("KRST", "KRST", 18),
+        "https://erpc-krest.peaq.network",
+        "https://krest.subscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo PolygonzkEVMCardona => _polygonzkevmcardona;
 
     private static ChainInfo _polygonzkevmcardona = new ChainInfo(
@@ -929,6 +947,24 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://node.botanixlabs.dev",
         "https://blockscout.botanixlabs.dev",
+        null,
+        null
+    );
+            
+
+    public static ChainInfo AstarzkEVMMainet => _astarzkevmmainet;
+
+    private static ChainInfo _astarzkevmmainet = new ChainInfo(
+        3776,
+        "AstarZkEVM",
+        "evm",
+        "https://static.particle.network/token-list/astarzkevm/native.png",
+        "Astar zkEVM Mainet",
+        "Mainet",
+        "https://astar.network",
+        new NativeCurrency("Sepolia Ether", "ETH", 18),
+        "https://rpc.startale.com/astar-zkevm",
+        "https://astar-zkevm.explorer.startale.com",
         null,
         null
     );
@@ -1114,6 +1150,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo PeaqAgungTestnet => _peaqagungtestnet;
+
+    private static ChainInfo _peaqagungtestnet = new ChainInfo(
+        9990,
+        "peaq",
+        "evm",
+        "https://static.particle.network/token-list/peaq/native.png",
+        "Peaq Agung Testnet",
+        "Testnet",
+        "https://www.peaq.network",
+        new NativeCurrency("AGUNG", "AGUNG", 18),
+        "https://rpcpc1-qa.agung.peaq.network",
+        "https://agung-testnet.subscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo GnosisTestnet => _gnosistestnet;
 
     private static ChainInfo _gnosistestnet = new ChainInfo(
@@ -1164,6 +1218,24 @@ namespace Network.Particle.Scripts.Model
         "https://pre-alpha-zkrollup-rpc.opside.network/readon-content-test-chain",
         "https://readon-content-test-chain.zkevm.opside.info",
         null,
+        null
+    );
+            
+
+    public static ChainInfo ImmutablezkEVMTestnet => _immutablezkevmtestnet;
+
+    private static ChainInfo _immutablezkevmtestnet = new ChainInfo(
+        13473,
+        "Immutable",
+        "evm",
+        "https://static.particle.network/token-list/immutable/native.png",
+        "Immutable zkEVM Testnet",
+        "Testnet",
+        "https://www.immutable.com",
+        new NativeCurrency("IMX", "IMX", 18),
+        "https://rpc.testnet.immutable.com",
+        "https://explorer.testnet.immutable.com",
+        new List<Feature>() { new Feature("EIP1559")},
         null
     );
             
@@ -1492,21 +1564,21 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo PolygonMumbai => _polygonmumbai;
+    public static ChainInfo PolygonAmoy => _polygonamoy;
 
-    private static ChainInfo _polygonmumbai = new ChainInfo(
-        80001,
+    private static ChainInfo _polygonamoy = new ChainInfo(
+        80002,
         "Polygon",
         "evm",
         "https://static.particle.network/token-list/polygon/native.png",
-        "Polygon Mumbai",
-        "Mumbai",
+        "Polygon Amoy",
+        "Amoy",
         "https://polygon.technology",
         new NativeCurrency("MATIC", "MATIC", 18),
-        "https://polygon-mumbai.gateway.tenderly.co",
-        "https://mumbai.polygonscan.com",
+        "https://rpc-amoy.polygon.technology",
+        "https://www.oklink.com/amoy",
         new List<Feature>() { new Feature("EIP1559")},
-        "https://faucet.polygon.technology"
+        null
     );
             
 
@@ -1744,24 +1816,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo AstarzkEVMTestnet => _astarzkevmtestnet;
-
-    private static ChainInfo _astarzkevmtestnet = new ChainInfo(
-        1261120,
-        "AstarZkEVM",
-        "evm",
-        "https://static.particle.network/token-list/astarzkevm/native.png",
-        "Astar zkEVM Testnet",
-        "Testnet",
-        "https://astar.network",
-        new NativeCurrency("Sepolia Ether", "ETH", 18),
-        "https://rpc.zkatana.gelato.digital",
-        "https://zkatana.blockscout.com",
-        null,
-        null
-    );
-            
-
     public static ChainInfo XterioTestnet => _xteriotestnet;
 
     private static ChainInfo _xteriotestnet = new ChainInfo(
@@ -1813,6 +1867,24 @@ namespace Network.Particle.Scripts.Model
         "https://pacific-explorer.testnet.manta.network",
         new List<Feature>() { new Feature("EIP1559")},
         "https://pacific-info.manta.network"
+    );
+            
+
+    public static ChainInfo AstarzkEVMTestnet => _astarzkevmtestnet;
+
+    private static ChainInfo _astarzkevmtestnet = new ChainInfo(
+        6038361,
+        "AstarZkEVM",
+        "evm",
+        "https://static.particle.network/token-list/astarzkevm/native.png",
+        "Astar zkEVM Testnet",
+        "Testnet",
+        "https://astar.network",
+        new NativeCurrency("Sepolia Ether", "ETH", 18),
+        "https://rpc.startale.com/zkyoto",
+        "https://zkyoto.explorer.startale.com",
+        null,
+        null
     );
             
 
@@ -2121,6 +2193,8 @@ namespace Network.Particle.Scripts.Model
             
         {"thundercore-108" , ThunderCore },
             
+        {"bob-111" , BOBTestnet },
+            
         {"heco-128" , Heco },
             
         {"polygon-137" , Polygon },
@@ -2169,8 +2243,6 @@ namespace Network.Particle.Scripts.Model
             
         {"moonbeam-1287" , MoonbeamTestnet },
             
-        {"polygonzkevm-1442" , PolygonzkEVMTestnet },
-            
         {"bevm-1501" , BEVMCanary },
             
         {"bevm-1502" , BEVMCanaryTestnet },
@@ -2178,6 +2250,8 @@ namespace Network.Particle.Scripts.Model
         {"kava-2221" , KavaTestnet },
             
         {"kava-2222" , Kava },
+        
+        {"peaq-2241" , PeaqKrest },
             
         {"polygonzkevm-2442" , PolygonzkEVMCardona },
             
@@ -2186,6 +2260,8 @@ namespace Network.Particle.Scripts.Model
         {"satoshivm-3110" , SatoshiVMTestnet },
             
         {"botanix-3636" , BotanixTestnet },
+            
+        {"astarzkevm-3776" , AstarzkEVMMainet },
             
         {"fantom-4002" , FantomTestnet },
             
@@ -2207,11 +2283,15 @@ namespace Network.Particle.Scripts.Model
             
         {"combo-9980" , Combo },
             
+        {"peaq-9990" , PeaqAgungTestnet },
+            
         {"gnosis-10200" , GnosisTestnet },
             
         {"bevm-11503" , BEVMTestnet },
             
         {"readon-12015" , ReadONTestnet },
+            
+        {"immutable-13473" , ImmutablezkEVMTestnet },
             
         {"eosevm-15557" , EOSEVMTestnet },
             
@@ -2249,7 +2329,7 @@ namespace Network.Particle.Scripts.Model
             
         {"linea-59144" , Linea },
             
-        {"polygon-80001" , PolygonMumbai },
+        {"polygon-80002" , PolygonAmoy },
             
         {"berachain-80085" , BerachainArtio },
             
@@ -2277,13 +2357,13 @@ namespace Network.Particle.Scripts.Model
             
         {"zklink-810180" , zkLinkNova },
             
-        {"astarzkevm-1261120" , AstarzkEVMTestnet },
-            
         {"xterio-1637450" , XterioTestnet },
             
         {"platon-2206132" , PlatONTestnet },
             
         {"manta-3441005" , MantaTestnet },
+            
+        {"astarzkevm-6038361" , AstarzkEVMTestnet },
             
         {"zora-7777777" , Zora },
             

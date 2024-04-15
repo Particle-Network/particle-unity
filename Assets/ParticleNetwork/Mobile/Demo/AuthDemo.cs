@@ -144,10 +144,10 @@ namespace Network.Particle.Scripts.Test
             var address = ParticleAuthServiceInteraction.GetAddress();
             Debug.Log($"address {address}");
         }
-        
+
         public void GetAddressBtn()
         {
-            var address=  ParticleAuthServiceInteraction.GetAddress();
+            var address = ParticleAuthServiceInteraction.GetAddress();
             Debug.Log("address = " + address);
         }
 
@@ -328,9 +328,8 @@ namespace Network.Particle.Scripts.Test
 
         public void ShowToast(string message)
         {
-
 #if UNITY_EDITOR
-            
+
 #elif UNITY_ANDROID && !UNITY_EDITOR
         AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
