@@ -412,21 +412,39 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo X1Testnet => _x1testnet;
+    public static ChainInfo XLayerTestnet => _xlayertestnet;
 
-    private static ChainInfo _x1testnet = new ChainInfo(
+    private static ChainInfo _xlayertestnet = new ChainInfo(
         195,
         "OKBC",
         "evm",
         "https://static.particle.network/token-list/okc/native.png",
-        "X1 Testnet",
+        "X Layer Testnet",
         "Testnet",
-        "https://www.okx.com/okbc/docs/dev/quick-start/introduction/introduction-to-okbchain",
+        "https://www.okx.com",
         new NativeCurrency("OKB", "OKB", 18),
-        "https://testrpc.x1.tech",
-        "https://www.oklink.com/x1-test",
+        "https://testrpc.xlayer.tech",
+        "https://www.okx.com/explorer/xlayer-test",
         null,
-        "https://www.okx.com/cn/okbc/faucet"
+        null
+    );
+            
+
+    public static ChainInfo XLayer => _xlayer;
+
+    private static ChainInfo _xlayer = new ChainInfo(
+        196,
+        "OKBC",
+        "evm",
+        "https://static.particle.network/token-list/okc/native.png",
+        "X Layer Mainnet",
+        "Mainnet",
+        "https://www.okx.com",
+        new NativeCurrency("OKB", "OKB", 18),
+        "https://rpc.xlayer.tech",
+        "https://www.okx.com/zh-hans/explorer/xlayer",
+        null,
+        null
     );
             
 
@@ -463,6 +481,24 @@ namespace Network.Particle.Scripts.Model
         "https://testnet.mapscan.io",
         new List<Feature>() { new Feature("EIP1559")},
         "https://faucet.mapprotocol.io"
+    );
+            
+
+    public static ChainInfo BSquared => _bsquared;
+
+    private static ChainInfo _bsquared = new ChainInfo(
+        223,
+        "BSquared",
+        "evm",
+        "https://static.particle.network/token-list/bsquared/native.png",
+        "B² Network Mainnet",
+        "Mainnet",
+        "https://www.bsquared.network",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://rpc.bsquared.network",
+        "https://explorer.bsquared.network",
+        null,
+        null
     );
             
 
@@ -1708,6 +1744,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo Bitlayer => _bitlayer;
+
+    private static ChainInfo _bitlayer = new ChainInfo(
+        200901,
+        "Bitlayer",
+        "evm",
+        "https://static.particle.network/token-list/bitlayer/native.png",
+        "Bitlayer Mainnet",
+        "Mainnet",
+        "https://www.bitlayer.org",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://rpc.bitlayer.org",
+        "https://www.btrscan.com",
+        null,
+        null
+    );
+            
+
     public static ChainInfo PlatON => _platon;
 
     private static ChainInfo _platon = new ChainInfo(
@@ -1917,7 +1971,7 @@ namespace Network.Particle.Scripts.Model
         "Sepolia",
         "https://sepolia.otterscan.io",
         new NativeCurrency("Ether", "ETH", 18),
-        "https://eth-sepolia.g.alchemy.com/v2/demo",
+        "https://rpc.sepolia.org",
         "https://sepolia.etherscan.io",
         new List<Feature>() { new Feature("EIP1559")},
         "https://faucet.quicknode.com/drip"
@@ -2201,11 +2255,15 @@ namespace Network.Particle.Scripts.Model
             
         {"manta-169" , Manta },
             
-        {"okbc-195" , X1Testnet },
+        {"okbc-195" , XLayerTestnet },
+            
+        {"okbc-196" , XLayer },
             
         {"opbnb-204" , opBNB },
             
         {"mapprotocol-212" , MAPProtocolTestnet },
+            
+        {"bsquared-223" , BSquared },
             
         {"fantom-250" , Fantom },
             
@@ -2250,7 +2308,7 @@ namespace Network.Particle.Scripts.Model
         {"kava-2221" , KavaTestnet },
             
         {"kava-2222" , Kava },
-        
+            
         {"peaq-2241" , PeaqKrest },
             
         {"polygonzkevm-2442" , PolygonzkEVMCardona },
@@ -2344,6 +2402,8 @@ namespace Network.Particle.Scripts.Model
         {"taiko-167008" , TaikoKatla },
             
         {"bitlayer-200810" , BitlayerTestnet },
+            
+        {"bitlayer-200901" , Bitlayer },
             
         {"platon-210425" , PlatON },
             
