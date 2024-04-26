@@ -344,7 +344,7 @@ namespace Network.Particle.Scripts.Model
 
     private static ChainInfo _bobtestnet = new ChainInfo(
         111,
-        "bob",
+        "BOB",
         "evm",
         "https://static.particle.network/token-list/bob/native.png",
         "BOB Testnet",
@@ -1132,6 +1132,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo Cyber => _cyber;
+
+    private static ChainInfo _cyber = new ChainInfo(
+        7560,
+        "Cyber",
+        "evm",
+        "https://static.particle.network/token-list/cyber/native.png",
+        "Cyber Mainnet",
+        "Mainnet",
+        "https://cyber-explorer.alt.technology",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://cyber.alt.technology",
+        "https://cyber-explorer.alt.technology",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo Klaytn => _klaytn;
 
     private static ChainInfo _klaytn = new ChainInfo(
@@ -1600,6 +1618,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo BOB => _bob;
+
+    private static ChainInfo _bob = new ChainInfo(
+        60808,
+        "BOB",
+        "evm",
+        "https://static.particle.network/token-list/bob/native.png",
+        "BOB Mainnet",
+        "Mainnet",
+        "https://www.gobob.xyz",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://rpc.gobob.xyz",
+        "https://explorer.gobob.xyz",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo PolygonAmoy => _polygonamoy;
 
     private static ChainInfo _polygonamoy = new ChainInfo(
@@ -1721,6 +1757,24 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Ether", "ETH", 18),
         "https://rpc.katla.taiko.xyz",
         "https://explorer.katla.taiko.xyz",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo TaikoHekla => _taikohekla;
+
+    private static ChainInfo _taikohekla = new ChainInfo(
+        167009,
+        "Taiko",
+        "evm",
+        "https://static.particle.network/token-list/taiko/native.png",
+        "Taiko Hekla",
+        "Hekla",
+        "https://taiko.xyz",
+        new NativeCurrency("Ether", "ETH", 18),
+        "https://rpc.hekla.taiko.xyz",
+        "https://explorer.hekla.taiko.xyz",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -2009,6 +2063,24 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("ETH", "ETH", 18),
         "https://rpcv2-testnet.ancient8.gg",
         "https://scanv2-testnet.ancient8.gg",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo CyberTestnet => _cybertestnet;
+
+    private static ChainInfo _cybertestnet = new ChainInfo(
+        111557560,
+        "Cyber",
+        "evm",
+        "https://static.particle.network/token-list/cyber/native.png",
+        "Cyber Testnet",
+        "Testnet",
+        "https://testnet.cyberscan.co",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://cyber-testnet.alt.technology",
+        "https://testnet.cyberscan.co",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -2335,6 +2407,8 @@ namespace Network.Particle.Scripts.Model
             
         {"zetachain-7001" , ZetaChainTestnet },
             
+        {"cyber-7560" , Cyber },
+            
         {"klaytn-8217" , Klaytn },
             
         {"base-8453" , Base },
@@ -2387,6 +2461,8 @@ namespace Network.Particle.Scripts.Model
             
         {"linea-59144" , Linea },
             
+        {"bob-60808" , BOB },
+            
         {"polygon-80002" , PolygonAmoy },
             
         {"berachain-80085" , BerachainArtio },
@@ -2400,6 +2476,8 @@ namespace Network.Particle.Scripts.Model
         {"xterio-112358" , Xterio },
             
         {"taiko-167008" , TaikoKatla },
+            
+        {"taiko-167009" , TaikoHekla },
             
         {"bitlayer-200810" , BitlayerTestnet },
             
@@ -2432,6 +2510,8 @@ namespace Network.Particle.Scripts.Model
         {"optimism-11155420" , OptimismSepolia },
             
         {"ancient8-28122024" , Ancient8Testnet },
+            
+        {"cyber-111557560" , CyberTestnet },
             
         {"blast-168587773" , BlastSepolia },
             
