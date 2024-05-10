@@ -7,14 +7,14 @@
 
 ## **Prerequisites**
 
-Install Unity 2020.3.26f1 or later. Earlier versions may also be compatible but will not be actively supported. 
+Install Unity 2021.3.35f1 or later. Earlier versions may also be compatible but will not be actively supported. 
 
 **[iOS and Android](https://docs.particle.network/dashboard/unity-sdk-prerequisites)**
 
 *(iOS only)* Install the following:
 
-- Xcode 14.1 or higher
-- CocoaPods 1.12.0 or higher
+- Xcode 15.0 or higher
+- CocoaPods 1.14.3 or higher
 
 Make sure that your Unity project meets these requirements:
 
