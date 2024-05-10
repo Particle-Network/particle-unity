@@ -23,6 +23,7 @@ public class WalletChoice : SingletonMonoBehaviour<WalletChoice>
         walletTypes.Add(WalletType.ImToken);
         walletTypes.Add(WalletType.WalletConnect);
         walletTypes.Add(WalletType.Phantom);
+        walletTypes.Add(WalletType.OKX);
         walletTypes.Add(WalletType.EvmPrivateKey);
         walletTypes.Add(WalletType.SolanaPrivateKey);
 

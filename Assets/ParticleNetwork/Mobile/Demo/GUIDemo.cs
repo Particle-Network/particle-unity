@@ -265,7 +265,7 @@ namespace Network.Particle.Scripts.Test
             // Only works for iOS
             // set your wallet name and icon, only support particle auth wallet and particle auth core wallet,
             // WalletType is particle or authCore.
-            ParticleWalletGUI.SetCustomWalletName("Hello", "https://static.particle.network/wallet-icons/Rainbow.png");
+            ParticleWalletGUI.SetCustomWalletName("Hello Wallet", "https://static.particle.network/wallet-icons/Rainbow.png");
             
             // Only works for iOS
             // set customize localizables for iOS, you can get all ios localizable strings

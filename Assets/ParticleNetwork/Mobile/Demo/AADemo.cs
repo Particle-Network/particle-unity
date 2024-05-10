@@ -220,7 +220,8 @@ namespace Network.Particle.Scripts.Test
 
                 var verifyingPaymasterGasless = JObject.Parse(feeQuotesResult.data)["verifyingPaymasterGasless"];
 
-                if (verifyingPaymasterGasless == null)
+
+                if (verifyingPaymasterGasless == null || verifyingPaymasterGasless.Type == JTokenType.Null)
                 {
                     Debug.Log("gasless is not available");
                     return;
@@ -426,7 +427,7 @@ namespace Network.Particle.Scripts.Test
 
                 var verifyingPaymasterGasless = JObject.Parse(feeQuotesResult.data)["verifyingPaymasterGasless"];
 
-                if (verifyingPaymasterGasless == null)
+                if (verifyingPaymasterGasless == null || verifyingPaymasterGasless.Type == JTokenType.Null)
                 {
                     Debug.Log("gasless is not available");
                     return;
@@ -635,7 +636,7 @@ namespace Network.Particle.Scripts.Test
 
                 var verifyingPaymasterGasless = JObject.Parse(feeQuotesResult.data)["verifyingPaymasterGasless"];
 
-                if (verifyingPaymasterGasless == null)
+                if (verifyingPaymasterGasless == null || verifyingPaymasterGasless.Type == JTokenType.Null)
                 {
                     Debug.Log("gasless is not available");
                     return;
