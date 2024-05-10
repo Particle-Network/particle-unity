@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
@@ -54,9 +55,10 @@ namespace Network.Particle.Scripts.Test
                 "Particle Connect Unity Demo");
             ParticleNetwork.Init(_chainInfo);
             ParticleConnectInteraction.Init(_chainInfo, metadata);
-            // List<ChainInfo> chainInfos = new List<ChainInfo>{new EthereumChain(EthereumChainId.Mainnet), new PolygonChain(PolygonChainId.Mainnet), new EthereumChain(EthereumChainId.Sepolia)};
+            // List<ChainInfo> chainInfos = new List<ChainInfo>
+            //     { ChainInfo.Ethereum, ChainInfo.EthereumSepolia, ChainInfo.EthereumSepolia };
             // ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
-            
+
             // control how to show set master password and payment password.
             ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
         }
