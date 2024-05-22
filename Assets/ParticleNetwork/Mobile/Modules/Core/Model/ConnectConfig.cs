@@ -11,6 +11,7 @@ namespace Network.Particle.Scripts.Model
         public SupportAuthType supportAuthTypes;
         public SocialLoginPrompt? socialLoginPrompt;
         [CanBeNull] public LoginAuthorization authorization;
+        [CanBeNull] public LoginPageConfig loginPageConfig;
 
         /// <summary>
         /// Particle connect configuration
@@ -22,8 +23,8 @@ namespace Network.Particle.Scripts.Model
         /// <param name="socialLoginPrompt">Optional, controls whether show light UI in web, default is false.</param>
         /// <param name="authorization">Optional, LoginAuthorization, , login and sign message, its message requires hex in evm, base58 in solana </param>
         public ConnectConfig(LoginType loginType, [CanBeNull] string account, [CanBeNull] string code,
-            SupportAuthType supportAuthTypes, [CanBeNull] LoginAuthorization authorization = null,
-            SocialLoginPrompt? socialLoginPrompt = null)
+            SupportAuthType supportAuthTypes,  [CanBeNull] LoginAuthorization authorization = null,
+            SocialLoginPrompt? socialLoginPrompt = null, [CanBeNull] LoginPageConfig authCoreLoginPageConfig = null)
         {
             this.loginType = loginType;
             this.account = account;
@@ -31,6 +32,7 @@ namespace Network.Particle.Scripts.Model
             this.supportAuthTypes = supportAuthTypes;
             this.socialLoginPrompt = socialLoginPrompt;
             this.authorization = authorization;
+            this.loginPageConfig = authCoreLoginPageConfig;
         }
     }
 }

@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Utils;
+using Newtonsoft.Json.Converters;
 using UnityEngine;
 
 
@@ -83,8 +84,16 @@ namespace Network.Particle.Scripts.Core
                     { "account", string.IsNullOrEmpty(config.account) ? "" : config.account },
                     { "account", string.IsNullOrEmpty(config.code) ? "" : config.code },
                     { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
-                    { "socialLoginPrompt", config.socialLoginPrompt.ToString() }
+                    { "socialLoginPrompt", config.socialLoginPrompt.ToString() },
                 };
+
+                JsonSerializerSettings settings = new JsonSerializerSettings
+                {
+                    Converters = new List<JsonConverter> { new StringEnumConverter() }
+                };
+
+                if (config.loginPageConfig != null)
+                    obj["loginPageConfig"] = JToken.FromObject(config.loginPageConfig, JsonSerializer.Create(settings));
 
                 if (config.authorization != null) obj["authorization"] = JToken.FromObject(config.authorization);
 
