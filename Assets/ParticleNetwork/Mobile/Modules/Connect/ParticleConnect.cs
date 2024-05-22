@@ -23,7 +23,6 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> signTypedDataTask;
         private TaskCompletionSource<NativeResultData> loginTask;
         private TaskCompletionSource<NativeResultData> verifyTask;
-        private TaskCompletionSource<NativeResultData> setChainTask;
 
         private TaskCompletionSource<NativeResultData> importPrivateKeyTask;
         private TaskCompletionSource<NativeResultData> importMnemonicTask;

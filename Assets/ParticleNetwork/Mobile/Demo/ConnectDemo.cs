@@ -70,7 +70,16 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType);
+                ConnectConfig configConfig = null;
+                if (this._walletType == WalletType.AuthCore)
+                {
+                    LoginPageConfig loginPageConfig = new LoginPageConfig("Particle Unity Example",
+                        "An example description", "https://connect.particle.network/icons/512.png");
+                    configConfig = new ConnectConfig(LoginType.EMAIL, null, null, SupportAuthType.ALL, null, null,
+                        loginPageConfig);
+                }
+
+                var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, configConfig);
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)

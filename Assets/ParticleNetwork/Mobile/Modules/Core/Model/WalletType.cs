@@ -15,7 +15,6 @@ namespace Network.Particle.Scripts.Model
         Phantom,
         Zerion,
         Math,
-        Omin,
         Inch1,
         Zengo,
         Alpha,

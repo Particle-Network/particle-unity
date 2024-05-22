@@ -82,7 +82,7 @@ namespace Network.Particle.Scripts.Core
                 {
                     { "loginType", config.loginType.ToString() },
                     { "account", string.IsNullOrEmpty(config.account) ? "" : config.account },
-                    { "account", string.IsNullOrEmpty(config.code) ? "" : config.code },
+                    { "code", string.IsNullOrEmpty(config.code) ? "" : config.code },
                     { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
                     { "socialLoginPrompt", config.socialLoginPrompt.ToString() },
                 };

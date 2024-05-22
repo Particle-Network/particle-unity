@@ -862,6 +862,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo ComboTestnet => _combotestnet;
+
+    private static ChainInfo _combotestnet = new ChainInfo(
+        1715,
+        "Combo",
+        "evm",
+        "https://static.particle.network/token-list/combo/native.png",
+        "Combo Testnet",
+        "Testnet",
+        "https://docs.combonetwork.io",
+        new NativeCurrency("BNB", "BNB", 18),
+        "https://test-rpc.combonetwork.io",
+        "https://combotrace-testnet.nodereal.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo KavaTestnet => _kavatestnet;
 
     private static ChainInfo _kavatestnet = new ChainInfo(
@@ -1144,7 +1162,7 @@ namespace Network.Particle.Scripts.Model
         "https://cyber-explorer.alt.technology",
         new NativeCurrency("ETH", "ETH", 18),
         "https://cyber.alt.technology",
-        "https://cyber-explorer.alt.technology",
+        "https://cyberscan.co",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -1600,6 +1618,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo LineaSepolia => _lineasepolia;
+
+    private static ChainInfo _lineasepolia = new ChainInfo(
+        59141,
+        "Linea",
+        "evm",
+        "https://static.particle.network/token-list/linea/native.png",
+        "Linea Sepolia",
+        "Sepolia",
+        "https://linea.build",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://rpc.sepolia.linea.build",
+        "https://sepolia.lineascan.build",
+        new List<Feature>() { new Feature("EIP1559")},
+        "https://faucet.goerli.linea.build"
+    );
+            
+
     public static ChainInfo Linea => _linea;
 
     private static ChainInfo _linea = new ChainInfo(
@@ -1611,7 +1647,7 @@ namespace Network.Particle.Scripts.Model
         "Mainnet",
         "https://linea.build",
         new NativeCurrency("ETH", "ETH", 18),
-        "https://linea-mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+        "https://rpc.linea.build",
         "https://lineascan.build",
         new List<Feature>() { new Feature("EIP1559")},
         null
@@ -1708,20 +1744,20 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo ComboTestnet => _combotestnet;
+    public static ChainInfo TUNATestnet => _tunatestnet;
 
-    private static ChainInfo _combotestnet = new ChainInfo(
-        91715,
-        "Combo",
+    private static ChainInfo _tunatestnet = new ChainInfo(
+        89682,
+        "TUNA",
         "evm",
-        "https://static.particle.network/token-list/combo/native.png",
-        "Combo Testnet",
+        "https://static.particle.network/token-list/tuna/native.png",
+        "TUNA Testnet",
         "Testnet",
-        "https://docs.combonetwork.io",
-        new NativeCurrency("BNB", "BNB", 18),
-        "https://test-rpc.combonetwork.io",
-        "https://combotrace-testnet.nodereal.io",
-        new List<Feature>() { new Feature("EIP1559")},
+        "https://tunachain.io",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://babytuna.rpc.tunachain.io",
+        "https://babytuna.explorer.tunachain.io",
+        null,
         null
     );
             
@@ -2377,6 +2413,8 @@ namespace Network.Particle.Scripts.Model
             
         {"bevm-1502" , BEVMCanaryTestnet },
             
+        {"combo-1715" , ComboTestnet },
+            
         {"kava-2221" , KavaTestnet },
             
         {"kava-2222" , Kava },
@@ -2459,6 +2497,8 @@ namespace Network.Particle.Scripts.Model
             
         {"pgn-58008" , PGNSepolia },
             
+        {"linea-59141" , LineaSepolia },
+            
         {"linea-59144" , Linea },
             
         {"bob-60808" , BOB },
@@ -2471,7 +2511,7 @@ namespace Network.Particle.Scripts.Model
             
         {"base-84532" , BaseSepolia },
             
-        {"combo-91715" , ComboTestnet },
+        {"tuna-89682" , TUNATestnet },
             
         {"xterio-112358" , Xterio },
             
