@@ -7,63 +7,31 @@ target 'Unity-iPhone' do
   use_frameworks!
 
   # Particle Auth Service
-  pod 'ParticleNetworkBase', :path => '/Users/link2/Documents/particle-ios-gitlab/ParticleNetwork'
-  
-  pod 'ParticleAuthService', :path => '/Users/link2/Documents/particle-ios-gitlab/ParticleNetwork'
-  
+  pod 'ParticleNetworkBase', '1.4.3'
+  pod 'ParticleAuthService', '1.4.3'
   
   # Particle Connect Service
-  pod 'ConnectCommon', :path => '/Users/link2/Documents/particle-connect-ios/'
-  pod 'ConnectEVMAdapter', :path => '/Users/link2/Documents/particle-connect-ios/'
-  pod 'ConnectSolanaAdapter', :path => '/Users/link2/Documents/particle-connect-ios/'
-  pod 'ConnectWalletConnectAdapter', :path => '/Users/link2/Documents/particle-connect-ios/'
-  pod 'ConnectPhantomAdapter', :path => '/Users/link2/Documents/particle-connect-ios/'
-  pod 'ParticleConnect', :path => '/Users/link2/Documents/particle-connect-ios/'
-  pod 'ParticleAuthAdapter', :path => '/Users/link2/Documents/particle-connect-ios/'
+  pod 'ConnectCommon', '0.2.21'
+  pod 'ConnectEVMAdapter', '0.2.21'
+  pod 'ConnectSolanaAdapter', '0.2.21'
+  pod 'ConnectWalletConnectAdapter', '0.2.21'
+  pod 'ConnectPhantomAdapter', '0.2.21'
+  pod 'ParticleConnect', '0.2.21'
+  pod 'ParticleAuthAdapter', '0.2.21'
 
   # Particle Wallet Service
-  pod 'ParticleWalletConnect', :path => '/Users/link2/Documents/particle-ios-gitlab/ParticleNetwork'
-  
-  pod 'ParticleWalletAPI', :path => '/Users/link2/Documents/particle-ios-gitlab/ParticleNetwork'
-  
-  pod 'ParticleWalletGUI', :path => '/Users/link2/Documents/particle-ios-gitlab/ParticleNetwork'
-  
+  pod 'ParticleWalletConnect', '1.4.3'
+  pod 'ParticleWalletAPI', '1.4.3'
+  pod 'ParticleWalletGUI', '1.4.3'
   
   # Particle AA
-  pod 'ParticleAA', :path => '/Users/link2/Documents/particle-ios-gitlab/ParticleNetwork'
+  pod 'ParticleAA', '1.4.3'
   
   # Particle Auth Core
-  pod 'AuthCoreAdapter', :path => '/Users/link2/Documents/particle-mpc/'
-  pod 'ParticleAuthCore', :path => '/Users/link2/Documents/particle-mpc/'
-  pod 'ParticleMPCCore', :path => '/Users/link2/Documents/particle-mpc/'
-  pod 'Thresh', :path => '/Users/link2/Documents/particle-mpc/'
-  
-#  # Particle Auth Service
-#  pod 'ParticleNetworkBase', '1.4.2'
-#  pod 'ParticleAuthService', '1.4.2'
-#  
-#  # Particle Connect Service
-#  pod 'ConnectCommon', '0.2.20'
-#  pod 'ConnectEVMAdapter', '0.2.20'
-#  pod 'ConnectSolanaAdapter', '0.2.20'
-#  pod 'ConnectWalletConnectAdapter', '0.2.20'
-#  pod 'ConnectPhantomAdapter', '0.2.20'
-#  pod 'ParticleConnect', '0.2.20'
-#  pod 'ParticleAuthAdapter', '0.2.20'
-#
-#  # Particle Wallet Service
-#  pod 'ParticleWalletConnect', '1.4.2'
-#  pod 'ParticleWalletAPI', '1.4.2'
-#  pod 'ParticleWalletGUI', '1.4.2'
-#  
-#  # Particle AA
-#  pod 'ParticleAA', '1.4.2'
-#  
-#  # Particle Auth Core
-#  pod 'AuthCoreAdapter', '1.4.2'
-#  pod 'ParticleAuthCore', '1.4.2'
-#  pod 'ParticleMPCCore', '1.4.2'
-#  pod 'Thresh', '1.4.2'
+  pod 'AuthCoreAdapter', '1.4.3'
+  pod 'ParticleAuthCore', '1.4.3'
+  pod 'ParticleMPCCore', '1.4.3'
+  pod 'Thresh', '1.4.3'
     
   pod 'SkeletonView', :git => 'https://github.com/SunZhiC/SkeletonView.git', :branch => 'main'
   pod 'SwiftyUserDefaults', :git => 'https://github.com/SunZhiC/SwiftyUserDefaults.git', :branch => 'master'
