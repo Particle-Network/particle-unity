@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
@@ -12,6 +13,8 @@ namespace Network.Particle.Scripts.Test
 {
     public class ConnectDemo : MonoBehaviour
     {
+        [SerializeField] private GameObject authCoreGameObject;
+
         private ChainInfo _chainInfo = ChainInfo.EthereumSepolia;
 
         private string loginSourceMessage = "";
@@ -19,14 +22,24 @@ namespace Network.Particle.Scripts.Test
 
         // before test in devices, preset wallet and test account
         private WalletType _walletType;
+        public WalletType WalletType => _walletType;
         private TestAccount _account;
 
         private string publicAddress = "";
+        public string PublicAddress => publicAddress;
+
+        public static ConnectDemo Instance;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {
             this._walletType = WalletType.MetaMask;
             this._account = TestAccount.EVM;
+            refreshUI();
         }
 
         public void SelectChain()
@@ -38,12 +51,14 @@ namespace Network.Particle.Scripts.Test
             });
         }
 
+
         public void SelectWallet()
         {
             WalletChoice.Instance.Show(walletType =>
             {
                 Debug.Log($"xxhong {walletType}");
                 this._walletType = walletType;
+                refreshUI();
             });
         }
 
@@ -75,7 +90,10 @@ namespace Network.Particle.Scripts.Test
                 {
                     LoginPageConfig loginPageConfig = new LoginPageConfig("Particle Unity Example",
                         "An example description", "https://connect.particle.network/icons/512.png");
-                    configConfig = new ConnectConfig(LoginType.EMAIL, null, null, SupportAuthType.ALL, null, null,
+                    List<SupportLoginType> loginTypes = Enum.GetValues(typeof(SupportLoginType))
+                        .Cast<SupportLoginType>()
+                        .ToList();
+                    configConfig = new ConnectConfig(LoginType.EMAIL, null, null, loginTypes, null, null,
                         loginPageConfig);
                 }
 
@@ -109,7 +127,7 @@ namespace Network.Particle.Scripts.Test
                 ConnectConfig config = null;
                 if (_walletType == WalletType.Particle)
                 {
-                    config = new ConnectConfig(LoginType.GOOGLE, null, null, SupportAuthType.NONE);
+                    config = new ConnectConfig(LoginType.GOOGLE, null, null);
                 }
 
                 var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, config);
@@ -534,6 +552,47 @@ namespace Network.Particle.Scripts.Test
             Debug.Log(chainInfo.Network);
         }
 
+
+        public void authCoreConnectWithPhone()
+        {
+            LoginPageConfig loginPageConfig = new LoginPageConfig("Particle Unity Example",
+                "An example description", "https://connect.particle.network/icons/512.png");
+            List<SupportLoginType> loginTypes = Enum.GetValues(typeof(SupportLoginType))
+                .Cast<SupportLoginType>()
+                .ToList();
+            ConnectConfig configConfig = new ConnectConfig(LoginType.PHONE, null, null, loginTypes, null, null,
+                loginPageConfig);
+            connectWithAuthCore(configConfig);
+        }
+
+        public void authCoreConnectWithEmail()
+        {
+            LoginPageConfig loginPageConfig = new LoginPageConfig("Particle Unity Example",
+                "An example description", "https://connect.particle.network/icons/512.png");
+            List<SupportLoginType> loginTypes = Enum.GetValues(typeof(SupportLoginType))
+                .Cast<SupportLoginType>()
+                .ToList();
+            ConnectConfig configConfig = new ConnectConfig(LoginType.EMAIL, "xxx@gmail.com", null, loginTypes, null,
+                null,
+                loginPageConfig);
+            connectWithAuthCore(configConfig);
+        }
+
+        public void authCoreConnectWithJWT()
+        {
+            var jwt = "";
+            ConnectConfig configConfig =
+                new ConnectConfig(LoginType.JWT, "");
+            connectWithAuthCore(configConfig);
+        }
+
+        public void authCoreConnectWithGoogle()
+        {
+            ConnectConfig configConfig = new ConnectConfig(LoginType.GOOGLE);
+            connectWithAuthCore(configConfig);
+        }
+
+
         public void ShowToast(string message)
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
@@ -546,6 +605,38 @@ namespace Network.Particle.Scripts.Test
 #elif UNITY_IOS && !UNITY_EDITOR
             ToastTip.Instance.OnShow(message);
 #endif
+        }
+
+        private void refreshUI()
+        {
+            authCoreGameObject.gameObject.SetActive(_walletType == WalletType.AuthCore);
+        }
+
+        private async void connectWithAuthCore(ConnectConfig configConfig)
+        {
+            try
+            {
+                var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, configConfig);
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    publicAddress = JObject.Parse(nativeResultData.data)["publicAddress"].ToString();
+                    Tips.Instance.Show(
+                        $"{MethodBase.GetCurrentMethod()?.Name} publicAddress:{publicAddress}  Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
         }
     }
 }

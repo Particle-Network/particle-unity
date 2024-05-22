@@ -1,4 +1,4 @@
-
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace Network.Particle.Scripts.Model
@@ -8,7 +8,7 @@ namespace Network.Particle.Scripts.Model
         public LoginType loginType;
         [CanBeNull] public string account;
         [CanBeNull] public string code;
-        public SupportAuthType supportAuthTypes;
+        [CanBeNull] public List<SupportLoginType> supportLoginTypes;
         public SocialLoginPrompt? socialLoginPrompt;
         [CanBeNull] public LoginAuthorization authorization;
         [CanBeNull] public LoginPageConfig loginPageConfig;
@@ -22,14 +22,15 @@ namespace Network.Particle.Scripts.Model
         /// <param name="supportAuthTypes">Controls whether third-party login buttons are displayed.</param>
         /// <param name="socialLoginPrompt">Optional, controls whether show light UI in web, default is false.</param>
         /// <param name="authorization">Optional, LoginAuthorization, , login and sign message, its message requires hex in evm, base58 in solana </param>
-        public ConnectConfig(LoginType loginType, [CanBeNull] string account, [CanBeNull] string code,
-            SupportAuthType supportAuthTypes,  [CanBeNull] LoginAuthorization authorization = null,
+        public ConnectConfig(LoginType loginType, [CanBeNull] string account = null, [CanBeNull] string code = null,
+            [CanBeNull] List<SupportLoginType> supportLoginTypes = null,
+            [CanBeNull] LoginAuthorization authorization = null,
             SocialLoginPrompt? socialLoginPrompt = null, [CanBeNull] LoginPageConfig authCoreLoginPageConfig = null)
         {
             this.loginType = loginType;
             this.account = account;
             this.code = code;
-            this.supportAuthTypes = supportAuthTypes;
+            this.supportLoginTypes = supportLoginTypes;
             this.socialLoginPrompt = socialLoginPrompt;
             this.authorization = authorization;
             this.loginPageConfig = authCoreLoginPageConfig;

@@ -77,13 +77,12 @@ namespace Network.Particle.Scripts.Core
             string configJson = "";
             if (config != null)
             {
-                var authTypeList = ParticleTools.GetSupportAuthTypeValues(config.supportAuthTypes);
+ 
                 var obj = new JObject
                 {
                     { "loginType", config.loginType.ToString() },
                     { "account", string.IsNullOrEmpty(config.account) ? "" : config.account },
                     { "code", string.IsNullOrEmpty(config.code) ? "" : config.code },
-                    { "supportAuthTypeValues", JToken.FromObject(authTypeList) },
                     { "socialLoginPrompt", config.socialLoginPrompt.ToString() },
                 };
 
@@ -91,6 +90,8 @@ namespace Network.Particle.Scripts.Core
                 {
                     Converters = new List<JsonConverter> { new StringEnumConverter() }
                 };
+                if (config.supportLoginTypes != null)
+                    obj["supportAuthTypeValues"] = JToken.FromObject(config.supportLoginTypes, JsonSerializer.Create(settings));
 
                 if (config.loginPageConfig != null)
                     obj["loginPageConfig"] = JToken.FromObject(config.loginPageConfig, JsonSerializer.Create(settings));

@@ -263,7 +263,7 @@ namespace Network.Particle.Scripts.Core
 #else
 #endif
         }
-        
+
         /// <summary>
         /// Open DappBrowser page
         /// </summary>
@@ -379,7 +379,7 @@ namespace Network.Particle.Scripts.Core
 
 #endif
         }
-        
+
         /// <summary>
         /// Set Show Smart Account Setting in Setting page
         /// </summary>
@@ -649,6 +649,18 @@ namespace Network.Particle.Scripts.Core
             ParticleNetworkIOSBridge.setCustomWalletName(json);
 #else
 
+#endif
+        }
+
+        /// <summary>
+        /// update Wallet Chains after call setChainInfo
+        /// </summary>
+        /// <param name="walletType"></param>
+        /// <param name="pubAddress"></param>
+        public static void UpdateWallet(WalletType walletType, string publicAddress)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            ParticleNetwork.GetUnityBridgeClass().CallStatic("updateWallet",walletType.ToString(),publicAddress);
 #endif
         }
     }

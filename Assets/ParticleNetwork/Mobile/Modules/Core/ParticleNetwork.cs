@@ -27,7 +27,7 @@ namespace Network.Particle.Scripts.Core
                 { "chain_name", chainInfo.Name },
                 { "chain_id", chainInfo.Id },
                 { "chain_id_name", chainInfo.Network },
-                { "env", env.ToString() },
+                { "env", env.ToString() }
             });
 
 #if UNITY_ANDROID&& !UNITY_EDITOR

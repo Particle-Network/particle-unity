@@ -238,6 +238,13 @@ namespace Network.Particle.Scripts.Test
             ParticleWalletGUI.SetSupportWalletConnect(true);
         }
 
+        public void SwitchWalletChain()
+        {
+            ParticleNetwork.SetChainInfo(ChainInfo.Polygon);
+            var walletType = ConnectDemo.Instance.WalletType;
+            var publicAddress = ConnectDemo.Instance.PublicAddress;
+            ParticleWalletGUI.UpdateWallet(walletType,publicAddress);
+        }
         public void SetCustomUI()
         {
             ParticleWalletGUI.SetSupportAddToken(true);
