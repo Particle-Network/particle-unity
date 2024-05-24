@@ -38,6 +38,7 @@ dependencies {
         implementation("network.particle:connect-phantom-adapter:$sdkVersion")
         implementation("network.particle:connect-wallet-connect-adapter:$sdkVersion")
         implementation("network.particle:connect-auth-adapter:$sdkVersion")
+        implementation("network.particle:connect-auth-core-adapter:$sdkVersion")
     }
 Properties localProps = getLocalProperties()
 android {
