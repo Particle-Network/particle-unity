@@ -772,6 +772,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo HybridTestnet => _hybridtestnet;
+
+    private static ChainInfo _hybridtestnet = new ChainInfo(
+        1224,
+        "Hybrid",
+        "evm",
+        "https://static.particle.network/token-list/hybrid/native.png",
+        "Hybrid Testnet",
+        "Testnet",
+        "https://buildonhybrid.com",
+        new NativeCurrency("HYB", "HYB", 18),
+        "https://testnet-rpc.buildonhybrid.com",
+        "https://explorer.buildonhybrid.com",
+        null,
+        null
+    );
+            
+
     public static ChainInfo Moonbeam => _moonbeam;
 
     private static ChainInfo _moonbeam = new ChainInfo(
@@ -2402,6 +2420,8 @@ namespace Network.Particle.Scripts.Model
         {"core-1116" , Core },
             
         {"bsquared-1123" , BSquaredTestnet },
+            
+        {"hybrid-1224" , HybridTestnet },
             
         {"moonbeam-1284" , Moonbeam },
             
