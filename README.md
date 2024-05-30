@@ -9,8 +9,6 @@
 
 Install Unity 2021.3.35f1 or later. Earlier versions may also be compatible but will not be actively supported. 
 
-**[iOS and Android](https://docs.particle.network/dashboard/unity-sdk-prerequisites)**
-
 *(iOS only)* Install the following:
 
 - Xcode 15.0 or higher
@@ -28,17 +26,17 @@ If you are familiar with web browser in windows platform, you can use other web 
 
 ## 📗 Docs
 
-**Auth**: https://docs.particle.network/auth-service/sdks/unity
+**Auth**: https://developers.particle.network/reference/auth-unity-mobile
 
-**AuthCore**: https://docs.particle.network/developers/auth-service/core/unity
+**AuthCore**: https://developers.particle.network/reference/auth-unity-mobile
 
-**Connect**: https://docs.particle.network/connect-service/sdks/unity
+**Connect**: https://developers.particle.network/reference/connect-unity
 
-**GUI**: https://docs.particle.network/wallet-service/sdks/unity
+**GUI**: https://developers.particle.network/reference/wallet-unity
 
-**AA**: https://docs.particle.network/developers/account-abstraction/sdks/unity
+**AA**: https://developers.particle.network/reference/aa-unity
 
-**Windows and macOS**: https://docs.particle.network/auth-service/sdks/unity-windows-macos
+**Windows and macOS**: https://developers.particle.network/reference/auth-unity-desktop
 
 ## 🚀 Quick start with DEMO
 
