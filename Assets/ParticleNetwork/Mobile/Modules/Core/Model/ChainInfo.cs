@@ -1780,19 +1780,37 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo Xterio => _xterio;
+    public static ChainInfo XterioBNB => _xteriobnb;
 
-    private static ChainInfo _xterio = new ChainInfo(
+    private static ChainInfo _xteriobnb = new ChainInfo(
         112358,
         "xterio",
         "evm",
         "https://static.particle.network/token-list/xterio/native.png",
-        "Xterio Mainnet",
+        "Xterio(BNB) Mainnet",
         "Mainnet",
         "https://xter.io",
         new NativeCurrency("BNB", "BNB", 18),
         "https://xterio.alt.technology",
         "https://xterscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo Taiko => _taiko;
+
+    private static ChainInfo _taiko = new ChainInfo(
+        167000,
+        "Taiko",
+        "evm",
+        "https://static.particle.network/token-list/taiko/native.png",
+        "Taiko Mainnet",
+        "Mainnet",
+        "https://taiko.xyz",
+        new NativeCurrency("Ether", "ETH", 18),
+        "https://rpc.mainnet.taiko.xyz",
+        "https://taikoscan.network",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -1978,19 +1996,37 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo XterioTestnet => _xteriotestnet;
+    public static ChainInfo XterioBNBTestnet => _xteriobnbtestnet;
 
-    private static ChainInfo _xteriotestnet = new ChainInfo(
+    private static ChainInfo _xteriobnbtestnet = new ChainInfo(
         1637450,
         "xterio",
         "evm",
         "https://static.particle.network/token-list/xterio/native.png",
-        "Xterio Testnet",
+        "Xterio(BNB) Testnet",
         "Testnet",
         "https://xter.io",
         new NativeCurrency("BNB", "BNB", 18),
         "https://xterio-testnet.alt.technology",
         "https://testnet.xterscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo XterioETHTestnet => _xterioethtestnet;
+
+    private static ChainInfo _xterioethtestnet = new ChainInfo(
+        1637451,
+        "xterioeth",
+        "evm",
+        "https://static.particle.network/token-list/xterioeth/native.png",
+        "Xterio(ETH) Testnet",
+        "Testnet",
+        "https://xterscan.io",
+        new NativeCurrency("Ether", "ETH", 18),
+        "https://xterio-eth-testnet.alt.technology",
+        "https://eth-testnet.xterscan.io",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -2011,6 +2047,24 @@ namespace Network.Particle.Scripts.Model
         "https://devnet2scan.platon.network",
         null,
         "https://devnet2faucet.platon.network/faucet"
+    );
+            
+
+    public static ChainInfo XterioETH => _xterioeth;
+
+    private static ChainInfo _xterioeth = new ChainInfo(
+        2702128,
+        "xterioeth",
+        "evm",
+        "https://static.particle.network/token-list/xterioeth/native.png",
+        "Xterio(ETH) Mainnet",
+        "Mainnet",
+        "https://xterscan.io",
+        new NativeCurrency("Ether", "ETH", 18),
+        "https://xterio-eth.alt.technology",
+        "https://eth.xterscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
     );
             
 
@@ -2533,7 +2587,9 @@ namespace Network.Particle.Scripts.Model
             
         {"tuna-89682" , TUNATestnet },
             
-        {"xterio-112358" , Xterio },
+        {"xterio-112358" , XterioBNB },
+            
+        {"taiko-167000" , Taiko },
             
         {"taiko-167008" , TaikoKatla },
             
@@ -2555,9 +2611,13 @@ namespace Network.Particle.Scripts.Model
             
         {"zklink-810180" , zkLinkNova },
             
-        {"xterio-1637450" , XterioTestnet },
+        {"xterio-1637450" , XterioBNBTestnet },
+            
+        {"xterioeth-1637451" , XterioETHTestnet },
             
         {"platon-2206132" , PlatONTestnet },
+            
+        {"xterioeth-2702128" , XterioETH },
             
         {"manta-3441005" , MantaTestnet },
             
