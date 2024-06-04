@@ -106,7 +106,7 @@ extension UnityManager {
     func initialize(_ json: String) {
         let data = JSON(parseJSON: json)
         let chainId = data["chain_id"].intValue
-        let name = data["chain_name"].stringValue.lowercased()
+        let name = data["c"].stringValue.lowercased()
         let chainType: ChainType = name == "solana" ? .solana : .evm
         guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else {
             return print("initialize error, can't find right chain for \(name), chainId \(chainId)")
@@ -960,6 +960,10 @@ extension UnityManager {
         adapters.append(PhantomConnectAdapter())
 #endif
         
+#if canImport(ParticleAuthCore)
+        adapters.append(AuthCoreAdapter())
+#endif
+        
 #if canImport(ConnectWalletConnectAdapter)
         adapters.append(contentsOf: [
             MetaMaskConnectAdapter(),
@@ -967,21 +971,16 @@ extension UnityManager {
             BitkeepConnectAdapter(),
             ImtokenConnectAdapter(),
             TrustConnectAdapter(),
-            WalletConnectAdapter()
+            WalletConnectAdapter(),
+            ZerionConnectAdapter(),
+            MathConnectAdapter(),
+            Inch1ConnectAdapter(),
+            ZengoConnectAdapter(),
+            AlphaConnectAdapter(),
+            OKXConnectAdapter()
+            
         ])
         
-        let moreAdapterClasses: [WalletConnectAdapter.Type] =
-            [ZerionConnectAdapter.self,
-             MathConnectAdapter.self,
-             OmniConnectAdapter.self,
-             Inch1ConnectAdapter.self,
-             ZengoConnectAdapter.self,
-             AlphaConnectAdapter.self,
-             OKXConnectAdapter.self]
-
-        adapters.append(contentsOf: moreAdapterClasses.map {
-            $0.init()
-        })
 #endif
         
         ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData) {
@@ -1111,8 +1110,19 @@ extension UnityManager {
 
             particleAuthConfig = ParticleAuthConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, account: account, socialLoginPrompt: socialLoginPrompt, authorization: loginAuthorization)
             
+            
+            
 #if canImport(ParticleAuthCore)
-            particleAuthCoreConfig = ParticleAuthCoreConfig(loginType: loginType, account: account, code: code, socialLoginPrompt: socialLoginPrompt)
+            let config = data["loginPageConfig"]
+            var loginPageConfig: LoginPageConfig?
+            if config != JSON.null {
+                let projectName = config["projectName"].stringValue
+                let description = config["description"].stringValue
+                let path = config["imagePath"].stringValue.lowercased()
+                let imagePath = ImagePath.url(path)
+                loginPageConfig = LoginPageConfig(imagePath: imagePath, projectName: projectName, description: description)
+            }
+            particleAuthCoreConfig = ParticleAuthCoreConfig(loginType: loginType, account: account, code: code, socialLoginPrompt: socialLoginPrompt, loginPageConfig: loginPageConfig)
 #endif
         }
         
@@ -2150,8 +2160,6 @@ extension UnityManager {
             walletType = .zerion
         } else if str == "math" {
             walletType = .math
-        } else if str == "omni" {
-            walletType = .omni
         } else if str == "zengo" {
             walletType = .zengo
         } else if str == "alpha" {
