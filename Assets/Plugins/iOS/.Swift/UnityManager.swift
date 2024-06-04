@@ -1118,7 +1118,7 @@ extension UnityManager {
             if config != JSON.null {
                 let projectName = config["projectName"].stringValue
                 let description = config["description"].stringValue
-                let path = config["imagePath"].stringValue.lowercased()
+                let path = config["imagePath"].stringValue
                 let imagePath = ImagePath.url(path)
                 loginPageConfig = LoginPageConfig(imagePath: imagePath, projectName: projectName, description: description)
             }
