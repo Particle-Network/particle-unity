@@ -1,84 +1,116 @@
 #if !UNITY_ANDROID && !UNITY_IOS
 using System.Collections.Generic;
 using System.Numerics;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace Particle.Windows.Modules.Models
 {
-    
-        [JsonObject]
-        public class ParticleConfig
+    [JsonObject]
+    public class ParticleConfig
+    {
+        [JsonProperty(PropertyName = "projectId")]
+        public string ProjectId;
+
+        [JsonProperty(PropertyName = "clientKey")]
+        public string ClientKey;
+
+        [JsonProperty(PropertyName = "appId")] public string AppId;
+
+        [JsonProperty(PropertyName = "securityAccount")]
+        public ParticleConfigSecurityAccount SecurityAccount;
+
+        [JsonProperty(PropertyName = "wallet")]
+        public ParticleConfigWallet Wallet;
+
+        public ParticleConfig([CanBeNull] ParticleConfigSecurityAccount SecurityAccount,
+            [CanBeNull] ParticleConfigWallet Wallet)
         {
-            [JsonProperty(PropertyName = "projectId")] 
-            public string ProjectId;
+            this.ProjectId = ParticleUnityRpc.Instance.projectId;
+            this.ClientKey = ParticleUnityRpc.Instance.clientKey;
+            this.AppId = ParticleUnityRpc.Instance.appId;
+            this.SecurityAccount = SecurityAccount;
+            this.Wallet = Wallet;
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+    }
+
+    [JsonObject]
+    public class ParticleConfigWallet
+    {
+        [JsonProperty(PropertyName = "displayWalletEntry")]
+        public bool DisplayWalletEntry;
+
+        [JsonProperty(PropertyName = "defaultWalletEntryPosition")]
+        public Vector2 DefaultWalletEntryPosition;
+
+        [JsonProperty(PropertyName = "supportChains")]
+        public List<string> SupportChains;
+
+        [JsonProperty(PropertyName = "customStyle")]
+        public string CustomStyle;
+
+        public ParticleConfigWallet(bool displayWalletEntry, Vector2 defaultWalletEntryPosition,
+            List<string> supportChains, string customStyle)
+        {
+            this.DisplayWalletEntry = displayWalletEntry;
+            this.DefaultWalletEntryPosition = defaultWalletEntryPosition;
+            this.SupportChains = supportChains;
+            this.CustomStyle = customStyle;
+        }
         
-            [JsonProperty(PropertyName = "clientKey")] 
-            public string ClientKey;
-            
-            [JsonProperty(PropertyName = "appId")] 
-            public string AppId;
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+    }
+
+    [JsonObject]
+    public class ParticleConfigSecurityAccount
+    {
+        [JsonProperty(PropertyName = "promptSettingWhenSign")]
+        public int PromptSettingWhenSign;
+
+        [JsonProperty(PropertyName = "promptMasterPasswordSettingWhenLogin")]
+        public int PromptMasterPasswordSettingWhenLogin;
+
+        public ParticleConfigSecurityAccount(int promptSettingWhenSign, int promptMasterPasswordSettingWhenLogin)
+        {
+            this.PromptSettingWhenSign = promptSettingWhenSign;
+            this.PromptMasterPasswordSettingWhenLogin = promptMasterPasswordSettingWhenLogin;
+        }
         
-            [JsonProperty(PropertyName = "securityAccount")] 
-            public ParticleConfigSecurityAccount SecurityAccount;
-            
-            [JsonProperty(PropertyName = "wallet")] 
-            public ParticleConfigWallet Wallet;
-            
-            public override string ToString()
-            {
-                return JsonConvert.SerializeObject(this);
-            }
-        }
-
-        [JsonObject]
-        public class ParticleConfigWallet
+        public override string ToString()
         {
-            
-            [JsonProperty(PropertyName = "displayWalletEntry")] 
-            public bool DisplayWalletEntry;
-            
-            [JsonProperty(PropertyName = "defaultWalletEntryPosition")] 
-            public Vector2 DefaultWalletEntryPosition;
-            
-            [JsonProperty(PropertyName = "supportChains")] 
-            public List<string> SupportChains;
-            
-            [JsonProperty(PropertyName = "customStyle")] 
-            public string CustomStyle;
+            return JsonConvert.SerializeObject(this);
         }
+    }
 
-        [JsonObject]
-        public class ParticleConfigSecurityAccount
+
+    [JsonObject]
+    public class ParticleTheme
+    {
+        [JsonProperty(PropertyName = "uiMode")]
+        public string UiMode;
+
+        [JsonProperty(PropertyName = "displayCloseButton")]
+        public bool DisplayCloseButton;
+
+        [JsonProperty(PropertyName = "displayWallet")]
+        public bool DisplayWallet;
+
+        [JsonProperty(PropertyName = "modalBorderRadius")]
+        public int ModalBorderRadius;
+
+
+        public override string ToString()
         {
-            [JsonProperty(PropertyName = "promptSettingWhenSign")] 
-            public int PromptSettingWhenSign;
-            
-            [JsonProperty(PropertyName = "promptMasterPasswordSettingWhenLogin")] 
-            public int PromptMasterPasswordSettingWhenLogin;
-            
+            return JsonConvert.SerializeObject(this);
         }
-
-
-        [JsonObject]
-        public class ParticleTheme
-        {
-            [JsonProperty(PropertyName = "uiMode")] 
-            public string UiMode;
-            
-            [JsonProperty(PropertyName = "displayCloseButton")] 
-            public bool DisplayCloseButton;
-            
-            [JsonProperty(PropertyName = "displayWallet")] 
-            public bool DisplayWallet;
-            
-            [JsonProperty(PropertyName = "modalBorderRadius")] 
-            public int ModalBorderRadius;
-            
-            
-            public override string ToString()
-            {
-                return JsonConvert.SerializeObject(this);
-            }
-        }
+    }
 }
 #endif

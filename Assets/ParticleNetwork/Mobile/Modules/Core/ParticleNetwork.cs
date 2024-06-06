@@ -53,6 +53,7 @@ namespace Network.Particle.Scripts.Core
 #elif UNITY_IOS &&!UNITY_EDITOR
             return ParticleNetworkIOSBridge.setChainInfo(json);
 #else
+            UnityInnerChainInfo.SetChainInfo(chainInfo);
             Debug.Log($"SetChainInfoSync json: {json}");
             return true;
 #endif

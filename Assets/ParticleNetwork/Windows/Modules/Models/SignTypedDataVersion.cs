@@ -7,6 +7,7 @@ namespace Particle.Windows.Modules.Models
         v1,
         v3,
         v4,
+        v4Unique
     }
 }
 #endif

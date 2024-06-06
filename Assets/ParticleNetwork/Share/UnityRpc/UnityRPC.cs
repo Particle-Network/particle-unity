@@ -321,7 +321,7 @@ namespace Network.Particle.Scripts.Core
 
             var maxPriorityFeePerGas = (double)JObject.Parse(gasFeesResult)["result"][level]["maxPriorityFeePerGas"];
             var maxPriorityFeePerGasHex = "0x" + ((BigInteger)(maxPriorityFeePerGas * Mathf.Pow(10, 9))).ToString("x");
-            var chainInfo = ParticleNetwork.GetChainInfo();
+            var chainInfo = UnityInnerChainInfo.GetChainInfo();
             var chainId = chainInfo.Id;
 
             EthereumTransaction transaction;
@@ -346,7 +346,7 @@ namespace Network.Particle.Scripts.Core
                     null,
                     null);
             }
-            
+
             var json = JsonConvert.SerializeObject(transaction);
             var serialized = BitConverter.ToString(Encoding.Default.GetBytes(json));
             serialized = serialized.Replace("-", "");
@@ -355,9 +355,61 @@ namespace Network.Particle.Scripts.Core
             return "0x" + serialized;
         }
 
-        public static async Task<string> GetSmartAccount(SmartAccountObject[] objects)
+        /// <summary>
+        /// Get smart account 
+        /// </summary>
+        /// <param name="objects">Smart account object list</param>
+        /// <returns></returns>
+        public static async Task<string> GetSmartAccount(List<SmartAccountObject> objects)
         {
             var result = await Rpc("particle_aa_getSmartAccount", objects.Cast<object>().ToList());
+            return result;
+        }
+
+        /// <summary>
+        /// Get fee quotes
+        /// </summary>
+        /// <param name="obj">Smart account object</param>
+        /// <param name="transactions">Transaction List</param>
+        /// <returns></returns>
+        public static async Task<string> GetFeeQuotes(SmartAccountObject obj, List<SimplifyTransaction> transactions)
+        {
+            var result = await Rpc("particle_aa_getFeeQuotes", new List<object> { obj, transactions });
+            return result;
+        }
+
+        public static async Task<string> CreateUserOp(SmartAccountObject obj,
+            List<SimplifyTransaction> transactions, object feeQuoteObject, string tokenPaymasterAddress,
+            [CanBeNull] string biconomyApiKey)
+        {
+            var accountConfig = new JObject
+            {
+                { "name", obj.name },
+                { "version", obj.version },
+                { "ownerAddress", obj.ownerAddress },
+            };
+
+            if (biconomyApiKey != null)
+            {
+                accountConfig[biconomyApiKey] = biconomyApiKey;
+            }
+
+
+            var result = await Rpc("particle_aa_createUserOp",
+                new List<object> { accountConfig, transactions, feeQuoteObject, tokenPaymasterAddress });
+            return result;
+        }
+
+        public static async Task<string> SendUserOp(SmartAccountObject obj, object userOp)
+        {
+            var accountConfig = new JObject
+            {
+                { "name", obj.name },
+                { "version", obj.version },
+                { "ownerAddress", obj.ownerAddress },
+            };
+
+            var result = await Rpc("particle_aa_sendUserOp", new List<object> { accountConfig, userOp });
             return result;
         }
     }

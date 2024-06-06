@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4439372, g: 0.49315345, b: 0.5721989, a: 1}
+  m_IndirectSpecularColor: {r: 0.44407046, g: 0.49331492, b: 0.57239574, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -401,6 +401,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639769512}
   m_CullTransparentMesh: 0
+--- !u!1001 &726654067
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8070970354961720260, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_Name
+      value: ParticleUnityRpc
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 866.7024
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1232.0088
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -293.3122
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8070970354961720267, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d8d5883ca91354cacbeee698e897354e, type: 3}
 --- !u!224 &849223881 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224179541092979990, guid: 3e10f3b6a733e441c8352020cff2f1f6, type: 3}
@@ -523,7 +580,6 @@ GameObject:
   - component: {fileID: 991321447}
   - component: {fileID: 991321446}
   - component: {fileID: 991321445}
-  - component: {fileID: 991321444}
   m_Layer: 5
   m_Name: WebCanvas
   m_TagString: Untagged
@@ -531,19 +587,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &991321444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 991321443}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74f16e5a091c4604a68b346922b99f90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  webCanvas: {fileID: 991321447}
 --- !u!114 &991321445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1022,34 +1065,6 @@ PrefabInstance:
       propertyPath: canvasWebViewPrefab
       value: 
       objectReference: {fileID: 849223882}
-    - target: {fileID: 3280613146756290952, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 991321444}
-    - target: {fileID: 3280613146807440685, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 991321444}
-    - target: {fileID: 3280613146814440052, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 991321444}
-    - target: {fileID: 3280613146968839912, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 991321444}
-    - target: {fileID: 3280613147693273024, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 991321444}
-    - target: {fileID: 3280613148123412310, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 991321444}
-    - target: {fileID: 3280613148383854533, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 991321444}
     - target: {fileID: 3280613148730471542, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
       propertyPath: m_Camera
       value: 
@@ -1142,9 +1157,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: DemoCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 3280613148730471547, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: 8693349652369404670, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}
+      propertyPath: webCanvas
+      value: 
+      objectReference: {fileID: 991321447}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1224d68cb6b374dfc8a42b478fb08410, type: 3}

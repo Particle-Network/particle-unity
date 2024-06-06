@@ -9,7 +9,9 @@ namespace Particle.Windows.Modules.Models
         eth_signTypedData_v1,
         eth_signTypedData_v3,
         eth_signTypedData_v4,
+        eth_signTypedData_v4_uniq,
         personal_sign,
+        personal_sign_uniq,
 
         // Solana
         signTransaction,

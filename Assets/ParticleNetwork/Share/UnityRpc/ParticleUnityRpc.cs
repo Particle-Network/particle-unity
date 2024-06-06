@@ -19,9 +19,4 @@ public class ParticleUnityRpc : SingletonMonoBehaviour<ParticleUnityRpc>
         Assert.IsTrue(!string.IsNullOrEmpty(appId), "Please set the appId");
         Assert.IsTrue(!string.IsNullOrEmpty(clientKey), "projectClientKey == null");
     }
-
-    public void showTips()
-    {
-        
-    }
 }

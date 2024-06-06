@@ -978,7 +978,6 @@ extension UnityManager {
             ZengoConnectAdapter(),
             AlphaConnectAdapter(),
             OKXConnectAdapter()
-            
         ])
         
 #endif

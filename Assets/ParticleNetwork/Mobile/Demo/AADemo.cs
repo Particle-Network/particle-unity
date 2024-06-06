@@ -44,10 +44,8 @@ namespace Network.Particle.Scripts.Test
 
         private async Task<string> GetSmartAccountAddress(string eoaAddress)
         {
-            var smartAccountResult = await EvmService.GetSmartAccount(new[]
-            {
-                new SmartAccountObject(accountName, eoaAddress)
-            });
+            var smartAccountResult = await EvmService.GetSmartAccount(new List<SmartAccountObject>
+                { new SmartAccountObject(accountName, eoaAddress) });
 
             var smartAccountAddress =
                 (string)JObject.Parse(smartAccountResult)["result"][0]["smartAccountAddress"];
