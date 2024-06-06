@@ -1,9 +1,11 @@
 #if !UNITY_ANDROID && !UNITY_IOS
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 using System.Web;
+using JetBrains.Annotations;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Singleton;
@@ -32,9 +34,7 @@ namespace Particle.Windows
         private TaskCompletionSource<string> _signAndSendTransactionTask;
         private TaskCompletionSource<string> _signTypedDataTask;
         private TaskCompletionSource<string> _signTransactionTask;
-        private TaskCompletionSource<string> _signAllTransactionsTask;
-
-        private TaskCompletionSource<string> _sendAATask;
+        private TaskCompletionSource<List<string>> _signAllTransactionsTask;
 
         async void Start()
         {
@@ -54,6 +54,10 @@ namespace Particle.Windows
                 {
                     var jsonString = JObject.Parse(eventArgs.Value)["message"]?.ToString();
                     OnSign(jsonString);
+                }
+                else if (type == "PARTICLE_WALLET_CLOSE_IFRAME")
+                {
+                    OnCloseWallet();
                 }
             };
 
@@ -363,17 +367,16 @@ namespace Particle.Windows
         /// </summary>
         /// <param name="transactions">Request base58 string list</param>
         /// <returns></returns>
-        public Task<string> SignAllTransactions(List<string> transactions)
+        public Task<List<string>> SignAllTransactions(List<string> transactions)
         {
-            _signAllTransactionsTask = new TaskCompletionSource<string>();
+            _signAllTransactionsTask = new TaskCompletionSource<List<string>>();
 
             var message = JsonConvert.SerializeObject(transactions);
             if (canvasWebViewPrefab == null)
             {
-                _signAllTransactionsTask.TrySetResult("");
+                _signAllTransactionsTask.TrySetResult(new List<string>());
                 return _signAllTransactionsTask.Task;
             }
-
 
             string method;
             if (_chainInfo.IsSolanaChain())
@@ -388,8 +391,8 @@ namespace Particle.Windows
                     { "message", "unsupported method in evm" },
                 };
 
-                _signMessageTask.TrySetResult(errorData.ToString());
-                return _signMessageTask.Task;
+                _signAllTransactionsTask.TrySetResult(new List<string> { errorData.ToString() });
+                return _signAllTransactionsTask.Task;
             }
 
             var queryStr =
@@ -419,38 +422,48 @@ namespace Particle.Windows
         {
             if (canvasWebViewPrefab == null)
                 return;
-            var result = JsonConvert.DeserializeObject<OnSignResult>(jsonString);
 
+            Debug.Log($"Particle OnSign JsonString = {jsonString}");
+
+            var result = JsonConvert.DeserializeObject<OnSignResult>(jsonString);
 
             if (result.Method == SignMethod.personal_sign.ToString() ||
                 result.Method == SignMethod.signMessage.ToString())
             {
-                _signMessageTask.TrySetResult(jsonString);
+                _signMessageTask.TrySetResult(result.Signature);
             }
             else if (result.Method == SignMethod.eth_signTypedData.ToString()
                      || result.Method == SignMethod.eth_signTypedData_v1.ToString()
                      || result.Method == SignMethod.eth_signTypedData_v3.ToString()
                      || result.Method == SignMethod.eth_signTypedData_v4.ToString())
             {
-                _signTypedDataTask.TrySetResult(jsonString);
+                _signTypedDataTask.TrySetResult(result.Signature);
             }
             else if (result.Method == SignMethod.eth_sendTransaction.ToString() ||
                      result.Method == SignMethod.signAndSendTransaction.ToString())
             {
-                _signAndSendTransactionTask.TrySetResult(jsonString);
+                _signAndSendTransactionTask.TrySetResult(result.Signature);
             }
             else if (result.Method == SignMethod.signTransaction.ToString())
             {
-                _signTransactionTask.TrySetResult(jsonString);
+                _signTransactionTask.TrySetResult(result.Signature);
             }
             else if (result.Method == SignMethod.signAllTransactions.ToString())
             {
-                _signAllTransactionsTask.TrySetResult(jsonString);
+                var signatureList = JsonConvert.DeserializeObject<string[]>(result.Signature).ToList();
+                _signAllTransactionsTask.TrySetResult(signatureList);
             }
 
             canvasWebViewPrefab.gameObject.SetActive(false);
+        }
 
-            Debug.Log($"Particle OnSign JsonString = {jsonString}");
+        private void OnCloseWallet()
+        {
+            if (canvasWebViewPrefab == null)
+                return;
+
+            canvasWebViewPrefab.WebView.LoadHtml("<html><body></body></html>");
+            canvasWebViewPrefab.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -478,10 +491,35 @@ namespace Particle.Windows
         /// <summary>
         /// Update Chain info
         /// </summary>
-        /// <param name="chainInfo">Chain iinfo</param>
+        /// <param name="chainInfo">Chain info</param>
         public void UpdateChainInfo(ChainInfo chainInfo)
         {
             this._chainInfo = chainInfo;
+        }
+
+        /// <summary>
+        /// Open web wallet 
+        /// </summary>
+        /// <param name="accountName">Optional, used when you prefer to open aa wallet</param>
+        public void OpenWebWallet([CanBeNull] AAAccountName accountName)
+        {
+            var queryStr =
+                $"config={_config}&theme={_theme}&language={_language}&chainName={_chainInfo.Name}&chainId={_chainInfo.Id}";
+
+            if (accountName != null)
+            {
+                var erc4337Params = JsonConvert.SerializeObject(accountName);
+                queryStr += $"&erc4337={erc4337Params}";
+            }
+
+            var temp = HttpUtility.UrlEncode(queryStr);
+            var path = "wallet";
+            var uri = $"{_walletURL}{path}?{temp}";
+
+            Debug.Log($"Particle SignMessage URI = {uri}");
+
+            canvasWebViewPrefab.WebView.LoadUrl(uri);
+            canvasWebViewPrefab.gameObject.SetActive(true);
         }
     }
 }

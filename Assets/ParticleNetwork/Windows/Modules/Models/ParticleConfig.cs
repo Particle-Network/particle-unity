@@ -40,29 +40,39 @@ namespace Particle.Windows.Modules.Models
     }
 
     [JsonObject]
+    public class SupportChain
+    {
+        [JsonProperty(PropertyName = "name")] public string Name;
+
+        [JsonProperty(PropertyName = "id")] public long Id;
+
+        public SupportChain(string name, long id)
+        {
+            this.Name = name;
+            this.Id = id;
+        }
+    }
+
+    [JsonObject]
     public class ParticleConfigWallet
     {
         [JsonProperty(PropertyName = "displayWalletEntry")]
         public bool DisplayWalletEntry;
 
-        [JsonProperty(PropertyName = "defaultWalletEntryPosition")]
-        public Vector2 DefaultWalletEntryPosition;
-
         [JsonProperty(PropertyName = "supportChains")]
-        public List<string> SupportChains;
+        public List<SupportChain> SupportChains;
 
-        [JsonProperty(PropertyName = "customStyle")]
+        [JsonProperty(PropertyName = "customStyle")] [CanBeNull]
         public string CustomStyle;
 
-        public ParticleConfigWallet(bool displayWalletEntry, Vector2 defaultWalletEntryPosition,
-            List<string> supportChains, string customStyle)
+        public ParticleConfigWallet(bool displayWalletEntry,
+            List<SupportChain> supportChains, [CanBeNull] string customStyle)
         {
             this.DisplayWalletEntry = displayWalletEntry;
-            this.DefaultWalletEntryPosition = defaultWalletEntryPosition;
             this.SupportChains = supportChains;
             this.CustomStyle = customStyle;
         }
-        
+
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
@@ -83,7 +93,7 @@ namespace Particle.Windows.Modules.Models
             this.PromptSettingWhenSign = promptSettingWhenSign;
             this.PromptMasterPasswordSettingWhenLogin = promptMasterPasswordSettingWhenLogin;
         }
-        
+
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);

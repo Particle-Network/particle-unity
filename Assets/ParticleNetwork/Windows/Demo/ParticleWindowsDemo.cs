@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
+using Network.Particle.Scripts.Test;
 using Newtonsoft.Json.Linq;
 using Particle.Windows.Modules.Models;
 using UnityEngine;
@@ -22,7 +23,10 @@ namespace Particle.Windows.Demo
 
         public void Init()
         {
-            var config = new ParticleConfig(new ParticleConfigSecurityAccount(1, 1), null);
+            var supportChains = new List<SupportChain>
+                { new SupportChain(ChainInfo.EthereumSepolia.Name, ChainInfo.EthereumSepolia.Id) };
+            var config = new ParticleConfig(new ParticleConfigSecurityAccount(1, 1),
+                new ParticleConfigWallet(true, supportChains, null));
 
             var theme = new ParticleTheme
             {
@@ -33,7 +37,7 @@ namespace Particle.Windows.Demo
 
             var language = "en-US";
 
-            var chainInfo = ChainInfo.Polygon;
+            var chainInfo = ChainInfo.EthereumSepolia;
 
             ParticleSystem.Instance.Init(config.ToString(), theme.ToString(), language, chainInfo);
         }
@@ -51,7 +55,7 @@ namespace Particle.Windows.Demo
             if (evmWallet != null) _evmAddress = evmWallet["public_address"].ToString();
 
             var solanaWallet = wallets.Children<JObject>()
-                .FirstOrDefault(wallet => wallet["chain_name"].ToString() == "solana_chain");
+                .FirstOrDefault(wallet => wallet["chain_name"].ToString() == "solana");
             if (solanaWallet != null) _solanaAddress = solanaWallet["public_address"]!.ToString();
 
             Debug.Log($"evm address: {_evmAddress}, solana address: {_solanaAddress}");
@@ -60,9 +64,20 @@ namespace Particle.Windows.Demo
 
         public async void SignMessage()
         {
+            var message = "";
+            if (UnityInnerChainInfo.GetChainInfo().IsSolanaChain())
+            {
+                // "hello world" convert to base58 string,
+                message = "StV1DL6CwTryKyV";
+            }
+            else
+            {
+                message = "hello world";
+            }
+
             webCanvas.sortingOrder = 2;
-            var signMessageResult = await ParticleSystem.Instance.SignMessage("hello world");
-            Debug.Log($"SignMessage result {signMessageResult}");
+            var signature = await ParticleSystem.Instance.SignMessage(message);
+            Debug.Log($"SignMessage signature: {signature}");
             webCanvas.sortingOrder = 0;
         }
 
@@ -72,45 +87,88 @@ namespace Particle.Windows.Demo
 
             // make a test transaction,
             // you need to update it parameters before trying.
-            var transaction = ParticleSystem.Instance.MakeEvmTransaction("0x16380a03f21e5a5e339c15ba8ebe581d194e0db3",
-                "0xA719d8C4C94C1a877289083150f8AB96AD0C6aa1", "0x",
-                "0x123123");
-            var signMessageResult = await ParticleSystem.Instance.SignAndSendTransaction(transaction);
-            Debug.Log($"SignAndSendTransaction result {signMessageResult}");
+            var transaction = "";
+            if (UnityInnerChainInfo.GetChainInfo().IsSolanaChain())
+            {
+                transaction = await TransactionHelper.GetSolanaTransacion(_solanaAddress);
+            }
+            else
+            {
+                transaction = await TransactionHelper.GetEVMTransacion(_evmAddress);
+            }
+
+            var signature = await ParticleSystem.Instance.SignAndSendTransaction(transaction);
+            Debug.Log($"SignAndSendTransaction signature: {signature}");
             webCanvas.sortingOrder = 0;
         }
 
         public async void SignTypedData()
         {
+            // only support evm.
+            if (UnityInnerChainInfo.GetChainInfo().IsSolanaChain())
+            {
+                return;
+            }
+
             webCanvas.sortingOrder = 2;
             // only support evm
             // pass your typedDataV4 here.
-            string typedDataV4 = "";
-            var signMessageResult =
-                await ParticleSystem.Instance.SignTypedData(typedDataV4, SignTypedDataVersion.Default);
-            Debug.Log($"SignTypedData result {signMessageResult}");
+            var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
+            string typedData = txtAsset.text;
+
+            var chainId = UnityInnerChainInfo.GetChainInfo().Id;
+            JObject json = JObject.Parse(typedData);
+            json["domain"]["chainId"] = chainId;
+            string newTypedData = json.ToString();
+
+            var signature =
+                await ParticleSystem.Instance.SignTypedData(newTypedData, SignTypedDataVersion.Default);
+            Debug.Log($"SignTypedData signature: {signature}");
             webCanvas.sortingOrder = 0;
         }
 
         public async void SignTransaction()
         {
-            webCanvas.sortingOrder = 2;
             // only support solana
             // pass your solana transaction here, request base58 string.
-            string transaction = "";
-            var signMessageResult = await ParticleSystem.Instance.SignTransaction(transaction);
-            Debug.Log($"SignTransaction result {signMessageResult}");
+            var transaction = "";
+            if (UnityInnerChainInfo.GetChainInfo().IsSolanaChain())
+            {
+                transaction = await TransactionHelper.GetSolanaTransacion(_solanaAddress);
+            }
+            else
+            {
+                return;
+            }
+
+            webCanvas.sortingOrder = 2;
+
+            var signature = await ParticleSystem.Instance.SignTransaction(transaction);
+            Debug.Log($"SignTransaction signature: {signature}");
             webCanvas.sortingOrder = 0;
         }
 
         public async void SignAllTransactions()
         {
-            webCanvas.sortingOrder = 2;
             // only support solana
             // pass your solana transactions here, request base58 string list.
-            List<string> transactions = new List<string> { "" };
-            var signMessageResult = await ParticleSystem.Instance.SignAllTransactions(transactions);
-            Debug.Log($"SignAllTransactions result {signMessageResult}");
+
+            List<string> transactions = new List<string>();
+            if (UnityInnerChainInfo.GetChainInfo().IsSolanaChain())
+            {
+                var transaction = await TransactionHelper.GetSolanaTransacion(_solanaAddress);
+                transactions.Add(transaction);
+                transactions.Add(transaction);
+            }
+            else
+            {
+                return;
+            }
+
+            webCanvas.sortingOrder = 2;
+            var signatureList = await ParticleSystem.Instance.SignAllTransactions(transactions);
+
+            Debug.Log($"SignAllTransactions signature: {string.Join(", ", signatureList)}");
             webCanvas.sortingOrder = 0;
         }
 
@@ -159,10 +217,9 @@ namespace Particle.Windows.Demo
 
             var userOpHash = verifyingPaymasterGasless["userOpHash"].ToString();
             var userOp = verifyingPaymasterGasless["userOp"];
-            
+
             webCanvas.sortingOrder = 2;
-            var signMessageResult = await ParticleSystem.Instance.SignMessage(userOpHash);
-            var signature = JObject.Parse(signMessageResult)["signature"].ToString();
+            var signature = await ParticleSystem.Instance.SignMessage(userOpHash);
             webCanvas.sortingOrder = 0;
 
             userOp["signature"] = signature;
@@ -174,7 +231,6 @@ namespace Particle.Windows.Demo
 
         public async void SendTransactionWithNative()
         {
-           
             if (_evmAddress == "")
             {
                 Debug.Log("don't have a evm address");
@@ -206,12 +262,11 @@ namespace Particle.Windows.Demo
             var userOp = verifyingPaymasterNative["userOp"];
 
             webCanvas.sortingOrder = 2;
-            var signMessageResult = await ParticleSystem.Instance.SignMessage(userOpHash);
-            var signature = JObject.Parse(signMessageResult)["signature"].ToString();
+            var signature = await ParticleSystem.Instance.SignMessage(userOpHash);
             webCanvas.sortingOrder = 0;
-            
+
             userOp["signature"] = signature;
-            
+
             var result = await EvmService.SendUserOp(smartAccountObject, userOp);
             var txHash = JObject.Parse(result)["result"].ToString();
             Debug.Log($"txHash {txHash}");
@@ -257,22 +312,28 @@ namespace Particle.Windows.Demo
             var feeQuote = overFeeQuotes[0];
             var tokenPaymasterAddress =
                 JObject.Parse(feeQuotes)["result"]["tokenPaymaster"]["tokenPaymasterAddress"].Value<string>();
-            
-            var creatUserOpResult = await EvmService.CreateUserOp(smartAccountObject, new List<SimplifyTransaction> { transaction }, feeQuote,
+
+            var creatUserOpResult = await EvmService.CreateUserOp(smartAccountObject,
+                new List<SimplifyTransaction> { transaction }, feeQuote,
                 tokenPaymasterAddress, null);
 
             var userOpHash = JObject.Parse(creatUserOpResult)["result"]["userOpHash"].ToString();
             var userOp = JObject.Parse(creatUserOpResult)["result"]["userOp"];
 
             webCanvas.sortingOrder = 2;
-            var signMessageResult = await ParticleSystem.Instance.SignMessage(userOpHash);
-            var signature = JObject.Parse(signMessageResult)["signature"].ToString();
+            var signature = await ParticleSystem.Instance.SignMessage(userOpHash);
             webCanvas.sortingOrder = 0;
 
             userOp["signature"] = signature;
             var result = await EvmService.SendUserOp(smartAccountObject, userOp);
             var txHash = JObject.Parse(result)["result"].ToString();
             Debug.Log($"txHash {txHash}");
+        }
+
+        public void OpenWebWallet()
+        {
+            webCanvas.sortingOrder = 2;
+            ParticleSystem.Instance.OpenWebWallet(AAAccountName.BICONOMY_V2());
         }
     }
 }

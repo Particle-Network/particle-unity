@@ -27,6 +27,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 866.7024, y: 1232.0088, z: -293.3122}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -44,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDontDestroy: 1
-  projectId: 772f7499-1d2e-40f4-8e2c-7b6dd47db9de
-  appId: 2db718b1-5e1e-4184-849f-b4efc606e782
-  clientKey: ctWeIc2UBA6sYTKJknT9cu9LBikF00fbk1vmQjsV
+  rpcUrl: https://rpc.particle.network/
+  projectId: d02226f6-f051-43df-8751-83cf1ead5a40
+  appId: db3da81e-2a86-46ed-883e-d0b40af53639
+  clientKey: cRtRmsvPWs8N4eJemZZadKlyZrXNV5Ai9pOoCgTF
