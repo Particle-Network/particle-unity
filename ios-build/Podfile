@@ -11,13 +11,13 @@ target 'Unity-iPhone' do
   pod 'ParticleAuthService', '1.4.6'
   
   # Particle Connect Service
-  pod 'ConnectCommon', '0.2.22'
-  pod 'ConnectEVMAdapter', '0.2.22'
-  pod 'ConnectSolanaAdapter', '0.2.22'
-  pod 'ConnectWalletConnectAdapter', '0.2.22'
-  pod 'ConnectPhantomAdapter', '0.2.22'
-  pod 'ParticleConnect', '0.2.22'
-  pod 'ParticleAuthAdapter', '0.2.22'
+  pod 'ConnectCommon', '0.2.23'
+  pod 'ConnectEVMAdapter', '0.2.23'
+  pod 'ConnectSolanaAdapter', '0.2.23'
+  pod 'ConnectWalletConnectAdapter', '0.2.23'
+  pod 'ConnectPhantomAdapter', '0.2.23'
+  pod 'ParticleConnect', '0.2.23'
+  pod 'ParticleAuthAdapter', '0.2.23'
 
   # Particle Wallet Service
   pod 'ParticleWalletConnect', '1.4.6'
