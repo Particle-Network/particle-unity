@@ -8,7 +8,7 @@ dependencies {
             }
         }
         implementation project(':unityLibrary')
-        def sdkVersion = "1.4.25" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
+        def sdkVersion = "1.4.30" //find the latest version of the sdk here:https://search.maven.org/search?q=g:network.particle
      
         //tips
         //auth-service and auth-service-tiramisu are the same library,
