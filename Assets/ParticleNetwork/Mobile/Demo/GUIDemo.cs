@@ -68,7 +68,7 @@ namespace Network.Particle.Scripts.Test
         {
             ParticleWalletGUI.NavigatorDappBrowser("https://opensea.io");
         }
-        
+
         public void NavigatorTokenReceive()
         {
             // If you want to test solana, your should replace under value with solana test account.
@@ -118,10 +118,10 @@ namespace Network.Particle.Scripts.Test
 
         public void NavigatorBuyBnb()
         {
-            ParticleWalletGUI.NavigatorBuyCrypto(null);
-            // BuyCryptoConfig config = new BuyCryptoConfig(TestAccount.EVM.PublicAddress,
-            //     OpenBuyNetwork.BinanceSmartChain, "BNB", "USD", 100);
-            // ParticleWalletGUI.NavigatorBuyCrypto(config);
+            // ParticleWalletGUI.NavigatorBuyCrypto(null);
+            BuyCryptoConfig config = new BuyCryptoConfig(TestAccount.EVM.PublicAddress,
+                ChainInfo.BNBChain, "BNB", "USD", 100);
+            ParticleWalletGUI.NavigatorBuyCrypto(config);
         }
 
         public async void NavigatorLoginList()
@@ -187,7 +187,7 @@ namespace Network.Particle.Scripts.Test
         {
             ParticleWalletGUI.SetShowLanguageSetting(true);
         }
-        
+
         public void SetShowSmartAccountSetting()
         {
             ParticleWalletGUI.SetShowSmartAccountSetting(true);
@@ -243,8 +243,9 @@ namespace Network.Particle.Scripts.Test
             ParticleNetwork.SetChainInfo(ChainInfo.Polygon);
             var walletType = ConnectDemo.Instance.WalletType;
             var publicAddress = ConnectDemo.Instance.PublicAddress;
-            ParticleWalletGUI.UpdateWallet(walletType,publicAddress);
+            ParticleWalletGUI.UpdateWallet(walletType, publicAddress);
         }
+
         public void SetCustomUI()
         {
             ParticleWalletGUI.SetSupportAddToken(true);
@@ -264,16 +265,17 @@ namespace Network.Particle.Scripts.Test
             // Only works for iOS
             // your custom ui json
             // for more detail, please explore
-            https://docs.particle.network/developers/wallet-service/sdks/web#custom-particle-wallet-style
+            https: //docs.particle.network/developers/wallet-service/sdks/web#custom-particle-wallet-style
             var txtAsset = Resources.Load<TextAsset>("customUIConfig");
             string json = txtAsset.text;
             ParticleWalletGUI.LoadCustomUIJsonString(json);
-            
+
             // Only works for iOS
             // set your wallet name and icon, only support particle auth wallet and particle auth core wallet,
             // WalletType is particle or authCore.
-            ParticleWalletGUI.SetCustomWalletName("Hello Wallet", "https://static.particle.network/wallet-icons/Rainbow.png");
-            
+            ParticleWalletGUI.SetCustomWalletName("Hello Wallet",
+                "https://static.particle.network/wallet-icons/Rainbow.png");
+
             // Only works for iOS
             // set customize localizables for iOS, you can get all ios localizable strings
             // from path yourIOSBuild/Pods/ParticleWalletGUI/XCFrameworks/ParticleWalletGUI/ParticleWalletGUI.bundle/en.lproj/Locallizable.strings.
@@ -281,7 +283,7 @@ namespace Network.Particle.Scripts.Test
             var enLocalizables = new Dictionary<string, string>
             {
                 { "network fee", "Service Fee" },
-                {  "particle auth wallet", "Hello"},
+                { "particle auth wallet", "Hello" },
             };
 
             var localizables = new Dictionary<Language, Dictionary<string, string>>
@@ -289,7 +291,6 @@ namespace Network.Particle.Scripts.Test
                 { Language.EN, enLocalizables }
             };
             ParticleWalletGUI.SetCustomLocalizable(localizables);
-            
         }
 
         public void ShowToast(string message)

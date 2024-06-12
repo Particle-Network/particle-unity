@@ -206,25 +206,23 @@ namespace Network.Particle.Scripts.Core
                 var jObject = new JObject
                 {
                     { "wallet_address", config.WalletAddress },
-                    { "network", config.Network.ToString() },
+                    {
+                        "chain_info", new JObject
+                        {
+                            { "chain_name", config.ChainInfo?.Name },
+                            { "chain_id", config.ChainInfo?.Id },
+                        }
+                    },
                     { "crypto_coin", config.CryptoCoin },
                     { "fiat_coin", config.FiatCoin },
                     { "fiat_amt", config.FiatAmt },
                     { "fix_crypto_coin", config.FixCryptoCoin },
                     { "fix_fiat_amt", config.FixFiatAmt },
                     { "fix_fiat_coin", config.FixFiatCoin },
-                    { "modal_style", modalStyle.ToString() }
+                    { "modal_style", modalStyle.ToString() },
+                    { "theme", config.Theme.ToString() },
+                    { "language", config.Language.ToString() },
                 };
-                if (config.Theme != null)
-                {
-                    jObject.Add(new JProperty("theme", config.Theme));
-                }
-
-                if (config.Language != null)
-                {
-                    jObject.Add(new JProperty("language", config.Language));
-                }
-
                 json = JsonConvert.SerializeObject(jObject);
             }
 

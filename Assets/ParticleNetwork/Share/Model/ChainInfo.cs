@@ -1402,6 +1402,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo Zeroone => _zeroone;
+
+    private static ChainInfo _zeroone = new ChainInfo(
+        27827,
+        "Zeroone",
+        "evm",
+        "https://static.particle.network/token-list/zeroone/native.png",
+        "Zeroone Mainnet",
+        "Mainnet",
+        "https://zeroone.art",
+        new NativeCurrency("ZERO", "ZERO", 18),
+        "https://subnets.avax.network/zeroonemai/mainnet/rpc",
+        "https://subnets.avax.network/zeroonemai",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo LumiBitTestnet => _lumibittestnet;
 
     private static ChainInfo _lumibittestnet = new ChainInfo(
@@ -1615,6 +1633,24 @@ namespace Network.Particle.Scripts.Model
         "https://explorer.celo.org/alfajores",
         null,
         " https://celo.org/developers/faucet"
+    );
+            
+
+    public static ChainInfo ZerooneTestnet => _zeroonetestnet;
+
+    private static ChainInfo _zeroonetestnet = new ChainInfo(
+        56400,
+        "Zeroone",
+        "evm",
+        "https://static.particle.network/token-list/zeroone/native.png",
+        "Zeroone Testnet",
+        "Testnet",
+        "https://zeroone.art",
+        new NativeCurrency("ZERO", "ZERO", 18),
+        "https://subnets.avax.network/testnetzer/testnet/rpc",
+        "https://subnets-test.avax.network/testnetzer",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
     );
             
 
@@ -2545,6 +2581,8 @@ namespace Network.Particle.Scripts.Model
             
         {"mapprotocol-22776" , MAPProtocol },
             
+        {"zeroone-27827" , Zeroone },
+            
         {"lumibit-28206" , LumiBitTestnet },
             
         {"mode-34443" , Mode },
@@ -2568,6 +2606,8 @@ namespace Network.Particle.Scripts.Model
         {"zkfair-43851" , ZKFairTestnet },
             
         {"celo-44787" , CeloTestnet },
+            
+        {"zeroone-56400" , ZerooneTestnet },
             
         {"pgn-58008" , PGNSepolia },
             

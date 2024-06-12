@@ -180,21 +180,9 @@ namespace Network.Particle.Scripts.Test
             // native value 
             BigInteger value = 1000000000;
 
-            var rpcResult = await EvmService.CreateTransaction(from, data, value, reciver);
+            var transaction = await EvmService.CreateTransaction(from, data, value, reciver);
 
-            var result = (string)JObject.Parse(rpcResult)["result"];
-
-            if (!string.IsNullOrEmpty(result))
-            {
-                Debug.Log($"result={result}");
-            }
-            else
-            {
-                var error = JObject.Parse(rpcResult)["error"];
-                var code = error?["code"];
-                var message = error?["message"];
-                Debug.Log($"code={code}, message={message}");
-            }
+            Debug.Log($"transaction = {transaction}");
         }
     }
 }
