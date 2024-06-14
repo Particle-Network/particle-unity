@@ -7,6 +7,7 @@
 Here is an example config json string, the params refer to [Particle Docs](https://docs.particle.network/developers/auth-service/sdks/web)
 ```
 {"projectId":"34c6b829-5b89-44e8-90a9-6d982787b9c9","clientKey":"c6Z44Ml4TQeNhctvwYgdSv6DBzfjf6t6CB0JDscR","appId":"64f36641-b68c-4b19-aa10-5c5304d0eab3","chainName":"Ethereum","chainId":1}
+{"projectId":"34c6b829-5b89-44e8-90a9-6d982787b9c9","clientKey":"c6Z44Ml4TQeNhctvwYgdSv6DBzfjf6t6CB0JDscR","appId":"64f36641-b68c-4b19-aa10-5c5304d0eab3","chainName":"Base","chainId":84532,"securityAccount":{"promptSettingWhenSign":0,"promptMasterPasswordSettingWhenLogin":0},"wallet":{"displayWalletEntry":false,"defaultWalletEntryPosition":{"X":0.0,"Y":0.0},"supportChains":[{"id":84532,"name":"Base"},{"id":80002,"name":"Polygon"}],"customStyle":null}}
 ``` 
 
 ```js
@@ -33,6 +34,8 @@ Learn more about [Interaction with browser scripting](https://docs.unity3d.com/c
 ## Interaction
 
 ```C#
+// Enable Erc4337
+ParticleAuth.Instance.SetERC4337(true);
 
 // login
 var userInfo = await ParticleAuth.Instance.Login(options);

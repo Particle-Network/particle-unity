@@ -56,7 +56,7 @@
     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/ConnectDemo.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/SignData.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/AuthCoreDemo.cs" />
-    <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/OpenBuyNework.cs" />
+    <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/Theme.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/NetService/APIService.cs" />
     <Compile Include="Assets/ParticleNetwork/Share/UnityRpc/UnityInnerChainInfo.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/WalletChoiceItem.cs" />

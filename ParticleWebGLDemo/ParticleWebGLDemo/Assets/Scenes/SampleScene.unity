@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4439372, g: 0.49315345, b: 0.5721989, a: 1}
+  m_IndirectSpecularColor: {r: 0.44407046, g: 0.49331492, b: 0.57239574, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1077,7 +1077,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b84f3e2a9fdf4469b34de522c9e228b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  config: '{"projectId":"34c6b829-5b89-44e8-90a9-6d982787b9c9","clientKey":"c6Z44Ml4TQeNhctvwYgdSv6DBzfjf6t6CB0JDscR","appId":"64f36641-b68c-4b19-aa10-5c5304d0eab3","chainName":"xterioeth","chainId":1637451}'
+  config: '{"projectId":"be36dab3-cefc-4345-9f80-c218f618febc","clientKey":"cGzYoS9EKLSmniB0kD5Z7Q6Hv9t4GPqW99w7Jw4i","appId":"252b2631-b2ad-48ad-b53f-c7091d1a475b","chainName":"Base","chainId":84532,"securityAccount":{"promptSettingWhenSign":0,"promptMasterPasswordSettingWhenLogin":0},"wallet":{"displayWalletEntry":false,"defaultWalletEntryPosition":{"X":0.0,"Y":0.0},"supportChains":[{"id":84532,"name":"Base"},{"id":80002,"name":"Polygon"}],"customStyle":null}}'
 --- !u!4 &1600812348
 Transform:
   m_ObjectHideFlags: 0

@@ -15,7 +15,7 @@ namespace DefaultNamespace
             var address = ParticleAuth.Instance.GetWalletAddress();
             Debug.Log($"address {address}");
 
-            ParticleAuth.Instance.SetERC4337(true);
+            ParticleAuth.Instance.SetERC4337(false);
         }
         
         public async void SignMessage()
