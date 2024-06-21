@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
-using Network.Particle.Scripts.Core.UnityEditorTestMode;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Network.Particle.Scripts.Model;
-using Network.Particle.Scripts.Utils;
 using Newtonsoft.Json.Converters;
 using UnityEngine;
 
@@ -77,7 +74,6 @@ namespace Network.Particle.Scripts.Core
             string configJson = "";
             if (config != null)
             {
- 
                 var obj = new JObject
                 {
                     { "loginType", config.loginType.ToString() },
@@ -91,7 +87,8 @@ namespace Network.Particle.Scripts.Core
                     Converters = new List<JsonConverter> { new StringEnumConverter() }
                 };
                 if (config.supportLoginTypes != null)
-                    obj["supportAuthTypeValues"] = JToken.FromObject(config.supportLoginTypes, JsonSerializer.Create(settings));
+                    obj["supportAuthTypeValues"] =
+                        JToken.FromObject(config.supportLoginTypes, JsonSerializer.Create(settings));
 
                 if (config.loginPageConfig != null)
                     obj["loginPageConfig"] = JToken.FromObject(config.loginPageConfig, JsonSerializer.Create(settings));
@@ -145,14 +142,30 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static string GetAccounts(WalletType walletType)
+//         public static string GetAccounts(WalletType walletType)
+//         {
+// #if UNITY_ANDROID && !UNITY_EDITOR
+//             return ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
+// #elif UNITY_IOS && !UNITY_EDITOR
+//             return ParticleNetworkIOSBridge.adapterGetAccounts(walletType.ToString());
+// #else
+//             return "";
+// #endif
+//         }
+
+        public static List<Account> GetAccounts(WalletType walletType)
         {
+            
 #if UNITY_ANDROID && !UNITY_EDITOR
-            return ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
+            // return ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
+             var jsonString =
+            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
+            return JsonConvert.DeserializeObject<List<Account>>(jsonString);
 #elif UNITY_IOS && !UNITY_EDITOR
+//todo:iOS
             return ParticleNetworkIOSBridge.adapterGetAccounts(walletType.ToString());
 #else
-            return "";
+            return new List<Account>();
 #endif
         }
 
@@ -186,7 +199,7 @@ namespace Network.Particle.Scripts.Core
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.adapterSignMessage(json);
 #else
-            DevModeService.SolanaSignMessages(new[] { message });
+            // DevModeService.SolanaSignMessages(new[] { message });
 #endif
         }
 

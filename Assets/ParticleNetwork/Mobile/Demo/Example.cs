@@ -60,23 +60,7 @@ namespace Network.Particle.Scripts.Test
             ParticleWalletGUI.SetShowSmartAccountSetting(true);
         }
 
-        public async void Login()
-        {
-            // Show login with particle auth, support apple and google.
-            var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, "",
-                SupportAuthType.APPLE | SupportAuthType.GOOGLE | SupportAuthType.EMAIL);
-            // Get result
-            Debug.Log(nativeResultData.data);
-            if (nativeResultData.isSuccess)
-            {
-                Debug.Log(nativeResultData.data);
-            }
-            else
-            {
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
-            }
-        }
+   
 
         public void ShowWallet()
         {

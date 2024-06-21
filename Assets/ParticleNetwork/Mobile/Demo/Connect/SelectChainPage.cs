@@ -7,33 +7,41 @@ using UnityEngine;
 using UnityEngine.Events;
 using Button = UnityEngine.UI.Button;
 
-public class ChainChoice : SingletonMonoBehaviour<ChainChoice>
+public class SelectChainPage :  SingletonMonoBehaviour<SelectChainPage>
 {
     [SerializeField] private GameObject chainItemTemplate;
     [SerializeField] private GameObject scrollContent;
     public UnityAction<ChainInfo> unityAction;
-
+    [SerializeField] private Button btnBack;
+    
     void Start()
     {
         List<ChainInfo> chainInfos = ChainInfo.GetAllChains();
         chainInfos = chainInfos
-            .OrderByDescending(chainInfo => chainInfo.Id == 80001)
+            .OrderByDescending(chainInfo => chainInfo.Id == 1)
             .ThenBy(chainInfo => chainInfo.Id)
             .ToList();
-
-
+    
+    
         foreach (var chainInfo in chainInfos)
         {
             var chainItem = Instantiate(chainItemTemplate);
-            var item = chainItem.GetComponent<ChainChoiceItem>();
+            var item = chainItem.GetComponent<SelectChainItem>();
             item.InitItem(chainInfo);
             item.GetComponent<Button>().onClick.AddListener(() =>
             {
                 unityAction.Invoke(chainInfo);
-                gameObject.transform.GetChild(0).gameObject.SetActive(false);
+                Hidden();
             });
             chainItem.transform.SetParent(scrollContent.transform);
         }
+        
+        btnBack.onClick.AddListener(Hidden);
+    }
+    
+    private void Hidden()
+    {
+        gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
 

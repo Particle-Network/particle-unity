@@ -6,109 +6,71 @@ using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using TMPro;
 using UnityEngine;
-using CommonTip.Script;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace Network.Particle.Scripts.Test
 {
-    public class ConnectDemo : MonoBehaviour
+    public class ConnectedWalletOprate : MonoBehaviour
     {
-        [SerializeField] private GameObject authCoreGameObject;
-
-        private ChainInfo _chainInfo = ChainInfo.EthereumSepolia;
+        public UnityAction<bool> unityAction; //refresh wallet list
+        [SerializeField] private TextMeshProUGUI title;
+        [SerializeField] private Button btnBack;
+        [SerializeField] private GameObject authCoreOprate;
 
         private string loginSourceMessage = "";
         private string loginSignature = "";
 
-        // before test in devices, preset wallet and test account
         private WalletType _walletType;
-        public WalletType WalletType => _walletType;
-        private TestAccount _account;
-
-        private string publicAddress = "";
-        public string PublicAddress => publicAddress;
-
-        public static ConnectDemo Instance;
-
-        private void Awake()
-        {
-            Instance = this;
-        }
+        private Account _account;
+        private string publicAddress;
 
         private void Start()
         {
-            this._walletType = WalletType.MetaMask;
-            this._account = TestAccount.EVM;
-            refreshUI();
+            btnBack.onClick.AddListener(Hidden);
         }
 
-        public void SelectChain()
+        public void Show(WalletType walletType, Account account, UnityAction<bool> unityAction)
         {
-            SelectChainPage.Instance.Show((chainInfo) =>
-            {
-                Debug.Log($"select chain {chainInfo.Name} {chainInfo.Id} {chainInfo.Network}");
-                this._chainInfo = chainInfo;
-            });
+            this.unityAction = unityAction;
+            this._walletType = walletType;
+            this._account = account;
+            this.publicAddress = account.publicAddress;
+            title.text = walletType.ToString();
+            gameObject.SetActive(true);
+            authCoreOprate.SetActive(walletType == WalletType.AuthCore);
         }
 
-
-        public void SelectWallet()
+        private void Hidden()
         {
-            SelectChainPage.Instance.Show(walletType =>
-            {
-                Debug.Log($"xxhong {walletType}");
-                refreshUI();
-            });
+            gameObject.SetActive(false);
         }
 
-        public void Init()
+        public void AuthCoreGetUserInfo()
         {
-            var metadata = new DAppMetaData(TestConfig.walletConnectProjectId, "Particle Connect",
-                "https://connect.particle.network/icons/512.png",
-                "https://connect.particle.network",
-                "Particle Connect Unity Demo");
-            ParticleNetwork.Init(_chainInfo);
-            ParticleConnectInteraction.Init(_chainInfo, metadata);
-            // List<ChainInfo> chainInfos = new List<ChainInfo>
-            //     { ChainInfo.Ethereum, ChainInfo.EthereumSepolia, ChainInfo.EthereumSepolia };
-            // ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
-
-            // control how to show set master password and payment password.
-            ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
+            var userInfo = ParticleAuthCoreInteraction.GetUserInfo();
+            ShowToast($"get user info {userInfo}");
+            Debug.Log($"get user info {userInfo}");
         }
 
-        /// <summary>
-        /// Before test connect to wallet connect, like metamask wallet, you should login metamask with our evm test account.
-        /// </summary>
-        public async void Connect()
+        public async void AuthCoreChangeMasterPassword()
         {
             try
             {
-                ConnectConfig configConfig = null;
-                if (this._walletType == WalletType.AuthCore)
-                {
-                    LoginPageConfig loginPageConfig = new LoginPageConfig("Particle Unity Example",
-                        "An example description", "https://connect.particle.network/icons/512.png");
-                    List<SupportLoginType> loginTypes = Enum.GetValues(typeof(SupportLoginType))
-                        .Cast<SupportLoginType>()
-                        .ToList();
-                    configConfig = new ConnectConfig(LoginType.EMAIL, null, null, loginTypes, null, null,
-                        loginPageConfig);
-                }
-
-                var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, configConfig);
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.ChangeMasterPassword();
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)
                 {
-                    publicAddress = JObject.Parse(nativeResultData.data)["publicAddress"].ToString();
-                    Tips.Instance.Show(
-                        $"{MethodBase.GetCurrentMethod()?.Name} publicAddress:{publicAddress}  Success:{nativeResultData.data}");
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                     Debug.Log(nativeResultData.data);
                 }
                 else
                 {
-                    Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
                 }
@@ -119,46 +81,58 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void ConnectWithParticleParams()
+
+        public void AuthCoreHasMasterPassword()
         {
-            // try
-            // {
-            //     ConnectConfig config = null;
-            //     if (_walletType == WalletType.Particle)
-            //     {
-            //         config = new ConnectConfig(LoginType.GOOGLE, null, null);
-            //     }
-            //
-            //     var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, config);
-            //     Debug.Log(nativeResultData.data);
-            //
-            //     if (nativeResultData.isSuccess)
-            //     {
-            //         publicAddress = JObject.Parse(nativeResultData.data)["publicAddress"].ToString();
-            //         Tips.Instance.Show(
-            //             $"{MethodBase.GetCurrentMethod()?.Name} publicAddress:{publicAddress} Success:{nativeResultData.data}");
-            //         Debug.Log(nativeResultData.data);
-            //     }
-            //     else
-            //     {
-            //         Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-            //         var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-            //         Debug.Log(errorData);
-            //     }
-            // }
-            // catch (Exception e)
-            // {
-            //     Debug.LogError($"An error occurred: {e.Message}");
-            // }
+            var result = ParticleAuthCoreInteraction.HasMasterPassword();
+            ShowToast($"has master password {result}");
+            Debug.Log($"has master password {result}");
         }
+
+        public void AuthCoreHasPaymentPassword()
+        {
+            var result = ParticleAuthCoreInteraction.HasPaymentPassword();
+            ShowToast($"has master password {result}");
+            Debug.Log($"has master password {result}");
+        }
+
+        public async void AuthCoreOpenAccountAndSecurity()
+        {
+            try
+            {
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.OpenAccountAndSecurity();
+
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public void AuthCoreSetBlindEnable()
+        {
+            ParticleAuthCoreInteraction.SetBlindEnable(true);
+        }
+
 
         public async void Disconnect()
         {
             try
             {
-                // Test public address
-                if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
-
                 var nativeResultData = await ParticleConnect.Instance.Disconnect(this._walletType, publicAddress);
 
                 Debug.Log(nativeResultData.data);
@@ -167,6 +141,8 @@ namespace Network.Particle.Scripts.Test
                 {
                     Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
                     Debug.Log(nativeResultData.data);
+                    unityAction.Invoke(true);
+                    Hidden();
                 }
                 else
                 {
@@ -197,7 +173,7 @@ namespace Network.Particle.Scripts.Test
             {
                 if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
                 string transaction;
-                if (!_account.PublicAddress.StartsWith("0x"))
+                if (!_account.publicAddress.StartsWith("0x"))
                 {
                     transaction = await TransactionHelper.GetSolanaTransacion(publicAddress);
                 }
@@ -424,173 +400,6 @@ namespace Network.Particle.Scripts.Test
             }
         }
 
-        public async void ImportPrivateKey()
-        {
-            try
-            {
-                string privateKey;
-
-                if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
-                {
-                    privateKey = TestAccount.Solana.PrivateKey;
-                }
-                else
-                {
-                    privateKey = TestAccount.EVM.PrivateKey;
-                }
-
-                var nativeResultData =
-                    await ParticleConnect.Instance.ImportWalletFromPrivateKey(this._walletType, privateKey);
-                Debug.Log(nativeResultData.data);
-
-                if (nativeResultData.isSuccess)
-                {
-                    Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
-                }
-                else
-                {
-                    Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                    Debug.Log(errorData);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred: {e.Message}");
-            }
-        }
-
-        public async void ImportMnemonic()
-        {
-            try
-            {
-                string mnemonic;
-
-                if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
-                {
-                    mnemonic = TestAccount.Solana.Mnemonic;
-                }
-                else
-                {
-                    mnemonic = TestAccount.EVM.Mnemonic;
-                }
-
-                var nativeResultData =
-                    await ParticleConnect.Instance.ImportWalletFromMnemonic(this._walletType, mnemonic);
-                Debug.Log(nativeResultData.data);
-
-                if (nativeResultData.isSuccess)
-                {
-                    Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
-                }
-                else
-                {
-                    Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                    Debug.Log(errorData);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred: {e.Message}");
-            }
-        }
-
-        public async void ExportPrivateKey()
-        {
-            try
-            {
-                string publicAddress;
-
-                if (this._account.PublicAddress == TestAccount.Solana.PublicAddress)
-                {
-                    publicAddress = TestAccount.Solana.PublicAddress;
-                }
-                else
-                {
-                    publicAddress = TestAccount.EVM.PublicAddress;
-                }
-
-                var nativeResultData =
-                    await ParticleConnect.Instance.ExportWalletPrivateKey(this._walletType, publicAddress);
-                Debug.Log(nativeResultData.data);
-
-                if (nativeResultData.isSuccess)
-                {
-                    Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
-                }
-                else
-                {
-                    Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                    Debug.Log(errorData);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred: {e.Message}");
-            }
-        }
-
-
-        public void GetWalletReadyState()
-        {
-            var walletReadyState = ParticleConnectInteraction.GetWalletReadyState(WalletType.Rainbow);
-            Debug.Log($"walletReadyState = {walletReadyState}");
-        }
-
-        public void GetChainInfo()
-        {
-            var chainInfo = ParticleNetwork.GetChainInfo();
-            Debug.Log(chainInfo);
-            Debug.Log(chainInfo.Id);
-            Debug.Log(chainInfo.Name);
-            Debug.Log(chainInfo.Network);
-        }
-
-
-        public void authCoreConnectWithPhone()
-        {
-            LoginPageConfig loginPageConfig = new LoginPageConfig("Particle Unity Example",
-                "An example description", "https://connect.particle.network/icons/512.png");
-            List<SupportLoginType> loginTypes = Enum.GetValues(typeof(SupportLoginType))
-                .Cast<SupportLoginType>()
-                .ToList();
-            ConnectConfig configConfig = new ConnectConfig(LoginType.PHONE, null, null, loginTypes, null, null,
-                loginPageConfig);
-            connectWithAuthCore(configConfig);
-        }
-
-        public void authCoreConnectWithEmail()
-        {
-            LoginPageConfig loginPageConfig = new LoginPageConfig("Particle Unity Example",
-                "An example description", "https://connect.particle.network/icons/512.png");
-            List<SupportLoginType> loginTypes = Enum.GetValues(typeof(SupportLoginType))
-                .Cast<SupportLoginType>()
-                .ToList();
-            ConnectConfig configConfig = new ConnectConfig(LoginType.EMAIL, "xxx@gmail.com", null, loginTypes, null,
-                null,
-                loginPageConfig);
-            connectWithAuthCore(configConfig);
-        }
-
-        public void authCoreConnectWithJWT()
-        {
-            var jwt = "";
-            ConnectConfig configConfig =
-                new ConnectConfig(LoginType.JWT, "");
-            connectWithAuthCore(configConfig);
-        }
-
-        public void authCoreConnectWithGoogle()
-        {
-            ConnectConfig configConfig = new ConnectConfig(LoginType.GOOGLE);
-            connectWithAuthCore(configConfig);
-        }
-
 
         public void ShowToast(string message)
         {
@@ -604,38 +413,6 @@ namespace Network.Particle.Scripts.Test
 #elif UNITY_IOS && !UNITY_EDITOR
             ToastTip.Instance.OnShow(message);
 #endif
-        }
-
-        private void refreshUI()
-        {
-            authCoreGameObject.gameObject.SetActive(_walletType == WalletType.AuthCore);
-        }
-
-        private async void connectWithAuthCore(ConnectConfig configConfig)
-        {
-            try
-            {
-                var nativeResultData = await ParticleConnect.Instance.Connect(this._walletType, configConfig);
-                Debug.Log(nativeResultData.data);
-
-                if (nativeResultData.isSuccess)
-                {
-                    publicAddress = JObject.Parse(nativeResultData.data)["publicAddress"].ToString();
-                    Tips.Instance.Show(
-                        $"{MethodBase.GetCurrentMethod()?.Name} publicAddress:{publicAddress}  Success:{nativeResultData.data}");
-                    Debug.Log(nativeResultData.data);
-                }
-                else
-                {
-                    Tips.Instance.Show($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                    Debug.Log(errorData);
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"An error occurred: {e.Message}");
-            }
         }
     }
 }

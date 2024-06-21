@@ -21,7 +21,7 @@ namespace Network.Particle.Scripts.Test
 
         public void SelectChain()
         {
-            ChainChoice.Instance.Show((chainInfo) =>
+            SelectChainPage.Instance.Show((chainInfo) =>
             {
                 Debug.Log($"select chain {chainInfo.Name} {chainInfo.Id} {chainInfo.Network}");
                 this._chainInfo = chainInfo;

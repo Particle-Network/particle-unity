@@ -21,5 +21,10 @@ namespace Network.Particle.Scripts.Model
             this.Description = description;
             this.ImagePath = imagePath;
         }
+
+        public override string ToString()
+        {
+            return "projectName:" + ProjectName + " description:" + Description + " imagePath:" + ImagePath;
+        }
     }
 }
