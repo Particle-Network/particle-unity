@@ -155,7 +155,6 @@ namespace Network.Particle.Scripts.Core
 
         public static List<Account> GetAccounts(WalletType walletType)
         {
-            
 #if UNITY_ANDROID && !UNITY_EDITOR
             // return ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
              var jsonString =
@@ -163,7 +162,9 @@ namespace Network.Particle.Scripts.Core
             return JsonConvert.DeserializeObject<List<Account>>(jsonString);
 #elif UNITY_IOS && !UNITY_EDITOR
 //todo:iOS
-            return ParticleNetworkIOSBridge.adapterGetAccounts(walletType.ToString());
+ var jsonString =
+            ParticleNetworkIOSBridge.adapterGetAccounts(walletType.ToString());
+            return JsonConvert.DeserializeObject<List<Account>>(jsonString);
 #else
             return new List<Account>();
 #endif

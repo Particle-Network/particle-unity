@@ -10,6 +10,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using CommonTip.Script;
 
 namespace Network.Particle.Scripts.Test
 {
