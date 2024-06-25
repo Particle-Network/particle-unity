@@ -585,28 +585,28 @@ namespace Network.Particle.Scripts.Test
                 // Now we need a sessionSigner, we use a private key for this role, and you should use your server for this role
                 // create a sessionSigner
                 
-                // var sessionSignerPrivateKey = TestAccount.EVM.PrivateKey;
-                // var signerAccountResultData =
-                //     await ParticleConnect.Instance.ImportWalletFromPrivateKey(WalletType.EvmPrivateKey,
-                //         sessionSignerPrivateKey);
-                //
-                // if (signerAccountResultData.isSuccess)
-                // {
-                //     this.sessionSignerPublicAddress =
-                //         JObject.Parse(signerAccountResultData.data)["publicAddress"].ToString();
-                // }
-                // else
-                // {
-                //     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{signerAccountResultData.data}");
-                //     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(signerAccountResultData.data);
-                //     Debug.Log(errorData);
-                // }
-                //
-                // if (this.sessionSignerPublicAddress == "")
-                // {
-                //     Debug.Log("Create session signer failed");
-                //     return;
-                // }
+                var sessionSignerPrivateKey = TestAccount.EVM.PrivateKey;
+                var signerAccountResultData =
+                    await ParticleConnect.Instance.ImportWalletFromPrivateKey(WalletType.EvmPrivateKey,
+                        sessionSignerPrivateKey);
+                
+                if (signerAccountResultData.isSuccess)
+                {
+                    this.sessionSignerPublicAddress =
+                        JObject.Parse(signerAccountResultData.data)["publicAddress"].ToString();
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{signerAccountResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(signerAccountResultData.data);
+                    Debug.Log(errorData);
+                }
+                
+                if (this.sessionSignerPublicAddress == "")
+                {
+                    Debug.Log("Create session signer failed");
+                    return;
+                }
                 // get a session signer
 
 

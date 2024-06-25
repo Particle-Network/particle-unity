@@ -323,7 +323,7 @@ namespace Network.Particle.Scripts.Test
             {
                 // sign typed data doesn't support solana
                 if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
-                var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
+                var txtAsset = Resources.Load<TextAsset>("Share/TypedDataV4");
                 string typedData = txtAsset.text;
 
                 var chainId = ParticleNetwork.GetChainInfo().Id;

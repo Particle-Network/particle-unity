@@ -359,7 +359,7 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
+                var txtAsset = Resources.Load<TextAsset>("Share/TypedDataV4");
                 string typedData = txtAsset.text;
 
                 var chainId = ParticleNetwork.GetChainInfo().Id;
@@ -394,7 +394,7 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
+                var txtAsset = Resources.Load<TextAsset>("Share/TypedDataV4");
                 string typedData = txtAsset.text;
 
                 var chainId = ParticleNetwork.GetChainInfo().Id;

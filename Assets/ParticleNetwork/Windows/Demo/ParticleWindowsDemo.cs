@@ -1,10 +1,12 @@
 #if !UNITY_ANDROID && !UNITY_IOS
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Test;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Particle.Windows.Modules.Models;
 using UnityEngine;
@@ -20,6 +22,9 @@ namespace Particle.Windows.Demo
         private string _evmAddress = "";
         private string _solanaAddress = "";
         private string _smartAccountAddress = "";
+
+        private string sessionSignerPublicAddress = "";
+        private List<object> sessions = new List<object>();
 
         public void Init()
         {
@@ -113,7 +118,7 @@ namespace Particle.Windows.Demo
             webCanvas.sortingOrder = 2;
             // only support evm
             // pass your typedDataV4 here.
-            var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
+            var txtAsset = Resources.Load<TextAsset>("Share/TypedDataV4");
             string typedData = txtAsset.text;
 
             var chainId = UnityInnerChainInfo.GetChainInfo().Id;
@@ -274,7 +279,6 @@ namespace Particle.Windows.Demo
 
         public async void SendTransactionWithToken()
         {
-            _evmAddress = "0xbD578922d613A9bAc9525aAc70685B7C5236692D";
             if (_evmAddress == "")
             {
                 Debug.Log("don't have a evm address");
@@ -334,6 +338,145 @@ namespace Particle.Windows.Demo
         {
             webCanvas.sortingOrder = 2;
             ParticleSystem.Instance.OpenWebWallet(AAAccountName.BICONOMY_V2());
+        }
+
+        public async void CreateSessions()
+        {
+            if (_evmAddress == "")
+            {
+                Debug.Log("don't have a evm address");
+                return;
+            }
+
+            try
+            {
+                var erc1155MintToModuleAddr = "0x8788379F96B5dbF5B787Bd8c616079B958da2538";
+                var receiver = TestAccount.EVM.ReceiverAddress;
+                var eoaAddress = _evmAddress;
+                var smartAccountObject = new SmartAccountObject(AAAccountName.BICONOMY_V2(), eoaAddress);
+                // Now we need a sessionSigner, at most time, you should use your server for this role.
+                var signerPrivateKey = "";
+                var signerPublicAddress = "";
+
+                this.sessionSignerPublicAddress = signerPublicAddress;
+                // get a session signer
+
+                var session = new JObject
+                {
+                    { "validUntil", 0 },
+                    { "validAfter", 0 },
+                    { "sessionValidationModule", erc1155MintToModuleAddr },
+                    {
+                        "sessionKeyDataInAbi", new JArray
+                        {
+                            new JArray("address", "address", "uint256"),
+                            new JArray(this.sessionSignerPublicAddress, receiver, 1)
+                        }
+                    }
+                };
+
+                // you can store the sessions
+                this.sessions = new List<object> { session };
+
+                var createSessionsResultData = await EvmService.CreateSessions(smartAccountObject, this.sessions);
+
+                var createSessionUserOp =
+                    JObject.Parse(createSessionsResultData)["result"]["verifyingPaymasterGasless"]["userOp"];
+                var createSessionUserOpHash =
+                    JObject.Parse(createSessionsResultData)["result"]["verifyingPaymasterGasless"]["userOpHash"]
+                        .ToString();
+                    
+                var signature  = await ParticleSystem.Instance.SignMessage(createSessionUserOpHash);
+                Debug.Log($"signature {signature}");
+
+                var sendCreateSessionUserOpResult =
+                    await EvmService.SendUserOp(smartAccountObject, createSessionUserOp);
+                var sendCreateSessionUserOpHash = JObject.Parse(sendCreateSessionUserOpResult)["result"].ToString();
+
+                Debug.Log($"send create session user op hash {sendCreateSessionUserOpHash}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void ValidateSessions()
+        {
+            if (_evmAddress == "")
+            {
+                Debug.Log("don't have a evm address");
+                return;
+            }
+
+            var eoaAddress = _evmAddress;
+            var smartAccountObject = new SmartAccountObject(AAAccountName.BICONOMY_V2(), eoaAddress);
+            var validateSessionResult = await EvmService.ValidateSession(smartAccountObject, sessions, sessions[0]);
+            var isPassingValidate = JObject.Parse(validateSessionResult)["result"].Value<bool>();
+            Debug.Log($"isPassingValidate {isPassingValidate}");
+        }
+
+        public async void SendSessionUserOp()
+        {
+            if (_evmAddress == "")
+            {
+                Debug.Log("don't have a evm address");
+                return;
+            }
+            
+            try
+            {
+                var erc1155TokenAddress = "0x210f16F8B69Cb8f2429942e573e19ba3C855b53b";
+                var receiver = TestAccount.EVM.ReceiverAddress;
+                var eoaAddress = _evmAddress;
+                var smartAccountObject = new SmartAccountObject(AAAccountName.BICONOMY_V2(), eoaAddress);
+                var abiJsonString =
+                    "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"mintTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]";
+                List<object> objects = new List<object>
+                {
+                    erc1155TokenAddress,
+                    "custom_mintTo",
+                    new List<object> { receiver, "0x1", "0x1" },
+                    abiJsonString
+                };
+                var dataResult = await EvmService.AbiEncodeFunctionCall(objects);
+
+                var data = JObject.Parse(dataResult)["result"].ToString();
+
+                Debug.Log($"data {data}");
+                var transaction = new SimplifyTransaction(erc1155TokenAddress, data, "0x0");
+                var feeQuotes = await EvmService.GetFeeQuotes(smartAccountObject,
+                    new List<SimplifyTransaction> { transaction });
+                
+                var verifyingPaymasterGasless = JObject.Parse(feeQuotes)["result"]["verifyingPaymasterGasless"];
+
+                if (verifyingPaymasterGasless == null || verifyingPaymasterGasless.Type == JTokenType.Null)
+                {
+                    Debug.Log("gasless is not available");
+                    return;
+                }
+                else
+                {
+                    Debug.Log($"verifyingPaymasterGasless {verifyingPaymasterGasless}");
+                }
+
+                var userOpHash = verifyingPaymasterGasless["userOpHash"].ToString();
+                var userOp = verifyingPaymasterGasless["userOp"];
+                
+                // use your session signer to sign the userOp hash
+                var signature = "";
+                userOp["signature"] = signature;
+                
+                var sendUserOpResult =
+                    await EvmService.SendUserOp(smartAccountObject, userOp, this.sessions, this.sessions[0]);
+                var sendUserOpHash = JObject.Parse(sendUserOpResult)["result"].ToString();
+
+                Debug.Log($"send user op hash {sendUserOpHash}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
         }
     }
 }
