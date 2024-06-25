@@ -68,7 +68,7 @@ namespace Network.Particle.Scripts.Test
                 null,
                 loginPageConfig);
             StringBuilder sb = new StringBuilder();
-            supportLoginTypes.ForEach(x=>sb.Append(x.ToString() +" "));
+            supportLoginTypes.ForEach(x => sb.Append(x.ToString() + " "));
             print(
                 $"xxhong account:{account} loginType:{loginType} supportLoginTypes:{sb.ToString()}loginPageConfig:{loginPageConfig.ToString()}");
             return configConfig;

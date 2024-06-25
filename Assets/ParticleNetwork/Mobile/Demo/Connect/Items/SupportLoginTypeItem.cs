@@ -11,7 +11,7 @@ namespace Network.Particle.Scripts.Test
         [SerializeField] private Image image;
         [SerializeField] private Image unSelectedImage;
         private SupportLoginType supportLoginType;
-        
+
         public void InitItem(SupportLoginType supportLoginType)
         {
             this.supportLoginType = supportLoginType;
@@ -36,6 +36,7 @@ namespace Network.Particle.Scripts.Test
         {
             return supportLoginType;
         }
+
         public bool GetSelected()
         {
             return isSelected;

@@ -15,7 +15,7 @@ namespace Network.Particle.Scripts.Test
         {
             chainInfo = walletType;
             text.text = walletType.ToString();
-            image.sprite = Resources.Load<Sprite>( walletType.ToString());
+            image.sprite = Resources.Load<Sprite>(walletType.ToString());
         }
     }
 }

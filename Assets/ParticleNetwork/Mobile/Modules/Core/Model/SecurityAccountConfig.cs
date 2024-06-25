@@ -7,8 +7,8 @@ namespace Network.Particle.Scripts.Model
     {
         [JsonProperty(PropertyName = "prompt_setting_when_sign")]
         public int promptSettingWhenSign;
-        
-        
+
+
         [JsonProperty(PropertyName = "prompt_master_password_setting_when_login")]
         public int promptMasterPasswordSettingWhenLogin;
 

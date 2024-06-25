@@ -15,9 +15,10 @@ using UnityEngine.UI;
 
 namespace Network.Particle.Scripts.Test
 {
-    public class ConnectV2Demo : MonoBehaviour
+    public class ConnectDemo : MonoBehaviour
     {
-        private ChainInfo currChainInfo = ChainInfo.EthereumSepolia;
+        
+        public static ChainInfo currChainInfo = ChainInfo.EthereumSepolia;
 
         //Connect HomePage
         [SerializeField] private GameObject homePageGameObject;
@@ -29,8 +30,6 @@ namespace Network.Particle.Scripts.Test
         [SerializeField] private GameObject emptyAccountsTip;
 
 
-      
-
         //Connect With Wallet
         [SerializeField] private ConnectWithWallet connectWithWalletPage;
 
@@ -39,7 +38,6 @@ namespace Network.Particle.Scripts.Test
 
         private void Awake()
         {
-            Init();
             homePageGameObject.SetActive(true);
             connectWithWalletPage.gameObject.SetActive(false);
             connectedWalletOpratePage.gameObject.SetActive(false);
@@ -58,28 +56,13 @@ namespace Network.Particle.Scripts.Test
             currChainInfo = chainInfo;
             ParticleNetwork.SetChainInfo(chainInfo);
             currChainInfoTextMeshProUGUI.text = currChainInfo.Fullname + " " + currChainInfo.Id;
+            LoadConnectWalletAccount();
         }
 
         private void OnWalletConnectCallback(bool refresh)
         {
             if (refresh)
                 LoadConnectWalletAccount();
-        }
-
-        private void Init()
-        {
-            var metadata = new DAppMetaData(TestConfig.walletConnectProjectId, "Particle Connect",
-                "https://connect.particle.network/icons/512.png",
-                "https://connect.particle.network",
-                "Particle Connect Unity Demo");
-            ParticleNetwork.Init(currChainInfo);
-            ParticleConnectInteraction.Init(currChainInfo, metadata);
-            // List<ChainInfo> chainInfos = new List<ChainInfo>
-            //     { ChainInfo.Ethereum, ChainInfo.EthereumSepolia, ChainInfo.EthereumSepolia };
-            // ParticleConnectInteraction.SetWalletConnectV2SupportChainInfos(chainInfos.ToArray());
-
-            // control how to show set master password and payment password.
-            // ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
         }
 
         private void LoadConnectWalletAccount()
@@ -90,12 +73,23 @@ namespace Network.Particle.Scripts.Test
             walletTypes.ForEach(walletType =>
             {
                 var accounts = ParticleConnectInteraction.GetAccounts(walletType);
+
+                if (ParticleNetwork.GetChainInfo().IsEvmChain())
+                {
+                    accounts = accounts.Where(item => item.publicAddress.StartsWith("0x")).ToList();
+                }
+                else
+                {
+                    accounts = accounts.Where(item => !item.publicAddress.StartsWith("0x")).ToList();
+                }
+
                 if (accounts.Count != 0)
                 {
                     var item = new AccountItem(walletType, accounts);
                     allAccountItems.Add(item);
                 }
             });
+
             if (allAccountItems.Count == 0)
             {
                 emptyAccountsTip.SetActive(true);

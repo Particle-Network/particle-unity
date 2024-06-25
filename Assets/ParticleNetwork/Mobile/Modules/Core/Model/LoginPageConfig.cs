@@ -7,15 +7,15 @@ namespace Network.Particle.Scripts.Model
         [JsonProperty(PropertyName = "projectName")]
         public string ProjectName;
 
-        [JsonProperty(PropertyName = "description")] 
+        [JsonProperty(PropertyName = "description")]
         public string Description;
-        
+
         [JsonProperty(PropertyName = "imagePath")]
         public string ImagePath;
-        
+
 
         public LoginPageConfig(string projectName,
-            string description,string imagePath )
+            string description, string imagePath)
         {
             this.ProjectName = projectName;
             this.Description = description;

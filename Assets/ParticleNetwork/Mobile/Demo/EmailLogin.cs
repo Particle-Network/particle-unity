@@ -74,7 +74,7 @@ public class EmailLogin : MonoBehaviour
         Debug.Log($"Connect click, email {email}, code {code}");
         try
         {
-            var nativeResultData = await ParticleAuthCore.Instance.ConnectWithCode(null,email, code);
+            var nativeResultData = await ParticleAuthCore.Instance.ConnectWithCode(null, email, code);
             Debug.Log(nativeResultData.data);
 
             if (nativeResultData.isSuccess)

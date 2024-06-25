@@ -1,4 +1,3 @@
-
 using Newtonsoft.Json;
 
 namespace Network.Particle.Scripts.Model
@@ -6,12 +5,11 @@ namespace Network.Particle.Scripts.Model
     [JsonObject]
     public class NativeErrorData
     {
-        [JsonProperty(PropertyName = "message")] 
+        [JsonProperty(PropertyName = "message")]
         public string Message;
-        [JsonProperty(PropertyName = "code")] 
-        public int Code;
-        [JsonProperty(PropertyName = "data")] 
-        public string Data;
+
+        [JsonProperty(PropertyName = "code")] public int Code;
+        [JsonProperty(PropertyName = "data")] public string Data;
 
         public NativeErrorData(string message, int code, string data)
         {

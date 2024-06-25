@@ -4,10 +4,14 @@ using System.Collections;
 
 namespace TMPro.Examples
 {
-    
     public class CameraController : MonoBehaviour
     {
-        public enum CameraModes { Follow, Isometric, Free }
+        public enum CameraModes
+        {
+            Follow,
+            Isometric,
+            Free
+        }
 
         private Transform cameraTransform;
         private Transform dummyTarget;
@@ -87,11 +91,13 @@ namespace TMPro.Examples
             {
                 if (CameraMode == CameraModes.Isometric)
                 {
-                    desiredPosition = CameraTarget.position + Quaternion.Euler(ElevationAngle, OrbitalAngle, 0f) * new Vector3(0, 0, -FollowDistance);
+                    desiredPosition = CameraTarget.position + Quaternion.Euler(ElevationAngle, OrbitalAngle, 0f) *
+                        new Vector3(0, 0, -FollowDistance);
                 }
                 else if (CameraMode == CameraModes.Follow)
                 {
-                    desiredPosition = CameraTarget.position + CameraTarget.TransformDirection(Quaternion.Euler(ElevationAngle, OrbitalAngle, 0f) * (new Vector3(0, 0, -FollowDistance)));
+                    desiredPosition = CameraTarget.position + CameraTarget.TransformDirection(
+                        Quaternion.Euler(ElevationAngle, OrbitalAngle, 0f) * (new Vector3(0, 0, -FollowDistance)));
                 }
                 else
                 {
@@ -101,7 +107,8 @@ namespace TMPro.Examples
                 if (MovementSmoothing == true)
                 {
                     // Using Smoothing
-                    cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, desiredPosition, ref currentVelocity, MovementSmoothingValue * Time.fixedDeltaTime);
+                    cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, desiredPosition,
+                        ref currentVelocity, MovementSmoothingValue * Time.fixedDeltaTime);
                     //cameraTransform.position = Vector3.Lerp(cameraTransform.position, desiredPosition, Time.deltaTime * 5.0f);
                 }
                 else
@@ -111,16 +118,15 @@ namespace TMPro.Examples
                 }
 
                 if (RotationSmoothing == true)
-                    cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation, Quaternion.LookRotation(CameraTarget.position - cameraTransform.position), RotationSmoothingValue * Time.deltaTime);
+                    cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation,
+                        Quaternion.LookRotation(CameraTarget.position - cameraTransform.position),
+                        RotationSmoothingValue * Time.deltaTime);
                 else
                 {
                     cameraTransform.LookAt(CameraTarget);
                 }
-
             }
-
         }
-
 
 
         void GetPlayerInput()
@@ -192,7 +198,6 @@ namespace TMPro.Examples
                         if (OrbitalAngle < 0)
                             OrbitalAngle += 360;
                     }
-
                 }
 
                 // Check for left mouse button to select a new CameraTarget or to reset Follow position
@@ -214,7 +219,6 @@ namespace TMPro.Examples
                             OrbitalAngle = 0;
                             MovementSmoothing = previousSmoothing;
                         }
-
                     }
                 }
 
@@ -248,9 +252,7 @@ namespace TMPro.Examples
                     moveVector = cameraTransform.TransformDirection(mouseX, mouseY, 0);
 
                     dummyTarget.Translate(-moveVector, Space.World);
-
                 }
-
             }
 
             // Check Pinching to Zoom in - out on Mobile device
@@ -273,20 +275,15 @@ namespace TMPro.Examples
                     // Limit FollowDistance between min & max values.
                     FollowDistance = Mathf.Clamp(FollowDistance, MinFollowDistance, MaxFollowDistance);
                 }
-
-
             }
 
             // Check MouseWheel to Zoom in-out
             if (mouseWheel < -0.01f || mouseWheel > 0.01f)
             {
-
                 FollowDistance -= mouseWheel * 5.0f;
                 // Limit FollowDistance between min & max values.
                 FollowDistance = Mathf.Clamp(FollowDistance, MinFollowDistance, MaxFollowDistance);
             }
-
-
         }
     }
 }

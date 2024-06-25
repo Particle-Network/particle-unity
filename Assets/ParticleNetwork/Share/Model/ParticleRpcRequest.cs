@@ -26,7 +26,7 @@ namespace Network.Particle.Scripts.Model
             @params = parameters;
             chainId = UnityInnerChainInfo.GetChainInfo().Id;
         }
-        
+
         public ParticleRpcRequest(string method, List<T> parameters)
         {
             id = Guid.NewGuid().ToString();

@@ -4,10 +4,8 @@ using System.Collections;
 
 namespace TMPro.Examples
 {
-
     public class VertexShakeA : MonoBehaviour
     {
-
         public float AngleMultiplier = 1.0f;
         public float SpeedMultiplier = 1.0f;
         public float ScaleMultiplier = 1.0f;
@@ -52,7 +50,6 @@ namespace TMPro.Examples
         /// <returns></returns>
         IEnumerator AnimateVertexColors()
         {
-
             // We force an update of the text object since it would only be updated at the end of the frame. Ie. before this code is executed on the first frame.
             // Alternatively, we could yield and wait until the end of the frame when the text object will be generated.
             m_TextComponent.ForceMeshUpdate();
@@ -95,12 +92,12 @@ namespace TMPro.Examples
                 // Iterate through each line of the text.
                 for (int i = 0; i < lineCount; i++)
                 {
-
                     int first = textInfo.lineInfo[i].firstCharacterIndex;
                     int last = textInfo.lineInfo[i].lastCharacterIndex;
 
                     // Determine the center of each line
-                    Vector3 centerOfLine = (textInfo.characterInfo[first].bottomLeft + textInfo.characterInfo[last].topRight) / 2;
+                    Vector3 centerOfLine =
+                        (textInfo.characterInfo[first].bottomLeft + textInfo.characterInfo[last].topRight) / 2;
                     Quaternion rotation = Quaternion.Euler(0, 0, Random.Range(-0.25f, 0.25f) * RotationMultiplier);
 
                     // Iterate through each character of the line.
@@ -127,16 +124,21 @@ namespace TMPro.Examples
                         copyOfVertices[materialIndex][vertexIndex + 3] = sourceVertices[vertexIndex + 3] - centerOfLine;
 
                         // Determine the random scale change for each character.
-                        float randomScale = Random.Range(0.995f - 0.001f * ScaleMultiplier, 1.005f + 0.001f * ScaleMultiplier);
+                        float randomScale = Random.Range(0.995f - 0.001f * ScaleMultiplier,
+                            1.005f + 0.001f * ScaleMultiplier);
 
                         // Setup the matrix rotation.
                         matrix = Matrix4x4.TRS(Vector3.one, rotation, Vector3.one * randomScale);
 
                         // Apply the matrix TRS to the individual characters relative to the center of the current line.
-                        copyOfVertices[materialIndex][vertexIndex + 0] = matrix.MultiplyPoint3x4(copyOfVertices[materialIndex][vertexIndex + 0]);
-                        copyOfVertices[materialIndex][vertexIndex + 1] = matrix.MultiplyPoint3x4(copyOfVertices[materialIndex][vertexIndex + 1]);
-                        copyOfVertices[materialIndex][vertexIndex + 2] = matrix.MultiplyPoint3x4(copyOfVertices[materialIndex][vertexIndex + 2]);
-                        copyOfVertices[materialIndex][vertexIndex + 3] = matrix.MultiplyPoint3x4(copyOfVertices[materialIndex][vertexIndex + 3]);
+                        copyOfVertices[materialIndex][vertexIndex + 0] =
+                            matrix.MultiplyPoint3x4(copyOfVertices[materialIndex][vertexIndex + 0]);
+                        copyOfVertices[materialIndex][vertexIndex + 1] =
+                            matrix.MultiplyPoint3x4(copyOfVertices[materialIndex][vertexIndex + 1]);
+                        copyOfVertices[materialIndex][vertexIndex + 2] =
+                            matrix.MultiplyPoint3x4(copyOfVertices[materialIndex][vertexIndex + 2]);
+                        copyOfVertices[materialIndex][vertexIndex + 3] =
+                            matrix.MultiplyPoint3x4(copyOfVertices[materialIndex][vertexIndex + 3]);
 
                         // Revert the translation change.
                         copyOfVertices[materialIndex][vertexIndex + 0] += centerOfLine;
@@ -156,6 +158,5 @@ namespace TMPro.Examples
                 yield return new WaitForSeconds(0.1f);
             }
         }
-
     }
 }

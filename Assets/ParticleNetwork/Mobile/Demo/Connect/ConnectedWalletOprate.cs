@@ -93,8 +93,8 @@ namespace Network.Particle.Scripts.Test
         public void AuthCoreHasPaymentPassword()
         {
             var result = ParticleAuthCoreInteraction.HasPaymentPassword();
-            ShowToast($"has master password {result}");
-            Debug.Log($"has master password {result}");
+            ShowToast($"has payment password {result}");
+            Debug.Log($"has payment password {result}");
         }
 
         public async void AuthCoreOpenAccountAndSecurity()
@@ -209,6 +209,12 @@ namespace Network.Particle.Scripts.Test
 
         public async void SignTransaction()
         {
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            {
+                Debug.Log("SignTransaction only support solana");
+                return;
+            }
+
             try
             {
                 // sign transaction doesn't support evm.
@@ -238,6 +244,12 @@ namespace Network.Particle.Scripts.Test
 
         public async void SignAllTransactions()
         {
+            if (ParticleNetwork.GetChainInfo().IsEvmChain())
+            {
+                Debug.Log("SignAllTransactions only support solana");
+                return;
+            }
+
             try
             {
                 // sign all transactions doesn't support evm.
@@ -301,6 +313,12 @@ namespace Network.Particle.Scripts.Test
 
         public async void SignTypedData()
         {
+            if (!ParticleNetwork.GetChainInfo().IsEvmChain())
+            {
+                Debug.Log("SignTypedData only support evm");
+                return;
+            }
+
             try
             {
                 // sign typed data doesn't support solana

@@ -13,7 +13,7 @@ namespace Network.Particle.Scripts.Core
         public static ChainInfo GetChainInfo()
         {
             var resultJson = "";
-            
+
 #if UNITY_ANDROID && !UNITY_EDITOR
             Assert.IsNotNull(currChainInfo, "currChainInfo is null, you must call ParticleNetwork.Init() first");
             resultJson = ParticleNetwork.GetUnityBridgeClass().CallStatic<string>("getChainInfo");
@@ -31,10 +31,9 @@ namespace Network.Particle.Scripts.Core
             var chainInfo = ChainUtils.FindChain(data["chain_name"].ToString(), (int)data["chain_id"]);
             return chainInfo;
 #else
-            
+
             return currChainInfo;
 #endif
-            
         }
 
         public static void SetChainInfo(ChainInfo chainInfo)

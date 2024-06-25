@@ -56,7 +56,7 @@ namespace Network.Particle.Scripts.Model
         {
             return new AAAccountName("LIGHT", "1.0.2");
         }
-        
+
         /// <summary>
         /// Xterio Account 1.0.0
         /// </summary>
@@ -65,7 +65,5 @@ namespace Network.Particle.Scripts.Model
         {
             return new AAAccountName("XTERIO", "1.0.0");
         }
-        
-        
     }
 }

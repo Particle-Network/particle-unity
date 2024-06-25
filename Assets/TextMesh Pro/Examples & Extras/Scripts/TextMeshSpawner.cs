@@ -4,10 +4,8 @@ using System.Collections;
 
 namespace TMPro.Examples
 {
-    
     public class TextMeshSpawner : MonoBehaviour
     {
-
         public int SpawnType = 0;
         public int NumberOfNPC = 12;
 
@@ -17,12 +15,10 @@ namespace TMPro.Examples
 
         void Awake()
         {
-
         }
 
         void Start()
         {
-
             for (int i = 0; i < NumberOfNPC; i++)
             {
                 if (SpawnType == 0)
@@ -74,6 +70,5 @@ namespace TMPro.Examples
                 }
             }
         }
-
     }
 }

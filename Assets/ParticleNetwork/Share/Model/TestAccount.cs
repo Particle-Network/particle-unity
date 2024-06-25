@@ -50,7 +50,7 @@ namespace Network.Particle.Scripts.Model
             "1412",
             "0xAC6d81182998EA5c196a4424EA6AB250C7eb175b",
             5);
-        
+
         /// <summary>
         /// This is a solana test account with some test token, you can use this account do all test cases.
         /// </summary>
@@ -65,7 +65,4 @@ namespace Network.Particle.Scripts.Model
             "9LR6zGAFB3UJcLg9tWBQJxEJCbZh2UTnSU14RBxsK1ZN",
             103);
     }
-    
-   
-
 }

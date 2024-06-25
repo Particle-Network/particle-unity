@@ -4,10 +4,8 @@ using System.Collections;
 
 namespace TMPro.Examples
 {
-    
     public class ObjectSpin : MonoBehaviour
     {
-
 #pragma warning disable 0414
 
         public float SpinSpeed = 5;
@@ -21,7 +19,13 @@ namespace TMPro.Examples
         private Color32 m_lightColor;
         private int frames = 0;
 
-        public enum MotionType { Rotation, BackAndForth, Translation };
+        public enum MotionType
+        {
+            Rotation,
+            BackAndForth,
+            Translation
+        };
+
         public MotionType Motion;
 
         void Awake()
@@ -45,7 +49,8 @@ namespace TMPro.Examples
             else if (Motion == MotionType.BackAndForth)
             {
                 m_time += SpinSpeed * Time.deltaTime;
-                m_transform.rotation = Quaternion.Euler(m_initial_Rotation.x, Mathf.Sin(m_time) * RotationRange + m_initial_Rotation.y, m_initial_Rotation.z);
+                m_transform.rotation = Quaternion.Euler(m_initial_Rotation.x,
+                    Mathf.Sin(m_time) * RotationRange + m_initial_Rotation.y, m_initial_Rotation.z);
             }
             else
             {

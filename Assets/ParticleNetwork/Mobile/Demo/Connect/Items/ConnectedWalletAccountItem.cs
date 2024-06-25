@@ -11,10 +11,8 @@ namespace Network.Particle.Scripts.Test
         [SerializeField] private TextMeshProUGUI walletName;
         [SerializeField] private TextMeshProUGUI publicAddress;
         [SerializeField] private Image walletIcon;
-        [HideInInspector]
-        public WalletType walletType;
-        [HideInInspector]
-        public Account account;
+        [HideInInspector] public WalletType walletType;
+        [HideInInspector] public Account account;
 
         public void InitItem(WalletType walletType, Account account)
         {
@@ -25,7 +23,7 @@ namespace Network.Particle.Scripts.Test
             publicAddress.text = account.publicAddress;
             walletIcon.sprite = Resources.Load<Sprite>(walletType.ToString());
         }
-        
+
         public void SetBtnDisconnectClickListner(UnityAction<WalletType, Account> action)
         {
             GetComponent<Button>().onClick.AddListener(() => { action(walletType, account); });

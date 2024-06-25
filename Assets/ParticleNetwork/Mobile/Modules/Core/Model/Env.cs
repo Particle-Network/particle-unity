@@ -6,5 +6,4 @@ namespace Network.Particle.Scripts.Model
         STAGING = 1,
         PRODUCTION = 2
     }
-
 }

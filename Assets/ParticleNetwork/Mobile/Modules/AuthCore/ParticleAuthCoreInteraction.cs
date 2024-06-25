@@ -48,7 +48,6 @@ namespace Network.Particle.Scripts.Core
         /// <returns></returns>
         public static bool GetBlindEnable()
         {
-           
 #if UNITY_ANDROID&& !UNITY_EDITOR
             return ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("getBlindEnable");
 #elif UNITY_IOS&& !UNITY_EDITOR

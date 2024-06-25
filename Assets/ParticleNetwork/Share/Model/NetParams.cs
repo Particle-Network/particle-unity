@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Network.Particle.Scripts.Core
 {
-     public class EvmReqBodyMethod
+    public class EvmReqBodyMethod
     {
         public const string particleSuggestedGasFees = "particle_suggestedGasFees";
         public const string particleGetPrice = "particle_getPrice";
@@ -50,7 +50,7 @@ namespace Network.Particle.Scripts.Core
         [SerializeField] public string sender;
         [SerializeField] public string receiver;
         [SerializeField] public BigInteger lamports;
-        
+
         public SerializeSOLTransReq(string sender, string receiver, BigInteger lamports)
         {
             this.sender = sender;
@@ -83,5 +83,4 @@ namespace Network.Particle.Scripts.Core
         {
         }
     }
-
 }

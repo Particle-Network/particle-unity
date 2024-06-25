@@ -18,5 +18,4 @@ public class SelectChainItem : MonoBehaviour
     {
         text.text = chainInfo.Name + " " + chainInfo.Network + " " + chainInfo.Id.ToString();
     }
- 
 }

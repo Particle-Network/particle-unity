@@ -5,5 +5,4 @@ namespace Network.Particle.Scripts.Model
         FullScreen,
         PageSheet
     }
-    
 }

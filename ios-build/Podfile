@@ -6,18 +6,16 @@ target 'Unity-iPhone' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
-  # Particle Auth Service
+  # Particle Network Base
   pod 'ParticleNetworkBase', '1.4.6'
-  pod 'ParticleAuthService', '1.4.6'
   
   # Particle Connect Service
-  pod 'ConnectCommon', '0.2.23'
-  pod 'ConnectEVMAdapter', '0.2.23'
-  pod 'ConnectSolanaAdapter', '0.2.23'
-  pod 'ConnectWalletConnectAdapter', '0.2.23'
-  pod 'ConnectPhantomAdapter', '0.2.23'
-  pod 'ParticleConnect', '0.2.23'
-  pod 'ParticleAuthAdapter', '0.2.23'
+  pod 'ConnectCommon', '0.2.24'
+  pod 'ConnectEVMAdapter', '0.2.24'
+  pod 'ConnectSolanaAdapter', '0.2.24'
+  pod 'ConnectWalletConnectAdapter', '0.2.24'
+  pod 'ConnectPhantomAdapter', '0.2.24'
+  pod 'ParticleConnect', '0.2.24'
 
   # Particle Wallet Service
   pod 'ParticleWalletConnect', '1.4.6'
@@ -32,7 +30,7 @@ target 'Unity-iPhone' do
   pod 'ParticleAuthCore', '1.4.7'
   pod 'ParticleMPCCore', '1.4.7'
   pod 'Thresh', '1.4.7'
-    
+  
   pod 'SkeletonView', :git => 'https://github.com/SunZhiC/SkeletonView.git', :branch => 'main'
   pod 'SwiftyUserDefaults', :git => 'https://github.com/SunZhiC/SwiftyUserDefaults.git', :branch => 'master'
   pod 'WalletConnectSwiftV2', :git => 'https://github.com/SunZhiC/WalletConnectSwiftV2.git', :branch => 'particle'

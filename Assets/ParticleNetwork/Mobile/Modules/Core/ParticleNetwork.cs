@@ -41,6 +41,7 @@ namespace Network.Particle.Scripts.Core
 
         public static bool SetChainInfo(ChainInfo chainInfo)
         {
+            UnityInnerChainInfo.SetChainInfo(chainInfo);
             var json = JsonConvert.SerializeObject(new JObject
             {
                 { "chain_name", chainInfo.Name },
@@ -48,12 +49,12 @@ namespace Network.Particle.Scripts.Core
                 { "chain_id_name", chainInfo.Network },
             });
 
+
 #if UNITY_ANDROID && !UNITY_EDITOR
             return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("setChainInfo", json) ==1?true:false;
 #elif UNITY_IOS &&!UNITY_EDITOR
             return ParticleNetworkIOSBridge.setChainInfo(json);
 #else
-            UnityInnerChainInfo.SetChainInfo(chainInfo);
             Debug.Log($"SetChainInfoSync json: {json}");
             return true;
 #endif
@@ -151,25 +152,9 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void SetWebAuthConfig(bool displayWallet, Appearance appearance)
-        {
-            var json = JsonConvert.SerializeObject(new JObject
-            {
-                { "display_wallet", displayWallet },
-                { "appearance", appearance.ToString() },
-            });
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.CallNative("setWebAuthConfig",json);
-#elif UNITY_IOS &&!UNITY_EDITOR
-            ParticleNetworkIOSBridge.setWebAuthConfig(json);
-#else
-#endif
-        }
-
         public static void CallNative(string methodName, params object[] args)
         {
-            Debug.Log("CallNative_methodName " + methodName );
+            Debug.Log("CallNative_methodName " + methodName);
 
             GetAndroidJavaObject().Call("runOnUiThread",
                 new AndroidJavaRunnable(() => { GetUnityBridgeClass().CallStatic(methodName, args); }));

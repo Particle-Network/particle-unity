@@ -5,7 +5,6 @@ namespace TMPro.Examples
 {
     public class TMP_TextEventCheck : MonoBehaviour
     {
-
         public TMP_TextEventHandler TextEventHandler;
 
         private TMP_Text m_TextComponent;
@@ -16,7 +15,7 @@ namespace TMPro.Examples
             {
                 // Get a reference to the text component
                 m_TextComponent = TextEventHandler.GetComponent<TMP_Text>();
-                
+
                 TextEventHandler.onCharacterSelection.AddListener(OnCharacterSelection);
                 TextEventHandler.onSpriteSelection.AddListener(OnSpriteSelection);
                 TextEventHandler.onWordSelection.AddListener(OnWordSelection);
@@ -51,12 +50,14 @@ namespace TMPro.Examples
 
         void OnWordSelection(string word, int firstCharacterIndex, int length)
         {
-            Debug.Log("Word [" + word + "] with first character index of " + firstCharacterIndex + " and length of " + length + " has been selected.");
+            Debug.Log("Word [" + word + "] with first character index of " + firstCharacterIndex + " and length of " +
+                      length + " has been selected.");
         }
 
         void OnLineSelection(string lineText, int firstCharacterIndex, int length)
         {
-            Debug.Log("Line [" + lineText + "] with first character index of " + firstCharacterIndex + " and length of " + length + " has been selected.");
+            Debug.Log("Line [" + lineText + "] with first character index of " + firstCharacterIndex +
+                      " and length of " + length + " has been selected.");
         }
 
         void OnLinkSelection(string linkID, string linkText, int linkIndex)
@@ -65,9 +66,9 @@ namespace TMPro.Examples
             {
                 TMP_LinkInfo linkInfo = m_TextComponent.textInfo.linkInfo[linkIndex];
             }
-            
-            Debug.Log("Link Index: " + linkIndex + " with ID [" + linkID + "] and Text \"" + linkText + "\" has been selected.");
-        }
 
+            Debug.Log("Link Index: " + linkIndex + " with ID [" + linkID + "] and Text \"" + linkText +
+                      "\" has been selected.");
+        }
     }
 }

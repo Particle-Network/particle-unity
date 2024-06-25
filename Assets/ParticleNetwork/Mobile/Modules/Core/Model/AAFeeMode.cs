@@ -7,22 +7,23 @@ namespace Network.Particle.Scripts.Model
     public class AAFeeMode
     {
         public string option;
-        
-        [JsonProperty(PropertyName = "fee_quote")] 
-        [CanBeNull] public object feeQuote;
-        
-        [JsonProperty(PropertyName = "token_paymaster_address")] 
-        [CanBeNull] public string tokenPaymasterAddress;
-        
-        [JsonProperty(PropertyName = "whole_fee_quote")] 
-        [CanBeNull] public object wholeFeeQuote;
-        
+
+        [JsonProperty(PropertyName = "fee_quote")] [CanBeNull]
+        public object feeQuote;
+
+        [JsonProperty(PropertyName = "token_paymaster_address")] [CanBeNull]
+        public string tokenPaymasterAddress;
+
+        [JsonProperty(PropertyName = "whole_fee_quote")] [CanBeNull]
+        public object wholeFeeQuote;
+
         /// <summary>
         /// Buy crypto config
         /// </summary>
         /// <param name="option">A wallet address to receive the purchased crypto</param>
         /// <param name="feeQuote">Choose a chain network to receive crypto</param>
-        private AAFeeMode(string option, [CanBeNull] object feeQuote, [CanBeNull] string tokenPaymasterAddress, [CanBeNull] object wholeFeeQuote)
+        private AAFeeMode(string option, [CanBeNull] object feeQuote, [CanBeNull] string tokenPaymasterAddress,
+            [CanBeNull] object wholeFeeQuote)
         {
             this.option = option;
             this.feeQuote = feeQuote;
@@ -43,7 +44,7 @@ namespace Network.Particle.Scripts.Model
             return new AAFeeMode("native", null, null, wholeFeeQuote);
         }
 
-            
+
         /// <summary>
         /// gasless
         /// There are two use cases.
@@ -56,7 +57,7 @@ namespace Network.Particle.Scripts.Model
         {
             return new AAFeeMode("gasless", null, null, wholeFeeQuote);
         }
-        
+
         /// <summary>
         /// Select token for fee
         /// specify feeQuote and tokenPaymasterAddress, that you can get from rpcGetFeeQuotes, to send a user paid transaction, use token as gas fee.

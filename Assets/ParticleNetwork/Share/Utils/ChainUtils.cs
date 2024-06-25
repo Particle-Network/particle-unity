@@ -11,13 +11,14 @@ namespace Network.Particle.Scripts.Core.Utils
             {
                 return chainInfo;
             }
+
             chainInfo = ChainInfo.GetSolanaChain(chainId);
-            
+
             if (chainInfo != null)
             {
                 return chainInfo;
             }
-            
+
             return ChainInfo.Ethereum;
         }
     }

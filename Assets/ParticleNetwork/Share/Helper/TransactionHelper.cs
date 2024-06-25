@@ -27,7 +27,7 @@ namespace Network.Particle.Scripts.Test
             BigInteger amount = TestAccount.EVM.Amount;
             return await EvmService.CreateTransaction(from, "0x", amount, receiver);
         }
-        
+
         public static async Task<string> GetEVMTransactionWithConnect(string sender)
         {
             string from = sender;
