@@ -127,7 +127,7 @@ namespace Particle.Windows.Demo
             string newTypedData = json.ToString();
 
             var signature =
-                await ParticleSystem.Instance.SignTypedData(newTypedData, SignTypedDataVersion.Default);
+                await ParticleSystem.Instance.SignTypedData(newTypedData, SignTypedDataVersion.v4);
             Debug.Log($"SignTypedData signature: {signature}");
             webCanvas.sortingOrder = 0;
         }
