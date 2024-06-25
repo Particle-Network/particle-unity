@@ -17,7 +17,11 @@ namespace Network.Particle.Scripts.Test
     {
         private static AndroidJavaObject activityObject;
 
-        private AAAccountName accountName = AAAccountName.XTERIO();
+        private AAAccountName accountName = AAAccountName.BICONOMY_V2();
+
+
+        private string sessionSignerPublicAddress = TestAccount.EVM.PublicAddress;
+        private List<object> sessions = new List<object>();
 
         private static AndroidJavaObject GetAndroidJavaObject()
         {
@@ -35,7 +39,6 @@ namespace Network.Particle.Scripts.Test
         private string GetEoaAddress()
         {
             var eoaAddress = ParticleAuthCoreInteraction.EvmGetAddress();
-            // return ParticleAuthServiceInteraction.GetAddress();
 
             ShowToast($"eoaAddress {eoaAddress}");
             Debug.Log($"eoaAddress {eoaAddress}");
@@ -564,6 +567,179 @@ namespace Network.Particle.Scripts.Test
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
                 }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void CreateSessions()
+        {
+            try
+            {
+                var erc1155MintToModuleAddr = "0x8788379F96B5dbF5B787Bd8c616079B958da2538";
+                var receiver = TestAccount.EVM.ReceiverAddress;
+                var eoaAddress = GetEoaAddress();
+                var smartAccountObject = new SmartAccountObject(accountName, eoaAddress);
+                // Now we need a sessionSigner, we use a private key for this role, and you should use your server for this role
+                // create a sessionSigner
+                
+                // var sessionSignerPrivateKey = TestAccount.EVM.PrivateKey;
+                // var signerAccountResultData =
+                //     await ParticleConnect.Instance.ImportWalletFromPrivateKey(WalletType.EvmPrivateKey,
+                //         sessionSignerPrivateKey);
+                //
+                // if (signerAccountResultData.isSuccess)
+                // {
+                //     this.sessionSignerPublicAddress =
+                //         JObject.Parse(signerAccountResultData.data)["publicAddress"].ToString();
+                // }
+                // else
+                // {
+                //     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{signerAccountResultData.data}");
+                //     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(signerAccountResultData.data);
+                //     Debug.Log(errorData);
+                // }
+                //
+                // if (this.sessionSignerPublicAddress == "")
+                // {
+                //     Debug.Log("Create session signer failed");
+                //     return;
+                // }
+                // get a session signer
+
+
+                var session = new JObject
+                {
+                    { "validUntil", 0 },
+                    { "validAfter", 0 },
+                    { "sessionValidationModule", erc1155MintToModuleAddr },
+                    {
+                        "sessionKeyDataInAbi", new JArray
+                        {
+                            new JArray("address", "address", "uint256"),
+                            new JArray(this.sessionSignerPublicAddress, receiver, 1)
+                        }
+                    }
+                };
+
+                // you can store the sessions
+                this.sessions = new List<object> { session };
+
+                var createSessionsResultData = await EvmService.CreateSessions(smartAccountObject, this.sessions);
+
+                var createSessionUserOp =
+                    JObject.Parse(createSessionsResultData)["result"]["verifyingPaymasterGasless"]["userOp"];
+                var createSessionUserOpHash =
+                    JObject.Parse(createSessionsResultData)["result"]["verifyingPaymasterGasless"]["userOpHash"]
+                        .ToString();
+
+                var createSessionUserOpResultData = await ParticleConnect.Instance.SignMessage(WalletType.AuthCore,
+                    eoaAddress, createSessionUserOpHash);
+
+                Debug.Log($"createSessionUserOpResultData {createSessionUserOpResultData}");
+                if (createSessionUserOpResultData.isSuccess)
+                {
+                    var signature = createSessionUserOpResultData.data;
+                    createSessionUserOp["signature"] = signature;
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{signature}");
+                    Debug.Log($"signature {signature}");
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{createSessionUserOpResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(createSessionUserOpResultData.data);
+                    Debug.Log(errorData);
+                }
+
+                var sendCreateSessionUserOpResult =
+                    await EvmService.SendUserOp(smartAccountObject, createSessionUserOp);
+                var sendCreateSessionUserOpHash = JObject.Parse(sendCreateSessionUserOpResult)["result"].ToString();
+
+                Debug.Log($"send create session user op hash {sendCreateSessionUserOpHash}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void ValidateSessions()
+        {
+            var eoaAddress = GetEoaAddress();
+            var smartAccountObject = new SmartAccountObject(accountName, eoaAddress);
+            var validateSessionResult = await EvmService.ValidateSession(smartAccountObject, sessions, sessions[0]);
+            var isPassingValidate = JObject.Parse(validateSessionResult)["result"].Value<bool>();
+            Debug.Log($"isPassingValidate {isPassingValidate}");
+            ShowToast($"{MethodBase.GetCurrentMethod()?.Name} isPassingValidate:{isPassingValidate}");
+        }
+
+        public async void SendSessionUserOp()
+        {
+            try
+            {
+                var erc1155TokenAddress = "0x210f16F8B69Cb8f2429942e573e19ba3C855b53b";
+                var receiver = TestAccount.EVM.ReceiverAddress;
+                var eoaAddress = GetEoaAddress();
+                var smartAccountObject = new SmartAccountObject(accountName, eoaAddress);
+                var abiJsonString =
+                    "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"mintTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]";
+                List<object> objects = new List<object>
+                {
+                    erc1155TokenAddress, 
+                    "custom_mintTo", 
+                    new List<object> { receiver, "0x1", "0x1" }, 
+                    abiJsonString
+                };
+                var dataResult = await EvmService.AbiEncodeFunctionCall(objects);
+
+                var data = JObject.Parse(dataResult)["result"].ToString();
+                
+                Debug.Log($"data {data}");
+                var transaction = new SimplifyTransaction(erc1155TokenAddress, data, "0x0");
+                var feeQuotes = await EvmService.GetFeeQuotes(smartAccountObject,
+                    new List<SimplifyTransaction> { transaction });
+                
+                
+                var verifyingPaymasterGasless = JObject.Parse(feeQuotes)["result"]["verifyingPaymasterGasless"];
+
+                if (verifyingPaymasterGasless == null || verifyingPaymasterGasless.Type == JTokenType.Null)
+                {
+                    Debug.Log("gasless is not available");
+                    return;
+                }
+                else
+                {
+                    Debug.Log($"verifyingPaymasterGasless {verifyingPaymasterGasless}");
+                }
+
+                var userOpHash = verifyingPaymasterGasless["userOpHash"].ToString();
+                var userOp = verifyingPaymasterGasless["userOp"];
+
+                var signUserOpHashResultData = await ParticleConnect.Instance.SignMessage(WalletType.EvmPrivateKey,
+                    this.sessionSignerPublicAddress, userOpHash);
+
+                if (signUserOpHashResultData.isSuccess)
+                {
+                    var signature = signUserOpHashResultData.data;
+                    userOp["signature"] = signature;
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{signature}");
+                    Debug.Log($"signature {signature}");
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{signUserOpHashResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(signUserOpHashResultData.data);
+                    Debug.Log(errorData);
+                }
+
+                var sendUserOpResult =
+                    await EvmService.SendUserOp(smartAccountObject, userOp, this.sessions, this.sessions[0]);
+                var sendUserOpHash = JObject.Parse(sendUserOpResult)["result"].ToString();
+
+                Debug.Log($"send user op hash {sendUserOpHash}");
+                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{sendUserOpHash}");
             }
             catch (Exception e)
             {

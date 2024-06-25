@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Network.Particle.Scripts.Core;
@@ -7,12 +8,11 @@ using UnityEngine;
 
 public class ParticleNetworkSDKDemo : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         Init();
     }
-    
+
     private void Init()
     {
         var currChainInfo = ChainInfo.EthereumSepolia;
@@ -29,10 +29,5 @@ public class ParticleNetworkSDKDemo : MonoBehaviour
         // control how to show set master password and payment password.
         // ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

@@ -22,6 +22,7 @@ namespace Network.Particle.Scripts.Core
         public static void Init(ChainInfo chainInfo, Env env = Env.PRODUCTION)
         {
             currChainInfo = chainInfo;
+            UnityInnerChainInfo.SetChainInfo(chainInfo);
             var json = JsonConvert.SerializeObject(new JObject
             {
                 { "chain_name", chainInfo.Name },

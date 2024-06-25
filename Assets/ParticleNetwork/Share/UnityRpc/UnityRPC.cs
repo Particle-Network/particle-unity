@@ -243,7 +243,7 @@ namespace Network.Particle.Scripts.Core
         /// <param name="methodName">Method name, you should add "custom_" before your method name, like "custom_balanceOf", "custom_mint"</param>
         /// <param name="parameters">Method parameters</param>
         /// <param name="abiJsonString">Abi json string</param>
-        /// <returns></returns>
+        /// <returns>Contract function return value</returns>
         public static async Task<string> ReadContract(string from, string contractAddress, string methodName,
             List<object> parameters, string abiJsonString = "")
         {
@@ -276,7 +276,7 @@ namespace Network.Particle.Scripts.Core
         /// <param name="parameters">Method parameters</param>
         /// <param name="abiJsonString">Abi json string</param>
         /// <param name="gasFeeLevel">Gas fee level, default is high</param>
-        /// <returns></returns>
+        /// <returns>Serialized transaction</returns>
         public static async Task<string> WriteContract(string from, string contractAddress, string methodName,
             List<object> parameters, [CanBeNull] string abiJsonString, GasFeeLevel gasFeeLevel = GasFeeLevel.High)
         {
@@ -294,7 +294,7 @@ namespace Network.Particle.Scripts.Core
         /// <param name="value">Native value </param>
         /// <param name="to">If your are sending native, it is receiver address, if you are sending token, it is the token contract address</param>
         /// <param name="gasFeeLevel">Gas fee level, default is high</param>
-        /// <returns></returns>
+        /// <returns>Serialized transaction </returns>
         public static async Task<string> CreateTransaction(string from, string data, BigInteger value, string to,
             GasFeeLevel gasFeeLevel = GasFeeLevel.High)
         {
@@ -359,7 +359,7 @@ namespace Network.Particle.Scripts.Core
         /// Get smart account 
         /// </summary>
         /// <param name="objects">Smart account object list</param>
-        /// <returns></returns>
+        /// <returns>Smart account</returns>
         public static async Task<string> GetSmartAccount(List<SmartAccountObject> objects)
         {
             var result = await Rpc("particle_aa_getSmartAccount", objects.Cast<object>().ToList());
@@ -371,16 +371,25 @@ namespace Network.Particle.Scripts.Core
         /// </summary>
         /// <param name="obj">Smart account object</param>
         /// <param name="transactions">Transaction List</param>
-        /// <returns></returns>
+        /// <returns>Whole fee quotes</returns>
         public static async Task<string> GetFeeQuotes(SmartAccountObject obj, List<SimplifyTransaction> transactions)
         {
             var result = await Rpc("particle_aa_getFeeQuotes", new List<object> { obj, transactions });
             return result;
         }
 
+        /// <summary>
+        /// Create user op
+        /// </summary>
+        /// <param name="obj">Smart account object</param>
+        /// <param name="transactions">Transaction List</param>
+        /// <param name="feeQuoteObject">Fee quote object</param>
+        /// <param name="tokenPaymasterAddress">Token paymaster address</param>
+        /// <param name="biconomyApiKey">Optional, biconomy api key</param>
+        /// <returns>User op and hash</returns>
         public static async Task<string> CreateUserOp(SmartAccountObject obj,
             List<SimplifyTransaction> transactions, object feeQuoteObject, string tokenPaymasterAddress,
-            [CanBeNull] string biconomyApiKey)
+            [CanBeNull] string biconomyApiKey = null)
         {
             var accountConfig = new JObject
             {
@@ -400,7 +409,15 @@ namespace Network.Particle.Scripts.Core
             return result;
         }
 
-        public static async Task<string> SendUserOp(SmartAccountObject obj, object userOp)
+        /// <summary>
+        /// Send user op
+        /// </summary>
+        /// <param name="obj">Smart account object</param>
+        /// <param name="userOp">User op</param>
+        /// <returns>Signature</returns>
+        public static async Task<string> SendUserOp(SmartAccountObject obj, object userOp,
+            [CanBeNull] List<object> sessions = null,
+            [CanBeNull] object targetSession = null)
         {
             var accountConfig = new JObject
             {
@@ -409,7 +426,68 @@ namespace Network.Particle.Scripts.Core
                 { "ownerAddress", obj.ownerAddress },
             };
 
-            var result = await Rpc("particle_aa_sendUserOp", new List<object> { accountConfig, userOp });
+
+            var result = "";
+            if (sessions != null && targetSession != null)
+            {
+                var sessionObj = new JObject()
+                {
+                    { "sessions", JToken.FromObject(sessions) },
+                    { "targetSession", JToken.FromObject(targetSession) }
+                };
+                result = await Rpc("particle_aa_sendUserOp", new List<object> { accountConfig, userOp, sessionObj });
+            }
+            else
+            {
+                result = await Rpc("particle_aa_sendUserOp", new List<object> { accountConfig, userOp });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Create sessions
+        /// </summary>
+        /// <param name="obj">Smart account object</param>
+        /// <param name="sessions">Sessions</param>
+        /// <returns>Result</returns>
+        public static async Task<string> CreateSessions(SmartAccountObject obj, List<object> sessions)
+        {
+            var accountConfig = new JObject
+            {
+                { "name", obj.name },
+                { "version", obj.version },
+                { "ownerAddress", obj.ownerAddress },
+            };
+
+            var result = await Rpc("particle_aa_createSessions", new List<object> { accountConfig, sessions });
+            return result;
+        }
+
+        /// <summary>
+        /// Validate session
+        /// </summary>
+        /// <param name="obj">Smart account object</param>
+        /// <param name="sessions">Sessions</param>
+        /// <param name="targetSession">Target session</param>
+        /// <returns></returns>
+        public static async Task<string> ValidateSession(SmartAccountObject obj, List<object> sessions,
+            object targetSession)
+        {
+            var accountConfig = new JObject
+            {
+                { "name", obj.name },
+                { "version", obj.version },
+                { "ownerAddress", obj.ownerAddress },
+            };
+
+            var sessionObj = new JObject()
+            {
+                { "sessions", JToken.FromObject(sessions) },
+                { "targetSession", JToken.FromObject(targetSession) }
+            };
+
+            var result = await Rpc("particle_aa_validateSession", new List<object> { accountConfig, sessionObj });
             return result;
         }
     }

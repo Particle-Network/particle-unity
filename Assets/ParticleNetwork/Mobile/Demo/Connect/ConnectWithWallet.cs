@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Network.Particle.Scripts.Core;
@@ -24,7 +25,7 @@ namespace Network.Particle.Scripts.Test
         void Start()
         {
             List<WalletType> walletTypes = new List<WalletType>((WalletType[])Enum.GetValues(typeof(WalletType)));
-
+            walletTypes = walletTypes.Where(e => e != WalletType.EvmPrivateKey && e != WalletType.SolanaPrivateKey).ToList();
 
             foreach (var walletType in walletTypes)
             {

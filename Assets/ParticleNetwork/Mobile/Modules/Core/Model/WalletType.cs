@@ -11,5 +11,7 @@ namespace Network.Particle.Scripts.Model
         WalletConnect,
         Phantom,
         OKX,
+        EvmPrivateKey,
+        SolanaPrivateKey,
     }
 }
