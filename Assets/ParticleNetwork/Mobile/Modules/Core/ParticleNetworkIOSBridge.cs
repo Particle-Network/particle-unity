@@ -33,73 +33,6 @@ namespace Network.Particle.Scripts.Core
         [DllImport("__Internal")]
         public static extern void setSecurityAccountConfig(string json);
 
-        [DllImport("__Internal")]
-        public static extern void setWebAuthConfig(string json);
-
-#endif
-
-        // Particle Auth Service
-#if UNITY_IOS
-        [DllImport("__Internal")]
-        public static extern void login(string json);
-
-        [DllImport("__Internal")]
-        public static extern void logout();
-
-        [DllImport("__Internal")]
-        public static extern void fastLogout();
-
-        [DllImport("__Internal")]
-        public static extern bool isLogin();
-
-        [DllImport("__Internal")]
-        public static extern void isLoginAsync();
-
-        [DllImport("__Internal")]
-        public static extern void signMessage(string message);
-
-        [DllImport("__Internal")]
-        public static extern void signMessageUnique(string message);
-
-        [DllImport("__Internal")]
-        public static extern void signTransaction(string transaction);
-
-        [DllImport("__Internal")]
-        public static extern void signAllTransactions(string transactions);
-
-        [DllImport("__Internal")]
-        public static extern void signAndSendTransaction(string message);
-
-        [DllImport("__Internal")]
-        public static extern void batchSendTransactions(string message);
-
-        [DllImport("__Internal")]
-        public static extern void signTypedData(string json);
-
-        [DllImport("__Internal")]
-        public static extern string getAddress();
-
-        [DllImport("__Internal")]
-        public static extern string getUserInfo();
-
-        [DllImport("__Internal")]
-        public static extern void setChainInfoAsync(string chainInfo);
-
-        [DllImport("__Internal")]
-        public static extern void setModalPresentStyle(string style);
-
-        [DllImport("__Internal")]
-        public static extern void setMediumScreen(bool isMedium);
-
-        [DllImport("__Internal")]
-        public static extern void openWebWallet(string json);
-
-        [DllImport("__Internal")]
-        public static extern void openAccountAndSecurity();
-
-        [DllImport("__Internal")]
-        public static extern void getSecurityAccount();
-
 #endif
 
         // Particle Wallet GUI
@@ -293,22 +226,22 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void authCoreConnect(string json);
-        
+
         [DllImport("__Internal")]
         public static extern void authCoreConnectWithCode(string json);
-        
+
         [DllImport("__Internal")]
         public static extern void authCoreSendEmailCode(string json);
-        
+
         [DllImport("__Internal")]
         public static extern void authCoreSendPhoneCode(string json);
-        
+
         [DllImport("__Internal")]
         public static extern void authCoreSetBlindEnable(bool json);
-        
+
         [DllImport("__Internal")]
         public static extern bool authCoreGetBlindEnable();
-        
+
         [DllImport("__Internal")]
         public static extern void authCoreDisconnect();
 

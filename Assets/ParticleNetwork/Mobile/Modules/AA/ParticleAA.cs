@@ -55,7 +55,7 @@ namespace Network.Particle.Scripts.Core
             ParticleAAInteraction.IsDeploy(eoaAddress);
             return isDeployTask.Task;
         }
-        
+
         public void IsDeployCallBack(string json)
         {
             Debug.Log($"IsDeploy:{json}");
@@ -64,6 +64,5 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             isDeployTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
-        
     }
 }

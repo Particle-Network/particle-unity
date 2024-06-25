@@ -20,13 +20,14 @@ namespace Network.Particle.Scripts.Utils
                 authTypeList.Add(SupportAuthType.ALL.ToString());
                 return authTypeList;
             }
-            
+
             foreach (SupportAuthType item in Enum.GetValues(typeof(SupportAuthType)))
             {
                 if (item == SupportAuthType.ALL)
                 {
                     continue;
                 }
+
                 if ((item & supportAuthTypes) != 0)
                 {
                     if (!authTypeList.Contains(item.ToString()))
@@ -35,6 +36,7 @@ namespace Network.Particle.Scripts.Utils
                     }
                 }
             }
+
             return authTypeList;
         }
     }

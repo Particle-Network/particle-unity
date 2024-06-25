@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
@@ -354,6 +355,42 @@ namespace Network.Particle.Scripts.Model
         "https://testnet.rpc.gobob.xyz",
         "https://testnet-explorer.gobob.xyz",
         new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo Fuse => _fuse;
+
+    private static ChainInfo _fuse = new ChainInfo(
+        122,
+        "fuse",
+        "evm",
+        "https://static.particle.network/token-list/fuse/native.png",
+        "Fuse Mainnet",
+        "Mainnet",
+        "https://www.fuse.io",
+        new NativeCurrency("FUSE", "FUSE", 18),
+        "https://rpc.fuse.io",
+        "https://explorer.fuse.io",
+        null,
+        null
+    );
+            
+
+    public static ChainInfo FuseTestnet => _fusetestnet;
+
+    private static ChainInfo _fusetestnet = new ChainInfo(
+        123,
+        "fuse",
+        "evm",
+        "https://static.particle.network/token-list/fuse/native.png",
+        "Fuse Testnet",
+        "Testnet",
+        "https://www.fuse.io",
+        new NativeCurrency("FUSE", "FUSE", 18),
+        "https://rpc.fusespark.io",
+        "https://explorer.fusespark.io",
+        null,
         null
     );
             
@@ -844,6 +881,42 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo SeiTestnet => _seitestnet;
+
+    private static ChainInfo _seitestnet = new ChainInfo(
+        1328,
+        "Sei",
+        "evm",
+        "https://static.particle.network/token-list/sei/native.png",
+        "Sei Testnet",
+        "Testnet",
+        "https://www.sei.io",
+        new NativeCurrency("SEI", "SEI", 18),
+        "https://evm-rpc-testnet.sei-apis.com",
+        "https://testnet.seistream.app",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo Sei => _sei;
+
+    private static ChainInfo _sei = new ChainInfo(
+        1329,
+        "Sei",
+        "evm",
+        "https://static.particle.network/token-list/sei/native.png",
+        "Sei Mainnet",
+        "Mainnet",
+        "https://www.sei.io",
+        new NativeCurrency("SEI", "SEI", 18),
+        "https://evm-rpc.sei-apis.com",
+        "https://seistream.app",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo BEVMCanary => _bevmcanary;
 
     private static ChainInfo _bevmcanary = new ChainInfo(
@@ -988,6 +1061,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo GMNetwork => _gmnetwork;
+
+    private static ChainInfo _gmnetwork = new ChainInfo(
+        2777,
+        "GMNetwork",
+        "evm",
+        "https://static.particle.network/token-list/gmnetwork/native.png",
+        "GM Network Mainnet",
+        "Mainnet",
+        "https://gmnetwork.ai",
+        new NativeCurrency("Ether", "ETH", 18),
+        "https://rpc.gmnetwork.ai",
+        "https://scan.gmnetwork.ai",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo SatoshiVMTestnet => _satoshivmtestnet;
 
     private static ChainInfo _satoshivmtestnet = new ChainInfo(
@@ -1078,6 +1169,42 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo IoTeX => _iotex;
+
+    private static ChainInfo _iotex = new ChainInfo(
+        4689,
+        "iotex",
+        "evm",
+        "https://static.particle.network/token-list/iotex/native.png",
+        "IoTeX Mainnet",
+        "Mainnet",
+        "https://iotex.io",
+        new NativeCurrency("IOTX", "IOTX", 18),
+        "https://babel-api.mainnet.iotex.io",
+        "https://iotexscan.io",
+        null,
+        null
+    );
+            
+
+    public static ChainInfo IoTeXTestnet => _iotextestnet;
+
+    private static ChainInfo _iotextestnet = new ChainInfo(
+        4690,
+        "iotex",
+        "evm",
+        "https://static.particle.network/token-list/iotex/native.png",
+        "IoTeX Testnet",
+        "Testnet",
+        "https://iotex.io",
+        new NativeCurrency("IOTX", "IOTX", 18),
+        "https://babel-api.testnet.iotex.io",
+        "https://testnet.iotexscan.io",
+        null,
+        null
+    );
+            
+
     public static ChainInfo Mantle => _mantle;
 
     private static ChainInfo _mantle = new ChainInfo(
@@ -1120,7 +1247,7 @@ namespace Network.Particle.Scripts.Model
         5611,
         "opBNB",
         "evm",
-        "https://static.particle.network/token-list/bsc/native.png",
+        "https://static.particle.network/token-list/opbnb/native.png",
         "opBNB Testnet",
         "Testnet",
         "https://opbnb.bnbchain.org",
@@ -1273,6 +1400,24 @@ namespace Network.Particle.Scripts.Model
         "https://blockscout.com/gnosis/chiado",
         new List<Feature>() { new Feature("EIP1559")},
         "https://gnosisfaucet.com"
+    );
+            
+
+    public static ChainInfo BEVM => _bevm;
+
+    private static ChainInfo _bevm = new ChainInfo(
+        11501,
+        "BEVM",
+        "evm",
+        "https://static.particle.network/token-list/bevm/native.png",
+        "BEVM Mainnet",
+        "Mainnet",
+        "https://www.bevm.io",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://rpc-mainnet-1.bevm.io",
+        "https://scan-mainnet.bevm.io",
+        null,
+        null
     );
             
 
@@ -1632,7 +1777,7 @@ namespace Network.Particle.Scripts.Model
         "https://alfajores-forno.celo-testnet.org",
         "https://explorer.celo.org/alfajores",
         null,
-        " https://celo.org/developers/faucet"
+        "https://celo.org/developers/faucet"
     );
             
 
@@ -1741,6 +1886,24 @@ namespace Network.Particle.Scripts.Model
         "https://www.oklink.com/amoy",
         new List<Feature>() { new Feature("EIP1559")},
         null
+    );
+            
+
+    public static ChainInfo BerachainbArtio => _berachainbartio;
+
+    private static ChainInfo _berachainbartio = new ChainInfo(
+        80084,
+        "Berachain",
+        "evm",
+        "https://static.particle.network/token-list/berachain/native.png",
+        "Berachain bArtio",
+        "bArtio",
+        "https://www.berachain.com",
+        new NativeCurrency("BERA", "BERA", 18),
+        "https://bartio.rpc.berachain.com",
+        "https://bartio.beratrail.io",
+        null,
+        "https://bartio.faucet.berachain.com"
     );
             
 
@@ -2014,6 +2177,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo SeiDevnet => _seidevnet;
+
+    private static ChainInfo _seidevnet = new ChainInfo(
+        713715,
+        "Sei",
+        "evm",
+        "https://static.particle.network/token-list/sei/native.png",
+        "Sei Devnet",
+        "Devnet",
+        "https://www.sei.io",
+        new NativeCurrency("SEI", "SEI", 18),
+        "https://evm-rpc-arctic-1.sei-apis.com",
+        "https://devnet.seistream.app",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo zkLinkNova => _zklinknova;
 
     private static ChainInfo _zklinknova = new ChainInfo(
@@ -2045,24 +2226,6 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BNB", "BNB", 18),
         "https://xterio-testnet.alt.technology",
         "https://testnet.xterscan.io",
-        new List<Feature>() { new Feature("EIP1559")},
-        null
-    );
-            
-
-    public static ChainInfo XterioETHTestnet => _xterioethtestnet;
-
-    private static ChainInfo _xterioethtestnet = new ChainInfo(
-        1637451,
-        "xterioeth",
-        "evm",
-        "https://static.particle.network/token-list/xterioeth/native.png",
-        "Xterio(ETH) Testnet",
-        "Testnet",
-        "https://xterscan.io",
-        new NativeCurrency("Ether", "ETH", 18),
-        "https://xterio-eth-testnet.alt.technology",
-        "https://eth-testnet.xterscan.io",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -2417,7 +2580,7 @@ namespace Network.Particle.Scripts.Model
         "GMNetwork",
         "evm",
         "https://static.particle.network/token-list/gmnetwork/native.png",
-        "GMNetwork Testnet",
+        "GM Network Testnet",
         "Testnet",
         "https://gmnetwork.ai",
         new NativeCurrency("Ether", "ETH", 18),
@@ -2464,6 +2627,10 @@ namespace Network.Particle.Scripts.Model
         {"thundercore-108" , ThunderCore },
             
         {"bob-111" , BOBTestnet },
+            
+        {"fuse-122" , Fuse },
+            
+        {"fuse-123" , FuseTestnet },
             
         {"heco-128" , Heco },
             
@@ -2519,6 +2686,10 @@ namespace Network.Particle.Scripts.Model
             
         {"moonbeam-1287" , MoonbeamTestnet },
             
+        {"sei-1328" , SeiTestnet },
+            
+        {"sei-1329" , Sei },
+            
         {"bevm-1501" , BEVMCanary },
             
         {"bevm-1502" , BEVMCanaryTestnet },
@@ -2535,6 +2706,8 @@ namespace Network.Particle.Scripts.Model
             
         {"ainn-2648" , AINNTestnet },
             
+        {"gmnetwork-2777" , GMNetwork },
+            
         {"satoshivm-3110" , SatoshiVMTestnet },
             
         {"botanix-3636" , BotanixTestnet },
@@ -2544,6 +2717,10 @@ namespace Network.Particle.Scripts.Model
         {"fantom-4002" , FantomTestnet },
             
         {"merlin-4200" , Merlin },
+            
+        {"iotex-4689" , IoTeX },
+            
+        {"iotex-4690" , IoTeXTestnet },
             
         {"mantle-5000" , Mantle },
             
@@ -2566,6 +2743,8 @@ namespace Network.Particle.Scripts.Model
         {"peaq-9990" , PeaqAgungTestnet },
             
         {"gnosis-10200" , GnosisTestnet },
+            
+        {"bevm-11501" , BEVM },
             
         {"bevm-11503" , BEVMTestnet },
             
@@ -2619,6 +2798,8 @@ namespace Network.Particle.Scripts.Model
             
         {"polygon-80002" , PolygonAmoy },
             
+        {"berachain-80084" , BerachainbArtio },
+            
         {"berachain-80085" , BerachainArtio },
             
         {"blast-81457" , Blast },
@@ -2649,11 +2830,11 @@ namespace Network.Particle.Scripts.Model
             
         {"merlin-686868" , MerlinTestnet },
             
+        {"sei-713715" , SeiDevnet },
+            
         {"zklink-810180" , zkLinkNova },
             
         {"xterio-1637450" , XterioBNBTestnet },
-            
-        {"xterioeth-1637451" , XterioETHTestnet },
             
         {"platon-2206132" , PlatONTestnet },
             
@@ -2721,11 +2902,87 @@ namespace Network.Particle.Scripts.Model
             return chain;
         }
 
-        public static List<ChainInfo> GetAllChains()
+        private static readonly List<string> sortKeys = new List<string>
         {
-            return ParticleChains.Values.ToList();
-        }
+            "Solana",
+            "Ethereum",
+            "BSC",
+            "opBNB",
+            "Polygon",
+            "Avalanche",
+            "Moonbeam",
+            "Moonriver",
+            "Heco",
+            "Fantom",
+            "Arbitrum",
+            "Harmony",
+            "Aurora",
+            "Optimism",
+            "KCC",
+            "PlatON",
+            "Tron",
+        };
 
+        public static List<ChainInfo> GetAllChainInfos(Func<ChainInfo, ChainInfo, int> compareFn = null)
+        {
+            var chains = ParticleChains.Values.ToList();
+            if (compareFn != null)
+            {
+                chains.Sort(new Comparison<ChainInfo>(compareFn));
+                return chains;
+            }
+
+            chains.Sort((a, b) =>
+            {
+                if (sortKeys.Contains(a.name) && sortKeys.Contains(b.name))
+                {
+                    if (a.name == b.name)
+                    {
+                        if (a.network == "Mainnet")
+                        {
+                            return -1;
+                        }
+                        else if (b.network == "Mainnet")
+                        {
+                            return 1;
+                        }
+                        return 0;
+                    }
+                    else if (sortKeys.IndexOf(a.name) > sortKeys.IndexOf(b.name))
+                    {
+                        return 1;
+                    }
+                    return -1;
+                }
+                else if (sortKeys.Contains(a.name))
+                {
+                    return -1;
+                }
+                else if (sortKeys.Contains(b.name))
+                {
+                    return 1;
+                }
+                else if (a.name == b.name)
+                {
+                    if (a.network == "Mainnet")
+                    {
+                        return -1;
+                    }
+                    else if (b.network == "Mainnet")
+                    {
+                        return 1;
+                    }
+                    return string.Compare(a.fullname, b.fullname, StringComparison.CurrentCulture);
+                }
+                else
+                {
+                    return string.Compare(a.name, b.name, StringComparison.CurrentCulture);
+                }
+            });
+
+            return chains;
+        }
+        
         public bool IsEvmChain()
         {
             return chainType == "evm";

@@ -35,16 +35,16 @@ namespace Network.Particle.Scripts.Model
 
     public enum SupportLoginType
     {
-        APPLE,
+        PHONE,
+        EMAIL,
         GOOGLE,
+        APPLE,
         FACEBOOK,
         DISCORD,
         GITHUB,
         TWITCH,
         MICROSOFT,
         LINKEDIN,
-        PHONE,
-        EMAIL,
         TWITTER,
     }
 

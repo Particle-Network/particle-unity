@@ -14,13 +14,14 @@ namespace Network.Particle.Scripts.Core
         {
             var tcs = new TaskCompletionSource<object>();
             asyncOp.completed += obj => { tcs.SetResult(null); };
-            return ((Task) tcs.Task).GetAwaiter();
+            return ((Task)tcs.Task).GetAwaiter();
         }
     }
 
     public class NodeService
     {
         private static string url = ParticleUnityRpc.Instance.rpcUrl;
+
         private static string authenticate(string username, string password)
         {
             string auth = username + ":" + password;

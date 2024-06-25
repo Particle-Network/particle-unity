@@ -1,5 +1,4 @@
 #if !UNITY_ANDROID && !UNITY_IOS
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;

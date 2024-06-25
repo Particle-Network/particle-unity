@@ -1,9 +1,8 @@
-
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
 
-public class HexUtils 
+public class HexUtils
 {
     public static bool IsHexadecimal(string value)
     {
@@ -16,5 +15,4 @@ public class HexUtils
         serialized = serialized.Replace("-", "");
         return "0x" + serialized;
     }
-   
 }

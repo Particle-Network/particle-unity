@@ -37,107 +37,15 @@ extern "C" {
     void setFiatCoin(const char* json) {
         [api setFiatCoin:[NSString stringWithUTF8String: json]];
     }
-
-    void setWebAuthConfig(const char* json) {
-        [api setWebAuthConfig:[NSString stringWithUTF8String: json]];
-    }
-
+    
     void setAppearance(const char* json) {
         [api setAppearance:[NSString stringWithUTF8String: json]];
-    }
-
-    void setMediumScreen(bool isMedium) {
-        [api setMediumScreen: isMedium];
-    }
-
-    void getSecurityAccount() {
-        [api getSecurityAccount];
     }
 
     void setSecurityAccountConfig(const char* json) {
         [api setSecurityAccountConfig:[NSString stringWithUTF8String: json]];
     }
 }
-
-// Particle Auth Service
-extern "C" {
-    void login(const char* json) {
-        [api login:[NSString stringWithUTF8String: json]];
-    }
-
-    void logout() {
-        [api logout];
-    }
-
-    void fastLogout() {
-        [api fastLogout];
-    }
-
-    bool isLogin() {
-        return [api isLogin];
-    }
-
-    void isLoginAsync() {
-        return [api isLoginAsync];
-    }
-
-    void signMessage(const char* message) {
-        [api signMessage:[NSString stringWithUTF8String: message]];
-    }
-
-    void signMessageUnique(const char* message) {
-        [api signMessageUnique:[NSString stringWithUTF8String: message]];
-    }
-
-    void signTransaction(const char* transaction) {
-        [api signTransaction:[NSString stringWithUTF8String: transaction]];
-    }
-
-    void signAllTransactions(const char* transactions) {
-        [api signAllTransactions:[NSString stringWithUTF8String: transactions]];
-    }
-
-    void signAndSendTransaction(const char* json) {
-        [api signAndSendTransaction:[NSString stringWithUTF8String: json]];
-    }
-
-    void batchSendTransactions(const char* json) {
-        [api batchSendTransactions:[NSString stringWithUTF8String: json]];
-    }
-
-    void signTypedData(const char* json) {
-        [api signTypedData:[NSString stringWithUTF8String: json]];
-    }
-
-    char* getAddress() {
-        char* cStringCopyPN(const char* string);
-        return cStringCopyPN([[api getAddress] UTF8String]);
-        
-    }
-
-    char* getUserInfo() {
-        char* cStringCopyPN(const char* string);
-        return cStringCopyPN([[api getUserInfo] UTF8String]);
-    }
-
-    void setChainInfoAsync(const char* chainInfo) {
-        [api setChainInfoAsync:[NSString stringWithUTF8String: chainInfo]];
-    }
-
-    void setModalPresentStyle(const char* style) {
-        [api setModalPresentStyle:[NSString stringWithUTF8String: style]];
-    }
-
-    
-    void openWebWallet(const char* chainInfo) {
-        [api openWebWallet:[NSString stringWithUTF8String: chainInfo]];
-    }
-
-    void openAccountAndSecurity() {
-        [api openAccountAndSecurity];
-    }
-}
-
 
 // Particle Wallet GUI
 extern "C" {

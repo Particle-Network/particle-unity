@@ -3,11 +3,10 @@ namespace Network.Particle.Scripts.Model
     public enum FiatCoin
     {
         USD,
-        CNY, 
+        CNY,
         JPY,
-        HKD, 
+        HKD,
         INR,
         KRW
     }
-
 }

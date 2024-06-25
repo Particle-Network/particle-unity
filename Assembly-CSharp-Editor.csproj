@@ -41,20 +41,20 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/CanvasPointerInputDetectorInspector.cs" />
-    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/ConditionalCompilationUtility.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/OptionalDependencyAttribute.cs" />
-    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/ScriptingSymbols.cs" />
     <Compile Include="Assets/Vuplex/WebView/Standalone/Mac/Editor/MacBuildScript.cs" />
     <Compile Include="Assets/Vuplex/WebView/Standalone/Mac/Editor/MacEditorScript.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/CanvasWebViewPrefabInspector.cs" />
-    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/DocumentationLinkDrawer.cs" />
-    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/WebViewPrefabInspector.cs" />
-    <Compile Include="Assets/Vuplex/WebView/Standalone/Editor/StandaloneVideoCodecsWindow.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/LabelDrawer.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/AndroidEditorUtils.cs" />
     <Compile Include="Assets/Vuplex/WebView/Standalone/Windows/Editor/WindowsBuildScript.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/DefaultPointerInputDetectorInspector.cs" />
+    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/CanvasPointerInputDetectorInspector.cs" />
+    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/ConditionalCompilationUtility.cs" />
+    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/ScriptingSymbols.cs" />
+    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/DocumentationLinkDrawer.cs" />
+    <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/WebViewPrefabInspector.cs" />
+    <Compile Include="Assets/Vuplex/WebView/Standalone/Editor/StandaloneVideoCodecsWindow.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/BaseWebViewPrefabInspector.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Editor/Scripts/EditorUtils.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Plugins/Editor/OldWebViewDirectoryDeleter.cs" />
@@ -752,6 +752,10 @@
     <ProjectReference Include="Unity.TextMeshPro.csproj">
       <Project>{1e9d8133-b3c0-17bd-0e56-d1d2e01d3482}</Project>
       <Name>Unity.TextMeshPro</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.2D.Sprite.Editor.csproj">
+      <Project>{48541e89-8dce-b7cf-6c07-af8269495d1c}</Project>
+      <Name>Unity.2D.Sprite.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{40bef3b2-29b8-ac71-3915-c13baaf77135}</Project>

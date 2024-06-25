@@ -3,8 +3,7 @@
 //  Unity-iPhone
 //
 //  Created by link on 2022/6/30.
-//
-import ParticleAuthService
+
 import ParticleConnect
 import ParticleNetworkBase
 import ParticleWalletGUI
@@ -36,18 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return true
         } else {
             // if integrate with ParticleConnect, call ParticleConnect.handleUrl(url)
-            // if integrate with ParticleAuthService, call ParticleAuthService.handleUrl(url)
-
-            #if canImport(ParticleAuthService)
-            if ParticleAuthService.handleUrl(url) {
-                return true
-            }
-
-            #elseif canImport(ParticleConnect)
             if ParticleConnect.handleUrl(url) {
                 return true
             }
-            #endif
         }
 
         return true

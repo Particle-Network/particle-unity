@@ -6,15 +6,14 @@ namespace Network.Particle.Scripts.Model
     [JsonObject]
     public class EthereumTransaction
     {
-
         public string from;
 
         public string? to;
 
         public string data;
-        
+
         public string? gasLimit;
-        
+
         public string? gasPrice;
 
         public string? value;
@@ -30,7 +29,9 @@ namespace Network.Particle.Scripts.Model
         public string? maxFeePerGas;
 
 
-        public EthereumTransaction(string from, string? to, string data, string? gasLimit, string? gasPrice, string? value, string? nonce, string? type, string? chainId, string? maxPriorityFeePerGas, string? maxFeePerGas)
+        public EthereumTransaction(string from, string? to, string data, string? gasLimit, string? gasPrice,
+            string? value, string? nonce, string? type, string? chainId, string? maxPriorityFeePerGas,
+            string? maxFeePerGas)
         {
             this.from = from;
             this.to = to;

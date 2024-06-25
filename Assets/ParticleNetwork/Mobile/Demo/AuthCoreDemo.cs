@@ -21,7 +21,7 @@ namespace Network.Particle.Scripts.Test
 
         public void SelectChain()
         {
-            ChainChoice.Instance.Show((chainInfo) =>
+            SelectChainPage.Instance.Show((chainInfo) =>
             {
                 Debug.Log($"select chain {chainInfo.Name} {chainInfo.Id} {chainInfo.Network}");
                 this._chainInfo = chainInfo;
@@ -40,7 +40,7 @@ namespace Network.Particle.Scripts.Test
         public void Init()
         {
             ParticleNetwork.Init(this._chainInfo);
-         
+
             ParticleAuthCoreInteraction.Init();
             // control how to show set master password and payment password.
             ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
@@ -50,11 +50,12 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                List<SupportLoginType> allSupportLoginTypes = new List<SupportLoginType>(Enum.GetValues(typeof(SupportLoginType)) as SupportLoginType[]);
+                List<SupportLoginType> allSupportLoginTypes =
+                    new List<SupportLoginType>(Enum.GetValues(typeof(SupportLoginType)) as SupportLoginType[]);
                 var nativeResultData =
                     await ParticleAuthCore.Instance.Connect(_loginType, null, allSupportLoginTypes,
                         SocialLoginPrompt.SelectAccount,
-                        new LoginPageConfig("Particle Unity Example", "Welcome to login", 
+                        new LoginPageConfig("Particle Unity Example", "Welcome to login",
                             "https://connect.particle.network/icons/512.png"));
 
                 Debug.Log(nativeResultData.data);
@@ -75,7 +76,6 @@ namespace Network.Particle.Scripts.Test
             {
                 Debug.LogError($"An error occurred: {e.Message}");
             }
-    
         }
 
         public async void ConnectJWT()
@@ -359,7 +359,7 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
+                var txtAsset = Resources.Load<TextAsset>("Share/TypedDataV4");
                 string typedData = txtAsset.text;
 
                 var chainId = ParticleNetwork.GetChainInfo().Id;
@@ -394,7 +394,7 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var txtAsset = Resources.Load<TextAsset>("TypedDataV4");
+                var txtAsset = Resources.Load<TextAsset>("Share/TypedDataV4");
                 string typedData = txtAsset.text;
 
                 var chainId = ParticleNetwork.GetChainInfo().Id;

@@ -8,10 +8,10 @@ using UnityEngine.Networking;
 
 namespace Network.Particle.Scripts.Core
 {
-
     public class APIService
     {
         private static string url = "https://api.particle.network/";
+
         private static string authenticate(string username, string password)
         {
             string auth = username + ":" + password;

@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Network.Particle.Scripts.Core.UnityEditorTestMode;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Network.Particle.Scripts.Model;
-using Network.Particle.Scripts.Utils;
 using Newtonsoft.Json.Converters;
 using UnityEngine;
 
@@ -50,7 +48,6 @@ namespace Network.Particle.Scripts.Core
         /// <returns></returns>
         public static bool GetBlindEnable()
         {
-           
 #if UNITY_ANDROID&& !UNITY_EDITOR
             return ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("getBlindEnable");
 #elif UNITY_IOS&& !UNITY_EDITOR

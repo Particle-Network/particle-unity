@@ -55,28 +55,11 @@ namespace Network.Particle.Scripts.Test
 
             // Control if show appearance setting button in setting page.
             ParticleWalletGUI.SetShowAppearanceSetting(true);
-            
+
             // Control if show smart account setting button in setting page.
             ParticleWalletGUI.SetShowSmartAccountSetting(true);
         }
 
-        public async void Login()
-        {
-            // Show login with particle auth, support apple and google.
-            var nativeResultData = await ParticleAuthService.Instance.Login(LoginType.PHONE, "",
-                SupportAuthType.APPLE | SupportAuthType.GOOGLE | SupportAuthType.EMAIL);
-            // Get result
-            Debug.Log(nativeResultData.data);
-            if (nativeResultData.isSuccess)
-            {
-                Debug.Log(nativeResultData.data);
-            }
-            else
-            {
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
-            }
-        }
 
         public void ShowWallet()
         {
@@ -164,7 +147,7 @@ namespace Network.Particle.Scripts.Test
 
             var transaction = await EvmService.WriteContract(from, contractAddress, methodName, parameters,
                 abiJsonString);
-            
+
             Debug.Log($"transaction = {transaction}");
         }
 

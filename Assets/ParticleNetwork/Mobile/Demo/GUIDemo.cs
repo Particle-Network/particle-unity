@@ -16,7 +16,7 @@ namespace Network.Particle.Scripts.Test
 
         public void SelectChain()
         {
-            ChainChoice.Instance.Show((chainInfo) =>
+            SelectChainPage.Instance.Show((chainInfo) =>
             {
                 Debug.Log($"select chain{chainInfo.Name} {chainInfo.Id} {chainInfo.Network}");
                 this._chainInfo =
@@ -237,15 +237,7 @@ namespace Network.Particle.Scripts.Test
         {
             ParticleWalletGUI.SetSupportWalletConnect(true);
         }
-
-        public void SwitchWalletChain()
-        {
-            ParticleNetwork.SetChainInfo(ChainInfo.Polygon);
-            var walletType = ConnectDemo.Instance.WalletType;
-            var publicAddress = ConnectDemo.Instance.PublicAddress;
-            ParticleWalletGUI.UpdateWallet(walletType, publicAddress);
-        }
-
+        
         public void SetCustomUI()
         {
             ParticleWalletGUI.SetSupportAddToken(true);

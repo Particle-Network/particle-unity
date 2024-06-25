@@ -1,4 +1,3 @@
-
 using System;
 using Network.Particle.Scripts.Singleton;
 using UnityEngine;
@@ -9,7 +8,7 @@ namespace CommonTip.Script
     public class ToastTip : SingletonMonoBehaviour<ToastTip>
     {
         public Text tipText;
-        public float  durTime=1f;
+        public float durTime = 1f;
         private float timer = 0;
 
         private void Start()
@@ -24,10 +23,11 @@ namespace CommonTip.Script
             gameObject.SetActive(true);
             LayoutRebuilder.ForceRebuildLayoutImmediate(tipText.transform.parent.GetComponent<RectTransform>());
         }
+
         private void Update()
         {
             timer += Time.deltaTime;
-            if (timer>=durTime)
+            if (timer >= durTime)
             {
                 gameObject.SetActive(false);
                 timer -= durTime;
@@ -35,4 +35,3 @@ namespace CommonTip.Script
         }
     }
 }
-

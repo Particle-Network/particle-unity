@@ -67,40 +67,40 @@ namespace Network.Particle.Scripts.Model
 
         [JsonProperty(PropertyName = "google_email")] [CanBeNull]
         public string GoogleEmail;
-        
+
         [JsonProperty(PropertyName = "twitter_id")] [CanBeNull]
         public string TwitterId;
 
         [JsonProperty(PropertyName = "twitter_email")] [CanBeNull]
         public string TwitterEmail;
-        
+
         [JsonProperty(PropertyName = "discord_id")] [CanBeNull]
         public string DiscordId;
 
         [JsonProperty(PropertyName = "discord_email")] [CanBeNull]
         public string DiscordEmail;
-        
+
         [JsonProperty(PropertyName = "github_id")] [CanBeNull]
         public string GithubId;
 
         [JsonProperty(PropertyName = "github_email")] [CanBeNull]
         public string GithubEmail;
-        
+
         [JsonProperty(PropertyName = "twitch_id")] [CanBeNull]
         public string TwitchId;
 
         [JsonProperty(PropertyName = "twitch_email")] [CanBeNull]
         public string TwitchEmail;
-        
+
         [JsonProperty(PropertyName = "microsoft_id")] [CanBeNull]
         public string MicrosoftId;
 
         [JsonProperty(PropertyName = "microsoft_email")] [CanBeNull]
         public string MicrosoftEmail;
-        
+
         [JsonProperty(PropertyName = "linkedin_id")] [CanBeNull]
         public string LinkedinId;
-        
+
         [JsonProperty(PropertyName = "linkedin_email")] [CanBeNull]
         public string LinkedinEmail;
 
