@@ -41,7 +41,7 @@ namespace Network.Particle.Scripts.Test
         {
             var metadata = new DAppMetaData(TestConfig.walletConnectProjectId, "Particle Connect",
                 "https://connect.particle.network/icons/512.png",
-                "https://connect.particle.network", "");
+                "https://connect.particle.network", "Particle Unity Demo");
 
             ParticleNetwork.Init(_chainInfo);
             ParticleConnectInteraction.Init(_chainInfo, metadata);

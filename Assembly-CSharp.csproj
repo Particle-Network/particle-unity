@@ -192,7 +192,6 @@
     <Compile Include="Assets/Vuplex/WebView/Core/Scripts/WebPluginType.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Scripts/Internal/AndroidUtils.cs" />
     <Compile Include="Assets/ParticleNetwork/Windows/Modules/Models/SignMethod.cs" />
-    <Compile Include="Assets/ParticleNetwork/Mobile/Utils/ParticleTools.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Scripts/ConsoleMessageLevel.cs" />
     <Compile Include="Assets/ParticleNetwork/Share/Model/EthCallObject.cs" />
     <Compile Include="Assets/Vuplex/WebView/Core/Scripts/MockWebPlugin.cs" />
