@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -53,16 +54,26 @@ namespace Network.Particle.Scripts.Core
                 www.downloadHandler = new DownloadHandlerBuffer();
                 www.SetRequestHeader("Content-Type", "application/json");
                 www.SetRequestHeader("AUTHORIZATION", authorization);
-                await www.SendWebRequest();
-                if (www.result == UnityWebRequest.Result.Success)
+                try
                 {
-                    var text = www.downloadHandler.text;
-                    Debug.Log($"Response ${text}");
-                    return text;
+                    await www.SendWebRequest();
+
+                    if (www.result == UnityWebRequest.Result.Success)
+                    {
+                        var text = www.downloadHandler.text;
+                        Debug.Log($"Response: {text}");
+                        return text;
+                    }
+                    else
+                    {
+                        Debug.LogError($"Response Error: {www.error}");
+                        return $"Error: {www.error}";
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Debug.Log($"Response Error Data ${www.error}");
+                    Debug.LogError($"Exception: {ex.Message}");
+                    return $"Exception: {ex.Message}";
                 }
             }
 
