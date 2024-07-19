@@ -47,7 +47,7 @@ In scene: Mobile_WalletDemo
 
 1. Download and open in Unity Editor.
 
-2. Run and click `Auth Demo` button, click `Select Chain` button, select `Ethereum Goerli`.
+2. Run and click `Connect Demo` button, click `Select Chain` button, select `Ethereum Sepolia`.
 
 3. Click `Init` button to initialize the SDK.
 
