@@ -10,7 +10,6 @@ namespace Network.Particle.Scripts.Model
         [CanBeNull] public string code;
         [CanBeNull] public List<SupportLoginType> supportLoginTypes;
         public SocialLoginPrompt? socialLoginPrompt;
-        [CanBeNull] public LoginAuthorization authorization;
         [CanBeNull] public LoginPageConfig loginPageConfig;
 
         /// <summary>
@@ -25,7 +24,6 @@ namespace Network.Particle.Scripts.Model
         /// <param name="authCoreLoginPageConfig">Optional, LoginPageConfig, for customize login page when use ParticleAuthCore</param>
         public ConnectConfig(LoginType loginType, [CanBeNull] string account = null, [CanBeNull] string code = null,
             [CanBeNull] List<SupportLoginType> supportLoginTypes = null,
-            [CanBeNull] LoginAuthorization authorization = null,
             SocialLoginPrompt? socialLoginPrompt = null, [CanBeNull] LoginPageConfig authCoreLoginPageConfig = null)
         {
             this.loginType = loginType;
@@ -33,7 +31,6 @@ namespace Network.Particle.Scripts.Model
             this.code = code;
             this.supportLoginTypes = supportLoginTypes;
             this.socialLoginPrompt = socialLoginPrompt;
-            this.authorization = authorization;
             this.loginPageConfig = authCoreLoginPageConfig;
         }
     }

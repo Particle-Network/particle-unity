@@ -13,5 +13,12 @@ namespace Network.Particle.Scripts.Model
         OKX,
         EvmPrivateKey,
         SolanaPrivateKey,
+        Zerion,
+        Math,
+        Inch1, // 1Inch
+        Zengo,
+        Alpha,
+        TokenPocket, // not supported by iOS.
+        
     }
 }

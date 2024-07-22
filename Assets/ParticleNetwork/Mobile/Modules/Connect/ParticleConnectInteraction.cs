@@ -93,8 +93,6 @@ namespace Network.Particle.Scripts.Core
                 if (config.loginPageConfig != null)
                     obj["loginPageConfig"] = JToken.FromObject(config.loginPageConfig, JsonSerializer.Create(settings));
 
-                if (config.authorization != null) obj["authorization"] = JToken.FromObject(config.authorization);
-
                 configJson = JsonConvert.SerializeObject(obj);
             }
 

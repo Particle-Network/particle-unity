@@ -65,7 +65,6 @@ namespace Network.Particle.Scripts.Test
             LoginType loginType = (LoginType)Enum.Parse(typeof(LoginType), dropdown.options[dropdown.value].text);
 
             ConnectConfig configConfig = new ConnectConfig(loginType, account, null, supportLoginTypes, null,
-                null,
                 loginPageConfig);
             StringBuilder sb = new StringBuilder();
             supportLoginTypes.ForEach(x => sb.Append(x.ToString() + " "));
