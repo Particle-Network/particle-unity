@@ -59,13 +59,7 @@ namespace Network.Particle.Scripts.Test
 
         public void Init()
         {
-            var biconomyApiKeys = new Dictionary<int, string>
-            {
-                { 1, "" }, // your ethereum mainnet key
-                { 137, "" }, // your polygon mainnet key
-            };
-
-            ParticleAAInteraction.Init(accountName, biconomyApiKeys);
+            ParticleAAInteraction.Init(accountName);
         }
 
 

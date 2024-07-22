@@ -60,7 +60,6 @@ namespace Network.Particle.Scripts.Test
                 "An example description", "https://connect.particle.network/icons/512.png");
             List<SupportLoginType> supportLoginTypes = supportLoginTypeItems.FindAll(x => x.GetSelected())
                 .ConvertAll(x => x.GetSupportLoginType());
-
             var account = inputField.text;
             LoginType loginType = (LoginType)Enum.Parse(typeof(LoginType), dropdown.options[dropdown.value].text);
 

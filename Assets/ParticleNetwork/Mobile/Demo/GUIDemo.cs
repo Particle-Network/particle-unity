@@ -45,15 +45,7 @@ namespace Network.Particle.Scripts.Test
 
             ParticleNetwork.Init(_chainInfo);
             ParticleConnectInteraction.Init(_chainInfo, metadata);
-            ParticleWalletConnectInitialize();
-        }
-
-        public void ParticleWalletConnectInitialize()
-        {
-            var metaData = new WalletMetaData("Particle Connect",
-                "https://connect.particle.network/icons/512.png",
-                "https://connect.particle.network", description: "", "75ac08814504606fc06126541ace9df6");
-            ParticleWalletGUI.ParticleWalletConnectInitialize(metaData);
+            ParticleWalletGUI.ParticleWalletConnectInitialize(metadata);
         }
 
         public void NavigatorWallet()
@@ -237,7 +229,7 @@ namespace Network.Particle.Scripts.Test
         {
             ParticleWalletGUI.SetSupportWalletConnect(true);
         }
-        
+
         public void SetCustomUI()
         {
             ParticleWalletGUI.SetSupportAddToken(true);

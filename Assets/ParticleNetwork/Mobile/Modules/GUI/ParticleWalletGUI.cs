@@ -494,7 +494,7 @@ namespace Network.Particle.Scripts.Core
         /// Initialize particle wallet connect as a wallet 
         /// </summary>
         /// <param name="metaData">WalletMetaData</param>
-        public static void ParticleWalletConnectInitialize(WalletMetaData metaData)
+        public static void ParticleWalletConnectInitialize(DAppMetaData metaData)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {

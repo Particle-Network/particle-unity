@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -9,14 +10,16 @@ namespace Network.Particle.Scripts.Core
     public static class ParticleAAInteraction
     {
         public static void Init(AAAccountName accountName,
-            Dictionary<int, string> biconomyApiKeys)
+            [CanBeNull] Dictionary<int, string> biconomyApiKeys = null)
         {
             var obj = new JObject
             {
-                { "biconomy_api_keys", JObject.FromObject(biconomyApiKeys) },
                 { "name", accountName.name },
                 { "version", accountName.version },
             };
+            
+            if (biconomyApiKeys != null)
+                obj["biconomy_api_keys"] = JObject.FromObject(biconomyApiKeys);
 
             var json = JsonConvert.SerializeObject(obj);
 
