@@ -224,7 +224,7 @@ namespace Particle.Windows.Demo
             var userOp = verifyingPaymasterGasless["userOp"];
 
             webCanvas.sortingOrder = 2;
-            var signature = await ParticleSystem.Instance.SignMessage(userOpHash);
+            var signature = await ParticleSystem.Instance.SignMessage(userOpHash, AAAccountName.BICONOMY_V2());
             webCanvas.sortingOrder = 0;
 
             userOp["signature"] = signature;
@@ -267,7 +267,7 @@ namespace Particle.Windows.Demo
             var userOp = verifyingPaymasterNative["userOp"];
 
             webCanvas.sortingOrder = 2;
-            var signature = await ParticleSystem.Instance.SignMessage(userOpHash);
+            var signature = await ParticleSystem.Instance.SignMessage(userOpHash, AAAccountName.BICONOMY_V2());
             webCanvas.sortingOrder = 0;
 
             userOp["signature"] = signature;
@@ -325,7 +325,7 @@ namespace Particle.Windows.Demo
             var userOp = JObject.Parse(creatUserOpResult)["result"]["userOp"];
 
             webCanvas.sortingOrder = 2;
-            var signature = await ParticleSystem.Instance.SignMessage(userOpHash);
+            var signature = await ParticleSystem.Instance.SignMessage(userOpHash, AAAccountName.BICONOMY_V2());
             webCanvas.sortingOrder = 0;
 
             userOp["signature"] = signature;
@@ -386,7 +386,7 @@ namespace Particle.Windows.Demo
                     JObject.Parse(createSessionsResultData)["result"]["verifyingPaymasterGasless"]["userOpHash"]
                         .ToString();
                     
-                var signature  = await ParticleSystem.Instance.SignMessage(createSessionUserOpHash);
+                var signature  = await ParticleSystem.Instance.SignMessage(createSessionUserOpHash, AAAccountName.BICONOMY_V2());
                 Debug.Log($"signature {signature}");
 
                 var sendCreateSessionUserOpResult =

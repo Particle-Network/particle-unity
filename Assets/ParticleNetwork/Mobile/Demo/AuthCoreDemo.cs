@@ -39,7 +39,7 @@ namespace Network.Particle.Scripts.Test
 
         public void Init()
         {
-            ParticleNetwork.Init(this._chainInfo);
+            ParticleNetwork.Init(this._chainInfo, Env.DEV);
 
             ParticleAuthCoreInteraction.Init();
             // control how to show set master password and payment password.

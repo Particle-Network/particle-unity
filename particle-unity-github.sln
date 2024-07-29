@@ -25,9 +25,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.Rider.Editor", "Unity
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.2D.Sprite.Editor", "Unity.2D.Sprite.Editor.csproj", "{48541e89-8dce-b7cf-6c07-af8269495d1c}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.VSCode.Editor", "Unity.VSCode.Editor.csproj", "{0ba6f64d-cd0e-cd39-bf03-c711232cae16}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{e4dec26b-e93c-15bf-eee8-f9adcfbd04ee}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.VSCode.Editor", "Unity.VSCode.Editor.csproj", "{0ba6f64d-cd0e-cd39-bf03-c711232cae16}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.2D.Sprite.Package.EditorTests", "Unity.2D.Sprite.Package.EditorTests.csproj", "{b66baa94-4f5d-fe7b-dad2-bde4b5f1e7eb}"
 EndProject
@@ -72,10 +72,10 @@ Global
 		{d7d2fb5a-e54f-260f-35b8-1d3c97282b93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48541e89-8dce-b7cf-6c07-af8269495d1c}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{48541e89-8dce-b7cf-6c07-af8269495d1c}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0ba6f64d-cd0e-cd39-bf03-c711232cae16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0ba6f64d-cd0e-cd39-bf03-c711232cae16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{e4dec26b-e93c-15bf-eee8-f9adcfbd04ee}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{e4dec26b-e93c-15bf-eee8-f9adcfbd04ee}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ba6f64d-cd0e-cd39-bf03-c711232cae16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ba6f64d-cd0e-cd39-bf03-c711232cae16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{b66baa94-4f5d-fe7b-dad2-bde4b5f1e7eb}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{b66baa94-4f5d-fe7b-dad2-bde4b5f1e7eb}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6bdbdb39-5a80-4492-acd3-8b700a755b9d}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

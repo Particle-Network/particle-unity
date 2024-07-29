@@ -118,12 +118,15 @@ namespace Particle.Windows
             return _loginTask.Task;
         }
 
+       
+        
         /// <summary>
         /// Sign message, support evm and solana.
         /// </summary>
         /// <param name="message">In evm, request plain text, like "hello world", in solana, request base58 string.</param>
+        /// <param name="accountName">Optional, pass the right account when use AA mode</param>
         /// <returns></returns>
-        public Task<string> SignMessage(string message)
+        public Task<string> SignMessage(string message, [CanBeNull] AAAccountName accountName = null)
         {
             _signMessageTask = new TaskCompletionSource<string>();
 
@@ -145,6 +148,13 @@ namespace Particle.Windows
 
             var queryStr =
                 $"config={_config}&theme={_theme}&language={_language}&chainName={_chainInfo.Name}&chainId={_chainInfo.Id}&method={method}&message={message}";
+            
+            if (accountName != null)
+            {
+                var erc4337Params = JsonConvert.SerializeObject(accountName);
+                queryStr += $"&erc4337={erc4337Params}";
+            }
+            
             var temp = HttpUtility.UrlEncode(queryStr);
             var path = "sign";
             var uri = $"{_walletURL}{path}?{temp}";
