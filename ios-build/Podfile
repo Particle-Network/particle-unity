@@ -26,10 +26,10 @@ target 'Unity-iPhone' do
   pod 'ParticleAA', '1.4.10'
   
   # Particle Auth Core
-  pod 'AuthCoreAdapter', '1.4.9'
-  pod 'ParticleAuthCore', '1.4.9'
-  pod 'ParticleMPCCore', '1.4.9'
-  pod 'Thresh', '1.4.9'
+  pod 'AuthCoreAdapter', '1.4.11'
+  pod 'ParticleAuthCore', '1.4.11'
+  pod 'ParticleMPCCore', '1.4.11'
+  pod 'Thresh', '1.4.11'
   
   pod 'SkeletonView', :git => 'https://github.com/SunZhiC/SkeletonView.git', :branch => 'main'
   pod 'SwiftyUserDefaults', :git => 'https://github.com/SunZhiC/SwiftyUserDefaults.git', :branch => 'master'
