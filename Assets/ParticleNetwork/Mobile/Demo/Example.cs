@@ -98,6 +98,12 @@ namespace Network.Particle.Scripts.Test
             // use data to configure transaction or eth_call
         }
 
+        public void BlindSign()
+        {
+            ParticleAuthCoreInteraction.SetBlindEnable(true);
+            var enable = ParticleAuthCoreInteraction.GetBlindEnable();
+        }
+
         public async void ReadContract()
         {
             // your public address

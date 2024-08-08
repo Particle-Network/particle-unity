@@ -19,7 +19,7 @@ createUnityInstance(canvas, config, (progress) => {
     });
 ```
 
-Function params refer to [Particle Docs](https://docs.particle.network/developers/auth-service/sdks/web)
+Function params refer to [Particle Docs](https://developers.particle.network/api-reference/auth/desktop-sdks/web)
 
 Learn more about [WebGL templates](https://docs.unity3d.com/2020.3/Documentation/Manual/webgl-templates.html).
 

@@ -248,8 +248,6 @@ namespace Network.Particle.Scripts.Test
 
             // Only works for iOS
             // your custom ui json
-            // for more detail, please explore
-            https: //docs.particle.network/developers/wallet-service/sdks/web#custom-particle-wallet-style
             var txtAsset = Resources.Load<TextAsset>("customUIConfig");
             string json = txtAsset.text;
             ParticleWalletGUI.LoadCustomUIJsonString(json);

@@ -26,17 +26,15 @@ If you are familiar with web browser in windows platform, you can use other web 
 
 ## 📗 Docs
 
-**Auth**: https://developers.particle.network/reference/auth-unity-mobile
+**Connect**: https://developers.particle.network/api-reference/connect/mobile/unity
 
-**AuthCore**: https://developers.particle.network/reference/auth-unity-mobile
+**AuthCore**: https://developers.particle.network/api-reference/auth/mobile-sdks/unity
 
-**Connect**: https://developers.particle.network/reference/connect-unity
+**GUI**: https://developers.particle.network/api-reference/wallet/mobile/unity
 
-**GUI**: https://developers.particle.network/reference/wallet-unity
+**AA**: https://developers.particle.network/api-reference/aa/sdks/mobile/unity
 
-**AA**: https://developers.particle.network/reference/aa-unity
-
-**Windows and macOS**: https://developers.particle.network/reference/auth-unity-desktop
+**Windows and macOS**: https://developers.particle.network/api-reference/auth/desktop-sdks/unity
 
 ## 🚀 Quick start with DEMO
 
