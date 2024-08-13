@@ -18,8 +18,8 @@ namespace DefaultNamespace
                 projectId = "be36dab3-cefc-4345-9f80-c218f618febc",
                 clientKey = "cGzYoS9EKLSmniB0kD5Z7Q6Hv9t4GPqW99w7Jw4i",
                 appId = "252b2631-b2ad-48ad-b53f-c7091d1a475b",
-                chainName = "Base",
-                chainId = 84532,
+                chainName = "xterio",
+                chainId = 112358,
                 securityAccount = new SecurityAccount
                 {
                     promptSettingWhenSign = 0,
@@ -31,8 +31,8 @@ namespace DefaultNamespace
                     defaultWalletEntryPosition = new WalletEntryPosition { x = 0.0f, y = 0.0f },
                     supportChains = new List<Chain>
                     {
-                        new Chain { id = 84532, name = "Base" },
-                        new Chain { id = 80002, name = "Polygon" }
+                        new Chain { id = 112358, name = "xterio" },
+                        new Chain { id = 2702128, name = "xterioeth" }
                     }
                 }
             };

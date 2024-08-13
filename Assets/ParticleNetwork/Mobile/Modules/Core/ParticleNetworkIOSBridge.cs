@@ -32,6 +32,10 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void setSecurityAccountConfig(string json);
+        
+        [DllImport("__Internal")]
+        public static extern void setCustomUIConfigJsonString(string json);
+        
 
 #endif
 
@@ -69,9 +73,6 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void navigatorBuyCrypto(string json);
-
-        [DllImport("__Internal")]
-        public static extern void navigatorLoginList(string json);
 
         [DllImport("__Internal")]
         public static extern void navigatorDappBrowser(string json);
@@ -123,10 +124,6 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void setPriorityNFTContractAddresses(string json);
-
-        [DllImport("__Internal")]
-        public static extern void loadCustomUIJsonString(string json);
-
 
         [DllImport("__Internal")]
         public static extern void setCustomLocalizable(string json);
@@ -302,9 +299,7 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void authCoreSolanaSignAndSendTransaction(string json);
-
-        [DllImport("__Internal")]
-        public static extern void authCoreSetCustomUI(string json);
+        
 
 
 #endif

@@ -13,14 +13,22 @@ import UnityFramework
 
 import ParticleAA
 import ParticleNetworkBase
+import ParticleNetworkChains
 import ParticleWalletAPI
 import ParticleWalletConnect
 import ParticleWalletGUI
 
 import ConnectCommon
+
+#if canImport(ConnectEVMAdapter)
 import ConnectEVMAdapter
-import ConnectPhantomAdapter
+#endif
+
+#if canImport(ConnectEVMAdapter)
 import ConnectSolanaAdapter
+#endif
+
+import ConnectPhantomAdapter
 import ConnectWalletConnectAdapter
 import ParticleConnect
 
@@ -307,7 +315,7 @@ extension UnityManager {
             let chainType: ChainType = chainName == "solana" ? .solana : .evm
             return ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType)
         }
-        ParticleWalletGUI.setSupportChain(chains)
+        ParticleWalletGUI.setSupportChain(Set(chains))
     }
     
     func setSwapDisabled(_ disabled: Bool) {
@@ -336,88 +344,22 @@ extension UnityManager {
         }
     }
     
-    func navigatorLoginList(_ json: String?) {
-        var observable: Single<(WalletType, Account?)>
-        if let json = json {
-            let array = JSON(parseJSON: json).arrayValue.map {
-                $0.stringValue.lowercased()
-            }
-            
-            var loginListPageSupportType: [LoginListSupportType] = []
-            
-            if array.contains("all") {
-                loginListPageSupportType = LoginListSupportType.allCases
-            } else {
-                array.forEach { if $0 == "email" {
-                    loginListPageSupportType.append(.email)
-                } else if $0 == "phone" {
-                    loginListPageSupportType.append(.phone)
-                } else if $0 == "apple" {
-                    loginListPageSupportType.append(.apple)
-                } else if $0 == "google" {
-                    loginListPageSupportType.append(.google)
-                } else if $0 == "facebook" {
-                    loginListPageSupportType.append(.facebook)
-                } else if $0 == "github" {
-                    loginListPageSupportType.append(.github)
-                } else if $0 == "twitch" {
-                    loginListPageSupportType.append(.twitch)
-                } else if $0 == "microsoft" {
-                    loginListPageSupportType.append(.microsoft)
-                } else if $0 == "linkedin" {
-                    loginListPageSupportType.append(.linkedin)
-                } else if $0 == "discord" {
-                    loginListPageSupportType.append(.discord)
-                } else if $0 == "privatekey" {
-                    loginListPageSupportType.append(.privateKey)
-                } else if $0 == "metamask" {
-                    loginListPageSupportType.append(.metamask)
-                } else if $0 == "rainbow" {
-                    loginListPageSupportType.append(.rainbow)
-                } else if $0 == "trust" {
-                    loginListPageSupportType.append(.trust)
-                } else if $0 == "imtoken" {
-                    loginListPageSupportType.append(.imtoken)
-                } else if $0 == "bitkeep" {
-                    loginListPageSupportType.append(.bitkeep)
-                } else if $0 == "walletConnect" {
-                    loginListPageSupportType.append(.walletConnect)
-                } else if $0 == "twitter" {
-                    loginListPageSupportType.append(.twitter)
-                }
-                }
-            }
-            if loginListPageSupportType.isEmpty {
-                observable = PNRouter.navigatorLoginList()
-            } else {
-                observable = PNRouter.navigatorLoginList(supportTypes: loginListPageSupportType)
-            }
-        } else {
-            observable = PNRouter.navigatorLoginList()
-        }
-        subscribeAndCallback(observable: observable.map { walletType, account in
-            let unityLoginListModel = UnityLoginListModel(walletType: walletType.stringValue, account: account)
-            return unityLoginListModel
-        }, unityName: UnityManager.guiSystemName, methodName: "loginList")
-    }
-    
     func switchWallet(_ json: String) {
         let data = JSON(parseJSON: json)
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
-        
-        if let walletType = map2WalletType(from: walletTypeString) {
+        if let walletType = WalletType.fromString(walletTypeString) {
             let result = ParticleWalletGUI.switchWallet(walletType: walletType, publicAddress: publicAddress)
             
-            let statusModel = UnityStatusModel(status: true, data: result == true ? "success" : "failed")
+            let statusModel = PNStatusModel(status: true, data: result == true ? "success" : "failed")
             
             let data = try! JSONEncoder().encode(statusModel)
             guard let json = String(data: data, encoding: .utf8) else { return }
             callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "switchWallet")
         } else {
             print("walletType \(walletTypeString) is not existed")
-            let response = UnityResponseError(code: nil, message: "walletType \(walletTypeString) is not existed", data: nil)
-            let statusModel = UnityStatusModel(status: false, data: response)
+            let response = PNResponseError(code: nil, message: "walletType \(walletTypeString) is not existed", data: nil)
+            let statusModel = PNStatusModel(status: false, data: response)
             let data = try! JSONEncoder().encode(statusModel)
             guard let json = String(data: data, encoding: .utf8) else { return }
             callBackMessage(json, unityName: UnityManager.guiSystemName, methodName: "switchWallet")
@@ -536,10 +478,10 @@ extension UnityManager {
         }
     }
 
-    func loadCustomUIJsonString(_ json: String) {
+    func setCustomUIConfigJsonString(_ json: String) {
         let jsonString = json
         do {
-            try ParticleWalletGUI.loadCustomUIJsonString(jsonString)
+            try ParticleNetwork.setCustomUIConfigJsonString(jsonString)
         } catch {
             print("loadCustomUIJsonString error = \(error)")
         }
@@ -551,7 +493,6 @@ extension UnityManager {
         let name = data["name"].stringValue
         let icon = data["icon"].stringValue
 
-        ConnectManager.setCustomWalletName(walletType: .particle, name: .init(name: name, icon: icon))
         ConnectManager.setCustomWalletName(walletType: .authCore, name: .init(name: name, icon: icon))
     }
     
@@ -611,28 +552,11 @@ extension UnityManager {
         
         let dAppData = DAppMetaData(name: dAppName, icon: dAppIconUrl, url: dAppUrl, description: description, redirectUniversalLink: redirect)
         
-        var adapters: [ConnectAdapter] = []
-        let evmRpcUrl = data["rpc_url"]["evm_url"].stringValue
-        if evmRpcUrl.isEmpty {
-            adapters.append(EVMConnectAdapter())
-        } else {
-            adapters.append(EVMConnectAdapter(rpcUrl: evmRpcUrl))
-        }
-        let solanaRpcUrl = data["rpc_url"]["sol_url"].stringValue
-        if solanaRpcUrl.isEmpty {
-            adapters.append(SolanaConnectAdapter())
-        } else {
-            adapters.append(SolanaConnectAdapter(rpcUrl: solanaRpcUrl))
-        }
-        
-        adapters.append(PhantomConnectAdapter())
-        
-        adapters.append(AuthCoreAdapter())
-        
-        adapters.append(contentsOf: [
+        var adapters: [ConnectAdapter] = [
+            AuthCoreAdapter(),
             MetaMaskConnectAdapter(),
             RainbowConnectAdapter(),
-            BitkeepConnectAdapter(),
+            BitgetConnectAdapter(),
             ImtokenConnectAdapter(),
             TrustConnectAdapter(),
             WalletConnectAdapter(),
@@ -641,17 +565,25 @@ extension UnityManager {
             Inch1ConnectAdapter(),
             ZengoConnectAdapter(),
             AlphaConnectAdapter(),
-            OKXConnectAdapter()
-        ])
+            OKXConnectAdapter(),
+            PhantomConnectAdapter(),
+        ]
         
-        ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData) {
-            adapters
-        }
+        #if canImport(ConnectEVMAdapter)
+        adapters.append(EVMConnectAdapter())
+        #endif
+        #if canImport(ConnectSolanaAdapter)
+        adapters.append(SolanaConnectAdapter())
+        #endif
+        
+        ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData, adapters: adapters)
+        
+        ParticleWalletGUI.setAdapters(ParticleConnect.getAllAdapters())
     }
     
     func adapterGetAccounts(_ json: String) -> String {
         let walletTypeString = json
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             return ""
         }
         guard let adapter = map2ConnectAdapter(from: walletType) else {
@@ -668,7 +600,7 @@ extension UnityManager {
     func adapterConnect(_ json: String, configJson: String) {
         let walletTypeString = json
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -754,7 +686,7 @@ extension UnityManager {
             particleAuthCoreConfig = ParticleAuthCoreConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, account: account, code: code, socialLoginPrompt: socialLoginPrompt, loginPageConfig: loginPageConfig)
         }
         
-        var observable: Single<Account?>
+        var observable: Single<Account>
         if walletType == .authCore {
             observable = adapter.connect(particleAuthCoreConfig)
 
@@ -770,7 +702,7 @@ extension UnityManager {
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -787,7 +719,7 @@ extension UnityManager {
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return false
         }
@@ -805,7 +737,7 @@ extension UnityManager {
         let publicAddress = data["public_address"].stringValue
         let transaction = data["transaction"].stringValue
                 
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -857,7 +789,7 @@ extension UnityManager {
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
                 
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -901,7 +833,7 @@ extension UnityManager {
         let publicAddress = data["public_address"].stringValue
         let transaction = data["transaction"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -922,7 +854,7 @@ extension UnityManager {
             $0.stringValue
         }
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -941,7 +873,7 @@ extension UnityManager {
         let publicAddress = data["public_address"].stringValue
         let message = data["message"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -960,7 +892,7 @@ extension UnityManager {
         let publicAddress = data["public_address"].stringValue
         let message = data["message"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -978,7 +910,7 @@ extension UnityManager {
         let walletTypeString = data["wallet_type"].stringValue
         let privateKey = data["private_key"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -1001,7 +933,7 @@ extension UnityManager {
         let walletTypeString = data["wallet_type"].stringValue
         let mnemonic = data["mnemonic"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -1024,7 +956,7 @@ extension UnityManager {
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -1049,7 +981,7 @@ extension UnityManager {
         let domain = data["domain"].stringValue
         guard let uri = URL(string: data["uri"].stringValue) else { return }
         
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -1064,8 +996,8 @@ extension UnityManager {
             return
         }
         
-        subscribeAndCallback(observable: adapter.login(config: siwe, publicAddress: publicAddress).map { sourceMessage, signedMessage in
-            UnityConnectLoginResult(message: sourceMessage, signature: signedMessage)
+        subscribeAndCallback(observable: adapter.signInWithEthereum(config: siwe, publicAddress: publicAddress).map { sourceMessage, signedMessage in
+            PNConnectLoginResult(message: sourceMessage, signature: signedMessage)
         }, unityName: UnityManager.connectSystemName, methodName: "login")
     }
     
@@ -1080,7 +1012,7 @@ extension UnityManager {
             signature = Base58.encode(Data(base64Encoded: signature)!)
         }
                 
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
             return
         }
@@ -1102,18 +1034,18 @@ extension UnityManager {
         let data = JSON(parseJSON: json)
         let walletTypeString = data["wallet_type"].stringValue
 
-        guard let walletType = map2WalletType(from: walletTypeString) else {
+        guard let walletType = WalletType.fromString(walletTypeString) else {
             print("walletType \(walletTypeString) is not existed ")
-            let response = UnityResponseError(code: nil, message: "walletType \(walletTypeString) is not existed", data: nil)
-            let statusModel = UnityStatusModel(status: false, data: response)
+            let response = PNResponseError(code: nil, message: "walletType \(walletTypeString) is not existed", data: nil)
+            let statusModel = PNStatusModel(status: false, data: response)
             let data = try! JSONEncoder().encode(statusModel)
             guard let json = String(data: data, encoding: .utf8) else { return "" }
             return json
         }
         guard let adapter = map2ConnectAdapter(from: walletType) else {
             print("adapter for \(walletTypeString) is not init ")
-            let response = UnityResponseError(code: nil, message: "adapter for \(walletTypeString) is not init", data: nil)
-            let statusModel = UnityStatusModel(status: false, data: response)
+            let response = PNResponseError(code: nil, message: "adapter for \(walletTypeString) is not init", data: nil)
+            let statusModel = PNStatusModel(status: false, data: response)
             let data = try! JSONEncoder().encode(statusModel)
             guard let json = String(data: data, encoding: .utf8) else { return "" }
             return json
@@ -1617,14 +1549,6 @@ extension UnityManager {
         }
         subscribeAndCallback(observable: observable, unityName: UnityManager.authCoreSystemName, methodName: "solanaSignAndSendTransaction")
     }
-    
-    func authCoreSetCustomUI(_ json: String) {
-        do {
-            try Auth.loadCustomUIJsonString(json)
-        } catch {
-            print("auth core set custom ui error \(error)")
-        }
-    }
 }
 
 // MARK: - Help methods
@@ -1649,74 +1573,14 @@ extension Dictionary {
 }
 
 extension UnityManager {
-    private func ResponseFromError(_ error: Error) -> UnityResponseError {
+    private func ResponseFromError(_ error: Error) -> PNResponseError {
         if let responseError = error as? ParticleNetwork.ResponseError {
-            return UnityResponseError(code: responseError.code, message: responseError.message ?? "", data: responseError.data)
+            return PNResponseError(code: responseError.code, message: responseError.message ?? "", data: responseError.data)
         } else if let error = error as? ConnectError {
-            return UnityResponseError(code: error.code, message: error.message!, data: nil)
+            return PNResponseError(code: error.code, message: error.message!, data: nil)
         } else {
-            return UnityResponseError(code: nil, message: String(describing: error), data: nil)
+            return PNResponseError(code: nil, message: String(describing: error), data: nil)
         }
-    }
-    
-    private func map2WalletType(from string: String) -> WalletType? {
-        /* Define in unity
-         AuthCore,
-         EvmPrivateKey,
-         SolanaPrivateKey,
-         MetaMask,
-         Rainbow,
-         Trust,
-         ImToken,
-         BitKeep,
-         WalletConnect,
-         Phantom,
-         Zerion,
-         Math,
-         Inch1,
-         Zengo,
-         Alpha,
-         OKX,
-         */
-        let str = string.lowercased()
-        var walletType: WalletType?
-        if str == "authcore" {
-            walletType = .authCore
-        } else if str == "evmprivatekey" {
-            walletType = .evmPrivateKey
-        } else if str == "solanaprivatekey" {
-            walletType = .solanaPrivateKey
-        } else if str == "metamask" {
-            walletType = .metaMask
-        } else if str == "rainbow" {
-            walletType = .rainbow
-        } else if str == "trust" {
-            walletType = .trust
-        } else if str == "imtoken" {
-            walletType = .imtoken
-        } else if str == "bitkeep" {
-            walletType = .bitkeep
-        } else if str == "walletconnect" {
-            walletType = .walletConnect
-        } else if str == "phantom" {
-            walletType = .phantom
-        } else if str == "zerion" {
-            walletType = .zerion
-        } else if str == "math" {
-            walletType = .math
-        } else if str == "zengo" {
-            walletType = .zengo
-        } else if str == "alpha" {
-            walletType = .alpha
-        } else if str == "inch1" {
-            walletType = .inch1
-        } else if str == "okx" {
-            walletType = .okx
-        } else {
-            walletType = nil
-        }
-        
-        return walletType
     }
     
     private func map2ConnectAdapter(from walletType: WalletType) -> ConnectAdapter? {
@@ -1729,7 +1593,7 @@ extension UnityManager {
 }
 
 extension UnityManager: MessageSigner {
-    public func signMessage(_ message: String, chainInfo: ParticleNetworkBase.ParticleNetwork.ChainInfo?) -> RxSwift.Single<String> {
+    public func signMessage(_ message: String, chainInfo: ChainInfo?) -> RxSwift.Single<String> {
         guard let walletType = latestWalletType else {
             print("walletType is nil")
             return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))
@@ -1742,8 +1606,6 @@ extension UnityManager: MessageSigner {
                 
                 return try await self.auth.evm.personalSign(message, chainInfo: chainInfo)
             }
-            print("authCore framework is not added")
-            return .error(ParticleNetwork.ResponseError(code: nil, message: "authCore framework is not added"))
         } else {
             guard let adapter = map2ConnectAdapter(from: walletType) else {
                 print("adapter for \(walletType) is not init")
@@ -1759,23 +1621,18 @@ extension UnityManager: MessageSigner {
     }
 }
 
-struct UnityResponseError: Codable {
+struct PNResponseError: Codable {
     let code: Int?
     let message: String?
     let data: String?
 }
 
-struct UnityStatusModel<T: Codable>: Codable {
+struct PNStatusModel<T: Codable>: Codable {
     let status: Bool
     let data: T?
 }
 
-struct UnityLoginListModel: Codable {
-    let walletType: String
-    let account: Account?
-}
-
-struct UnityConnectLoginResult: Codable {
+struct PNConnectLoginResult: Codable {
     let message: String
     let signature: String
 }
@@ -1787,12 +1644,12 @@ extension UnityManager {
             switch result {
             case .failure(let error):
                 let response = self.ResponseFromError(error)
-                let statusModel = UnityStatusModel(status: false, data: response)
+                let statusModel = PNStatusModel(status: false, data: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: unityName, methodName: methodName)
             case .success(let signedMessage):
-                let statusModel = UnityStatusModel(status: true, data: signedMessage)
+                let statusModel = PNStatusModel(status: true, data: signedMessage)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
                 self.callBackMessage(json, unityName: unityName, methodName: methodName)

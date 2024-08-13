@@ -585,14 +585,5 @@ namespace Network.Particle.Scripts.Test
         {
             ParticleAuthCoreInteraction.SetBlindEnable(true);
         }
-
-        public void SetCustomUI()
-        {
-            // Only works for iOS
-            // your custom ui json
-            var txtAsset = Resources.Load<TextAsset>("customUIConfig");
-            string json = txtAsset.text;
-            ParticleAuthCoreInteraction.SetCustomUI(json);
-        }
     }
 }

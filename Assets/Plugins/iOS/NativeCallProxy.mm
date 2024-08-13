@@ -45,6 +45,10 @@ extern "C" {
     void setSecurityAccountConfig(const char* json) {
         [api setSecurityAccountConfig:[NSString stringWithUTF8String: json]];
     }
+    
+    void setCustomUIConfigJsonString(const char* json) {
+        [api setCustomUIConfigJsonString:[NSString stringWithUTF8String: json]];
+    }
 }
 
 // Particle Wallet GUI
@@ -99,10 +103,6 @@ extern "C" {
     
     void navigatorSwap(const char* json) {
         [api navigatorSwap:[NSString stringWithUTF8String: json]];
-    }
-    
-    void navigatorLoginList(const char* json)  {
-        [api navigatorLoginList:[NSString stringWithUTF8String: json]];
     }
     
     void setShowTestNetwork(bool show) {
@@ -163,10 +163,6 @@ extern "C" {
 
     void setPriorityNFTContractAddresses(const char* json) {
         [api setPriorityNFTContractAddresses:[NSString stringWithUTF8String: json]];
-    }
-
-    void loadCustomUIJsonString(const char* json) {
-        [api loadCustomUIJsonString:[NSString stringWithUTF8String: json]];
     }
 
     void setCustomWalletName(const char* json) {
@@ -398,9 +394,6 @@ extern "C" {
         [api authCoreSolanaSignAndSendTransaction: [NSString stringWithUTF8String: json]];
     }
 
-    void authCoreSetCustomUI(const char* json) {
-        [api authCoreSetCustomUI: [NSString stringWithUTF8String: json]];
-    }
 }
 
 // rename to cStringCopyPN in case meet same name function from other library.

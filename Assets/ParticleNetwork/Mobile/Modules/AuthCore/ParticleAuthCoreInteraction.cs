@@ -448,17 +448,5 @@ ParticleNetwork.CallAuthCoreNative("evmSendTransaction",json);
             return;
 #endif
         }
-
-        public static void SetCustomUI(string json)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-// todo 
-            // ParticleNetwork.CallAuthCoreNative("solanaSignAndSendTransaction",transaction);
-#elif UNITY_IOS &&!UNITY_EDITOR
-            ParticleNetworkIOSBridge.authCoreSetCustomUI(json);
-#else
-            return;
-#endif
-        }
     }
 }

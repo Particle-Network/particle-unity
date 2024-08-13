@@ -152,6 +152,22 @@ namespace Network.Particle.Scripts.Core
 #else
 #endif
         }
+        
+        
+        /// <summary>
+        /// Set custom ui config json string
+        /// </summary>
+        /// <param name="jsonString"></param>
+        public static void setCustomUIConfigJsonString(String jsonString)
+        {
+            
+#if UNITY_ANDROID && !UNITY_EDITOR
+
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.setCustomUIConfigJsonString(jsonString);
+#else
+#endif
+        }
 
         public static void CallNative(string methodName, params object[] args)
         {

@@ -22,6 +22,7 @@
 - (void) setLanguage:(NSString* _Nonnull)json;
 - (void) setFiatCoin:(NSString*_Nonnull)json;
 - (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
+- (void) setCustomUIConfigJsonString:(NSString* _Nonnull)json;
 
 // Particle Wallet GUI
 - (void) setPayDisabled:(BOOL)disabled;
@@ -37,7 +38,6 @@
 - (void) navigatorNFTDetails:(NSString*_Nonnull)json;
 - (void) navigatorBuyCrypto:(NSString*_Nonnull)json;
 - (void) navigatorSwap:(NSString* _Nullable)json;
-- (void) navigatorLoginList:(NSString* _Nullable)json;
 - (void) setShowTestNetwork:(BOOL)show;
 - (void) setShowManageWallet:(BOOL)show;
 - (void) setSupportChain:(NSString*_Nonnull)json;
@@ -53,7 +53,6 @@
 - (void) setDisplayNFTContractAddresses:(NSString*_Nonnull)json;
 - (void) setPriorityTokenAddresses:(NSString*_Nonnull)json;
 - (void) setPriorityNFTContractAddresses:(NSString*_Nonnull)json;
-- (void) loadCustomUIJsonString:(NSString*_Nonnull)json;
 - (void) setCustomWalletName:(NSString*_Nonnull)json;
 - (void) setCustomLocalizable:(NSString*_Nonnull)json;
 
@@ -117,7 +116,6 @@
 - (void) authCoreSolanaSignTransaction:(NSString* _Nonnull)json;
 - (void) authCoreSolanaSignAllTransactions:(NSString* _Nonnull)json;
 - (void) authCoreSolanaSignAndSendTransaction:(NSString* _Nonnull)json;
-- (void) authCoreSetCustomUI:(NSString* _Nonnull)json;
 @end
 
 __attribute__ ((visibility("default")))

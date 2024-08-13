@@ -15,8 +15,6 @@ namespace Network.Particle.Scripts.Core
     {
         private TaskCompletionSource<NativeResultData> switchWallet;
 
-        private TaskCompletionSource<NativeResultData> loginListTask;
-
         /// <summary>
         /// Open Wallet page
         /// </summary>
@@ -278,43 +276,7 @@ namespace Network.Particle.Scripts.Core
 #else
 #endif
         }
-
-
-        /// <summary>
-        /// Open Login List page
-        /// </summary>
-        /// <returns></returns>
-        public Task<NativeResultData> NavigatorLoginList(List<LoginListPageSupportType> supportTypes)
-        {
-            loginListTask = new TaskCompletionSource<NativeResultData>();
-
-            var json = JsonConvert.SerializeObject(supportTypes.Select(x => x.ToString()));
-#if UNITY_EDITOR
-            LoginListCallBack(JsonConvert.SerializeObject(new JObject
-            {
-                { "status", 0 },
-                { "data", "" },
-            }));
-#elif UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.CallNative("navigatorLoginList");
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.navigatorLoginList(json);
-#endif
-            return loginListTask.Task;
-        }
-
-        /// <summary>
-        /// Login list call back
-        /// </summary>
-        /// <param name="json">Result</param>
-        public void LoginListCallBack(string json)
-        {
-            Debug.Log($"LoginListCallBack:{json}");
-            var resultData = JObject.Parse(json);
-            var status = (int)resultData["status"];
-            loginListTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
-        }
-
+        
         /// <summary>
         /// Set Show Test Network
         /// </summary>
@@ -591,21 +553,6 @@ namespace Network.Particle.Scripts.Core
             ParticleNetwork.GetUnityBridgeClass().CallStatic("setPriorityNFTContractAddresses",json);
 #elif UNITY_IOS && !UNITY_EDITOR
             ParticleNetworkIOSBridge.setPriorityNFTContractAddresses(json);
-#else
-
-#endif
-        }
-
-        /// <summary>
-        /// Load custom ui json string
-        /// Only works for iOS
-        /// </summary>
-        /// <param name="json">Json string</param>
-        public static void LoadCustomUIJsonString(string json)
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-#elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.loadCustomUIJsonString(json);
 #else
 
 #endif

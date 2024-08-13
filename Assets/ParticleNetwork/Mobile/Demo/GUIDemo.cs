@@ -116,29 +116,6 @@ namespace Network.Particle.Scripts.Test
             ParticleWalletGUI.NavigatorBuyCrypto(config);
         }
 
-        public async void NavigatorLoginList()
-        {
-            var nativeResultData = await ParticleWalletGUI.Instance.NavigatorLoginList(
-                new List<LoginListPageSupportType>
-                {
-                    LoginListPageSupportType.all
-                });
-
-            Debug.Log(nativeResultData.data);
-
-            if (nativeResultData.isSuccess)
-            {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
-                Debug.Log(nativeResultData.data);
-            }
-            else
-            {
-                ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
-                var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
-                Debug.Log(errorData);
-            }
-        }
-
         public void NavigatorSwap()
         {
             ParticleWalletGUI.NavigatorSwap();
@@ -250,7 +227,7 @@ namespace Network.Particle.Scripts.Test
             // your custom ui json
             var txtAsset = Resources.Load<TextAsset>("customUIConfig");
             string json = txtAsset.text;
-            ParticleWalletGUI.LoadCustomUIJsonString(json);
+            ParticleNetwork.setCustomUIConfigJsonString(json);
 
             // Only works for iOS
             // set your wallet name and icon, only support particle auth wallet and particle auth core wallet,

@@ -26,7 +26,6 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> importPrivateKeyTask;
         private TaskCompletionSource<NativeResultData> importMnemonicTask;
         private TaskCompletionSource<NativeResultData> exportPrivateKeyTask;
-        private TaskCompletionSource<NativeResultData> loginListTask;
 
 
         /// <summary>

@@ -805,7 +805,7 @@ PlayerSettings:
   webGLPowerPreference: 2
   scriptingDefineSymbols:
     : GLOBAL
-    Standalone: VUPLEX_STANDALONE
+    Standalone: 
     iPhone: VUPLEX_CCU;VUPLEX_STANDALONE
   additionalCompilerArguments: {}
   platformArchitecture: {}
