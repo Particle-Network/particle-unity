@@ -263,7 +263,7 @@ namespace Network.Particle.Scripts.Test
         {
             var chainInfo = ParticleNetwork.GetChainInfo();
             Debug.Log(
-                $"chain name {chainInfo.Name}, chain id {chainInfo.Id}, chain id name {chainInfo.Network}");
+                $"chain name {chainInfo.Name}, chain id {chainInfo.Id}");
         }
 
         public async void OpenAccountAndSecurity()
@@ -584,6 +584,17 @@ namespace Network.Particle.Scripts.Test
         public void SetBlindEnable()
         {
             ParticleAuthCoreInteraction.SetBlindEnable(true);
+        }
+
+        public void SetLanguage()
+        {
+            ParticleNetwork.SetLanguage(Language.ZH_CN);
+        }
+
+        public void GetLanguage()
+        {
+            var language = ParticleNetwork.GetLanguage();
+            Debug.Log(language);
         }
     }
 }

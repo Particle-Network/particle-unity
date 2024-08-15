@@ -96,7 +96,6 @@
     <Compile Include="Assets/ParticleNetwork/Share/Model/NetParams.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/Benchmark02.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/WalletReadyState.cs" />
-    <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/LoginListSupportType.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/LoginInfo.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Connect/SelectChainPage.cs" />
     <Compile Include="Assets/ParticleNetwork/Share/UnityRpc/UnityRPC.cs" />

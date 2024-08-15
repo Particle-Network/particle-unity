@@ -50,6 +50,9 @@ namespace Network.Particle.Scripts.Test
             // Set language
             ParticleNetwork.SetLanguage(Language.KO);
 
+            var language= ParticleNetwork.GetLanguage();
+            Debug.Log(language);
+
             // Control if show language setting button in setting page.
             ParticleWalletGUI.SetShowLanguageSetting(true);
 

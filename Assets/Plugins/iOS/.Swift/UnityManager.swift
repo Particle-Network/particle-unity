@@ -93,25 +93,7 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
 
 extension UnityManager {
     func initialize(_ json: String) {
-        let data = JSON(parseJSON: json)
-        let chainId = data["chain_id"].intValue
-        let name = data["c"].stringValue.lowercased()
-        let chainType: ChainType = name == "solana" ? .solana : .evm
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else {
-            return print("initialize error, can't find right chain for \(name), chainId \(chainId)")
-        }
-        let env = data["env"].stringValue.lowercased()
-        var devEnv: ParticleNetwork.DevEnvironment = .production
-        if env == "dev" {
-            devEnv = .debug
-        } else if env == "staging" {
-            devEnv = .staging
-        } else if env == "production" {
-            devEnv = .production
-        }
-        
-        let config = ParticleNetworkConfiguration(chainInfo: chainInfo, devEnv: devEnv)
-        ParticleNetwork.initialize(config: config)
+        ShareBase.initialize(json)
     }
     
     func getDevEnv() -> Int {
@@ -119,60 +101,35 @@ extension UnityManager {
     }
     
     func setChainInfo(_ json: String) -> Bool {
-        let data = JSON(parseJSON: json)
-        let chainId = data["chain_id"].intValue
-        let name = data["chain_name"].stringValue.lowercased()
-        let chainType: ChainType = name == "solana" ? .solana : .evm
-        guard let chainInfo = ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType) else { return false }
-        ParticleNetwork.setChainInfo(chainInfo)
-        return true
+        return ShareBase.setChainInfo(json)
     }
     
     func getChainInfo() -> String {
-        let chainInfo = ParticleNetwork.getChainInfo()
-        return ["chain_name": chainInfo.name, "chain_id": chainInfo.chainId, "chain_id_name": chainInfo.network].jsonString() ?? ""
+        return ShareBase.getChainInfo()
     }
     
     func setLanguage(_ json: String) {
-        /**
-         ZH_CN,
-         ZH_TW,
-         EN,
-         JA,
-         KO,
-         */
-        
-        if let language = getLanguage(from: json) {
-            ParticleNetwork.setLanguage(language)
+        ShareBase.setLanguage(json)
+    }
+    
+    func getLanguage() -> String {
+        var value = ShareBase.getLanguage()
+        if value == "zh_hans" {
+            value = "zh_cn"
+        } else if value == "zh_hant" {
+            value = "zh_tw"
         }
+        return value
     }
     
     func setAppearance(_ json: String) {
-        /**
-         SYSTEM,
-         LIGHT,
-         DARK,
-         */
-        var appearance: UIUserInterfaceStyle = .unspecified
-        if json.lowercased() == "system" {
-            appearance = UIUserInterfaceStyle.unspecified
-        } else if json.lowercased() == "light" {
-            appearance = UIUserInterfaceStyle.light
-        } else if json.lowercased() == "dark" {
-            appearance = UIUserInterfaceStyle.dark
-        }
-        ParticleNetwork.setAppearance(appearance)
+        ShareBase.setAppearance(json)
     }
     
     func setSecurityAccountConfig(_ json: String) {
-        let data = JSON(parseJSON: json)
-        let promptSettingWhenSign = data["prompt_setting_when_sign"].intValue
-        let promptMasterPasswordSettingWhenLogin = data["prompt_master_password_setting_when_login"].intValue
-        ParticleNetwork.setSecurityAccountConfig(config: .init(promptSettingWhenSign: promptSettingWhenSign, promptMasterPasswordSettingWhenLogin: promptMasterPasswordSettingWhenLogin))
+        ShareBase.setSecurityAccountConfig(json)
     }
 }
-
-// MARK: - Particle Auth Service
 
 // MARK: - Particle Wallet GUI
 
@@ -586,7 +543,7 @@ extension UnityManager {
 
         var accounts: [Account] = []
         
-        if let walletType = map2WalletType(from: walletTypeString), let adapter = map2ConnectAdapter(from: walletType) {
+        if let walletType = WalletType.fromString(walletTypeString), let adapter = map2ConnectAdapter(from: walletType) {
             accounts = adapter.getAccounts()
         } else {
             accounts = []
@@ -1562,28 +1519,7 @@ extension UnityManager {
     }
 }
 
-extension Dictionary {
-    /// - Parameter prettify: set true to prettify string (default is false).
-    /// - Returns: optional JSON String (if applicable).
-    func jsonString(prettify: Bool = false) -> String? {
-        guard JSONSerialization.isValidJSONObject(self) else { return nil }
-        let options = (prettify == true) ? JSONSerialization.WritingOptions.prettyPrinted : JSONSerialization.WritingOptions()
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: self, options: options) else { return nil }
-        return String(data: jsonData, encoding: .utf8)
-    }
-}
-
 extension UnityManager {
-    private func ResponseFromError(_ error: Error) -> PNResponseError {
-        if let responseError = error as? ParticleNetwork.ResponseError {
-            return PNResponseError(code: responseError.code, message: responseError.message ?? "", data: responseError.data)
-        } else if let error = error as? ConnectError {
-            return PNResponseError(code: error.code, message: error.message!, data: nil)
-        } else {
-            return PNResponseError(code: nil, message: String(describing: error), data: nil)
-        }
-    }
-    
     private func map2ConnectAdapter(from walletType: WalletType) -> ConnectAdapter? {
         let adapters = ParticleConnect.getAllAdapters().filter {
             $0.walletType == walletType
@@ -1620,17 +1556,6 @@ extension UnityManager: MessageSigner {
     public func getEoaAddress() -> String {
         return latestPublicAddress ?? ""
     }
-}
-
-struct PNResponseError: Codable {
-    let code: Int?
-    let message: String?
-    let data: String?
-}
-
-struct PNStatusModel<T: Codable>: Codable {
-    let status: Bool
-    let data: T?
 }
 
 struct PNConnectLoginResult: Codable {

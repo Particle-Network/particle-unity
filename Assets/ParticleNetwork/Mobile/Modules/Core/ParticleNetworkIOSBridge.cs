@@ -28,6 +28,9 @@ namespace Network.Particle.Scripts.Core
         public static extern void setLanguage(string json);
 
         [DllImport("__Internal")]
+        public static extern string getLanguage();
+
+        [DllImport("__Internal")]
         public static extern void setFiatCoin(string json);
 
         [DllImport("__Internal")]

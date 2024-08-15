@@ -27,7 +27,6 @@ namespace Network.Particle.Scripts.Core
             {
                 { "chain_name", chainInfo.Name },
                 { "chain_id", chainInfo.Id },
-                { "chain_id_name", chainInfo.Network },
                 { "env", env.ToString() }
             });
 
@@ -47,7 +46,6 @@ namespace Network.Particle.Scripts.Core
             {
                 { "chain_name", chainInfo.Name },
                 { "chain_id", chainInfo.Id },
-                { "chain_id_name", chainInfo.Network },
             });
 
 
@@ -127,6 +125,32 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
+        public static Language GetLanguage()
+        {
+            var languageString = "";
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            languageString = ParticleNetwork.GetUnityBridgeClass().CallStatic("getLanguage",language.ToString());
+#elif UNITY_IOS && !UNITY_EDITOR
+            languageString = ParticleNetworkIOSBridge.getLanguage();
+#else
+            languageString = "en";
+#endif
+            Language languageEnum;
+
+            languageString = languageString.ToUpper();
+
+            if (Enum.TryParse(languageString, out languageEnum))
+            {
+                return languageEnum;
+                Console.WriteLine($"Successfully converted '{languageString}' to {languageEnum}");
+            }
+            else
+            {
+                return Language.EN;
+            }
+        }
+
         /// <summary>
         /// Set fiat coin, currently support USD, CNY, JPY, HKD, INR, KRW.
         /// </summary>
@@ -152,17 +176,15 @@ namespace Network.Particle.Scripts.Core
 #else
 #endif
         }
-        
-        
+
+
         /// <summary>
         /// Set custom ui config json string
         /// </summary>
         /// <param name="jsonString"></param>
-        public static void setCustomUIConfigJsonString(String jsonString)
+        public static void SetCustomUIConfigJsonString(String jsonString)
         {
-            
 #if UNITY_ANDROID && !UNITY_EDITOR
-
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.setCustomUIConfigJsonString(jsonString);
 #else

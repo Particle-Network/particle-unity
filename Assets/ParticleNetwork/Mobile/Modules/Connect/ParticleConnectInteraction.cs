@@ -12,16 +12,6 @@ namespace Network.Particle.Scripts.Core
 {
     public static class ParticleConnectInteraction
     {
-        /**
-         * {
-            "chain_name": "BSC",
-            "chain_id": 56,
-            "chain_id_name": "Mainnet",
-            "env": "PRODUCTION",
-            "metadata": "{"name":"Particle Connect","icon":"https://static.particle.network/wallet-icons/Particle.png","url":"https://particle.network"}",
-            "rpc_url": null
-        }
-         */
         public static void Init(ChainInfo chainInfo, DAppMetaData dAppMetadata, [CanBeNull] RpcUrl rpcUrl = null,
             Env env = Env.DEV)
         {
@@ -29,7 +19,6 @@ namespace Network.Particle.Scripts.Core
             {
                 { "chain_name", chainInfo.Name },
                 { "chain_id", chainInfo.Id },
-                { "chain_id_name", chainInfo.Network },
                 { "env", env.ToString() },
                 { "metadata", JToken.FromObject(dAppMetadata) },
                 { "rpc_url", rpcUrl == null ? null : JToken.FromObject(rpcUrl) }
@@ -53,7 +42,6 @@ namespace Network.Particle.Scripts.Core
                 {
                     { "chain_name", chainInfo.Name },
                     { "chain_id", chainInfo.Id },
-                    { "chain_id_name", chainInfo.Network },
                 };
                 allInfos.Add(info);
             }

@@ -12,13 +12,7 @@ public class NativeResultData
     public string data;
 }
 
-/*
-  {
-     "chain_name": "Solana",
-     "chain_id": 1,
-     "chain_id_name":"Mainnet"
- }
- */
+
 class NativeChainInfo
 {
     [JsonProperty(PropertyName = "chain_name")]

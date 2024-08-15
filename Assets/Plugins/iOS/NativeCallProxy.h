@@ -20,6 +20,7 @@
 - (BOOL) setChainInfo:(NSString* _Nonnull)json;
 - (void) setAppearance:(NSString* _Nonnull)json;
 - (void) setLanguage:(NSString* _Nonnull)json;
+- (NSString* _Nonnull)getLanguage;
 - (void) setFiatCoin:(NSString*_Nonnull)json;
 - (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
 - (void) setCustomUIConfigJsonString:(NSString* _Nonnull)json;

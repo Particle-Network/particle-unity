@@ -368,7 +368,6 @@ namespace Network.Particle.Scripts.Core
                 {
                     { "chain_name", chainInfo.Name },
                     { "chain_id", chainInfo.Id },
-                    { "chain_id_name", chainInfo.Network },
                 };
                 allInfos.Add(info);
             }

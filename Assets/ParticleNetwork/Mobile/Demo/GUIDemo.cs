@@ -227,7 +227,7 @@ namespace Network.Particle.Scripts.Test
             // your custom ui json
             var txtAsset = Resources.Load<TextAsset>("customUIConfig");
             string json = txtAsset.text;
-            ParticleNetwork.setCustomUIConfigJsonString(json);
+            ParticleNetwork.SetCustomUIConfigJsonString(json);
 
             // Only works for iOS
             // set your wallet name and icon, only support particle auth wallet and particle auth core wallet,

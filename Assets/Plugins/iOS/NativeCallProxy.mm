@@ -33,6 +33,11 @@ extern "C" {
     void setLanguage(const char* json) {
         [api setLanguage:[NSString stringWithUTF8String: json]];
     }
+    
+    char* getLanguage() {
+        char* cStringCopyPN(const char* string);
+        return cStringCopyPN([[api getLanguage] UTF8String]);
+    }
 
     void setFiatCoin(const char* json) {
         [api setFiatCoin:[NSString stringWithUTF8String: json]];
