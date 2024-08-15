@@ -583,14 +583,15 @@ extension UnityManager {
     
     func adapterGetAccounts(_ json: String) -> String {
         let walletTypeString = json
-        guard let walletType = WalletType.fromString(walletTypeString) else {
-            return ""
-        }
-        guard let adapter = map2ConnectAdapter(from: walletType) else {
-            return ""
+
+        var accounts: [Account] = []
+        
+        if let walletType = map2WalletType(from: walletTypeString), let adapter = map2ConnectAdapter(from: walletType) {
+            accounts = adapter.getAccounts()
+        } else {
+            accounts = []
         }
         
-        let accounts = adapter.getAccounts()
         let data = try! JSONEncoder().encode(accounts)
         let json = String(data: data, encoding: .utf8) ?? ""
         
