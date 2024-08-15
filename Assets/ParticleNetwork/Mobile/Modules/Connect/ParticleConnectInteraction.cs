@@ -159,10 +159,8 @@ namespace Network.Particle.Scripts.Core
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
             return JsonConvert.DeserializeObject<List<Account>>(jsonString);
 #elif UNITY_IOS && !UNITY_EDITOR
-//todo:iOS
- var jsonString =
-            ParticleNetworkIOSBridge.adapterGetAccounts(walletType.ToString());
-            return JsonConvert.DeserializeObject<List<Account>>(jsonString);
+            var jsonString = ParticleNetworkIOSBridge.adapterGetAccounts(walletType.ToString());
+             return JsonConvert.DeserializeObject<List<Account>>(jsonString);
 #else
             return new List<Account>();
 #endif
