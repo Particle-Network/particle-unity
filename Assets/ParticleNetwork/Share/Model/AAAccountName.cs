@@ -34,9 +34,18 @@ namespace Network.Particle.Scripts.Model
         /// Simple Account 1.0.0
         /// </summary>
         /// <returns></returns>
-        public static AAAccountName SIMPLE()
+        public static AAAccountName SIMPLE_V1()
         {
             return new AAAccountName("SIMPLE", "1.0.0");
+        }
+        
+        /// <summary>
+        /// Simple Account 2.0.0
+        /// </summary>
+        /// <returns></returns>
+        public static AAAccountName SIMPLE_V2()
+        {
+            return new AAAccountName("SIMPLE", "2.0.0");
         }
 
         /// <summary>

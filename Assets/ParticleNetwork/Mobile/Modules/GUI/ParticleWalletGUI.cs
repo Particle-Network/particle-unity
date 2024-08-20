@@ -187,6 +187,35 @@ namespace Network.Particle.Scripts.Core
             return true;
 #endif
         }
+        
+        /// <summary>
+        /// Set bridge disabled
+        /// </summary>
+        /// <param name="disabled"></param>
+        public static void SetBridgeDisabled(bool disabled)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+            ParticleNetwork.CallNative("setBridgeDisabled",disabled);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.setBridgeDisabled(disabled);
+#else
+#endif
+        }
+
+        /// <summary>
+        /// Get bridge disabled
+        /// </summary>
+        /// <returns></returns>
+        public static bool GetBridgeDisabled()
+        {
+#if UNITY_ANDROID && !UNITY_EDITO
+            return ParticleNetwork.GetUnityBridgeClass().CallStatic<bool>("getBridgeDisabled");
+#elif UNITY_IOS && !UNITY_EDITOR
+            return ParticleNetworkIOSBridge.getBridgeDisabled();
+#else
+            return true;
+#endif
+        }
 
 
         /// <summary>

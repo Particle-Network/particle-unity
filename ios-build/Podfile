@@ -7,8 +7,8 @@ target 'Unity-iPhone' do
   use_frameworks!
 
   # Particle Network Base
-  pod 'ParticleNetworkBase', '2.0.0'
-  pod 'ParticleNetworkChains', '2.0.0'
+  pod 'ParticleNetworkBase', '2.0.1'
+  pod 'ParticleNetworkChains', '2.0.1'
   
   # Particle Connect Service
   pod 'ConnectCommon', '2.0.0'
@@ -20,18 +20,18 @@ target 'Unity-iPhone' do
   pod 'ParticleConnectKit', '2.0.0'
 
   # Particle Wallet Service
-  pod 'ParticleWalletConnect', '2.0.0'
-  pod 'ParticleWalletAPI', '2.0.0'
-  pod 'ParticleWalletGUI', '2.0.0'
+  pod 'ParticleWalletConnect', '2.0.1'
+  pod 'ParticleWalletAPI', '2.0.1'
+  pod 'ParticleWalletGUI', '2.0.1'
   
   # Particle AA
-  pod 'ParticleAA', '2.0.0'
+  pod 'ParticleAA', '2.0.1'
   
   # Particle Auth Core
-  pod 'AuthCoreAdapter', '2.0.0'
-  pod 'ParticleAuthCore', '2.0.0'
-  pod 'ParticleMPCCore', '2.0.0'
-  pod 'Thresh', '2.0.0'
+  pod 'AuthCoreAdapter', '2.0.1'
+  pod 'ParticleAuthCore', '2.0.1'
+  pod 'ParticleMPCCore', '2.0.1'
+  pod 'Thresh', '2.0.1'
   
   pod 'SkeletonView', :git => 'https://github.com/SunZhiC/SkeletonView.git', :branch => 'main'
   pod 'SwiftyUserDefaults', :git => 'https://github.com/SunZhiC/SwiftyUserDefaults.git', :branch => 'master'

@@ -174,12 +174,17 @@ namespace Network.Particle.Scripts.Test
 
         public void SetPayDisabled()
         {
-            ParticleWalletGUI.SetPayDisabled(true);
+            ParticleWalletGUI.SetPayDisabled(false);
         }
 
         public void SetSwapDisabled()
         {
-            ParticleWalletGUI.SetSwapDisabled(true);
+            ParticleWalletGUI.SetSwapDisabled(false);
+        }
+        
+        public void SetBridgeDisabled()
+        {
+            ParticleWalletGUI.SetBridgeDisabled(false);
         }
 
         public void SetSupportChainInfos()
@@ -200,6 +205,12 @@ namespace Network.Particle.Scripts.Test
         {
             var result = ParticleWalletGUI.GetPayDisabled();
             Debug.Log($"Is pay disabled = {result}");
+        }
+        
+        public void GetBridgeDisabled()
+        {
+            var result = ParticleWalletGUI.GetBridgeDisabled();
+            Debug.Log($"Is bridge disabled = {result}");
         }
 
         public void SetSupportWalletConnect()

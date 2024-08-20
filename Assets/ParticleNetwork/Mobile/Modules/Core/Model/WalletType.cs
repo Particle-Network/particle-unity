@@ -7,7 +7,7 @@ namespace Network.Particle.Scripts.Model
         Rainbow,
         Trust,
         ImToken,
-        BitKeep,
+        Bitget,
         WalletConnect,
         Phantom,
         OKX,

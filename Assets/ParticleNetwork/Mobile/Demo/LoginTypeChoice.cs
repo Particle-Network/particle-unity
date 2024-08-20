@@ -13,19 +13,13 @@ public class LoginTypeChoice : SingletonMonoBehaviour<LoginTypeChoice>
 
     void Start()
     {
-        List<LoginType> loginTypes = new List<LoginType>();
-        loginTypes.Add(LoginType.PHONE);
-        loginTypes.Add(LoginType.EMAIL);
-        loginTypes.Add(LoginType.APPLE);
-        loginTypes.Add(LoginType.GOOGLE);
-        loginTypes.Add(LoginType.FACEBOOK);
-        loginTypes.Add(LoginType.GITHUB);
-        loginTypes.Add(LoginType.TWITCH);
-        loginTypes.Add(LoginType.TWITTER);
-        loginTypes.Add(LoginType.DISCORD);
-        loginTypes.Add(LoginType.LINKEDIN);
-        loginTypes.Add(LoginType.MICROSOFT);
-
+        List<LoginType> loginTypes = new List<LoginType>
+        {
+            LoginType.Phone, LoginType.Email, LoginType.Apple, LoginType.Google,
+            LoginType.Facebook, LoginType.Github, LoginType.Twitch, LoginType.Twitter, LoginType.Discord,
+            LoginType.Linkedin, LoginType.Microsoft
+        };
+        
         foreach (var loginType in loginTypes)
         {
             var loginTypeItem = Instantiate(loginTypeTemplate);

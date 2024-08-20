@@ -41,6 +41,7 @@ import UIKit
 
 @objcMembers
 class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
+    
     let bag = DisposeBag()
     
     static var shared = UnityManager()
@@ -93,27 +94,24 @@ class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
 
 extension UnityManager {
     func initialize(_ json: String) {
-        ShareBase.initialize(json)
+        ShareBase.shared.initialize(json)
     }
-    
-    func getDevEnv() -> Int {
-        return ParticleNetwork.getDevEnv().rawValue
-    }
-    
+
     func setChainInfo(_ json: String) -> Bool {
-        return ShareBase.setChainInfo(json)
+        return ShareBase.shared.setChainInfo(json)
     }
     
     func getChainInfo() -> String {
-        return ShareBase.getChainInfo()
+        let value = ShareBase.shared.getChainInfo()
+        return value
     }
     
     func setLanguage(_ json: String) {
-        ShareBase.setLanguage(json)
+        ShareBase.shared.setLanguage(json)
     }
     
     func getLanguage() -> String {
-        var value = ShareBase.getLanguage()
+        var value = ShareBase.shared.getLanguage()
         if value == "zh_hans" {
             value = "zh_cn"
         } else if value == "zh_hant" {
@@ -123,11 +121,19 @@ extension UnityManager {
     }
     
     func setAppearance(_ json: String) {
-        ShareBase.setAppearance(json)
+        ShareBase.shared.setAppearance(json)
     }
     
     func setSecurityAccountConfig(_ json: String) {
-        ShareBase.setSecurityAccountConfig(json)
+        ShareBase.shared.setSecurityAccountConfig(json)
+    }
+    
+    func setThemeColor(_ json: String) {
+        ShareBase.shared.setThemeColor(json)
+    }
+    
+    func setUnsupportCountries(_ json: String) {
+        ShareBase.shared.setUnsupportCountries(json)
     }
 }
 
@@ -932,7 +938,7 @@ extension UnityManager {
         subscribeAndCallback(observable: (adapter as! LocalAdapter).exportWalletPrivateKey(publicAddress: publicAddress), unityName: UnityManager.connectSystemName, methodName: "exportWalletPrivateKey")
     }
     
-    func adapterLogin(_ json: String) {
+    func adapterSignInWithEthereum(_ json: String) {
         let data = JSON(parseJSON: json)
         let walletTypeString = data["wallet_type"].stringValue
         let publicAddress = data["public_address"].stringValue
@@ -1558,18 +1564,13 @@ extension UnityManager: MessageSigner {
     }
 }
 
-struct PNConnectLoginResult: Codable {
-    let message: String
-    let signature: String
-}
-
 extension UnityManager {
     private func subscribeAndCallback<T: Codable>(observable: Single<T>, unityName: String, methodName: String = #function) {
         observable.subscribe { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .failure(let error):
-                let response = self.ResponseFromError(error)
+                let response = responseFromError(error)
                 let statusModel = PNStatusModel(status: false, data: response)
                 let data = try! JSONEncoder().encode(statusModel)
                 guard let json = String(data: data, encoding: .utf8) else { return }
@@ -1581,17 +1582,5 @@ extension UnityManager {
                 self.callBackMessage(json, unityName: unityName, methodName: methodName)
             }
         }.disposed(by: bag)
-    }
-}
-
-extension Single {
-    static func fromAsync<T>(_ fn: @escaping () async throws -> T) -> Single<T> {
-        .create { observer in
-            let task = Task {
-                do { try await observer(.success(fn())) }
-                catch { observer(.failure(error)) }
-            }
-            return Disposables.create { task.cancel() }
-        }.observe(on: MainScheduler.instance)
     }
 }

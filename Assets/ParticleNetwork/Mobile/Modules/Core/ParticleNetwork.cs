@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Network.Particle.Scripts.Core.Utils;
 using Newtonsoft.Json;
@@ -79,17 +80,6 @@ namespace Network.Particle.Scripts.Core
             var data = JObject.Parse(resultJson);
             var chainInfo = ChainUtils.FindChain(data["chain_name"].ToString(), (int)data["chain_id"]);
             return chainInfo;
-        }
-
-        public static int GetEnv()
-        {
-#if UNITY_ANDROID && !UNITY_EDITOR
-            return ParticleNetwork.GetUnityBridgeClass().CallStatic<int>("getEnv");
-#elif UNITY_IOS && !UNITY_EDITOR
-            return ParticleNetworkIOSBridge.getDevEnv();
-#else
-            return 0;
-#endif
         }
 
 
@@ -187,6 +177,32 @@ namespace Network.Particle.Scripts.Core
 #if UNITY_ANDROID && !UNITY_EDITOR
 #elif UNITY_IOS &&!UNITY_EDITOR
             ParticleNetworkIOSBridge.setCustomUIConfigJsonString(jsonString);
+#else
+#endif
+        }
+
+
+        public static void SetThemeColor(String hexColor)
+        {
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.setThemeColor(hexColor);
+#else
+#endif
+        }
+
+        /// <summary>
+        /// Set unsupport countries list, used with phone login UI
+        /// </summary>
+        /// <param name="isoCodeList">Is ISO 3166-1 alpha-2 code list, https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2, such as the US, the UK, etc.</param>
+        public static void SetUnsupportCountries(List<String> isoCodeList)
+        {
+            var json = JsonConvert.SerializeObject(isoCodeList);
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+#elif UNITY_IOS &&!UNITY_EDITOR
+            ParticleNetworkIOSBridge.setUnsupportCountries(json);
 #else
 #endif
         }

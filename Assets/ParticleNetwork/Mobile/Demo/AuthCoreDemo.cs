@@ -596,5 +596,27 @@ namespace Network.Particle.Scripts.Test
             var language = ParticleNetwork.GetLanguage();
             Debug.Log(language);
         }
+
+        public void SetThemeColor()
+        {
+            var hexColor = "#003468";
+            ParticleNetwork.SetThemeColor(hexColor);
+        }
+
+        public void SetUnsupportCountries()
+        {
+            List<String> isoCodeList = new List<String> { "US", "CA", "GB" };
+            ParticleNetwork.SetUnsupportCountries(isoCodeList);
+        }
+
+        public void SetCustomUIConfig()
+        {
+            // Only works for iOS
+            // your custom ui json
+            var txtAsset = Resources.Load<TextAsset>("customUIConfig");
+            string json = txtAsset.text;
+            ParticleNetwork.SetCustomUIConfigJsonString(json);
+
+        }
     }
 }

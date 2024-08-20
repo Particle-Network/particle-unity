@@ -89,7 +89,7 @@ namespace Network.Particle.Scripts.Core
             List<string> supportAuthTypeValues = new List<string>();
             if (supportLoginTypes != null)
             {
-                supportAuthTypeValues = supportLoginTypes.ConvertAll(s => s.ToString());
+                supportAuthTypeValues = supportLoginTypes.ConvertAll(s => s.ToString().ToUpper());
             }
 
             string accountNative = "";
@@ -100,7 +100,7 @@ namespace Network.Particle.Scripts.Core
 
             var obj = new JObject
             {
-                { "loginType", loginType.ToString() },
+                { "loginType", loginType.ToString().ToUpper() },
                 { "account", accountNative },
                 { "supportAuthTypeValues", JToken.FromObject(supportAuthTypeValues) },
                 { "socialLoginPrompt", socialLoginPrompt.ToString() },

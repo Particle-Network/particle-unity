@@ -2,33 +2,33 @@ namespace Network.Particle.Scripts.Model
 {
     public enum LoginType
     {
-        EMAIL,
-        PHONE,
-        GOOGLE,
-        FACEBOOK,
-        APPLE,
-        TWITTER,
-        DISCORD,
-        GITHUB,
-        TWITCH,
-        MICROSOFT,
-        LINKEDIN,
-        JWT,
+        Email,
+        Phone,
+        Google,
+        Facebook,
+        Apple,
+        Twitter,
+        Discord,
+        Github,
+        Twitch,
+        Microsoft,
+        Linkedin,
+        Jwt,
     }
 
     public enum SupportLoginType
     {
-        PHONE,
-        EMAIL,
-        GOOGLE,
-        APPLE,
-        FACEBOOK,
-        DISCORD,
-        GITHUB,
-        TWITCH,
-        MICROSOFT,
-        LINKEDIN,
-        TWITTER,
+        Email,
+        Phone,
+        Google,
+        Facebook,
+        Apple,
+        Twitter,
+        Discord,
+        Github,
+        Twitch,
+        Microsoft,
+        Linkedin,
     }
 
     public enum SocialLoginPrompt

@@ -100,7 +100,7 @@ namespace Network.Particle.Scripts.Core
         /// <returns>User info json string</returns>
         public Task<NativeResultData> ConnectJWT(string jwt)
         {
-            return Connect(LoginType.JWT, jwt, null, null, null);
+            return Connect(LoginType.Jwt, jwt, null, null, null);
         }
 
 

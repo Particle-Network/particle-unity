@@ -16,12 +16,13 @@
 // Particle Network Base
 - (void) initialize:(NSString* _Nonnull)json;
 - (NSString* _Nonnull) getChainInfo;
-- (NSInteger) getDevEnv;
 - (BOOL) setChainInfo:(NSString* _Nonnull)json;
 - (void) setAppearance:(NSString* _Nonnull)json;
 - (void) setLanguage:(NSString* _Nonnull)json;
 - (NSString* _Nonnull)getLanguage;
 - (void) setFiatCoin:(NSString*_Nonnull)json;
+- (void) setThemeColor:(NSString*_Nonnull)json;
+- (void) setUnsupportCountries:(NSString*_Nonnull)json;
 - (void) setSecurityAccountConfig:(NSString* _Nonnull)json;
 - (void) setCustomUIConfigJsonString:(NSString* _Nonnull)json;
 
@@ -61,7 +62,8 @@
 - (void) particleConnectInitialize:(NSString* _Nonnull)json;
 - (void) setWalletConnectV2SupportChainInfos:(NSString* _Nonnull)json;
 - (NSString* _Nonnull) adapterGetAccounts:(NSString* _Nonnull)json;
-- (void) adapterConnect:(NSString* _Nonnull)json configJson:(NSString* _Nonnull)account;
+- (void) adapterConnect:(NSString* _Nonnull)json;
+- (void) connectWithConnectKitConfig:(NSString* _Nonnull)json;
 - (void) adapterDisconnect:(NSString* _Nonnull)json;
 - (BOOL) adapterIsConnected:(NSString* _Nonnull)json;
 - (void) adapterSignAndSendTransaction:(NSString* _Nonnull)json;
@@ -73,7 +75,7 @@
 - (void) adapterImportWalletFromPrivateKey:(NSString* _Nonnull)json;
 - (void) adapterImportWalletFromMnemonic:(NSString* _Nonnull)json;
 - (void) adapterExportWalletPrivateKey:(NSString* _Nonnull)json;
-- (void) adapterLogin:(NSString* _Nonnull)json;
+- (void) adapterSignInWithEthereum:(NSString* _Nonnull)json;
 - (void) adapterVerify:(NSString* _Nonnull)json;
 - (NSString* _Nonnull) adapterWalletReadyState:(NSString* _Nonnull)json;
 

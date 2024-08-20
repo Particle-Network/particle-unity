@@ -107,6 +107,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo Elastos => _elastos;
+
+    private static ChainInfo _elastos = new ChainInfo(
+        20,
+        "Elastos",
+        "evm",
+        "https://static.particle.network/token-list/elastos/native.png",
+        "Elastos Mainnet",
+        "Mainnet",
+        "http://elastos.org",
+        new NativeCurrency("ELA", "ELA", 18),
+        "https://api.elastos.io/esc",
+        "https://esc.elastos.io",
+        new List<Feature>() { new Feature("ERC4337")},
+        null
+    );
+            
+
     public static ChainInfo Cronos => _cronos;
 
     private static ChainInfo _cronos = new ChainInfo(
@@ -138,7 +156,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BNB", "BNB", 18),
         "https://bsc-dataseed1.binance.org",
         "https://bscscan.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -174,7 +192,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("OKT", "OKT", 18),
         "https://exchainrpc.okex.org",
         "https://www.oklink.com/okc",
-        null,
+        new List<Feature>() { new Feature("SWAP")},
         null
     );
             
@@ -210,7 +228,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Viction", "VIC", 18),
         "https://rpc.viction.xyz",
         "https://vicscan.xyz",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -228,7 +246,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Viction", "VIC", 18),
         "https://rpc-testnet.viction.xyz",
         "https://testnet.vicscan.xyz",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -246,7 +264,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BNB", "BNB", 18),
         "https://data-seed-prebsc-1-s1.binance.org:8545",
         "https://testnet.bscscan.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         "https://testnet.bnbchain.org/faucet-smart"
     );
             
@@ -282,7 +300,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("SOL", "SOL", 9),
         "https://api.mainnet-beta.solana.com",
         "https://solscan.io",
-        null,
+        new List<Feature>() { new Feature("SWAP")},
         null
     );
             
@@ -372,7 +390,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("FUSE", "FUSE", 18),
         "https://rpc.fuse.io",
         "https://explorer.fuse.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -390,7 +408,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("FUSE", "FUSE", 18),
         "https://rpc.fusespark.io",
         "https://explorer.fusespark.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -462,7 +480,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("OKB", "OKB", 18),
         "https://testrpc.xlayer.tech",
         "https://www.okx.com/explorer/xlayer-test",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -480,7 +498,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("OKB", "OKB", 18),
         "https://rpc.xlayer.tech",
         "https://www.okx.com/zh-hans/explorer/xlayer",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -515,7 +533,7 @@ namespace Network.Particle.Scripts.Model
         "https://maplabs.io",
         new NativeCurrency("MAPO", "MAPO", 18),
         "https://testnet-rpc.maplabs.io",
-        "https://testnet.mapscan.io",
+        "https://testnet.maposcan.io",
         new List<Feature>() { new Feature("EIP1559")},
         "https://faucet.mapprotocol.io"
     );
@@ -534,7 +552,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://rpc.bsquared.network",
         "https://explorer.bsquared.network",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -552,7 +570,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("FTM", "FTM", 18),
         "https://rpc.ftm.tools",
         "https://ftmscan.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -647,24 +665,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo PGN => _pgn;
-
-    private static ChainInfo _pgn = new ChainInfo(
-        424,
-        "PGN",
-        "evm",
-        "https://static.particle.network/token-list/pgn/native.png",
-        "PGN Mainnet",
-        "Mainnet",
-        "https://publicgoods.network",
-        new NativeCurrency("ETH", "ETH", 18),
-        "https://sepolia.publicgoods.network",
-        "https://explorer.publicgoods.network",
-        new List<Feature>() { new Feature("EIP1559")},
-        null
-    );
-            
-
     public static ChainInfo ModeTestnet => _modetestnet;
 
     private static ChainInfo _modetestnet = new ChainInfo(
@@ -678,6 +678,42 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("ETH", "ETH", 18),
         "https://sepolia.mode.network",
         "https://sepolia.explorer.mode.network",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo fiveire => _fiveire;
+
+    private static ChainInfo _fiveire = new ChainInfo(
+        995,
+        "fiveire",
+        "evm",
+        "https://static.particle.network/token-list/fiveire/native.png",
+        "5ire Mainnet",
+        "Mainnet",
+        "https://www.5ire.org",
+        new NativeCurrency("5IRE", "5IRE", 18),
+        "https://rpc.5ire.network",
+        "https://5irescan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo fiveireTestnet => _fiveiretestnet;
+
+    private static ChainInfo _fiveiretestnet = new ChainInfo(
+        997,
+        "fiveire",
+        "evm",
+        "https://static.particle.network/token-list/fiveire/native.png",
+        "5ire Testnet",
+        "Testnet",
+        "https://www.5ire.org",
+        new NativeCurrency("5IRE", "5IRE", 18),
+        "https://rpc.qa.5ire.network",
+        "https://scan.qa.5ire.network",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -750,7 +786,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("ETH", "ETH", 18),
         "https://zkevm-rpc.com",
         "https://zkevm.polygonscan.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -768,7 +804,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("CORE", "CORE", 18),
         "https://rpc.test.btcs.network",
         "https://scan.test.btcs.network",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -786,7 +822,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("CORE", "CORE", 18),
         "https://rpc.coredao.org",
         "https://scan.coredao.org",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -804,7 +840,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://b2-testnet.alt.technology",
         "https://testnet-explorer.bsquared.network",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -812,7 +848,7 @@ namespace Network.Particle.Scripts.Model
     public static ChainInfo HybridTestnet => _hybridtestnet;
 
     private static ChainInfo _hybridtestnet = new ChainInfo(
-        1224,
+        1225,
         "Hybrid",
         "evm",
         "https://static.particle.network/token-list/hybrid/native.png",
@@ -820,9 +856,9 @@ namespace Network.Particle.Scripts.Model
         "Testnet",
         "https://buildonhybrid.com",
         new NativeCurrency("HYB", "HYB", 18),
-        "https://testnet-rpc.buildonhybrid.com",
+        "https://hybrid-testnet.rpc.caldera.xyz/http",
         "https://explorer.buildonhybrid.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -930,7 +966,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://rpc-canary-1.bevm.io",
         "https://scan-canary.bevm.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -948,7 +984,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://canary-testnet.bevm.io",
         "https://scan-canary-testnet.bevm.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -984,8 +1020,8 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("KAVA", "KAVA", 18),
         "https://evm.testnet.kava.io",
         "http://testnet.kavascan.com",
-        new List<Feature>() { new Feature("undefined")},
-        null
+        null,
+        "https://faucet.kava.io"
     );
             
 
@@ -1038,25 +1074,43 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("ETH", "ETH", 18),
         "https://rpc.cardona.zkevm-rpc.com",
         "https://cardona-zkevm.polygonscan.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
 
-    public static ChainInfo AINNTestnet => _ainntestnet;
+    public static ChainInfo AILayerTestnet => _ailayertestnet;
 
-    private static ChainInfo _ainntestnet = new ChainInfo(
+    private static ChainInfo _ailayertestnet = new ChainInfo(
         2648,
         "ainn",
         "evm",
         "https://static.particle.network/token-list/ainn/native.png",
-        "AINN Testnet",
+        "AILayer Testnet",
         "Testnet",
         "https://anvm.io",
         new NativeCurrency("BTC", "BTC", 18),
         "https://rpc.anvm.io",
         "https://explorer.anvm.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
+        null
+    );
+            
+
+    public static ChainInfo AILayer => _ailayer;
+
+    private static ChainInfo _ailayer = new ChainInfo(
+        2649,
+        "ainn",
+        "evm",
+        "https://static.particle.network/token-list/ainn/native.png",
+        "AILayer Mainnet",
+        "Mainnet",
+        "https://anvm.io",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://mainnet-rpc.ailayer.xyz",
+        "https://mainnet-explorer.ailayer.xyz",
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1074,6 +1128,24 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Ether", "ETH", 18),
         "https://rpc.gmnetwork.ai",
         "https://scan.gmnetwork.ai",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo SatoshiVMAlpha => _satoshivmalpha;
+
+    private static ChainInfo _satoshivmalpha = new ChainInfo(
+        3109,
+        "satoshivm",
+        "evm",
+        "https://static.particle.network/token-list/satoshivm/native.png",
+        "SatoshiVM Alpha",
+        "Mainnet",
+        "https://www.satoshivm.io",
+        new NativeCurrency("BTC", "BTC", 18),
+        "https://alpha-rpc-node-http.svmscan.io",
+        "https://svmscan.io",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -1110,7 +1182,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://node.botanixlabs.dev",
         "https://blockscout.botanixlabs.dev",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1128,7 +1200,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Sepolia Ether", "ETH", 18),
         "https://rpc.startale.com/astar-zkevm",
         "https://astar-zkevm.explorer.startale.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1146,7 +1218,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("FTM", "FTM", 18),
         "https://rpc.testnet.fantom.network",
         "https://testnet.ftmscan.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         "https://faucet.fantom.network"
     );
             
@@ -1164,7 +1236,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://rpc.merlinchain.io",
         "https://scan.merlinchain.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1182,7 +1254,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("IOTX", "IOTX", 18),
         "https://babel-api.mainnet.iotex.io",
         "https://iotexscan.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1200,7 +1272,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("IOTX", "IOTX", 18),
         "https://babel-api.testnet.iotex.io",
         "https://testnet.iotexscan.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1218,7 +1290,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("MNT", "MNT", 18),
         "https://rpc.mantle.xyz",
         "https://explorer.mantle.xyz",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1236,7 +1308,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("MNT", "MNT", 18),
         "https://rpc.sepolia.mantle.xyz",
         "https://explorer.sepolia.mantle.xyz",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         "https://faucet.sepolia.mantle.xyz"
     );
             
@@ -1255,6 +1327,42 @@ namespace Network.Particle.Scripts.Model
         "https://opbnb-testnet-rpc.bnbchain.org",
         "https://opbnb-testnet.bscscan.com",
         new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo AuraTestnet => _auratestnet;
+
+    private static ChainInfo _auratestnet = new ChainInfo(
+        6321,
+        "aura",
+        "evm",
+        "https://static.particle.network/token-list/aura/native.png",
+        "Aura Testnet",
+        "Testnet",
+        "https://aura.network",
+        new NativeCurrency("AURA", "AURA", 18),
+        "https://jsonrpc.euphoria.aura.network",
+        "https://euphoria.aurascan.io",
+        new List<Feature>() { new Feature("ERC4337")},
+        null
+    );
+            
+
+    public static ChainInfo Aura => _aura;
+
+    private static ChainInfo _aura = new ChainInfo(
+        6322,
+        "aura",
+        "evm",
+        "https://static.particle.network/token-list/aura/native.png",
+        "Aura Mainnet",
+        "Mainnet",
+        "https://aura.network",
+        new NativeCurrency("AURA", "AURA", 18),
+        "https://jsonrpc.aura.network",
+        "https://aurascan.io",
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1326,7 +1434,25 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Klaytn", "KLAY", 18),
         "https://cypress.fandom.finance/archive",
         "https://scope.klaytn.com",
-        null,
+        new List<Feature>() { new Feature("SWAP")},
+        null
+    );
+            
+
+    public static ChainInfo Lorenzo => _lorenzo;
+
+    private static ChainInfo _lorenzo = new ChainInfo(
+        8329,
+        "lorenzo",
+        "evm",
+        "https://static.particle.network/token-list/lorenzo/native.png",
+        "Lorenzo Mainnet",
+        "Mainnet",
+        "https://lorenzo-protocol.xyz",
+        new NativeCurrency("stBTC", "stBTC", 18),
+        "https://rpc.lorenzo-protocol.xyz",
+        "https://scan.lorenzo-protocol.xyz",
+        new List<Feature>() { new Feature("EIP1559")},
         null
     );
             
@@ -1416,7 +1542,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://rpc-mainnet-1.bevm.io",
         "https://scan-mainnet.bevm.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1434,7 +1560,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://testnet.bevm.io",
         "https://scan-testnet.bevm.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1452,7 +1578,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("READ", "READ", 18),
         "https://pre-alpha-zkrollup-rpc.opside.network/readon-content-test-chain",
         "https://readon-content-test-chain.zkevm.opside.info",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1488,8 +1614,8 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("EOS", "EOS", 18),
         "https://api.testnet.evm.eosnetwork.com",
         "https://explorer.testnet.evm.eosnetwork.com",
-        new List<Feature>() { new Feature("undefined")},
-        null
+        null,
+        "https://bridge.testnet.evm.eosnetwork.com"
     );
             
 
@@ -1565,24 +1691,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo LumiBitTestnet => _lumibittestnet;
-
-    private static ChainInfo _lumibittestnet = new ChainInfo(
-        28206,
-        "lumibit",
-        "evm",
-        "https://static.particle.network/token-list/lumibit/native.png",
-        "LumiBit Testnet",
-        "Testnet",
-        null,
-        new NativeCurrency("BTC", "BTC", 18),
-        "https://test-rpc.lumibit.org",
-        "https://test-scan.lumibit.org",
-        null,
-        null
-    );
-            
-
     public static ChainInfo Mode => _mode;
 
     private static ChainInfo _mode = new ChainInfo(
@@ -1650,7 +1758,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Celo", "CELO", 18),
         "https://rpc.ankr.com/celo",
         "https://explorer.celo.org/mainnet",
-        null,
+        new List<Feature>() { new Feature("SWAP")},
         null
     );
             
@@ -1704,7 +1812,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("ZKF", "USDC", 18),
         "https://rpc.zkfair.io",
         "https://scan.zkfair.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1758,7 +1866,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("ZKF", "USDC", 18),
         "https://testnet-rpc.zkfair.io",
         "https://testnet-scan.zkfair.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -1781,6 +1889,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo ZircuitTestnet => _zircuittestnet;
+
+    private static ChainInfo _zircuittestnet = new ChainInfo(
+        48899,
+        "Zircuit",
+        "evm",
+        "https://static.particle.network/token-list/zircuit/native.png",
+        "Zircuit Testnet",
+        "Testnet",
+        "https://www.zircuit.com",
+        new NativeCurrency("Ether", "ETH", 18),
+        "https://zircuit1.p2pify.com",
+        "https://explorer.zircuit.com",
+        new List<Feature>() { new Feature("ERC4337")},
+        null
+    );
+            
+
     public static ChainInfo ZerooneTestnet => _zeroonetestnet;
 
     private static ChainInfo _zeroonetestnet = new ChainInfo(
@@ -1794,24 +1920,6 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("ZERO", "ZERO", 18),
         "https://subnets.avax.network/testnetzer/testnet/rpc",
         "https://subnets-test.avax.network/testnetzer",
-        new List<Feature>() { new Feature("EIP1559")},
-        null
-    );
-            
-
-    public static ChainInfo PGNSepolia => _pgnsepolia;
-
-    private static ChainInfo _pgnsepolia = new ChainInfo(
-        58008,
-        "PGN",
-        "evm",
-        "https://static.particle.network/token-list/pgn/native.png",
-        "PGN Sepolia",
-        "Sepolia",
-        "https://publicgoods.network",
-        new NativeCurrency("ETH", "ETH", 18),
-        "https://sepolia.publicgoods.network",
-        "https://explorer.sepolia.publicgoods.network",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -1902,26 +2010,8 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BERA", "BERA", 18),
         "https://bartio.rpc.berachain.com",
         "https://bartio.beratrail.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         "https://bartio.faucet.berachain.com"
-    );
-            
-
-    public static ChainInfo BerachainArtio => _berachainartio;
-
-    private static ChainInfo _berachainartio = new ChainInfo(
-        80085,
-        "Berachain",
-        "evm",
-        "https://static.particle.network/token-list/berachain/native.png",
-        "Berachain Artio",
-        "Artio",
-        "https://www.berachain.com",
-        new NativeCurrency("BERA", "BERA", 18),
-        "https://artio.rpc.berachain.com",
-        "https://artio.beratrail.io",
-        null,
-        "https://artio.faucet.berachain.com"
     );
             
 
@@ -1938,6 +2028,24 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Blast Ether", "ETH", 18),
         "https://rpc.blast.io",
         "https://blastscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo LorenzoTestnet => _lorenzotestnet;
+
+    private static ChainInfo _lorenzotestnet = new ChainInfo(
+        83291,
+        "lorenzo",
+        "evm",
+        "https://static.particle.network/token-list/lorenzo/native.png",
+        "Lorenzo Testnet",
+        "Testnet",
+        "https://lorenzo-protocol.xyz",
+        new NativeCurrency("stBTC", "stBTC", 18),
+        "https://rpc-testnet.lorenzo-protocol.xyz",
+        "https://scan-testnet.lorenzo-protocol.xyz",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -1974,7 +2082,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://babytuna.rpc.tunachain.io",
         "https://babytuna.explorer.tunachain.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -2015,24 +2123,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo TaikoKatla => _taikokatla;
-
-    private static ChainInfo _taikokatla = new ChainInfo(
-        167008,
-        "Taiko",
-        "evm",
-        "https://static.particle.network/token-list/taiko/native.png",
-        "Taiko Katla",
-        "Katla",
-        "https://taiko.xyz",
-        new NativeCurrency("Ether", "ETH", 18),
-        "https://rpc.katla.taiko.xyz",
-        "https://explorer.katla.taiko.xyz",
-        new List<Feature>() { new Feature("EIP1559")},
-        null
-    );
-            
-
     public static ChainInfo TaikoHekla => _taikohekla;
 
     private static ChainInfo _taikohekla = new ChainInfo(
@@ -2064,7 +2154,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://testnet-rpc.bitlayer.org",
         "https://testnet-scan.bitlayer.org",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -2082,7 +2172,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://rpc.bitlayer.org",
         "https://www.btrscan.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -2136,7 +2226,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Scroll", "ETH", 18),
         "https://sepolia-rpc.scroll.io",
         "https://sepolia.scrollscan.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -2154,7 +2244,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Scroll", "ETH", 18),
         "https://rpc.scroll.io",
         "https://scrollscan.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -2172,7 +2262,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("BTC", "BTC", 18),
         "https://testnet-rpc.merlinchain.io",
         "https://testnet-scan.merlinchain.io",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -2267,19 +2357,19 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo MantaTestnet => _mantatestnet;
+    public static ChainInfo MantaSepolia => _mantasepolia;
 
-    private static ChainInfo _mantatestnet = new ChainInfo(
-        3441005,
+    private static ChainInfo _mantasepolia = new ChainInfo(
+        3441006,
         "Manta",
         "evm",
         "https://static.particle.network/token-list/manta/native.png",
-        "Manta Testnet",
-        "Testnet",
+        "Manta Sepolia",
+        "Sepolia",
         "https://manta.network",
         new NativeCurrency("ETH", "ETH", 18),
-        "https://pacific-rpc.testnet.manta.network/http",
-        "https://pacific-explorer.testnet.manta.network",
+        "https://pacific-rpc.sepolia-testnet.manta.network/http",
+        "https://pacific-explorer.sepolia-testnet.manta.network",
         new List<Feature>() { new Feature("EIP1559")},
         "https://pacific-info.manta.network"
     );
@@ -2298,7 +2388,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Sepolia Ether", "ETH", 18),
         "https://rpc.startale.com/zkyoto",
         "https://zkyoto.explorer.startale.com",
-        null,
+        new List<Feature>() { new Feature("ERC4337")},
         null
     );
             
@@ -2424,7 +2514,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("TRX", "TRX", 6),
         "https://api.trongrid.io",
         "https://tronscan.io",
-        null,
+        new List<Feature>() { new Feature("ON-RAMP")},
         null
     );
             
@@ -2460,7 +2550,7 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("Ether", "ETH", 18),
         "https://mainnet.aurora.dev",
         "https://explorer.aurora.dev",
-        null,
+        new List<Feature>() { new Feature("SWAP")},
         null
     );
             
@@ -2537,6 +2627,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo KakarotSepolia => _kakarotsepolia;
+
+    private static ChainInfo _kakarotsepolia = new ChainInfo(
+        1802203764,
+        "Kakarot",
+        "evm",
+        "https://static.particle.network/token-list/kakarot/native.png",
+        "Kakarot Sepolia",
+        "Sepolia",
+        "https://www.kakarot.org",
+        new NativeCurrency("Ether", "ETH", 18),
+        "https://sepolia-rpc.kakarot.org",
+        "https://sepolia.kakarotscan.org",
+        new List<Feature>() { new Feature("ERC4337")},
+        null
+    );
+            
+
     public static ChainInfo TronShasta => _tronshasta;
 
     private static ChainInfo _tronshasta = new ChainInfo(
@@ -2600,6 +2708,8 @@ namespace Network.Particle.Scripts.Model
             
         {"thundercore-18" , ThunderCoreTestnet },
             
+        {"elastos-20" , Elastos },
+            
         {"cronos-25" , Cronos },
             
         {"bsc-56" , BNBChain },
@@ -2660,9 +2770,11 @@ namespace Network.Particle.Scripts.Model
             
         {"cronos-338" , CronosTestnet },
             
-        {"pgn-424" , PGN },
-            
         {"mode-919" , ModeTestnet },
+            
+        {"fiveire-995" , fiveire },
+            
+        {"fiveire-997" , fiveireTestnet },
             
         {"klaytn-1001" , KlaytnTestnet },
             
@@ -2678,7 +2790,7 @@ namespace Network.Particle.Scripts.Model
             
         {"bsquared-1123" , BSquaredTestnet },
             
-        {"hybrid-1224" , HybridTestnet },
+        {"hybrid-1225" , HybridTestnet },
             
         {"moonbeam-1284" , Moonbeam },
             
@@ -2704,9 +2816,13 @@ namespace Network.Particle.Scripts.Model
             
         {"polygonzkevm-2442" , PolygonzkEVMCardona },
             
-        {"ainn-2648" , AINNTestnet },
+        {"ainn-2648" , AILayerTestnet },
+            
+        {"ainn-2649" , AILayer },
             
         {"gmnetwork-2777" , GMNetwork },
+            
+        {"satoshivm-3109" , SatoshiVMAlpha },
             
         {"satoshivm-3110" , SatoshiVMTestnet },
             
@@ -2728,6 +2844,10 @@ namespace Network.Particle.Scripts.Model
             
         {"opbnb-5611" , opBNBTestnet },
             
+        {"aura-6321" , AuraTestnet },
+            
+        {"aura-6322" , Aura },
+            
         {"zetachain-7000" , ZetaChain },
             
         {"zetachain-7001" , ZetaChainTestnet },
@@ -2735,6 +2855,8 @@ namespace Network.Particle.Scripts.Model
         {"cyber-7560" , Cyber },
             
         {"klaytn-8217" , Klaytn },
+            
+        {"lorenzo-8329" , Lorenzo },
             
         {"base-8453" , Base },
             
@@ -2762,8 +2884,6 @@ namespace Network.Particle.Scripts.Model
             
         {"zeroone-27827" , Zeroone },
             
-        {"lumibit-28206" , LumiBitTestnet },
-            
         {"mode-34443" , Mode },
             
         {"arbitrum-42161" , ArbitrumOne },
@@ -2786,9 +2906,9 @@ namespace Network.Particle.Scripts.Model
             
         {"celo-44787" , CeloTestnet },
             
-        {"zeroone-56400" , ZerooneTestnet },
+        {"zircuit-48899" , ZircuitTestnet },
             
-        {"pgn-58008" , PGNSepolia },
+        {"zeroone-56400" , ZerooneTestnet },
             
         {"linea-59141" , LineaSepolia },
             
@@ -2800,9 +2920,9 @@ namespace Network.Particle.Scripts.Model
             
         {"berachain-80084" , BerachainbArtio },
             
-        {"berachain-80085" , BerachainArtio },
-            
         {"blast-81457" , Blast },
+            
+        {"lorenzo-83291" , LorenzoTestnet },
             
         {"base-84532" , BaseSepolia },
             
@@ -2811,8 +2931,6 @@ namespace Network.Particle.Scripts.Model
         {"xterio-112358" , XterioBNB },
             
         {"taiko-167000" , Taiko },
-            
-        {"taiko-167008" , TaikoKatla },
             
         {"taiko-167009" , TaikoHekla },
             
@@ -2840,7 +2958,7 @@ namespace Network.Particle.Scripts.Model
             
         {"xterioeth-2702128" , XterioETH },
             
-        {"manta-3441005" , MantaTestnet },
+        {"manta-3441006" , MantaSepolia },
             
         {"astarzkevm-6038361" , AstarzkEVMTestnet },
             
@@ -2869,6 +2987,8 @@ namespace Network.Particle.Scripts.Model
         {"harmony-1666600000" , Harmony },
             
         {"harmony-1666700000" , HarmonyTestnet },
+            
+        {"kakarot-1802203764" , KakarotSepolia },
             
         {"tron-2494104990" , TronShasta },
             

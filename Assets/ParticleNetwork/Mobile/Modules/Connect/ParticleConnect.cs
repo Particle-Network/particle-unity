@@ -13,6 +13,7 @@ namespace Network.Particle.Scripts.Core
     public class ParticleConnect : SingletonMonoBehaviour<ParticleConnect>
     {
         private TaskCompletionSource<NativeResultData> connectTask;
+        private TaskCompletionSource<NativeResultData> connectWithConnectKitTask;
         private TaskCompletionSource<NativeResultData> disconnectTask;
         private TaskCompletionSource<NativeResultData> signMessageTask;
         private TaskCompletionSource<NativeResultData> signTransactionTask;
@@ -20,7 +21,7 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> signAndSendTransactionTask;
         private TaskCompletionSource<NativeResultData> batchSendTransactionsTask;
         private TaskCompletionSource<NativeResultData> signTypedDataTask;
-        private TaskCompletionSource<NativeResultData> loginTask;
+        private TaskCompletionSource<NativeResultData> signInWithEthereumTask;
         private TaskCompletionSource<NativeResultData> verifyTask;
 
         private TaskCompletionSource<NativeResultData> importPrivateKeyTask;
@@ -58,6 +59,39 @@ namespace Network.Particle.Scripts.Core
             var status = (int)resultData["status"];
             connectTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
+        
+        /// <summary>
+        /// Connect wallet
+        /// </summary>
+        /// <param name="walletType">Wallet Type</param>
+        /// <returns></returns>
+        public Task<NativeResultData> connectWithConnectKitConfig(ConnectKitConfig config)
+        {
+            connectWithConnectKitTask = new TaskCompletionSource<NativeResultData>();
+#if UNITY_EDITOR
+            ConnectWithConnectKitCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 1 },
+                { "data", "" },
+            }));
+#endif
+            ParticleConnectInteraction.ConnectWithConnectKitConfig(config);
+            return connectWithConnectKitTask.Task;
+        }
+
+        /// <summary>
+        /// Connect wallet call back
+        /// </summary>
+        /// <param name="json">Result</param>
+        public void ConnectWithConnectKitCallBack(string json)
+        {
+            Debug.Log($"ConnectWithConnectKitTaskCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            connectWithConnectKitTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+        
+        
 
         /// <summary>
         /// Disconnect wallet
@@ -307,16 +341,16 @@ namespace Network.Particle.Scripts.Core
         }
 
         /// <summary>
-        /// Login, Sign-in with Ethereum, For more information on SIWE check out https://docs.login.xyz
+        /// Sign-in with Ethereum (EIP 4361 ), for more information on SIWE check out https://eips.ethereum.org/EIPS/eip-4361
         /// </summary>
         /// <param name="walletType">Wallet type</param>
         /// <param name="publicAddress">Public address</param>
         /// <param name="domain">Domain</param>
         /// <param name="uri">Uri</param>
         /// <returns></returns>
-        public Task<NativeResultData> Login(WalletType walletType, string publicAddress, string domain, string uri)
+        public Task<NativeResultData> SignInWithEthereum(WalletType walletType, string publicAddress, string domain, string uri)
         {
-            loginTask = new TaskCompletionSource<NativeResultData>();
+            signInWithEthereumTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
             LoginCallBack(JsonConvert.SerializeObject(new JObject
             {
@@ -324,8 +358,8 @@ namespace Network.Particle.Scripts.Core
                 { "data", "" },
             }));
 #endif
-            ParticleConnectInteraction.Login(walletType, publicAddress, domain, uri);
-            return loginTask.Task;
+            ParticleConnectInteraction.SignInWithEthereum(walletType, publicAddress, domain, uri);
+            return signInWithEthereumTask.Task;
         }
 
         /// <summary>
@@ -337,7 +371,7 @@ namespace Network.Particle.Scripts.Core
             Debug.Log($"LoginCallBack:{json}");
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
-            loginTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+            signInWithEthereumTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
 
         /// <summary>

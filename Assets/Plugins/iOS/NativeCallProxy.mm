@@ -25,11 +25,7 @@ extern "C" {
     void initialize(const char* json) {
         [api initialize:[NSString stringWithUTF8String: json]];
     }
-
-    long getDevEnv() {
-        return [api getDevEnv];
-    }
-
+    
     void setLanguage(const char* json) {
         [api setLanguage:[NSString stringWithUTF8String: json]];
     }
@@ -54,6 +50,15 @@ extern "C" {
     void setCustomUIConfigJsonString(const char* json) {
         [api setCustomUIConfigJsonString:[NSString stringWithUTF8String: json]];
     }
+    
+    void setUnsupportCountries(const char* json) {
+        [api setUnsupportCountries:[NSString stringWithUTF8String: json]];
+    }
+        
+    void setThemeColor(const char* json) {
+        [api setThemeColor:[NSString stringWithUTF8String: json]];
+    }
+    
 }
 
 // Particle Wallet GUI
@@ -197,9 +202,13 @@ extern "C" {
         return cStringCopyPN([[api adapterGetAccounts:[NSString stringWithUTF8String: json]] UTF8String]);
      }
      
-     void adapterConnect(const char* json, const char* configJson) {
-        [api adapterConnect:[NSString stringWithUTF8String: json] configJson:[NSString stringWithUTF8String: configJson]];
-     }
+    void adapterConnect(const char* json) {
+        [api adapterConnect:[NSString stringWithUTF8String: json]];
+    }
+     
+    void connectWithConnectKitConfig(const char* json) {
+        [api connectWithConnectKitConfig:[NSString stringWithUTF8String: json]];
+    }
 
     void adapterDisconnect(const char* json) {
         [api adapterDisconnect:[NSString stringWithUTF8String: json]];
@@ -238,12 +247,13 @@ extern "C" {
     void adapterImportWalletFromMnemonic(const char* json) {
         [api adapterImportWalletFromMnemonic:[NSString stringWithUTF8String: json]];
     }
+
     void adapterExportWalletPrivateKey(const char* json) {
         [api adapterExportWalletPrivateKey:[NSString stringWithUTF8String: json]];
     }
 
-    void adapterLogin(const char* json) {
-        [api adapterLogin:[NSString stringWithUTF8String: json]];
+    void adapterSignInWithEthereum(const char* json) {
+        [api adapterSignInWithEthereum:[NSString stringWithUTF8String: json]];
     }
     void adapterVerify(const char* json) {
         [api adapterVerify:[NSString stringWithUTF8String: json]];

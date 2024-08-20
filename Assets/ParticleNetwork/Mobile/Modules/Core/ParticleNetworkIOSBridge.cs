@@ -17,10 +17,7 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern string getChainInfo();
-
-        [DllImport("__Internal")]
-        public static extern int getDevEnv();
-
+        
         [DllImport("__Internal")]
         public static extern void setAppearance(string json);
 
@@ -35,10 +32,16 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void setSecurityAccountConfig(string json);
-        
+
         [DllImport("__Internal")]
         public static extern void setCustomUIConfigJsonString(string json);
-        
+
+        [DllImport("__Internal")]
+        public static extern void setThemeColor(string json);
+
+        [DllImport("__Internal")]
+        public static extern void setUnsupportCountries(string json);
+
 
 #endif
 
@@ -55,6 +58,12 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern bool getSwapDisabled();
+        
+        [DllImport("__Internal")]
+        public static extern void setBridgeDisabled(bool enable);
+
+        [DllImport("__Internal")]
+        public static extern bool getBridgeDisabled();
 
         [DllImport("__Internal")]
         public static extern void navigatorWallet(int display);
@@ -149,7 +158,10 @@ namespace Network.Particle.Scripts.Core
         public static extern string adapterGetAccounts(string json);
 
         [DllImport("__Internal")]
-        public static extern void adapterConnect(string json, string configJson);
+        public static extern void adapterConnect(string json);
+
+        [DllImport("__Internal")]
+        public static extern void connectWithConnectKitConfig(string json);
 
         [DllImport("__Internal")]
         public static extern void adapterDisconnect(string json);
@@ -185,7 +197,7 @@ namespace Network.Particle.Scripts.Core
         public static extern void adapterExportWalletPrivateKey(string json);
 
         [DllImport("__Internal")]
-        public static extern void adapterLogin(string json);
+        public static extern void adapterSignInWithEthereum(string json);
 
         [DllImport("__Internal")]
         public static extern void adapterVerify(string json);
@@ -302,7 +314,6 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void authCoreSolanaSignAndSendTransaction(string json);
-        
 
 
 #endif

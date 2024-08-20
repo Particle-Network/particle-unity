@@ -20,7 +20,6 @@ namespace Network.Particle.Scripts.Model
         /// <param name="code">Optional, email or phone code, used with auth core sdk</param>
         /// <param name="supportLoginTypes">Controls whether third-party login buttons are displayed.</param>
         /// <param name="socialLoginPrompt">Optional, controls whether show light UI in web, default is false.</param>
-        /// <param name="authorization">Optional, LoginAuthorization, login and sign message, its message requires hex in evm, base58 in solana </param>
         /// <param name="authCoreLoginPageConfig">Optional, LoginPageConfig, for customize login page when use ParticleAuthCore</param>
         public ConnectConfig(LoginType loginType, [CanBeNull] string account = null, [CanBeNull] string code = null,
             [CanBeNull] List<SupportLoginType> supportLoginTypes = null,

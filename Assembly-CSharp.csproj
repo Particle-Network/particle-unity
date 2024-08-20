@@ -160,6 +160,7 @@
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/DAppMetaData.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Example.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextEventCheck.cs" />
+    <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ConnectKitConfig.cs" />
     <None Include="Library/PackageCache/com.unity.modules.subsystems@1.0.0/package.json" />
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
     <None Include="Library/PackageCache/com.unity.modules.jsonserialize@1.0.0/package.json" />

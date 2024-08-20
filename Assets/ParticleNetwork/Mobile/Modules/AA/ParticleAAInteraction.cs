@@ -9,17 +9,13 @@ namespace Network.Particle.Scripts.Core
 {
     public static class ParticleAAInteraction
     {
-        public static void Init(AAAccountName accountName,
-            [CanBeNull] Dictionary<int, string> biconomyApiKeys = null)
+        public static void Init(AAAccountName accountName)
         {
             var obj = new JObject
             {
                 { "name", accountName.name },
                 { "version", accountName.version },
             };
-            
-            if (biconomyApiKeys != null)
-                obj["biconomy_api_keys"] = JObject.FromObject(biconomyApiKeys);
 
             var json = JsonConvert.SerializeObject(obj);
 

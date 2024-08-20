@@ -358,10 +358,10 @@ namespace Network.Particle.Scripts.Test
             try
             {
                 if (string.IsNullOrEmpty(publicAddress)) throw new Exception("publicAddress is null, connect first");
-                var domain = "login.xyz";
-                var uri = "https://login.xyz/demo#login";
+                var domain = "particle.network";
+                var uri = "https://demo.particle.network";
                 var nativeResultData =
-                    await ParticleConnect.Instance.Login(this._walletType, publicAddress, domain, uri);
+                    await ParticleConnect.Instance.SignInWithEthereum(this._walletType, publicAddress, domain, uri);
                 Debug.Log(nativeResultData.data);
 
                 if (nativeResultData.isSuccess)

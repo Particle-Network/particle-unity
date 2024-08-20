@@ -59,36 +59,87 @@ namespace Network.Particle.Scripts.Core
 
         public static void Connect(WalletType walletType, [CanBeNull] ConnectConfig config)
         {
-            string configJson = "";
+            var obj = new JObject
+            {
+                "walletType", walletType.ToString(),
+            };
+
             if (config != null)
             {
-                var obj = new JObject
+                var configObj = new JObject
                 {
-                    { "loginType", config.loginType.ToString() },
+                    { "loginType", config.loginType.ToString().ToUpper() },
                     { "account", string.IsNullOrEmpty(config.account) ? "" : config.account },
                     { "code", string.IsNullOrEmpty(config.code) ? "" : config.code },
                     { "socialLoginPrompt", config.socialLoginPrompt.ToString() },
                 };
 
-                JsonSerializerSettings settings = new JsonSerializerSettings
-                {
-                    Converters = new List<JsonConverter> { new StringEnumConverter() }
-                };
                 if (config.supportLoginTypes != null)
-                    obj["supportAuthTypeValues"] =
-                        JToken.FromObject(config.supportLoginTypes, JsonSerializer.Create(settings));
+                {
+                    configObj["supportAuthTypeValues"] =
+                        JToken.FromObject(config.supportLoginTypes.ConvertAll(s => s.ToString().ToUpper()));
+                }
 
                 if (config.loginPageConfig != null)
-                    obj["loginPageConfig"] = JToken.FromObject(config.loginPageConfig, JsonSerializer.Create(settings));
+                {
+                    configObj["loginPageConfig"] = JToken.FromObject(config.loginPageConfig);
+                }
 
-                configJson = JsonConvert.SerializeObject(obj);
+                obj["particleConnectConfig"] = JToken.FromObject(configObj);
             }
+
+            var configJson = JsonConvert.SerializeObject(obj);
 
             Debug.Log($"Connect-> walletType:{walletType} configJson:{configJson} ");
 #if UNITY_ANDROID && !UNITY_EDITOR
+// todo
+            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic(configJson);
+#elif UNITY_IOS && !UNITY_EDITOR
+            ParticleNetworkIOSBridge.adapterConnect(configJson);
+#else
+
+#endif
+        }
+
+        public static void ConnectWithConnectKitConfig(ConnectKitConfig config)
+        {
+            var obj = new JObject
+            {
+                {
+                    "connectOptions",
+                    JToken.FromObject(config.ConnectOptions.ConvertAll(s => s.ToString().ToUpper()))
+                },
+                {
+                    "additionalLayoutOptions", JToken.FromObject(config.AdditionalLayoutOptions)
+                }
+            };
+
+            if (config.SocialProviders != null)
+            {
+                obj["socialProviders"] =
+                    JToken.FromObject(config.SocialProviders.ConvertAll(s => s.ToString().ToUpper()));
+            }
+
+            if (config.WalletProviders != null)
+            {
+                obj["walletProviders"] =
+                    JToken.FromObject(config.WalletProviders.ConvertAll(s => s.ToString().ToUpper()));
+            }
+
+            if (config.Logo != null)
+            {
+                obj["logo"] = config.Logo;
+            }
+
+
+            var configJson = JsonConvert.SerializeObject(obj);
+
+            Debug.Log($"ConnectWithConnectKitConfig-> configJson:{configJson}");
+#if UNITY_ANDROID && !UNITY_EDITOR
+// todo
             ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("connect",walletType.ToString(),configJson);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.adapterConnect(walletType.ToString(), configJson);
+            ParticleNetworkIOSBridge.connectWithConnectKitConfig(configJson);
 #else
 
 #endif
@@ -340,7 +391,7 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-        public static void Login(WalletType walletType, string publicAddress, string domain, string uri)
+        public static void SignInWithEthereum(WalletType walletType, string publicAddress, string domain, string uri)
         {
             var json = JsonConvert.SerializeObject(new JObject
             {
@@ -350,9 +401,9 @@ namespace Network.Particle.Scripts.Core
                 { "uri", uri },
             });
 #if UNITY_ANDROID && !UNITY_EDITOR
-            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("login",json);
+            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic("signInWithEthereum",json);
 #elif UNITY_IOS && !UNITY_EDITOR
-            ParticleNetworkIOSBridge.adapterLogin(json);
+            ParticleNetworkIOSBridge.adapterSignInWithEthereum(json);
 #else
 
 #endif
