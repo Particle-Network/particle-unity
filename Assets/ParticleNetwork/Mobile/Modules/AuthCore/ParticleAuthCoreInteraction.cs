@@ -207,14 +207,14 @@ namespace Network.Particle.Scripts.Core
         /// Has master password
         /// </summary>
         /// <returns></returns>
-        internal static bool HasMasterPassword()
+        internal static void HasMasterPassword()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            return  ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("hasMasterPassword");
+             ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("hasMasterPassword");
 #elif UNITY_IOS && !UNITY_EDITOR
-            return ParticleNetworkIOSBridge.authCoreHasMasterPassword();
+             ParticleNetworkIOSBridge.authCoreHasMasterPassword();
 #else
-            return false;
+
 #endif
         }
 
@@ -222,14 +222,14 @@ namespace Network.Particle.Scripts.Core
         /// Has payment password
         /// </summary>
         /// <returns></returns>
-        public static bool HasPaymentPassword()
+        public static void HasPaymentPassword()
         {
 #if UNITY_ANDROID && !UNITY_EDITOR
-            return  ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("hasPaymentPassword");
+            ParticleNetwork.GetAuthCoreBridgeClass().CallStatic<bool>("hasPaymentPassword");
 #elif UNITY_IOS && !UNITY_EDITOR
-            return ParticleNetworkIOSBridge.authCoreHasPaymentPassword();
+            ParticleNetworkIOSBridge.authCoreHasPaymentPassword();
 #else
-            return false;
+
 #endif
         }
 

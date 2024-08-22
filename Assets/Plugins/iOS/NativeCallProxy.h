@@ -31,6 +31,8 @@
 - (BOOL) getPayDisabled;
 - (void) setSwapDisabled:(BOOL)disabled;
 - (BOOL) getSwapDisabled;
+- (void) setBridgeDisabled:(BOOL)disabled;
+- (BOOL) getBridgeDisabled;
 - (void) navigatorWallet:(NSInteger)display;
 - (void) navigatorDappBrowser:(NSString* _Nonnull)json;
 - (void) navigatorTokenReceive:(NSString* _Nullable)json;
@@ -87,8 +89,6 @@
 - (BOOL) isAAModeEnable;
 - (void) isDeploy:(NSString* _Nonnull)json;
 - (void) rpcGetFeeQuotes:(NSString* _Nonnull)json;
-- (BOOL) isSupportChainInfo:(NSString* _Nonnull)json;
-
 
 // Particle Auth Core
 - (void) authCoreInitialize;
@@ -103,8 +103,8 @@
 - (NSString* _Nonnull) authCoreGetUserInfo;
 - (void) authCoreSwitchChain:(NSString* _Nonnull)json;
 - (void) authCoreChangeMasterPassword;
-- (BOOL) authCoreHasMasterPassword;
-- (BOOL) authCoreHasPaymentPassword;
+- (void) authCoreHasMasterPassword;
+- (void) authCoreHasPaymentPassword;
 - (void) authCoreOpenAccountAndSecurity;
 
 - (NSString* _Nonnull) authCoreEvmGetAddress;

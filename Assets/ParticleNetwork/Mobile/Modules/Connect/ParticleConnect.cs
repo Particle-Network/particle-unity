@@ -13,7 +13,7 @@ namespace Network.Particle.Scripts.Core
     public class ParticleConnect : SingletonMonoBehaviour<ParticleConnect>
     {
         private TaskCompletionSource<NativeResultData> connectTask;
-        private TaskCompletionSource<NativeResultData> connectWithConnectKitTask;
+        private TaskCompletionSource<NativeResultData> connectWithConnectKitConfigTask;
         private TaskCompletionSource<NativeResultData> disconnectTask;
         private TaskCompletionSource<NativeResultData> signMessageTask;
         private TaskCompletionSource<NativeResultData> signTransactionTask;
@@ -67,7 +67,7 @@ namespace Network.Particle.Scripts.Core
         /// <returns></returns>
         public Task<NativeResultData> connectWithConnectKitConfig(ConnectKitConfig config)
         {
-            connectWithConnectKitTask = new TaskCompletionSource<NativeResultData>();
+            connectWithConnectKitConfigTask = new TaskCompletionSource<NativeResultData>();
 #if UNITY_EDITOR
             ConnectWithConnectKitCallBack(JsonConvert.SerializeObject(new JObject
             {
@@ -76,7 +76,7 @@ namespace Network.Particle.Scripts.Core
             }));
 #endif
             ParticleConnectInteraction.ConnectWithConnectKitConfig(config);
-            return connectWithConnectKitTask.Task;
+            return connectWithConnectKitConfigTask.Task;
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Network.Particle.Scripts.Core
             Debug.Log($"ConnectWithConnectKitTaskCallBack:{json}");
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
-            connectWithConnectKitTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+            connectWithConnectKitConfigTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
         }
         
         

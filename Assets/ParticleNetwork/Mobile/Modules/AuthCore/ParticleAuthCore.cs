@@ -25,6 +25,8 @@ namespace Network.Particle.Scripts.Core
         private TaskCompletionSource<NativeResultData> sendPhoneCodeTask;
         private TaskCompletionSource<NativeResultData> sendEmailCodeTask;
 
+        private TaskCompletionSource<NativeResultData> hasMasterPasswordTask;
+        private TaskCompletionSource<NativeResultData> hasPaymentPasswordTask;
 
         /// <summary>
         /// Connect 
@@ -319,13 +321,66 @@ namespace Network.Particle.Scripts.Core
         public void OpenAccountAndSecurityCallBack(string json)
         {
             Debug.Log($"OpenAccountAndSecurityCallBack:{json}");
-#if UNITY_EDITOR
-            openAccountAndSecurityTask?.TrySetResult(new NativeResultData(true, json));
-#else
             var resultData = JObject.Parse(json);
             var status = (int)resultData["status"];
             openAccountAndSecurityTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+        }
+        
+        
+        /// <summary>
+        /// Has master password
+        /// </summary>
+        /// <returns>Result</returns>
+        public Task<NativeResultData> HasMasterPassword()
+        {
+            hasMasterPasswordTask = new TaskCompletionSource<NativeResultData>();
+
+#if UNITY_EDITOR
+            HasMasterPasswordCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
 #endif
+            ParticleAuthCoreInteraction.HasMasterPassword();
+            return hasMasterPasswordTask.Task;
+        }
+        
+        public void HasMasterPasswordCallBack(string json)
+        {
+            Debug.Log($"HasMasterPasswordCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            hasMasterPasswordTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+
+        }
+        
+        /// <summary>
+        /// Has payment password
+        /// </summary>
+        /// <returns>Result</returns>
+        public Task<NativeResultData> HasPaymentPassword()
+        {
+            hasPaymentPasswordTask = new TaskCompletionSource<NativeResultData>();
+
+#if UNITY_EDITOR
+            HasPaymentPasswordCallBack(JsonConvert.SerializeObject(new JObject
+            {
+                { "status", 0 },
+                { "data", "" },
+            }));
+#endif
+            ParticleAuthCoreInteraction.HasMasterPassword();
+            return hasPaymentPasswordTask.Task;
+        }
+        
+        public void HasPaymentPasswordCallBack(string json)
+        {
+            Debug.Log($"HasPaymentPasswordCallBack:{json}");
+            var resultData = JObject.Parse(json);
+            var status = (int)resultData["status"];
+            hasPaymentPasswordTask?.TrySetResult(new NativeResultData(status == 1, resultData["data"].ToString()));
+
         }
     }
 

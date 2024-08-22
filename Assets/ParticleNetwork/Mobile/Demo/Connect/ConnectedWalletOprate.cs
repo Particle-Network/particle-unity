@@ -83,18 +83,56 @@ namespace Network.Particle.Scripts.Test
         }
 
 
-        public void AuthCoreHasMasterPassword()
+        public async void AuthCoreHasMasterPassword()
         {
-            var result = ParticleAuthCoreInteraction.HasMasterPassword();
-            ShowToast($"has master password {result}");
-            Debug.Log($"has master password {result}");
+            try
+            {
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.HasMasterPassword();
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
         }
 
-        public void AuthCoreHasPaymentPassword()
+        public async void AuthCoreHasPaymentPassword()
         {
-            var result = ParticleAuthCoreInteraction.HasPaymentPassword();
-            ShowToast($"has payment password {result}");
-            Debug.Log($"has payment password {result}");
+            try
+            {
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.HasPaymentPassword();
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
         }
 
         public async void AuthCoreOpenAccountAndSecurity()

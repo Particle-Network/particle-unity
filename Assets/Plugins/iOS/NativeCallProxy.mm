@@ -78,6 +78,14 @@ extern "C" {
     bool getSwapDisabled() {
         return [api getSwapDisabled];
     }
+    
+    void setBridgeDisabled(bool enable) {
+            [api setBridgeDisabled:enable];
+        }
+    
+    bool getBridgeDisabled() {
+        return [api getBridgeDisabled];
+    }
 
     void navigatorWallet(int display) {
         [api navigatorWallet:display];
@@ -290,10 +298,6 @@ extern "C" {
     void rpcGetFeeQuotes(const char* json) {
         [api rpcGetFeeQuotes:[NSString stringWithUTF8String: json]];
     }
-
-    bool isSupportChainInfo(const char* json) {
-        return [api isSupportChainInfo:[NSString stringWithUTF8String: json]];
-    }
 }
 
 extern "C" {
@@ -347,12 +351,12 @@ extern "C" {
         [api authCoreChangeMasterPassword];
     }
 
-    bool authCoreHasMasterPassword() {
-        return [api authCoreHasMasterPassword];
+    void authCoreHasMasterPassword() {
+        [api authCoreHasMasterPassword];
     }
 
-    bool authCoreHasPaymentPassword() {
-        return [api authCoreHasPaymentPassword];
+    void authCoreHasPaymentPassword() {
+        [api authCoreHasPaymentPassword];
     }
 
     void authCoreOpenAccountAndSecurity() {

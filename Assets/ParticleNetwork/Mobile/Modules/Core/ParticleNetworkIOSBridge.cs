@@ -225,10 +225,7 @@ namespace Network.Particle.Scripts.Core
 
         [DllImport("__Internal")]
         public static extern void rpcGetFeeQuotes(string json);
-
-        [DllImport("__Internal")]
-        public static extern bool isSupportChainInfo(string json);
-
+        
 #endif
 
         // Particle Auth Core
@@ -270,10 +267,10 @@ namespace Network.Particle.Scripts.Core
         public static extern void authCoreChangeMasterPassword();
 
         [DllImport("__Internal")]
-        public static extern bool authCoreHasMasterPassword();
+        public static extern void authCoreHasMasterPassword();
 
         [DllImport("__Internal")]
-        public static extern bool authCoreHasPaymentPassword();
+        public static extern void authCoreHasPaymentPassword();
 
         [DllImport("__Internal")]
         public static extern void authCoreOpenAccountAndSecurity();

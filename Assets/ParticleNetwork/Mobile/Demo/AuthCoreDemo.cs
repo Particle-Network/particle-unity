@@ -169,6 +169,7 @@ namespace Network.Particle.Scripts.Test
         public void GetUserInfo()
         {
             var userInfo = ParticleAuthCoreInteraction.GetUserInfo();
+            ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{userInfo}");
             Debug.Log($"get user info {userInfo}");
         }
 
@@ -225,16 +226,56 @@ namespace Network.Particle.Scripts.Test
         }
 
 
-        public void HasMasterPassword()
+        public async void HasMasterPassword()
         {
-            var result = ParticleAuthCoreInteraction.HasMasterPassword();
-            Debug.Log($"has master password {result}");
+            try
+            {
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.HasMasterPassword();
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
         }
 
-        public void HasPaymentPassword()
+        public async void HasPaymentPassword()
         {
-            var result = ParticleAuthCoreInteraction.HasPaymentPassword();
-            Debug.Log($"has master password {result}");
+            try
+            {
+                var nativeResultData =
+                    await ParticleAuthCore.Instance.HasPaymentPassword();
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{nativeResultData.data}");
+                    Debug.Log(nativeResultData.data);
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
         }
 
 
