@@ -47,7 +47,7 @@ namespace Network.Particle.Scripts.Core
                 ParticleUnityRpc.Instance.clientKey);
             Debug.Log($"Request params ${postData}");
             byte[] postDataJson = System.Text.Encoding.UTF8.GetBytes(postData);
-            using (var www = UnityWebRequest.Post(url + path, UnityWebRequest.kHttpVerbPOST))
+            using (var www = UnityWebRequest.PostWwwForm(url + path, UnityWebRequest.kHttpVerbPOST))
             {
                 www.chunkedTransfer = false;
                 www.uploadHandler = new UploadHandlerRaw(postDataJson);
