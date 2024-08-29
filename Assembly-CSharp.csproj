@@ -116,7 +116,6 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexShakeB.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/AA/ParticleAAInteraction.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Connect/Items/WalletTypeItem.cs" />
-    <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/LoginListSupportType.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/AuthCore/ParticleAuthCoreInteraction.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Model/TestConfig.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/UnityRPCDemo.cs" />
@@ -165,6 +164,7 @@
     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Tips.cs" />
     <Compile Include="Assets/ParticleNetwork/Windows/Modules/Models/OnSignResult.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/SecurityAccount.cs" />
+    <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/ConnectKitConfig.cs" />
     <None Include="Library/PackageCache/com.unity.modules.subsystems@1.0.0/package.json" />
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
     <None Include="Library/PackageCache/com.unity.modules.jsonserialize@1.0.0/package.json" />

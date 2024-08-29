@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Network.Particle.Scripts.Model;
-using Newtonsoft.Json.Converters;
 using UnityEngine;
 
 
@@ -179,30 +178,21 @@ namespace Network.Particle.Scripts.Core
 #endif
         }
 
-//         public static string GetAccounts(WalletType walletType)
-//         {
-// #if UNITY_ANDROID && !UNITY_EDITOR
-//             return ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
-// #elif UNITY_IOS && !UNITY_EDITOR
-//             return ParticleNetworkIOSBridge.adapterGetAccounts(walletType.ToString());
-// #else
-//             return "";
-// #endif
-//         }
-
         public static List<Account> GetAccounts(WalletType walletType)
         {
-#if UNITY_ANDROID && !UNITY_EDITOR
+// #if UNITY_ANDROID && !UNITY_EDITOR
             // return ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
-             var jsonString =
-            ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
-            return JsonConvert.DeserializeObject<List<Account>>(jsonString);
-#elif UNITY_IOS && !UNITY_EDITOR
+            // var jsonString =
+            // ParticleNetwork.GetUnityConnectBridgeClass().CallStatic<string>("getAccounts",walletType.ToString());
+            // return JsonConvert.DeserializeObject<List<Account>>(jsonString);
+// #elif UNITY_IOS && !UNITY_EDITOR
             var jsonString = ParticleNetworkIOSBridge.adapterGetAccounts(walletType.ToString());
-             return JsonConvert.DeserializeObject<List<Account>>(jsonString);
-#else
+            var nativeResultData = JsonConvert.DeserializeObject<NativeResultData>(jsonString);
+Debug.Log($"getAccounts, jsonString: {jsonString}, nativeResultData.data {nativeResultData.data}");
+            return JsonConvert.DeserializeObject<List<Account>>(nativeResultData.data);
+// #else
             return new List<Account>();
-#endif
+// #endif
         }
 
         public static void SignMessage(WalletType walletType, string publicAddress, string message)
