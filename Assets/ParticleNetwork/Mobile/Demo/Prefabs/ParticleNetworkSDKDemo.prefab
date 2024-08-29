@@ -753,7 +753,7 @@ GameObject:
   - component: {fileID: 5047835956272565910}
   - component: {fileID: 5047835956272565914}
   - component: {fileID: 1234638216}
-  - component: {fileID: 3965721571951317510}
+  - component: {fileID: 2260331349143017670}
   m_Layer: 5
   m_Name: ParticleNetworkSDKDemo
   m_TagString: Untagged
@@ -892,7 +892,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &3965721571951317510
+--- !u!114 &2260331349143017670
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
