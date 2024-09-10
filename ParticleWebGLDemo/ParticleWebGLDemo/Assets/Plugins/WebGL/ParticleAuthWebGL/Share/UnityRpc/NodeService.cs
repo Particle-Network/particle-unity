@@ -21,7 +21,7 @@ namespace Network.Particle.Scripts.Core
 
     public class NodeService
     {
-        private static string url = ParticleUnityRpc.Instance.rpcUrl;
+        private static string url = ParticleUnityRpc.rpcUrl;
 
         private static string authenticate(string username, string password)
         {
@@ -39,12 +39,12 @@ namespace Network.Particle.Scripts.Core
 
         public async static Task<string> Request(string path, string postData)
         {
-            Assert.IsTrue(!string.IsNullOrEmpty(ParticleUnityRpc.Instance.projectId), "Project ID is not set");
-            Assert.IsTrue(!string.IsNullOrEmpty(ParticleUnityRpc.Instance.clientKey),
+            Assert.IsTrue(!string.IsNullOrEmpty(ParticleUnityRpc.projectId), "Project ID is not set");
+            Assert.IsTrue(!string.IsNullOrEmpty(ParticleUnityRpc.clientKey),
                 "Project Client Key is not set");
 
-            string authorization = authenticate(ParticleUnityRpc.Instance.projectId,
-                ParticleUnityRpc.Instance.clientKey);
+            string authorization = authenticate(ParticleUnityRpc.projectId,
+                ParticleUnityRpc.clientKey);
             Debug.Log($"Request params ${postData}");
             byte[] postDataJson = System.Text.Encoding.UTF8.GetBytes(postData);
             using (var www = UnityWebRequest.Post(url + path, UnityWebRequest.kHttpVerbPOST))

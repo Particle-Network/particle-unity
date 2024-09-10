@@ -123,8 +123,8 @@ public class ParticleAuth : MonoBehaviour
     /// <param name="config"></param>
     public void Init(InitConfig config)
     {
-        UnityInnerChainInfo.SetChainInfo(config.chainInfo);
         string json = JsonConvert.SerializeObject(config, Formatting.Indented);
+        SetInnerConfig(config.projectId, config.clientKey, config.appId, config.chainInfo);
         InitParticleAuth(json);
     }
 
@@ -137,8 +137,23 @@ public class ParticleAuth : MonoBehaviour
         var chainName = (string)JObject.Parse(json)["chainName"];
         var chainId = (long)JObject.Parse(json)["chainId"];
         var chainInfo = ChainInfo.GetChain(chainId, chainName);
-        UnityInnerChainInfo.SetChainInfo(chainInfo);
+        var projectId =  (string)JObject.Parse(json)["projectId"];
+        var clientKey =  (string)JObject.Parse(json)["clientKey"];
+        var appId =  (string)JObject.Parse(json)["appId"];
+        SetInnerConfig(projectId, clientKey, appId, chainInfo);
         InitParticleAuth(json);
+    }
+
+    private void SetInnerConfig(string projectId, string clientKey, string appId, ChainInfo chainInfo)
+    {
+        if (projectId == "" || clientKey == "" || appId == "")
+        {
+            throw new ErrorException(0, "Init config is wrong");
+        }
+        ParticleUnityRpc.projectId = projectId;
+        ParticleUnityRpc.appId = appId;
+        ParticleUnityRpc.clientKey = clientKey;
+        UnityInnerChainInfo.SetChainInfo(chainInfo);
     }
 
     /// <summary>
