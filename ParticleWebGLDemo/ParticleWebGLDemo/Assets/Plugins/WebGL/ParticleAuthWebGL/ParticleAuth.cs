@@ -1,7 +1,15 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using System.Text;
+using JetBrains.Annotations;
+using Network.Particle.Scripts.Core;
+using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Plugins.WebGL.ParticleAuthWebGL.Share;
 
 
 public class ParticleAuth : MonoBehaviour
@@ -19,7 +27,10 @@ public class ParticleAuth : MonoBehaviour
     private static extern void SetParticleAuthTheme(string options);
 
     [DllImport("__Internal")]
-    private static extern void SetParticleERC4337(bool enable);
+    private static extern void SetParticleERC4337(string json);
+
+    [DllImport("__Internal")]
+    private static extern void EnableParticleERC4337(bool enable);
 
     [DllImport("__Internal")]
     private static extern void LoginWithParticle(string options);
@@ -52,25 +63,32 @@ public class ParticleAuth : MonoBehaviour
     private static extern void ParticleSwitchChain(string options);
 
     [DllImport("__Internal")]
-    private static extern void ParticleEVMSendTransaction(string options);
+    private static extern void ParticleEVMSendTransaction(string transaction);
 
     [DllImport("__Internal")]
-    private static extern void ParticleEVMPersonalSign(string options);
+    private static extern void ParticleEVMPersonalSign(string message);
 
     [DllImport("__Internal")]
-    private static extern void ParticleEVMPersonalSignUniq(string options);
+    private static extern void ParticleEVMPersonalSignUniq(string message);
 
     [DllImport("__Internal")]
-    private static extern void ParticleEVMSignTypedData(string options);
+    private static extern void ParticleEVMSignTypedData(string message);
 
     [DllImport("__Internal")]
-    private static extern void ParticleEVMSignTypedDataUniq(string options);
+    private static extern void ParticleEVMSignTypedDataUniq(string message);
 
     [DllImport("__Internal")]
-    private static extern void ParticleSolanaSignAndSendTransaction(string options);
+    private static extern void ParticleSolanaSignAndSendTransaction(string transaction);
 
     [DllImport("__Internal")]
-    private static extern void ParticleSolanasSignMessage(string options);
+    private static extern void ParticleSolanasSignMessage(string message);
+
+    [DllImport("__Internal")]
+    private static extern void ParticleSolanasSignTransaction(string transaction);
+
+    [DllImport("__Internal")]
+    private static extern void ParticleSolanasSignAllTransactions(string[] transaction);
+
 
     public static ParticleAuth Instance;
 
@@ -85,6 +103,8 @@ public class ParticleAuth : MonoBehaviour
     private TaskCompletionSource<string> evmSignTypedDataUniqTask;
     private TaskCompletionSource<string> solanaSignAndSendTransactionTask;
     private TaskCompletionSource<string> solanasSignMessageTask;
+    private TaskCompletionSource<string> solanasSignTransactionTask;
+    private TaskCompletionSource<List<string>> solanasSignAllTransactionsTask;
 
 
     void Awake()
@@ -103,16 +123,21 @@ public class ParticleAuth : MonoBehaviour
     /// <param name="config"></param>
     public void Init(InitConfig config)
     {
+        UnityInnerChainInfo.SetChainInfo(config.chainInfo);
         string json = JsonConvert.SerializeObject(config, Formatting.Indented);
         InitParticleAuth(json);
     }
-    
+
     /// <summary>
-    /// Init with a json string
+    /// Init with a json string, must contains chainName and chainId
     /// </summary>
-    /// <param name="json"></param>
+    /// <param name="json">config ison string</param>
     public void InitWithJsonString(string json)
     {
+        var chainName = (string)JObject.Parse(json)["chainName"];
+        var chainId = (long)JObject.Parse(json)["chainId"];
+        var chainInfo = ChainInfo.GetChain(chainId, chainName);
+        UnityInnerChainInfo.SetChainInfo(chainInfo);
         InitParticleAuth(json);
     }
 
@@ -144,11 +169,30 @@ public class ParticleAuth : MonoBehaviour
         SetParticleAuthTheme(json);
     }
 
-    public void SetERC4337(bool enable)
+    /// <summary>
+    /// Set account abstraction 
+    /// </summary>
+    /// <param name="accountName">AccountName</param>
+    public void SetERC4337(AAAccountName accountName)
     {
-        SetParticleERC4337(enable);
+        var json = JsonConvert.SerializeObject(accountName);
+        SetParticleERC4337(json);
     }
 
+    /// <summary>
+    /// Enable ERC4337 
+    /// </summary>
+    /// <param name="enable">true is enable, false is disable</param>
+    public void EnableERC4337(bool enable)
+    {
+        EnableParticleERC4337(enable);
+    }
+
+    /// <summary>
+    /// Login
+    /// </summary>
+    /// <param name="config">login config</param>
+    /// <returns></returns>
     public Task<string> Login(LoginConfig? config)
     {
         var json = JsonConvert.SerializeObject(config);
@@ -163,6 +207,10 @@ public class ParticleAuth : MonoBehaviour
         loginTask?.TrySetResult(json);
     }
 
+    /// <summary>
+    /// Logout
+    /// </summary>
+    /// <returns></returns>
     public Task<bool> Logout()
     {
         logoutTask = new TaskCompletionSource<bool>();
@@ -181,7 +229,7 @@ public class ParticleAuth : MonoBehaviour
         return IsParticleLoggedIn() == 1;
     }
 
-    
+
     /// <summary>
     /// Get user info after login
     /// </summary>
@@ -211,8 +259,17 @@ public class ParticleAuth : MonoBehaviour
         getSecurityAccountTask?.TrySetResult(json);
     }
 
-    public void OpenWallet()
+    /// <summary>
+    /// Open wallet page
+    /// </summary>
+    /// <param name="accountName">Optional, if you are using smart account, should provide this value</param>
+    public void OpenWallet([CanBeNull] AAAccountName accountName = null)
     {
+        if (accountName != null)
+        {
+            SetERC4337(accountName);
+        }
+
         OpenParticleWallet();
     }
 
@@ -226,10 +283,10 @@ public class ParticleAuth : MonoBehaviour
         return GetParticleWalletAddress();
     }
 
-    public Task<string> SwitchChain(Chain chain)
+    public Task<string> SwitchChain(ChainInfo chainInfo)
     {
         switchChainTask = new TaskCompletionSource<string>();
-        var json = JsonConvert.SerializeObject(chain);
+        var json = JsonConvert.SerializeObject(chainInfo);
         ParticleSwitchChain(json);
         return switchChainTask.Task;
     }
@@ -241,18 +298,40 @@ public class ParticleAuth : MonoBehaviour
 
     public Task<string> EVMSendTransaction(string transaction)
     {
+        var jsonString = "";
+        if (transaction.StartsWith("0x"))
+        {
+            jsonString = HexToString(transaction);
+        }
+        else
+        {
+            jsonString = transaction;
+        }
+
         evmSendTransactionTask = new TaskCompletionSource<string>();
-        ParticleEVMSendTransaction(transaction);
+        ParticleEVMSendTransaction(jsonString);
         return evmSendTransactionTask.Task;
     }
 
+
     public void OnEVMSendTransaction(string json)
     {
-        evmSendTransactionTask?.TrySetResult(json);
+        HandleSignResult(json, evmSendTransactionTask);
     }
 
-    public Task<string> EVMPersonalSign(string message)
+    /// <summary>
+    /// Personal sign
+    /// </summary>
+    /// <param name="message">Message</param>
+    /// <param name="accountName">Optional, if you are using smart account, should provide this value</param>
+    /// <returns></returns>
+    public Task<string> EVMPersonalSign(string message, [CanBeNull] AAAccountName accountName = null)
     {
+        if (accountName != null)
+        {
+            SetERC4337(accountName);
+        }
+
         evmPersonalSignTask = new TaskCompletionSource<string>();
         ParticleEVMPersonalSign(message);
         return evmPersonalSignTask.Task;
@@ -260,8 +339,9 @@ public class ParticleAuth : MonoBehaviour
 
     public void OnEVMPersonalSign(string json)
     {
-        evmPersonalSignTask?.TrySetResult(json);
+        HandleSignResult(json, evmPersonalSignTask);
     }
+
 
     public Task<string> EVMPersonalSignUniq(string message)
     {
@@ -272,7 +352,7 @@ public class ParticleAuth : MonoBehaviour
 
     public void OnEVMPersonalSignUniq(string json)
     {
-        evmPersonalSignUniqTask?.TrySetResult(json);
+        HandleSignResult(json, evmPersonalSignUniqTask);
     }
 
     public Task<string> EVMSignTypedData(string message)
@@ -284,7 +364,7 @@ public class ParticleAuth : MonoBehaviour
 
     public void OnEVMSignTypedData(string json)
     {
-        evmSignTypedDataTask?.TrySetResult(json);
+        HandleSignResult(json, evmSignTypedDataTask);
     }
 
     public Task<string> EVMSignTypedDataUniq(string message)
@@ -296,7 +376,7 @@ public class ParticleAuth : MonoBehaviour
 
     public void OnEVMSignTypedDataUniq(string json)
     {
-        evmSignTypedDataUniqTask?.TrySetResult(json);
+        HandleSignResult(json, evmSignTypedDataUniqTask);
     }
 
     public Task<string> SolanaSignAndSendTransaction(string transaction)
@@ -308,18 +388,97 @@ public class ParticleAuth : MonoBehaviour
 
     public void OnSolanaSignAndSendTransaction(string json)
     {
-        solanaSignAndSendTransactionTask?.TrySetResult(json);
+        HandleSignResult(json, solanaSignAndSendTransactionTask);
     }
 
-    public Task<string> SolanasSignMessage(string message)
+    public Task<string> SolanasSignMessage(string transaction)
     {
         solanasSignMessageTask = new TaskCompletionSource<string>();
-        ParticleSolanasSignMessage(message);
+        ParticleSolanasSignMessage(transaction);
         return solanasSignMessageTask.Task;
     }
 
     public void OnSolanasSignMessage(string json)
     {
-        solanasSignMessageTask?.TrySetResult(json);
+        HandleSignResult(json, solanasSignMessageTask);
+    }
+
+    public Task<string> SolanasSignTransaction(string transaction)
+    {
+        solanasSignTransactionTask = new TaskCompletionSource<string>();
+        ParticleSolanasSignTransaction(transaction);
+        return solanasSignTransactionTask.Task;
+    }
+
+    public void OnSolanasSignTransaction(string json)
+    {
+        HandleSignResult(json, solanasSignTransactionTask);
+    }
+
+    public Task<List<string>> SolanasSignAllTransactions(string[] transactions)
+    {
+        solanasSignAllTransactionsTask = new TaskCompletionSource<List<string>>();
+        ParticleSolanasSignAllTransactions(transactions);
+        return solanasSignAllTransactionsTask.Task;
+    }
+
+    public void OnSolanasSignAllTransactions(string json)
+    {
+        HandleSignResult(json, solanasSignAllTransactionsTask);
+    }
+
+    private void HandleSignResult<T>(string json, TaskCompletionSource<T> task)
+    {
+        Debug.Log($"handle result {json}");
+        var jsonObject = JObject.Parse(json);
+
+        if (jsonObject.ContainsKey("signature"))
+        {
+            var signature = jsonObject["signature"]!.ToObject<T>();
+            task?.TrySetResult(signature);
+        }
+        else if (jsonObject.ContainsKey("error"))
+        {
+            var error = jsonObject.GetValue("error");
+
+            if (error != null && error is JObject errorObj)
+            {
+                var codeToken = errorObj.GetValue("code");
+                var messageToken = errorObj.GetValue("message");
+
+                if (codeToken != null && messageToken != null)
+                {
+                    var code = (int)codeToken;
+                    var message = (string)messageToken;
+
+                    task.SetException(new ErrorException(code, message));
+                }
+                else
+                {
+                    task.SetException(new ErrorException(0, "Unknown error: Missing 'code' or 'message' fields"));
+                }
+            }
+            else
+            {
+                task.SetException(new ErrorException(0, "Unknown error: 'error' object missing"));
+            }
+        }
+    }
+
+    private string HexToString(string hex)
+    {
+        if (hex.StartsWith("0x"))
+        {
+            hex = hex.Substring(2);
+        }
+
+        hex = hex.Replace("-", "");
+        byte[] raw = new byte[hex.Length / 2];
+        for (int i = 0; i < raw.Length; i++)
+        {
+            raw[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+        }
+
+        return Encoding.ASCII.GetString(raw);
     }
 }

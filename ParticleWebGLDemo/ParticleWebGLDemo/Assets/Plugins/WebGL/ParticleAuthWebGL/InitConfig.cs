@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Network.Particle.Scripts.Model;
 using UnityEngine;
 using Newtonsoft.Json;
 
@@ -17,26 +18,14 @@ public struct WalletEntryPosition
 }
 
 [Serializable]
-public struct Chain
-{
-    public int id;
-    public string name;
-
-    public Chain(int id, string name)
-    {
-        this.id = id;
-        this.name = name;
-    }
-}
-
-[Serializable]
 public struct Wallet
 {
     public bool displayWalletEntry;
     public WalletEntryPosition defaultWalletEntryPosition;
-    public List<Chain> supportChains;
+    public List<ChainInfo> supportChains;
 
-    public Wallet(bool displayWalletEntry, WalletEntryPosition defaultWalletEntryPosition, List<Chain> supportChains)
+    public Wallet(bool displayWalletEntry, WalletEntryPosition defaultWalletEntryPosition,
+        List<ChainInfo> supportChains)
     {
         this.displayWalletEntry = displayWalletEntry;
         this.defaultWalletEntryPosition = defaultWalletEntryPosition;
@@ -64,20 +53,26 @@ public struct InitConfig
     public string clientKey;
     public string appId;
     public string chainName;
-    public int chainId;
+    public long chainId;
     public SecurityAccount securityAccount;
     public Wallet wallet;
 
-    public InitConfig(string projectId, string clientKey, string appId, string chainName, int chainId,
+
+    [JsonIgnore] 
+    public ChainInfo chainInfo;
+
+    public InitConfig(string projectId, string clientKey, string appId, ChainInfo chainInfo,
         SecurityAccount securityAccount, Wallet wallet)
     {
         this.projectId = projectId;
         this.clientKey = clientKey;
         this.appId = appId;
-        this.chainName = chainName;
-        this.chainId = chainId;
+        this.chainName = chainInfo.Name;
+        this.chainId = chainInfo.Id;
         this.securityAccount = securityAccount;
         this.wallet = wallet;
+
+        this.chainInfo = chainInfo;
     }
 }
 

@@ -24,9 +24,13 @@ mergeInto(LibraryManager.library, {
         const config = UTF8ToString(options);
         window.particle.setAuthTheme(JSON.parse(config));
     },
-    
+
     SetParticleERC4337: function (enable) {
-         window.particle.setERC4337(enable);
+        window.particle.setERC4337(enable);
+    },
+
+    EnableParticleERC4337: function (enable) {
+        window.particle.setERC4337(enable);
     },
 
     LoginWithParticle: async function (options) {
@@ -87,7 +91,7 @@ mergeInto(LibraryManager.library, {
 
     GetParticleWalletAddress: function () {
         const chainType = window.particle.getChain().name.toLowerCase() === 'solana' ? 'solana' : 'evm_chain';
-        const wallet =  window.particle.auth.getWallet(chainType);
+        const wallet = window.particle.auth.getWallet(chainType);
         const walletAddress = wallet ? wallet.public_address : '';
         const bufferSize = lengthBytesUTF8(walletAddress) + 1;
         const buffer = _malloc(bufferSize);
@@ -172,6 +176,26 @@ mergeInto(LibraryManager.library, {
             SendMessage('ParticleAuth', 'OnSolanasSignMessage', JSON.stringify({ signature }));
         } catch (error) {
             SendMessage('ParticleAuth', 'OnSolanasSignMessage', JSON.stringify({ error }));
+        }
+    },
+
+    ParticleSolanasSignTransaction: async function (options) {
+        const message = UTF8ToString(options);
+        try {
+            const signature = (await window.particle.solana.signTransaction(message)).toString('base64');
+            SendMessage('ParticleAuth', 'OnSolanasSignTransaction', JSON.stringify({ signature }));
+        } catch (error) {
+            SendMessage('ParticleAuth', 'OnSolanasSignTransaction', JSON.stringify({ error }));
+        }
+    },
+
+    ParticleSolanasSignAllTransactions: async function (options) {
+        const message = UTF8ToString(options);
+        try {
+            const signature = (await window.particle.solana.signAllTransactions(message)).toString('base64');
+            SendMessage('ParticleAuth', 'OnSolanasSignAllTransactions', JSON.stringify({ signature }));
+        } catch (error) {
+            SendMessage('ParticleAuth', 'OnSolanasSignAllTransactions', JSON.stringify({ error }));
         }
     },
 });

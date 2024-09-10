@@ -292,8 +292,16 @@ namespace Particle.Windows.Demo
             var feeQuotes = await EvmService.GetFeeQuotes(smartAccountObject,
                 new List<SimplifyTransaction> { transaction });
 
+            var tokenPaymaster = JObject.Parse(feeQuotes)["result"]["tokenPaymaster"];
 
-            JArray tokenFeeQuotes = (JArray)(JObject.Parse(feeQuotes)["result"]["tokenPaymaster"]["feeQuotes"]);
+
+            if (tokenPaymaster == null || tokenPaymaster.Type == JTokenType.Null)
+            {
+                Debug.Log("paying token is not available");
+                return;
+            }
+
+            JArray tokenFeeQuotes = (JArray)tokenPaymaster["feeQuotes"];
 
             var overFeeQuotes = tokenFeeQuotes
                 .Where(jt =>
@@ -386,9 +394,11 @@ namespace Particle.Windows.Demo
                     JObject.Parse(createSessionsResultData)["result"]["verifyingPaymasterGasless"]["userOpHash"]
                         .ToString();
                     
-                var signature  = await ParticleSystem.Instance.SignMessage(createSessionUserOpHash, AAAccountName.BICONOMY_V2());
+                var signature =
+ await ParticleSystem.Instance.SignMessage(createSessionUserOpHash, AAAccountName.BICONOMY_V2());
                 Debug.Log($"signature {signature}");
 
+                createSessionUserOp["signature"] = signature;
                 var sendCreateSessionUserOpResult =
                     await EvmService.SendUserOp(smartAccountObject, createSessionUserOp);
                 var sendCreateSessionUserOpHash = JObject.Parse(sendCreateSessionUserOpResult)["result"].ToString();
