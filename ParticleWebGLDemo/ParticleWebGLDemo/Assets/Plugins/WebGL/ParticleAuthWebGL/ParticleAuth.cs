@@ -219,7 +219,7 @@ public class ParticleAuth : MonoBehaviour
     // Called from browser
     public void OnLogin(string json)
     {
-        loginTask?.TrySetResult(json);
+        HandleLoginResult(json, loginTask);
     }
 
     /// <summary>
@@ -232,7 +232,7 @@ public class ParticleAuth : MonoBehaviour
         LogoutParticle();
         return logoutTask.Task;
     }
-
+    
     // Called from browser
     public void OnLogout()
     {
@@ -269,6 +269,7 @@ public class ParticleAuth : MonoBehaviour
         return getSecurityAccountTask.Task;
     }
 
+    // Called from browser
     public void OnGetSecurityAccount(string json)
     {
         getSecurityAccountTask?.TrySetResult(json);
@@ -292,12 +293,21 @@ public class ParticleAuth : MonoBehaviour
     {
         OpenParticleBuy(options);
     }
-
+    
+    /// <summary>
+    /// Get address base on current chainInfo
+    /// </summary>
+    /// <returns></returns>
     public string GetWalletAddress()
     {
         return GetParticleWalletAddress();
     }
 
+    /// <summary>
+    /// Switch chain
+    /// </summary>
+    /// <param name="chainInfo"></param>
+    /// <returns></returns>
     public Task<string> SwitchChain(ChainInfo chainInfo)
     {
         switchChainTask = new TaskCompletionSource<string>();
@@ -311,6 +321,11 @@ public class ParticleAuth : MonoBehaviour
         switchChainTask?.TrySetResult(json);
     }
 
+    /// <summary>
+    /// EVM send transaction
+    /// </summary>
+    /// <param name="transaction">The EVM transaction requires a hexadecimal string.</param>
+    /// <returns></returns>
     public Task<string> EVMSendTransaction(string transaction)
     {
         var jsonString = "";
@@ -335,9 +350,9 @@ public class ParticleAuth : MonoBehaviour
     }
 
     /// <summary>
-    /// Personal sign
+    /// EVM personal sign
     /// </summary>
-    /// <param name="message">Message</param>
+    /// <param name="message">The message requires a hexadecimal string.</param>
     /// <param name="accountName">Optional, if you are using smart account, should provide this value</param>
     /// <returns></returns>
     public Task<string> EVMPersonalSign(string message, [CanBeNull] AAAccountName accountName = null)
@@ -358,6 +373,11 @@ public class ParticleAuth : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// EVM personal sign unique
+    /// </summary>
+    /// <param name="message">The message requires a hexadecimal string.</param>
+    /// <returns></returns>
     public Task<string> EVMPersonalSignUniq(string message)
     {
         evmPersonalSignUniqTask = new TaskCompletionSource<string>();
@@ -370,6 +390,11 @@ public class ParticleAuth : MonoBehaviour
         HandleSignResult(json, evmPersonalSignUniqTask);
     }
 
+    /// <summary>
+    /// EVM sign typed data
+    /// </summary>
+    /// <param name="message">The message requires a json string.</param>
+    /// <returns></returns>
     public Task<string> EVMSignTypedData(string message)
     {
         evmSignTypedDataTask = new TaskCompletionSource<string>();
@@ -382,6 +407,11 @@ public class ParticleAuth : MonoBehaviour
         HandleSignResult(json, evmSignTypedDataTask);
     }
 
+    /// <summary>
+    /// EVM sign typed data unique
+    /// </summary>
+    /// <param name="message">The message requires a json string.</param>
+    /// <returns></returns>
     public Task<string> EVMSignTypedDataUniq(string message)
     {
         evmSignTypedDataUniqTask = new TaskCompletionSource<string>();
@@ -394,6 +424,11 @@ public class ParticleAuth : MonoBehaviour
         HandleSignResult(json, evmSignTypedDataUniqTask);
     }
 
+    /// <summary>
+    /// Solana sign and send transaction
+    /// </summary>
+    /// <param name="transaction">The Solana transaction requires a base58 string.</param>
+    /// <returns></returns>
     public Task<string> SolanaSignAndSendTransaction(string transaction)
     {
         solanaSignAndSendTransactionTask = new TaskCompletionSource<string>();
@@ -406,6 +441,11 @@ public class ParticleAuth : MonoBehaviour
         HandleSignResult(json, solanaSignAndSendTransactionTask);
     }
 
+    /// <summary>
+    /// Solana sign message
+    /// </summary>
+    /// <param name="transaction">The message requires a base58 string.</param>
+    /// <returns></returns>
     public Task<string> SolanaSignMessage(string transaction)
     {
         solanaSignMessageTask = new TaskCompletionSource<string>();
@@ -418,6 +458,11 @@ public class ParticleAuth : MonoBehaviour
         HandleSignResult(json, solanaSignMessageTask);
     }
 
+    /// <summary>
+    /// Solana sign transaction
+    /// </summary>
+    /// <param name="transaction">The Solana transaction requires a base58 string.</param>
+    /// <returns></returns>
     public Task<string> SolanaSignTransaction(string transaction)
     {
         solanaSignTransactionTask = new TaskCompletionSource<string>();
@@ -430,6 +475,11 @@ public class ParticleAuth : MonoBehaviour
         HandleSignResult(json, solanaSignTransactionTask);
     }
 
+    /// <summary>
+    /// Solana sign all transactions
+    /// </summary>
+    /// <param name="transactions">Each Solana transaction requires a base58 string.</param>
+    /// <returns></returns>
     public Task<List<string>> SolanaSignAllTransactions(string[] transactions)
     {
         solanaSignAllTransactionsTask = new TaskCompletionSource<List<string>>();
@@ -443,17 +493,22 @@ public class ParticleAuth : MonoBehaviour
         HandleSignResult(json, solanaSignAllTransactionsTask);
     }
 
+    private void HandleLoginResult<T>(string json, TaskCompletionSource<T> task)
+    {
+        HandleResult(json, task, "");
+    }
+
     private void HandleSignResult<T>(string json, TaskCompletionSource<T> task)
+    {
+        HandleResult(json, task, "signature");
+    }
+
+    private void HandleResult<T>(string json, TaskCompletionSource<T> task, string key)
     {
         Debug.Log($"handle result {json}");
         var jsonObject = JObject.Parse(json);
-
-        if (jsonObject.ContainsKey("signature"))
-        {
-            var signature = jsonObject["signature"]!.ToObject<T>();
-            task?.TrySetResult(signature);
-        }
-        else if (jsonObject.ContainsKey("error"))
+        
+        if (jsonObject.ContainsKey("error"))
         {
             var error = jsonObject.GetValue("error");
 
@@ -478,6 +533,15 @@ public class ParticleAuth : MonoBehaviour
             {
                 task.SetException(new ErrorException(0, "Unknown error: 'error' object missing"));
             }
+        }
+        else if (jsonObject.ContainsKey(key))
+        {
+            var value = jsonObject[key]!.ToObject<T>();
+            task?.TrySetResult(value);
+        }
+        else
+        {
+            task?.TrySetResult((T)(object)json);
         }
     }
 

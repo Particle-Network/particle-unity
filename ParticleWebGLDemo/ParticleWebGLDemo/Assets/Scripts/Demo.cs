@@ -50,8 +50,17 @@ namespace DefaultNamespace
 
         public async void Login()
         {
+            // google login
+            var userInfo = await ParticleAuth.Instance.Login(new LoginConfig(preferredAuthType: "google", account: "",
+                null, "select_account", null));
+            // jwt login
+            // var userInfo = await ParticleAuth.Instance.Login(new LoginConfig(preferredAuthType: "jwt", account: "your jwt", null, "select_account", null));
+
+            // open login page
+            // var userInfo = await ParticleAuth.Instance.Login(null);
+
             // get userInfo after login
-            var userInfo = await ParticleAuth.Instance.Login(null);
+            // var userInfo = await ParticleAuth.Instance.Login(null);
             Debug.Log($"userInfo {userInfo}");
 
             // get current chain's public address, all evm chains' address is the same.
@@ -59,6 +68,12 @@ namespace DefaultNamespace
             Debug.Log($"current chainInfo, address {address}");
 
             getAddressFromUserInfo(userInfo);
+        }
+
+        public async void Logout()
+        {
+            var result = await ParticleAuth.Instance.Logout();
+            Debug.Log($"logout result {result}");
         }
 
         public void GetUserInfo()

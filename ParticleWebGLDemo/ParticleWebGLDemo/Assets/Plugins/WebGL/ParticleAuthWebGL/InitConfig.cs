@@ -117,7 +117,7 @@ public struct Authorization
 public struct LoginConfig
 {
     /// <summary>
-    /// email,phone,jwt
+    /// support email | phone | jwt | google | apple | facebook | discord | twitter | twitch | microsoft | linkedin
     /// </summary>
     public string preferredAuthType;
 
@@ -144,7 +144,7 @@ public struct LoginConfig
     public Authorization? authorization;
 
     public LoginConfig(string preferredAuthType, string account, bool? hideLoading, string socialLoginPrompt,
-        Authorization authorization)
+        Authorization? authorization)
     {
         this.preferredAuthType = preferredAuthType;
         this.account = account;
