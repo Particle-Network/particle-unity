@@ -116,7 +116,7 @@ namespace Network.Particle.Scripts.Model
         "https://static.particle.network/token-list/elastos/native.png",
         "Elastos Mainnet",
         "Mainnet",
-        "http://elastos.org",
+        "https://elastos.org",
         new NativeCurrency("ELA", "ELA", 18),
         "https://api.elastos.io/esc",
         "https://esc.elastos.io",
@@ -409,24 +409,6 @@ namespace Network.Particle.Scripts.Model
         "https://rpc.fusespark.io",
         "https://explorer.fusespark.io",
         new List<Feature>() { new Feature("ERC4337")},
-        null
-    );
-            
-
-    public static ChainInfo Heco => _heco;
-
-    private static ChainInfo _heco = new ChainInfo(
-        128,
-        "Heco",
-        "evm",
-        "https://static.particle.network/token-list/heco/native.png",
-        "Heco Mainnet",
-        "Mainnet",
-        "https://www.hecochain.com",
-        new NativeCurrency("HT", "HT", 18),
-        "https://http-mainnet.hecochain.com",
-        "https://hecoinfo.com",
-        new List<Feature>() { new Feature("EIP1559")},
         null
     );
             
@@ -989,6 +971,42 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo StoryNetworkTestnet => _storynetworktestnet;
+
+    private static ChainInfo _storynetworktestnet = new ChainInfo(
+        1513,
+        "StoryNetwork",
+        "evm",
+        "https://static.particle.network/token-list/storynetwork/native.png",
+        "Story Network Testnet",
+        "Testnet",
+        "https://explorer.testnet.storyprotocol.net",
+        new NativeCurrency("IP", "IP", 18),
+        "https://rpc.partner.testnet.storyprotocol.net",
+        "https://explorer.testnet.storyprotocol.net",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo GravityAlpha => _gravityalpha;
+
+    private static ChainInfo _gravityalpha = new ChainInfo(
+        1625,
+        "Gravity",
+        "evm",
+        "https://static.particle.network/token-list/gravity/native.png",
+        "Gravity Alpha Mainnet",
+        "Mainnet",
+        "https://gravity.xyz",
+        new NativeCurrency("G", "G", 18),
+        "https://rpc.gravity.xyz",
+        "https://gscan.xyz",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo ComboTestnet => _combotestnet;
 
     private static ChainInfo _combotestnet = new ChainInfo(
@@ -1007,6 +1025,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo SoneiumMinatoTestnet => _soneiumminatotestnet;
+
+    private static ChainInfo _soneiumminatotestnet = new ChainInfo(
+        1946,
+        "Soneium",
+        "evm",
+        "https://static.particle.network/token-list/soneium/native.png",
+        "Soneium Minato Testnet",
+        "Testnet",
+        "https://soneium.org",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://rpc.minato.soneium.org",
+        "https://explorer-testnet.soneium.org",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo KavaTestnet => _kavatestnet;
 
     private static ChainInfo _kavatestnet = new ChainInfo(
@@ -1019,7 +1055,7 @@ namespace Network.Particle.Scripts.Model
         "https://www.kava.io",
         new NativeCurrency("KAVA", "KAVA", 18),
         "https://evm.testnet.kava.io",
-        "http://testnet.kavascan.com",
+        "https://testnet.kavascan.com",
         null,
         "https://faucet.kava.io"
     );
@@ -1195,7 +1231,7 @@ namespace Network.Particle.Scripts.Model
         "evm",
         "https://static.particle.network/token-list/astarzkevm/native.png",
         "Astar zkEVM Mainet",
-        "Mainet",
+        "Mainnet",
         "https://astar.network",
         new NativeCurrency("Sepolia Ether", "ETH", 18),
         "https://rpc.startale.com/astar-zkevm",
@@ -1601,6 +1637,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo GravityAlphaTestnet => _gravityalphatestnet;
+
+    private static ChainInfo _gravityalphatestnet = new ChainInfo(
+        13505,
+        "Gravity",
+        "evm",
+        "https://static.particle.network/token-list/gravity/native.png",
+        "Gravity Alpha Testnet",
+        "Testnet",
+        "https://gravity.xyz",
+        new NativeCurrency("G", "G", 18),
+        "https://rpc-sepolia.gravity.xyz",
+        " https://explorer-sepolia.gravity.xyz",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo EOSEVMTestnet => _eosevmtestnet;
 
     private static ChainInfo _eosevmtestnet = new ChainInfo(
@@ -1901,8 +1955,26 @@ namespace Network.Particle.Scripts.Model
         "https://www.zircuit.com",
         new NativeCurrency("Ether", "ETH", 18),
         "https://zircuit1.p2pify.com",
-        "https://explorer.zircuit.com",
+        "https://explorer.testnet.zircuit.com",
         new List<Feature>() { new Feature("ERC4337")},
+        null
+    );
+            
+
+    public static ChainInfo DODOChainTestnet => _dodochaintestnet;
+
+    private static ChainInfo _dodochaintestnet = new ChainInfo(
+        53457,
+        "DODOChain",
+        "evm",
+        "https://static.particle.network/token-list/dodochain/native.png",
+        "DODOChain Testnet",
+        "Testnet",
+        "https://www.dodochain.com",
+        new NativeCurrency("DODO", "DODO", 18),
+        "https://dodochain-testnet.alt.technology",
+        "https://testnet-scan.dodochain.com",
+        new List<Feature>() { new Feature("EIP1559")},
         null
     );
             
@@ -2173,6 +2245,24 @@ namespace Network.Particle.Scripts.Model
         "https://rpc.bitlayer.org",
         "https://www.btrscan.com",
         new List<Feature>() { new Feature("ERC4337")},
+        null
+    );
+            
+
+    public static ChainInfo DuckchainTestnet => _duckchaintestnet;
+
+    private static ChainInfo _duckchaintestnet = new ChainInfo(
+        202105,
+        "Duckchain",
+        "evm",
+        "https://static.particle.network/token-list/duckchain/native.png",
+        "Duckchain Testnet",
+        "Testnet",
+        "https://testnet-scan.duckchain.io",
+        new NativeCurrency("TON", "TON", 18),
+        "https://testnet-rpc.duckchain.io",
+        "https://testnet-scan.duckchain.io",
+        new List<Feature>() { new Feature("EIP1559")},
         null
     );
             
@@ -2483,6 +2573,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo PlumeTestnet => _plumetestnet;
+
+    private static ChainInfo _plumetestnet = new ChainInfo(
+        161221135,
+        "Plume",
+        "evm",
+        "https://static.particle.network/token-list/plume/native.png",
+        "Plume Testnet",
+        "Testnet",
+        "https://testnet-explorer.plumenetwork.xyz",
+        new NativeCurrency("ETH", "ETH", 18),
+        "https://testnet-rpc.plumenetwork.xyz/http",
+        "https://testnet-explorer.plumenetwork.xyz",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo BlastSepolia => _blastsepolia;
 
     private static ChainInfo _blastsepolia = new ChainInfo(
@@ -2681,24 +2789,6 @@ namespace Network.Particle.Scripts.Model
     );
             
 
-    public static ChainInfo GMNetworkTestnet => _gmnetworktestnet;
-
-    private static ChainInfo _gmnetworktestnet = new ChainInfo(
-        202402181627,
-        "GMNetwork",
-        "evm",
-        "https://static.particle.network/token-list/gmnetwork/native.png",
-        "GM Network Testnet",
-        "Testnet",
-        "https://gmnetwork.ai",
-        new NativeCurrency("Ether", "ETH", 18),
-        "https://gmnetwork-testnet.alt.technology",
-        "https://gmnetwork-testnet-explorer.alt.technology",
-        new List<Feature>() { new Feature("EIP1559")},
-        null
-    );
-            
-
     private static Dictionary < string, ChainInfo > ParticleChains = new Dictionary<string, ChainInfo > ()
     {
                 
@@ -2741,8 +2831,6 @@ namespace Network.Particle.Scripts.Model
         {"fuse-122" , Fuse },
             
         {"fuse-123" , FuseTestnet },
-            
-        {"heco-128" , Heco },
             
         {"polygon-137" , Polygon },
             
@@ -2806,7 +2894,13 @@ namespace Network.Particle.Scripts.Model
             
         {"bevm-1502" , BEVMCanaryTestnet },
             
+        {"storynetwork-1513" , StoryNetworkTestnet },
+            
+        {"gravity-1625" , GravityAlpha },
+            
         {"combo-1715" , ComboTestnet },
+            
+        {"soneium-1946" , SoneiumMinatoTestnet },
             
         {"kava-2221" , KavaTestnet },
             
@@ -2874,6 +2968,8 @@ namespace Network.Particle.Scripts.Model
             
         {"immutable-13473" , ImmutablezkEVMTestnet },
             
+        {"gravity-13505" , GravityAlphaTestnet },
+            
         {"eosevm-15557" , EOSEVMTestnet },
             
         {"ethereum-17000" , EthereumHolesky },
@@ -2908,6 +3004,8 @@ namespace Network.Particle.Scripts.Model
             
         {"zircuit-48899" , ZircuitTestnet },
             
+        {"dodochain-53457" , DODOChainTestnet },
+            
         {"zeroone-56400" , ZerooneTestnet },
             
         {"linea-59141" , LineaSepolia },
@@ -2937,6 +3035,8 @@ namespace Network.Particle.Scripts.Model
         {"bitlayer-200810" , BitlayerTestnet },
             
         {"bitlayer-200901" , Bitlayer },
+            
+        {"duckchain-202105" , DuckchainTestnet },
             
         {"platon-210425" , PlatON },
             
@@ -2972,6 +3072,8 @@ namespace Network.Particle.Scripts.Model
             
         {"cyber-111557560" , CyberTestnet },
             
+        {"plume-161221135" , PlumeTestnet },
+            
         {"blast-168587773" , BlastSepolia },
             
         {"tron-728126428" , Tron },
@@ -2993,8 +3095,6 @@ namespace Network.Particle.Scripts.Model
         {"tron-2494104990" , TronShasta },
             
         {"tron-3448148188" , TronNile },
-            
-        {"gmnetwork-202402181627" , GMNetworkTestnet },
     };
           // template code end        [CanBeNull]
         public static ChainInfo GetChain(long chainId, string chainName)

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Test;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 public class ParticleNetworkSDKDemo : MonoBehaviour
@@ -29,5 +30,4 @@ public class ParticleNetworkSDKDemo : MonoBehaviour
         // control how to show set master password and payment password.
         // ParticleNetwork.SetSecurityAccountConfig(new SecurityAccountConfig(0, 0));
     }
-    
 }

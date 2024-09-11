@@ -169,33 +169,37 @@ mergeInto(LibraryManager.library, {
         }
     },
 
-    ParticleSolanasSignMessage: async function (options) {
+    ParticleSolanaSignMessage: async function (options) {
         const message = UTF8ToString(options);
         try {
             const signature = (await window.particle.solana.signMessage(message)).toString('base64');
-            SendMessage('ParticleAuth', 'OnSolanasSignMessage', JSON.stringify({ signature }));
+            SendMessage('ParticleAuth', 'OnSolanaSignMessage', JSON.stringify({ signature }));
         } catch (error) {
-            SendMessage('ParticleAuth', 'OnSolanasSignMessage', JSON.stringify({ error }));
+            SendMessage('ParticleAuth', 'OnSolanaSignMessage', JSON.stringify({ error }));
         }
     },
 
-    ParticleSolanasSignTransaction: async function (options) {
+    ParticleSolanaSignTransaction: async function (options) {
         const message = UTF8ToString(options);
         try {
             const signature = (await window.particle.solana.signTransaction(message)).toString('base64');
-            SendMessage('ParticleAuth', 'OnSolanasSignTransaction', JSON.stringify({ signature }));
+            SendMessage('ParticleAuth', 'OnSolanaSignTransaction', JSON.stringify({ signature }));
         } catch (error) {
-            SendMessage('ParticleAuth', 'OnSolanasSignTransaction', JSON.stringify({ error }));
+            SendMessage('ParticleAuth', 'OnSolanaSignTransaction', JSON.stringify({ error }));
         }
     },
 
-    ParticleSolanasSignAllTransactions: async function (options) {
+    ParticleSolanaSignAllTransactions: async function (options) {
         const message = UTF8ToString(options);
         try {
-            const signature = (await window.particle.solana.signAllTransactions(message)).toString('base64');
-            SendMessage('ParticleAuth', 'OnSolanasSignAllTransactions', JSON.stringify({ signature }));
+            let signature = (await window.particle.solana.signAllTransactions(JSON.parse(message)));
+            signature = signature.map(signature => {
+                return signature.toString('base64')
+            });
+
+            SendMessage('ParticleAuth', 'OnSolanaSignAllTransactions', JSON.stringify({ signature }));
         } catch (error) {
-            SendMessage('ParticleAuth', 'OnSolanasSignAllTransactions', JSON.stringify({ error }));
+            SendMessage('ParticleAuth', 'OnSolanaSignAllTransactions', JSON.stringify({ error }));
         }
     },
 });

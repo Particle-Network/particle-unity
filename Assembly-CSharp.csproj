@@ -115,8 +115,8 @@
     <Compile Include="Assets/ParticleNetwork/Share/Utils/HexTool.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/VertexShakeB.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/AA/ParticleAAInteraction.cs" />
-    <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Connect/Items/WalletTypeItem.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/Core/Model/LoginListSupportType.cs" />
+    <Compile Include="Assets/ParticleNetwork/Mobile/Demo/Connect/Items/WalletTypeItem.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Modules/AuthCore/ParticleAuthCoreInteraction.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Model/TestConfig.cs" />
     <Compile Include="Assets/ParticleNetwork/Mobile/Demo/UnityRPCDemo.cs" />

@@ -9,7 +9,6 @@ using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Plugins.WebGL.ParticleAuthWebGL.Share;
 
 
 public class ParticleAuth : MonoBehaviour
@@ -81,13 +80,13 @@ public class ParticleAuth : MonoBehaviour
     private static extern void ParticleSolanaSignAndSendTransaction(string transaction);
 
     [DllImport("__Internal")]
-    private static extern void ParticleSolanasSignMessage(string message);
+    private static extern void ParticleSolanaSignMessage(string message);
 
     [DllImport("__Internal")]
-    private static extern void ParticleSolanasSignTransaction(string transaction);
+    private static extern void ParticleSolanaSignTransaction(string transaction);
 
     [DllImport("__Internal")]
-    private static extern void ParticleSolanasSignAllTransactions(string[] transaction);
+    private static extern void ParticleSolanaSignAllTransactions(string json);
 
 
     public static ParticleAuth Instance;
@@ -102,9 +101,9 @@ public class ParticleAuth : MonoBehaviour
     private TaskCompletionSource<string> evmSignTypedDataTask;
     private TaskCompletionSource<string> evmSignTypedDataUniqTask;
     private TaskCompletionSource<string> solanaSignAndSendTransactionTask;
-    private TaskCompletionSource<string> solanasSignMessageTask;
-    private TaskCompletionSource<string> solanasSignTransactionTask;
-    private TaskCompletionSource<List<string>> solanasSignAllTransactionsTask;
+    private TaskCompletionSource<string> solanaSignMessageTask;
+    private TaskCompletionSource<string> solanaSignTransactionTask;
+    private TaskCompletionSource<List<string>> solanaSignAllTransactionsTask;
 
 
     void Awake()
@@ -137,9 +136,9 @@ public class ParticleAuth : MonoBehaviour
         var chainName = (string)JObject.Parse(json)["chainName"];
         var chainId = (long)JObject.Parse(json)["chainId"];
         var chainInfo = ChainInfo.GetChain(chainId, chainName);
-        var projectId =  (string)JObject.Parse(json)["projectId"];
-        var clientKey =  (string)JObject.Parse(json)["clientKey"];
-        var appId =  (string)JObject.Parse(json)["appId"];
+        var projectId = (string)JObject.Parse(json)["projectId"];
+        var clientKey = (string)JObject.Parse(json)["clientKey"];
+        var appId = (string)JObject.Parse(json)["appId"];
         SetInnerConfig(projectId, clientKey, appId, chainInfo);
         InitParticleAuth(json);
     }
@@ -150,6 +149,7 @@ public class ParticleAuth : MonoBehaviour
         {
             throw new ErrorException(0, "Init config is wrong");
         }
+
         ParticleUnityRpc.projectId = projectId;
         ParticleUnityRpc.appId = appId;
         ParticleUnityRpc.clientKey = clientKey;
@@ -406,40 +406,41 @@ public class ParticleAuth : MonoBehaviour
         HandleSignResult(json, solanaSignAndSendTransactionTask);
     }
 
-    public Task<string> SolanasSignMessage(string transaction)
+    public Task<string> SolanaSignMessage(string transaction)
     {
-        solanasSignMessageTask = new TaskCompletionSource<string>();
-        ParticleSolanasSignMessage(transaction);
-        return solanasSignMessageTask.Task;
+        solanaSignMessageTask = new TaskCompletionSource<string>();
+        ParticleSolanaSignMessage(transaction);
+        return solanaSignMessageTask.Task;
     }
 
-    public void OnSolanasSignMessage(string json)
+    public void OnSolanaSignMessage(string json)
     {
-        HandleSignResult(json, solanasSignMessageTask);
+        HandleSignResult(json, solanaSignMessageTask);
     }
 
-    public Task<string> SolanasSignTransaction(string transaction)
+    public Task<string> SolanaSignTransaction(string transaction)
     {
-        solanasSignTransactionTask = new TaskCompletionSource<string>();
-        ParticleSolanasSignTransaction(transaction);
-        return solanasSignTransactionTask.Task;
+        solanaSignTransactionTask = new TaskCompletionSource<string>();
+        ParticleSolanaSignTransaction(transaction);
+        return solanaSignTransactionTask.Task;
     }
 
-    public void OnSolanasSignTransaction(string json)
+    public void OnSolanaSignTransaction(string json)
     {
-        HandleSignResult(json, solanasSignTransactionTask);
+        HandleSignResult(json, solanaSignTransactionTask);
     }
 
-    public Task<List<string>> SolanasSignAllTransactions(string[] transactions)
+    public Task<List<string>> SolanaSignAllTransactions(string[] transactions)
     {
-        solanasSignAllTransactionsTask = new TaskCompletionSource<List<string>>();
-        ParticleSolanasSignAllTransactions(transactions);
-        return solanasSignAllTransactionsTask.Task;
+        solanaSignAllTransactionsTask = new TaskCompletionSource<List<string>>();
+        var json = JsonConvert.SerializeObject(transactions);
+        ParticleSolanaSignAllTransactions(json);
+        return solanaSignAllTransactionsTask.Task;
     }
 
-    public void OnSolanasSignAllTransactions(string json)
+    public void OnSolanaSignAllTransactions(string json)
     {
-        HandleSignResult(json, solanasSignAllTransactionsTask);
+        HandleSignResult(json, solanaSignAllTransactionsTask);
     }
 
     private void HandleSignResult<T>(string json, TaskCompletionSource<T> task)

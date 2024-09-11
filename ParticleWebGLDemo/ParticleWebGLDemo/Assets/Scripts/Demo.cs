@@ -39,10 +39,10 @@ namespace DefaultNamespace
                 defaultWalletEntryPosition = new WalletEntryPosition { x = 0.0f, y = 0.0f },
                 supportChains = new List<ChainInfo>
                 {
-                    ChainInfo.EthereumSepolia
+                    ChainInfo.SolanaDevnet
                 }
             };
-            var config = new InitConfig(projectId, clientKey, appId, ChainInfo.EthereumSepolia, securityAccount,
+            var config = new InitConfig(projectId, clientKey, appId, ChainInfo.SolanaDevnet, securityAccount,
                 wallet);
 
             ParticleAuth.Instance.Init(config);
@@ -186,7 +186,7 @@ namespace DefaultNamespace
             {
                 // "hello world" convert to base58 string,
                 var message = "StV1DL6CwTryKyV";
-                var signature = await ParticleAuth.Instance.SolanasSignMessage(message);
+                var signature = await ParticleAuth.Instance.SolanaSignMessage(message);
                 Debug.Log($"signature {signature}");
             }
             catch (Exception e)
@@ -202,7 +202,7 @@ namespace DefaultNamespace
             {
                 // "hello world" convert to base58 string,
                 var transaction = await TransactionHelper.GetSolanaTransacion(_solanaAddress);
-                var signature = await ParticleAuth.Instance.SolanasSignTransaction(transaction);
+                var signature = await ParticleAuth.Instance.SolanaSignTransaction(transaction);
                 Debug.Log($"signature {signature}");
             }
             catch (Exception e)
@@ -220,8 +220,8 @@ namespace DefaultNamespace
                 var transaction1 = await TransactionHelper.GetSolanaTransacion(_solanaAddress);
                 var transaction2 = await TransactionHelper.GetSolanaTransacion(_solanaAddress);
                 var signatures =
-                    await ParticleAuth.Instance.SolanasSignAllTransactions(new[] { transaction1, transaction2 });
-                Debug.Log($"signature {signatures}");
+                    await ParticleAuth.Instance.SolanaSignAllTransactions(new[] { transaction1, transaction2 });
+                Debug.Log($"signatures: {string.Join(", ", signatures)}");
             }
             catch (Exception e)
             {
