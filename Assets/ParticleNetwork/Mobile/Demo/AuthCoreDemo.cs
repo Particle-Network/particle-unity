@@ -83,7 +83,7 @@ namespace Network.Particle.Scripts.Test
         {
             try
             {
-                var jwt = "";
+                var jwt = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IndVUE05RHNycml0Sy1jVHE2OWNKcCJ9.eyJlbWFpbCI6InBhbnRhb3ZheUBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6Ly9kZXYtcXI2LTU5ZWUudXMuYXV0aDAuY29tLyIsImF1ZCI6IkVWaksxWlpQU3RRY2RXdWhqd1BkZEF0Z1Jpd3A1NFZRIiwiaWF0IjoxNzI2Nzk5NjgzLCJleHAiOjE3MjY4MzU2ODMsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTA2OTk5NzM0NTYwNTU3OTk1NTQwIiwic2lkIjoiamVqWmZPTV9uZXRSbnBtTFVPMm9zZFFSYmk5UDZhUVMifQ.SQlGCKvxApNfALd_JUPdhlxa8Ccz2DEzFEJZgSyImzI3LMVvlqUSoZ1CCA2cM8rUrHPH5ka5Y0aNDiCK3e5EGyPcHpQurJT70ZZCTBmol3TFLUkNw9h6ts7hccC0rhFG1SHY6yQEqWbAs4XWFX71lnAy3LHaoS21dv-g2BGn-M7cTGTL35dKKZOClJVRLSQcY-4t4pMFnzW5J6B7_6dZequL_dNYC2hAZIdSBrUJWBFkYQ69OonQyXX46gjQ2MhH6Z7o6OuH8XxhXI0Q0UIThq11Z4bdto1Wig7_YRPwEc-Lr3VubSt2gR_2U2-wM11D4tkW8m0PO5LPrQZiXjfG0w";
                 var nativeResultData = await ParticleAuthCore.Instance.ConnectJWT(jwt);
 
                 Debug.Log(nativeResultData.data);
