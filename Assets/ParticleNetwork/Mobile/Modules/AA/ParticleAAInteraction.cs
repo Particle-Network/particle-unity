@@ -20,7 +20,10 @@ namespace Network.Particle.Scripts.Core
             
             if (biconomyApiKeys != null)
                 obj["biconomy_api_keys"] = JObject.FromObject(biconomyApiKeys);
-
+            else
+            {
+                obj["biconomy_api_keys"] = JObject.FromObject(new Dictionary<int, string>() { { 1, "" } });
+            }
             var json = JsonConvert.SerializeObject(obj);
 
             Debug.Log(json);
