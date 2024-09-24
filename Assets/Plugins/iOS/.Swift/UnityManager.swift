@@ -31,6 +31,8 @@ import Thresh
 
 import UIKit
 
+import ParticleNetworkChains
+
 @objcMembers
 class UnityManager: NSObject, UnityFrameworkListener, NativeCallsProtocol {
     let bag = DisposeBag()
@@ -307,7 +309,7 @@ extension UnityManager {
             let chainType: ChainType = chainName == "solana" ? .solana : .evm
             return ParticleNetwork.searchChainInfo(by: chainId, chainType: chainType)
         }
-        ParticleWalletGUI.setSupportChain(chains)
+        ParticleWalletGUI.setSupportChain(Set(chains))
     }
     
     func setSwapDisabled(_ disabled: Bool) {
@@ -337,68 +339,7 @@ extension UnityManager {
     }
     
     func navigatorLoginList(_ json: String?) {
-        var observable: Single<(WalletType, Account?)>
-        if let json = json {
-            let array = JSON(parseJSON: json).arrayValue.map {
-                $0.stringValue.lowercased()
-            }
-            
-            var loginListPageSupportType: [LoginListSupportType] = []
-            
-            if array.contains("all") {
-                loginListPageSupportType = LoginListSupportType.allCases
-            } else {
-                array.forEach { if $0 == "email" {
-                    loginListPageSupportType.append(.email)
-                } else if $0 == "phone" {
-                    loginListPageSupportType.append(.phone)
-                } else if $0 == "apple" {
-                    loginListPageSupportType.append(.apple)
-                } else if $0 == "google" {
-                    loginListPageSupportType.append(.google)
-                } else if $0 == "facebook" {
-                    loginListPageSupportType.append(.facebook)
-                } else if $0 == "github" {
-                    loginListPageSupportType.append(.github)
-                } else if $0 == "twitch" {
-                    loginListPageSupportType.append(.twitch)
-                } else if $0 == "microsoft" {
-                    loginListPageSupportType.append(.microsoft)
-                } else if $0 == "linkedin" {
-                    loginListPageSupportType.append(.linkedin)
-                } else if $0 == "discord" {
-                    loginListPageSupportType.append(.discord)
-                } else if $0 == "privatekey" {
-                    loginListPageSupportType.append(.privateKey)
-                } else if $0 == "metamask" {
-                    loginListPageSupportType.append(.metamask)
-                } else if $0 == "rainbow" {
-                    loginListPageSupportType.append(.rainbow)
-                } else if $0 == "trust" {
-                    loginListPageSupportType.append(.trust)
-                } else if $0 == "imtoken" {
-                    loginListPageSupportType.append(.imtoken)
-                } else if $0 == "bitkeep" {
-                    loginListPageSupportType.append(.bitkeep)
-                } else if $0 == "walletConnect" {
-                    loginListPageSupportType.append(.walletConnect)
-                } else if $0 == "twitter" {
-                    loginListPageSupportType.append(.twitter)
-                }
-                }
-            }
-            if loginListPageSupportType.isEmpty {
-                observable = PNRouter.navigatorLoginList()
-            } else {
-                observable = PNRouter.navigatorLoginList(supportTypes: loginListPageSupportType)
-            }
-        } else {
-            observable = PNRouter.navigatorLoginList()
-        }
-        subscribeAndCallback(observable: observable.map { walletType, account in
-            let unityLoginListModel = UnityLoginListModel(walletType: walletType.stringValue, account: account)
-            return unityLoginListModel
-        }, unityName: UnityManager.guiSystemName, methodName: "loginList")
+        // will remove
     }
     
     func switchWallet(_ json: String) {
@@ -551,7 +492,6 @@ extension UnityManager {
         let name = data["name"].stringValue
         let icon = data["icon"].stringValue
 
-        ConnectManager.setCustomWalletName(walletType: .particle, name: .init(name: name, icon: icon))
         ConnectManager.setCustomWalletName(walletType: .authCore, name: .init(name: name, icon: icon))
     }
     
@@ -613,17 +553,12 @@ extension UnityManager {
         
         var adapters: [ConnectAdapter] = []
         let evmRpcUrl = data["rpc_url"]["evm_url"].stringValue
-        if evmRpcUrl.isEmpty {
-            adapters.append(EVMConnectAdapter())
-        } else {
-            adapters.append(EVMConnectAdapter(rpcUrl: evmRpcUrl))
-        }
+        
+        adapters.append(EVMConnectAdapter())
+        
         let solanaRpcUrl = data["rpc_url"]["sol_url"].stringValue
-        if solanaRpcUrl.isEmpty {
-            adapters.append(SolanaConnectAdapter())
-        } else {
-            adapters.append(SolanaConnectAdapter(rpcUrl: solanaRpcUrl))
-        }
+        
+        adapters.append(SolanaConnectAdapter())
         
         adapters.append(PhantomConnectAdapter())
         
@@ -632,7 +567,7 @@ extension UnityManager {
         adapters.append(contentsOf: [
             MetaMaskConnectAdapter(),
             RainbowConnectAdapter(),
-            BitkeepConnectAdapter(),
+            BitgetConnectAdapter(),
             ImtokenConnectAdapter(),
             TrustConnectAdapter(),
             WalletConnectAdapter(),
@@ -644,9 +579,7 @@ extension UnityManager {
             OKXConnectAdapter()
         ])
         
-        ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData) {
-            adapters
-        }
+        ParticleConnect.initialize(env: devEnv, chainInfo: chainInfo, dAppData: dAppData, adapters: adapters)
     }
     
     func adapterGetAccounts(_ json: String) -> String {
@@ -754,10 +687,9 @@ extension UnityManager {
             particleAuthCoreConfig = ParticleAuthCoreConfig(loginType: loginType, supportAuthType: supportAuthTypeArray, account: account, code: code, socialLoginPrompt: socialLoginPrompt, loginPageConfig: loginPageConfig)
         }
         
-        var observable: Single<Account?>
+        var observable: Single<Account>
         if walletType == .authCore {
             observable = adapter.connect(particleAuthCoreConfig)
-
         } else {
             observable = adapter.connect(ConnectConfig.none)
         }
@@ -1064,7 +996,7 @@ extension UnityManager {
             return
         }
         
-        subscribeAndCallback(observable: adapter.login(config: siwe, publicAddress: publicAddress).map { sourceMessage, signedMessage in
+        subscribeAndCallback(observable: adapter.signInWithEthereum(config: siwe, publicAddress: publicAddress).map { sourceMessage, signedMessage in
             UnityConnectLoginResult(message: sourceMessage, signature: signedMessage)
         }, unityName: UnityManager.connectSystemName, methodName: "login")
     }
@@ -1155,15 +1087,6 @@ extension UnityManager {
     func particleAAInitialize(_ json: String) {
         let data = JSON(parseJSON: json)
         
-        let biconomyAppKeysDict = data["biconomy_api_keys"].dictionaryValue
-        var biconomyAppKeys: [Int: String] = [:]
-        
-        for (key, value) in biconomyAppKeysDict {
-            if let chainId = Int(key) {
-                biconomyAppKeys[chainId] = value.stringValue
-            }
-        }
-        
         let name = data["name"].stringValue.uppercased()
         let version = data["version"].stringValue.lowercased()
         let accountName = AA.AccountName(version: version, name: name)
@@ -1176,7 +1099,7 @@ extension UnityManager {
             finalAccountName = .biconomyV1
         }
         
-        AAService.initialize(name: finalAccountName, biconomyApiKeys: biconomyAppKeys)
+        AAService.initialize(name: finalAccountName)
         ParticleNetwork.setAAService(aaService)
     }
     
@@ -1620,7 +1543,7 @@ extension UnityManager {
     
     func authCoreSetCustomUI(_ json: String) {
         do {
-            try Auth.loadCustomUIJsonString(json)
+            try ParticleNetwork.setCustomUIConfigJsonString(json)
         } catch {
             print("auth core set custom ui error \(error)")
         }
@@ -1694,8 +1617,8 @@ extension UnityManager {
             walletType = .trust
         } else if str == "imtoken" {
             walletType = .imtoken
-        } else if str == "bitkeep" {
-            walletType = .bitkeep
+        } else if str == "bitget" {
+            walletType = .bitget
         } else if str == "walletconnect" {
             walletType = .walletConnect
         } else if str == "phantom" {
@@ -1729,7 +1652,7 @@ extension UnityManager {
 }
 
 extension UnityManager: MessageSigner {
-    public func signMessage(_ message: String, chainInfo: ParticleNetworkBase.ParticleNetwork.ChainInfo?) -> RxSwift.Single<String> {
+    public func signMessage(_ message: String, chainInfo: ChainInfo?) -> RxSwift.Single<String> {
         guard let walletType = latestWalletType else {
             print("walletType is nil")
             return .error(ParticleNetwork.ResponseError(code: nil, message: "walletType is nil"))

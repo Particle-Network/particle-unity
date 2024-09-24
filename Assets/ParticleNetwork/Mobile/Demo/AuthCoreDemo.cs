@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using CommonTip.Script;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
@@ -580,6 +581,76 @@ namespace Network.Particle.Scripts.Test
                 Debug.LogError($"An error occurred: {e.Message}");
             }
         }
+
+        public async void WriteContractAndSend()
+        {
+            if (_chainInfo.Id != ChainInfo.BaseSepolia.Id)
+            {
+                Debug.Log("This example only support BaseSepolia");
+                ShowToast("This example only support BaseSepolia");
+                return;
+            }
+
+            try
+            {
+                var from = ParticleAuthCoreInteraction.EvmGetAddress();
+                var contractAddress = "0x0cc5E8D54096628a79bf6827AC31a1DF3aFA0c43";
+                var methodName = "custom_signIn";
+                var parameters = new List<object> { "Jack" };
+                var abiJsonString =
+                    "[{\"type\":\"function\",\"name\":\"signIn\",\"inputs\":[{\"name\":\"name\",\"type\":\"string\",\"internalType\":\"string\"}],\"outputs\":[],\"stateMutability\":\"nonpayable\"}]";
+                var transaction =
+                    await EvmService.WriteContract(from, contractAddress, methodName, parameters, abiJsonString);
+                var nativeResultData = await ParticleAuthCore.Instance.EvmSendTransaction(transaction);
+                Debug.Log(nativeResultData.data);
+
+                if (nativeResultData.isSuccess)
+                {
+                    var txhash = nativeResultData.data;
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Success:{txhash}");
+                    Debug.Log($"txhash: {txhash}");
+                }
+                else
+                {
+                    ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
+                    var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
+                    Debug.Log(errorData);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
+        public async void ReadContract()
+        {
+            if (_chainInfo.Id != ChainInfo.BaseSepolia.Id)
+            {
+                Debug.Log("This example only support BaseSepolia");
+                ShowToast("This example only support BaseSepolia");
+                return;
+            }
+
+            try
+            {
+                var from = ParticleAuthCoreInteraction.EvmGetAddress();
+                var contractAddress = "0x0cc5E8D54096628a79bf6827AC31a1DF3aFA0c43";
+                var methodName = "custom_getName";
+                var parameters = new List<object>();
+                var abiJsonString =
+                    "[{\"inputs\":[],\"name\":\"getName\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]";
+                var result =
+                    await EvmService.ReadContract(from, contractAddress, methodName, parameters, abiJsonString);
+                // you should resolve the result by yourself, use some web3 library or read contract in server side code.
+                Debug.Log($"ReadContract result: {result}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"An error occurred: {e.Message}");
+            }
+        }
+
 
         public void SetBlindEnable()
         {
