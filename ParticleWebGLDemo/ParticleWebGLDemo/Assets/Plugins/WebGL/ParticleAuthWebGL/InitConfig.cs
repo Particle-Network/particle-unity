@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Network.Particle.Scripts.Model;
-using UnityEngine;
 using Newtonsoft.Json;
 
 [Serializable]
