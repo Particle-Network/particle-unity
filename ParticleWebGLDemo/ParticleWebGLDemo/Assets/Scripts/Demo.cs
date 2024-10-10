@@ -39,10 +39,10 @@ namespace DefaultNamespace
                 defaultWalletEntryPosition = new WalletEntryPosition { x = 0.0f, y = 0.0f },
                 supportChains = new List<ChainInfo>
                 {
-                    ChainInfo.SolanaDevnet
+                    ChainInfo.Sei
                 }
             };
-            var config = new InitConfig(projectId, clientKey, appId, ChainInfo.SolanaDevnet, securityAccount,
+            var config = new InitConfig(projectId, clientKey, appId, ChainInfo.Sei, securityAccount,
                 wallet);
 
             ParticleAuth.Instance.Init(config);
