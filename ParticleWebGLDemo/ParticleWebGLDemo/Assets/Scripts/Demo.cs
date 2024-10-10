@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices.ComTypes;
 using Network.Particle.Scripts.Core;
 using Network.Particle.Scripts.Model;
 using Network.Particle.Scripts.Test;
@@ -39,10 +40,10 @@ namespace DefaultNamespace
                 defaultWalletEntryPosition = new WalletEntryPosition { x = 0.0f, y = 0.0f },
                 supportChains = new List<ChainInfo>
                 {
-                    ChainInfo.Sei
+                    ChainInfo.EthereumSepolia
                 }
             };
-            var config = new InitConfig(projectId, clientKey, appId, ChainInfo.Sei, securityAccount,
+            var config = new InitConfig(projectId, clientKey, appId, ChainInfo.EthereumSepolia, securityAccount,
                 wallet);
 
             ParticleAuth.Instance.Init(config);
@@ -185,6 +186,9 @@ namespace DefaultNamespace
             try
             {
                 var transaction = await TransactionHelper.GetEVMTransacion(_evmAddress);
+                var simplifyTransaction = GetSimplifyTransactionFrom(transaction);
+                Debug.Log($"simplifyTransaction to {simplifyTransaction.to}, data {simplifyTransaction.data}, value {simplifyTransaction.value}");
+                
                 var signature = await ParticleAuth.Instance.EVMSendTransaction(transaction);
                 Debug.Log($"signature {signature}");
             }
@@ -609,6 +613,17 @@ namespace DefaultNamespace
             {
                 Debug.LogError($"An error occurred: {e.Message}");
             }
+        }
+
+        // convert the transaction hex string to a SimplifyTransaction object
+        public SimplifyTransaction GetSimplifyTransactionFrom(string transaction)
+        {
+            var jsonString = ParticleAuth.Instance.HexToString(transaction);
+            var jobject = JObject.Parse(jsonString);
+            var to = jobject["to"].ToString();
+            var data = jobject["data"].ToString();
+            var value = jobject["value"].ToString();
+            return new SimplifyTransaction(to, data, value);
         }
     }
 }

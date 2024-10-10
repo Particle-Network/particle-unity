@@ -545,7 +545,7 @@ public class ParticleAuth : MonoBehaviour
         }
     }
 
-    private string HexToString(string hex)
+    public string HexToString(string hex)
     {
         if (hex.StartsWith("0x"))
         {
