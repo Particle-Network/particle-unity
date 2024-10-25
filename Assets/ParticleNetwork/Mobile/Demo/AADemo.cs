@@ -98,6 +98,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -144,6 +145,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -195,6 +197,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -242,6 +245,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -306,6 +310,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -355,6 +360,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -404,6 +410,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -449,6 +456,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -512,6 +520,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -560,6 +569,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{nativeResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(nativeResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
             }
             catch (Exception e)
@@ -594,6 +604,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{signerAccountResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(signerAccountResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
                 
                 if (this.sessionSignerPublicAddress == "")
@@ -645,6 +656,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{createSessionUserOpResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(createSessionUserOpResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
 
                 var sendCreateSessionUserOpResult =
@@ -726,6 +738,7 @@ namespace Network.Particle.Scripts.Test
                     ShowToast($"{MethodBase.GetCurrentMethod()?.Name} Failed:{signUserOpHashResultData.data}");
                     var errorData = JsonConvert.DeserializeObject<NativeErrorData>(signUserOpHashResultData.data);
                     Debug.Log(errorData);
+                    return;
                 }
 
                 var sendUserOpResult =
