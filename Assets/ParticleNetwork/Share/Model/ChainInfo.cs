@@ -1221,6 +1221,24 @@ namespace Network.Particle.Scripts.Model
     );
             
 
+    public static ChainInfo Peaq => _peaq;
+
+    private static ChainInfo _peaq = new ChainInfo(
+        3338,
+        "Peaq Network",
+        "evm",
+        "https://static.particle.network/token-list/peaq/native.png",
+        "Peaq Mainnet",
+        "Mainnet",
+        "https://peaq.subscan.io",
+        new NativeCurrency("PEAQ", "PEAQ", 18),
+        " https://evm.peaq.network",
+        "https://peaq.subscan.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
     public static ChainInfo BotanixTestnet => _botanixtestnet;
 
     private static ChainInfo _botanixtestnet = new ChainInfo(
@@ -1362,6 +1380,24 @@ namespace Network.Particle.Scripts.Model
         "https://explorer.sepolia.mantle.xyz",
         new List<Feature>() { new Feature("ERC4337")},
         "https://faucet.sepolia.mantle.xyz"
+    );
+            
+
+    public static ChainInfo Duckchain => _duckchain;
+
+    private static ChainInfo _duckchain = new ChainInfo(
+        5545,
+        "Duckchain",
+        "evm",
+        "https://static.particle.network/token-list/duckchain/native.png",
+        "Duckchain Mainnet",
+        "Mainnet",
+        "https://duckchain.io",
+        new NativeCurrency("TON", "TON", 18),
+        "https://rpc.duckchain.io",
+        "https://scan.duckchain.io",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
     );
             
 
@@ -1756,6 +1792,24 @@ namespace Network.Particle.Scripts.Model
         new NativeCurrency("ZERO", "ZERO", 18),
         "https://subnets.avax.network/zeroonemai/mainnet/rpc",
         "https://subnets.avax.network/zeroonemai",
+        new List<Feature>() { new Feature("EIP1559")},
+        null
+    );
+            
+
+    public static ChainInfo MovementDevnet => _movementdevnet;
+
+    private static ChainInfo _movementdevnet = new ChainInfo(
+        30732,
+        "Movement",
+        "evm",
+        "https://static.particle.network/token-list/movement/native.png",
+        "Movement Devnet",
+        "Devnet",
+        "https://movementlabs.xyz",
+        new NativeCurrency("MOVE", "MOVE", 18),
+        "https://mevm.devnet.imola.movementnetwork.xyz",
+        "https://explorer.devnet.imola.movementnetwork.xyz",
         new List<Feature>() { new Feature("EIP1559")},
         null
     );
@@ -2773,7 +2827,7 @@ namespace Network.Particle.Scripts.Model
 
     private static ChainInfo _lumiatestnet = new ChainInfo(
         1952959480,
-        "lumia",
+        "Lumia",
         "evm",
         "https://static.particle.network/token-list/lumia/native.png",
         "Lumia Testnet",
@@ -2954,6 +3008,8 @@ namespace Network.Particle.Scripts.Model
             
         {"satoshivm-3110" , SatoshiVMTestnet },
             
+        {"peaq network-3338" , Peaq },
+            
         {"botanix-3636" , BotanixTestnet },
             
         {"astarzkevm-3776" , AstarzkEVMMainet },
@@ -2969,6 +3025,8 @@ namespace Network.Particle.Scripts.Model
         {"mantle-5000" , Mantle },
             
         {"mantle-5003" , MantleSepoliaTestnet },
+            
+        {"duckchain-5545" , Duckchain },
             
         {"opbnb-5611" , opBNBTestnet },
             
@@ -3013,6 +3071,8 @@ namespace Network.Particle.Scripts.Model
         {"mapprotocol-22776" , MAPProtocol },
             
         {"zeroone-27827" , Zeroone },
+            
+        {"movement-30732" , MovementDevnet },
             
         {"mode-34443" , Mode },
             
